@@ -460,6 +460,1207 @@
 
   
 
+
+  /* === Score Tab === */
+  #scoreView {
+    display: none;
+  }
+  body.score-mode #scoreView {
+    display: block;
+  }
+  body.score-mode .prayers-area,
+  body.score-mode .stats,
+  body.score-mode .progress,
+  body.score-mode .discover-btn,
+  body.score-mode .action-bar,
+  body.score-mode #emptyState {
+    display: none !important;
+  }
+
+  .score-date-header {
+    text-align: center;
+    margin-bottom: 18px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--brown-deep), var(--brown));
+    border-radius: 8px;
+    color: var(--gold-light);
+    box-shadow: 0 2px 8px rgba(60,30,10,0.2);
+  }
+  .score-date-header .date-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  .score-date-header .date-value {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .score-today-total {
+    text-align: center;
+    margin-bottom: 22px;
+    padding: 20px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    box-shadow:
+      inset 0 0 0 1px var(--parchment-light),
+      inset 0 0 0 2px var(--gold);
+  }
+  .score-today-total .label {
+    font-family: 'Frank Ruhl Libre', serif;
+    color: var(--brown);
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .score-today-total .value {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: 48px;
+    color: var(--wine);
+    line-height: 1;
+  }
+  .score-today-total .max {
+    font-family: 'Frank Ruhl Libre', serif;
+    color: var(--brown-light);
+    font-size: 16px;
+    margin-top: 4px;
+  }
+
+  .mitzva-card {
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow:
+      inset 0 0 0 1px var(--parchment-light),
+      inset 0 0 0 2px var(--gold),
+      0 2px 6px rgba(60,30,10,0.08);
+    transition: all 0.25s;
+  }
+  .mitzva-card.done {
+    background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.1));
+    border-color: var(--gold-dark);
+  }
+
+  .mitzva-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .mitzva-icon {
+    font-size: 28px;
+    width: 44px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .mitzva-info {
+    flex: 1;
+  }
+  .mitzva-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brown-deep);
+    line-height: 1.2;
+  }
+  .mitzva-points {
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    color: var(--brown-light);
+    margin-top: 3px;
+  }
+  .mitzva-points strong {
+    color: var(--wine);
+    font-weight: 700;
+  }
+
+  .mitzva-check {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 2px solid var(--brown-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .mitzva-check:hover {
+    transform: scale(1.05);
+    border-color: var(--gold);
+  }
+  .mitzva-check svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: var(--brown-light);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .mitzva-card.done .mitzva-check {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+    box-shadow: 0 3px 10px rgba(201,169,97,0.4);
+  }
+  .mitzva-card.done .mitzva-check svg {
+    stroke: var(--brown-deep);
+    opacity: 1;
+    animation: checkPop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes checkPop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .minyan-toggle {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .minyan-toggle-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px;
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .minyan-toggle-label .bonus {
+    font-size: 12px;
+    color: var(--wine);
+    font-weight: 700;
+  }
+  .switch {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .switch input { display: none; }
+  .switch-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--parchment-dark);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 28px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .switch-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--parchment-light);
+    border-radius: 50%;
+    transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .switch input:checked + .switch-slider {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+  }
+  .switch input:checked + .switch-slider::before {
+    right: calc(100% - 23px);
+    background: var(--brown-deep);
+  }
+
+  .score-end-day {
+    margin: 24px 0 18px;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--wine), #6b1d2a);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(122,40,55,0.3);
+  }
+  .score-end-day:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(122,40,55,0.4);
+  }
+  .score-end-day:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .score-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .score-summary-card {
+    background: var(--parchment);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .score-summary-card .label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    color: var(--brown);
+    margin-bottom: 4px;
+  }
+  .score-summary-card .value {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--wine);
+    line-height: 1;
+  }
+
+  .score-history {
+    margin-top: 20px;
+  }
+  .score-history-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--brown-deep);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--gold);
+  }
+  .history-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--parchment-light);
+    border: 1px solid var(--brown-light);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+  }
+  .history-date {
+    flex: 1;
+    color: var(--brown);
+    font-size: 14px;
+  }
+  .history-score {
+    color: var(--wine);
+    font-weight: 700;
+    font-size: 17px;
+  }
+  .history-bar {
+    width: 60px;
+    height: 6px;
+    background: var(--parchment-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .history-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    border-radius: 3px;
+  }
+  .history-empty {
+    text-align: center;
+    padding: 20px;
+    color: var(--brown-light);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-style: italic;
+  }
+
+
+  /* === Goals System === */
+  .goals-section {
+    margin: 22px 0;
+  }
+  .goals-section-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--brown-deep);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .goals-next {
+    background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08));
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(201,169,97,0.2);
+  }
+  .goals-next-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .goals-next-icon {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .goals-next-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brown-deep);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .goals-progress-bar {
+    height: 14px;
+    background: var(--parchment);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .goals-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+    border-radius: 7px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .goals-progress-text {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown);
+  }
+  .goals-progress-text strong {
+    color: var(--wine);
+    font-weight: 700;
+  }
+
+  .goal-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.25s;
+  }
+  .goal-card.unlocked {
+    background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08));
+    border-color: var(--gold-dark);
+    box-shadow: 0 2px 6px rgba(201,169,97,0.25);
+  }
+  .goal-card.claimed {
+    opacity: 0.6;
+    background: var(--parchment);
+  }
+  .goal-icon {
+    font-size: 28px;
+    width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .goal-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .goal-points {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--wine);
+    line-height: 1;
+  }
+  .goal-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown-deep);
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  .goal-status {
+    font-size: 11px;
+    color: var(--brown-light);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .goal-status.unlocked {
+    color: var(--gold-dark);
+    font-weight: 700;
+    font-style: normal;
+  }
+  .goal-status.claimed {
+    color: var(--brown);
+    font-weight: 600;
+    font-style: normal;
+  }
+  .goal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .goal-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--brown-light);
+    background: var(--parchment);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .goal-btn:hover {
+    transform: scale(1.05);
+    border-color: var(--gold);
+  }
+  .goal-btn.claim {
+    border-color: var(--gold-dark);
+    color: var(--wine);
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    font-weight: 700;
+  }
+  .goal-btn.edit { color: var(--brown); }
+  .goal-btn.delete { color: var(--wine); }
+
+  .add-goal-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--parchment);
+    border: 2px dashed var(--gold);
+    border-radius: 8px;
+    color: var(--brown-deep);
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .add-goal-btn:hover {
+    background: var(--parchment-light);
+    border-color: var(--gold-dark);
+  }
+
+  /* Goal Edit Modal */
+  .goal-form {
+    padding: 4px 4px 0;
+  }
+  .goal-form-row {
+    margin-bottom: 14px;
+  }
+  .goal-form-label {
+    display: block;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+  .goal-form-input,
+  .goal-form-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--parchment);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 16px;
+    color: var(--brown-deep);
+    box-sizing: border-box;
+  }
+  .goal-form-input:focus,
+  .goal-form-textarea:focus {
+    outline: none;
+    border-color: var(--gold-dark);
+    background: var(--parchment-light);
+  }
+  .goal-form-textarea {
+    min-height: 60px;
+    resize: vertical;
+  }
+  .goal-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+  }
+  .goal-icon-option {
+    aspect-ratio: 1;
+    border: 1.5px solid var(--brown-light);
+    background: var(--parchment);
+    border-radius: 6px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .goal-icon-option:hover {
+    border-color: var(--gold);
+  }
+  .goal-icon-option.selected {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+    transform: scale(1.05);
+  }
+  .goal-form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .goal-form-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: all 0.2s;
+  }
+  .goal-form-btn.save {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border-color: var(--gold-dark);
+  }
+  .goal-form-btn.cancel {
+    background: transparent;
+    color: var(--brown);
+    border-color: var(--brown-light);
+  }
+
+  /* Celebration Modal Override for Goal Unlock */
+  .goal-celebration-icon {
+    font-size: 80px;
+    text-align: center;
+    margin-bottom: 14px;
+    animation: celebrate 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes celebrate {
+    0% { transform: scale(0) rotate(-180deg); }
+    60% { transform: scale(1.3) rotate(20deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  .goal-celebration-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--wine);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .goal-celebration-points {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 18px;
+    color: var(--gold-dark);
+    text-align: center;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+  .goal-celebration-text {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 16px;
+    color: var(--brown-deep);
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+
+  /* === Goals/Rewards Section === */
+  .goals-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px solid var(--gold);
+  }
+  .goals-section-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--brown-deep);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .goals-section-subtitle {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown-light);
+    text-align: center;
+    margin-bottom: 18px;
+    font-style: italic;
+  }
+  
+  .goals-next {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    color: var(--brown-deep);
+    box-shadow: 0 3px 12px rgba(201,169,97,0.35);
+  }
+  .goals-next-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.85;
+    margin-bottom: 4px;
+  }
+  .goals-next-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .goals-next-progress {
+    margin-top: 10px;
+    height: 8px;
+    background: rgba(60,30,10,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .goals-next-progress-fill {
+    height: 100%;
+    background: var(--brown-deep);
+    border-radius: 4px;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .goals-next-stats {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    margin-top: 6px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .goal-card {
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.25s;
+  }
+  .goal-card.unlocked {
+    border-color: var(--gold-dark);
+    background: linear-gradient(135deg, rgba(201,169,97,0.18), rgba(212,182,121,0.08));
+    box-shadow: 0 2px 8px rgba(201,169,97,0.2);
+  }
+  .goal-card.claimed {
+    opacity: 0.65;
+    background: var(--parchment-dark);
+  }
+  .goal-icon {
+    font-size: 28px;
+    width: 44px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .goal-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .goal-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--brown-deep);
+    line-height: 1.2;
+    word-wrap: break-word;
+  }
+  .goal-card.claimed .goal-name {
+    text-decoration: line-through;
+    color: var(--brown-light);
+  }
+  .goal-points {
+    font-family: 'Heebo', sans-serif;
+    font-size: 12px;
+    color: var(--brown-light);
+    margin-top: 3px;
+  }
+  .goal-card.unlocked .goal-points {
+    color: var(--wine);
+    font-weight: 700;
+  }
+  .goal-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .goal-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--brown-light);
+    background: var(--parchment);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .goal-btn:hover {
+    transform: scale(1.08);
+    background: var(--parchment-light);
+  }
+  .goal-btn.claim {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+    color: var(--brown-deep);
+    font-weight: 700;
+  }
+  .goal-btn.delete {
+    border-color: var(--wine);
+    color: var(--wine);
+  }
+  .goal-btn.delete:hover {
+    background: var(--wine);
+    color: var(--parchment-light);
+  }
+
+  .add-goal-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--parchment);
+    border: 2px dashed var(--brown-light);
+    border-radius: 8px;
+    color: var(--brown);
+    font-family: 'Heebo', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+  .add-goal-btn:hover {
+    background: var(--parchment-light);
+    border-color: var(--gold-dark);
+    color: var(--brown-deep);
+  }
+
+  /* Goal form (in modal) */
+  .goal-form {
+    padding: 20px;
+  }
+  .goal-form-group {
+    margin-bottom: 16px;
+  }
+  .goal-form-label {
+    display: block;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--brown-deep);
+    margin-bottom: 6px;
+  }
+  .goal-form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--brown-light);
+    border-radius: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 16px;
+    color: var(--brown-deep);
+    background: var(--parchment-light);
+    box-sizing: border-box;
+  }
+  .goal-form-input:focus {
+    outline: none;
+    border-color: var(--gold-dark);
+  }
+  .goal-icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .goal-icon-option {
+    aspect-ratio: 1;
+    border: 1.5px solid var(--brown-light);
+    background: var(--parchment-light);
+    border-radius: 8px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .goal-icon-option:hover {
+    background: var(--parchment);
+    transform: scale(1.1);
+  }
+  .goal-icon-option.selected {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+    box-shadow: 0 2px 6px rgba(201,169,97,0.4);
+    transform: scale(1.05);
+  }
+  .goal-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 0 20px 20px;
+  }
+  .goal-form-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: all 0.2s;
+  }
+  .goal-form-btn.save {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border-color: var(--gold-dark);
+  }
+  .goal-form-btn.cancel {
+    background: transparent;
+    color: var(--brown);
+    border-color: var(--brown-light);
+  }
+
+  /* Celebration modal */
+  .celebration-modal {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .celebration-icon {
+    font-size: 72px;
+    margin-bottom: 16px;
+    animation: celebrationBounce 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes celebrationBounce {
+    0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+    60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .celebration-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--wine);
+    margin-bottom: 8px;
+  }
+  .celebration-points {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--gold-dark);
+    margin-bottom: 20px;
+  }
+  .celebration-prize-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    color: var(--brown);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .celebration-prize-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--brown-deep);
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(201,169,97,0.2), rgba(212,182,121,0.1));
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .celebration-btn {
+    padding: 14px 30px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(201,169,97,0.4);
+  }
+
+
+  /* === Progress Chart === */
+  .score-chart-section {
+    margin-top: 20px;
+    padding: 18px 14px 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold);
+  }
+  .score-chart-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--brown-deep);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .score-chart-subtitle {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    color: var(--brown-light);
+    text-align: center;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .chart-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    justify-content: center;
+  }
+  .chart-tab {
+    padding: 6px 14px;
+    background: var(--parchment);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 20px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    color: var(--brown);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .chart-tab.active {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border-color: var(--gold-dark);
+    color: var(--brown-deep);
+    font-weight: 700;
+  }
+  .chart-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+  .chart-svg {
+    width: 100%;
+    height: 180px;
+    display: block;
+  }
+  .chart-grid-line {
+    stroke: var(--brown-light);
+    stroke-width: 0.5;
+    stroke-dasharray: 2,3;
+    opacity: 0.4;
+  }
+  .chart-axis-label {
+    font-family: 'Heebo', sans-serif;
+    font-size: 9px;
+    fill: var(--brown-light);
+  }
+  .chart-area {
+    fill: url(#chartGradient);
+    opacity: 0.6;
+  }
+  .chart-line {
+    fill: none;
+    stroke: var(--gold-dark);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .chart-point {
+    fill: var(--wine);
+    stroke: var(--parchment-light);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .chart-point:hover {
+    r: 6;
+  }
+  .chart-point.today {
+    fill: var(--gold-dark);
+    stroke: var(--wine);
+    stroke-width: 2.5;
+  }
+  .chart-tooltip {
+    position: absolute;
+    background: var(--brown-deep);
+    color: var(--gold-light);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .chart-tooltip.active { opacity: 1; }
+  .chart-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: var(--brown-deep);
+  }
+  .chart-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--gold);
+  }
+  .chart-stat {
+    text-align: center;
+  }
+  .chart-stat-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 11px;
+    color: var(--brown-light);
+  }
+  .chart-stat-value {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--wine);
+    line-height: 1.2;
+  }
+  .chart-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--brown-light);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-style: italic;
+  }
+
+
+  /* === Edit Day Modal === */
+  .history-row { cursor: pointer; transition: all 0.2s; }
+  .history-row:hover {
+    background: var(--parchment);
+    border-color: var(--gold);
+    transform: translateX(-2px);
+  }
+  .history-row-edit-hint {
+    color: var(--brown-light);
+    font-size: 11px;
+    margin-right: 4px;
+    opacity: 0.6;
+  }
+
+  .edit-day-body {
+    padding: 16px;
+  }
+  .edit-day-date {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 17px;
+    color: var(--brown-deep);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .edit-day-score-preview {
+    text-align: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(201,169,97,0.18), rgba(212,182,121,0.08));
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+  }
+  .edit-day-score-label {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    color: var(--brown);
+    margin-bottom: 2px;
+  }
+  .edit-day-score-value {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--wine);
+    line-height: 1;
+  }
+  #editDayMitzvot .mitzva-card {
+    box-shadow: 0 1px 4px rgba(60,30,10,0.08);
+  }
+  .edit-day-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px;
+  }
+  .edit-day-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1.5px solid;
+    transition: all 0.2s;
+  }
+  .edit-day-btn.save {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border-color: var(--gold-dark);
+    flex: 2;
+  }
+  .edit-day-btn.save:hover {
+    box-shadow: 0 3px 10px rgba(201,169,97,0.4);
+  }
+  .edit-day-btn.delete {
+    background: transparent;
+    color: var(--wine);
+    border-color: var(--wine);
+  }
+  .edit-day-btn.delete:hover {
+    background: var(--wine);
+    color: var(--parchment-light);
+  }
+
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -785,6 +1986,10 @@
       חכמה
       <span class="tab-subtitle">515 תפילות</span>
     </button>
+    <button class="tab-btn" data-tab="score">
+      ניקוד יומי
+      <span class="tab-subtitle">מעקב מצוות</span>
+    </button>
   </div>
 
   <div class="progress-section">
@@ -825,6 +2030,67 @@
     </div>
   </div>
 
+  <div id="scoreView">
+    <div class="score-date-header">
+      <div class="date-label">תאריך</div>
+      <div class="date-value" id="scoreDateValue">—</div>
+    </div>
+
+    <div class="score-today-total">
+      <div class="label">סך הניקוד היום</div>
+      <div class="value"><span id="scoreToday">0</span></div>
+      <div class="max">מתוך <span id="scoreTodayMax">125</span></div>
+    </div>
+
+    <div id="mitzvotList"></div>
+
+    <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
+
+    <div class="score-summary-grid">
+      <div class="score-summary-card">
+        <div class="label">השבוע</div>
+        <div class="value" id="scoreWeek">0</div>
+      </div>
+      <div class="score-summary-card">
+        <div class="label">החודש</div>
+        <div class="value" id="scoreMonth">0</div>
+      </div>
+      <div class="score-summary-card">
+        <div class="label">סה״כ</div>
+        <div class="value" id="scoreTotal">0</div>
+      </div>
+    </div>
+
+    <div class="goals-section">
+      <div class="goals-section-title">🎁 יעדים ופרסים</div>
+      <div class="goals-section-subtitle">תן לעצמך משהו לחכות לו</div>
+      <div id="goalsNext"></div>
+      <div id="goalsList"></div>
+      <button class="add-goal-btn" id="addGoalBtn">+ הוסף יעד חדש</button>
+    </div>
+
+    <div class="score-chart-section">
+      <div class="score-chart-title">📈 גרף התקדמות</div>
+      <div class="score-chart-subtitle">צבירת נקודות לאורך זמן</div>
+      <div class="chart-tabs">
+        <button class="chart-tab" data-range="7">7 ימים</button>
+        <button class="chart-tab active" data-range="14">14 ימים</button>
+        <button class="chart-tab" data-range="30">30 ימים</button>
+      </div>
+      <div class="chart-container">
+        <div id="chartContent"></div>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+      <div class="chart-stats" id="chartStats"></div>
+    </div>
+
+    <div class="score-history">
+      <div class="score-history-title">היסטוריה · לחץ ליום לעריכה</div>
+      <div id="scoreHistory"></div>
+    </div>
+  </div>
+
+
   <footer>
     <span class="ornament">✦</span>
     מקובל בידינו שתפילה שיוצאת מהלב — נכנסת ללב
@@ -849,6 +2115,54 @@
       <button class="modal-close" id="favsClose">×</button>
     </div>
     <div class="modal-body" id="favsBody"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="goalEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="goalEditTitle">עריכת יעד</div>
+      <button class="modal-close" id="goalEditClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="goal-form">
+        <div class="goal-form-row">
+          <label class="goal-form-label">שם הפרס</label>
+          <input type="text" class="goal-form-input" id="goalNameInput" placeholder="למשל: ארטיק טוב, ספר חדש...">
+        </div>
+        <div class="goal-form-row">
+          <label class="goal-form-label">כמות נקודות</label>
+          <input type="number" class="goal-form-input" id="goalPointsInput" min="50" max="100000" step="50">
+        </div>
+        <div class="goal-form-row">
+          <label class="goal-form-label">בחר אייקון</label>
+          <div class="goal-icon-grid" id="goalIconGrid"></div>
+        </div>
+        <div class="goal-form-buttons">
+          <button class="goal-form-btn save" id="goalSaveBtn">שמור</button>
+          <button class="goal-form-btn cancel" id="goalCancelBtn">ביטול</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="goalCelebrationModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🎉 הגעת ליעד!</div>
+      <button class="modal-close" id="goalCelebClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="goal-celebration-icon" id="celebIcon">🥉</div>
+      <div class="goal-celebration-title" id="celebTitle">פרס</div>
+      <div class="goal-celebration-points" id="celebPoints">500 נקודות</div>
+      <div class="goal-celebration-text">הגעת ליעד שלך! עכשיו הזמן לממש את הפרס שעבדת עליו.</div>
+      <div class="goal-form-buttons">
+        <button class="goal-form-btn save" id="celebClaimBtn">✓ מימשתי את הפרס</button>
+        <button class="goal-form-btn cancel" id="celebLaterBtn">אחר כך</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4599,6 +5913,24 @@
         btn.classList.toggle('active', btn.dataset.tab === tabName);
       });
 
+      // Handle score tab specially
+      if (tabName === 'score') {
+        document.body.classList.add('score-mode');
+        const titleEl = document.getElementById('mainTitle');
+        const subtitleEl = document.getElementById('mainSubtitle');
+        const verseEl = document.getElementById('mainVerse');
+        if (titleEl) titleEl.textContent = 'ניקוד יומי';
+        if (subtitleEl) subtitleEl.textContent = 'מעקב מצוות וצבירת זכויות';
+        if (verseEl) verseEl.textContent = '״ויעקב הלך לדרכו ויפגעו בו מלאכי אלוהים״';
+        try { localStorage.setItem(STORAGE_KEY_TAB, tabName); } catch(e) {}
+        loadTodayState();
+        loadGoals();
+        renderScoreView();
+        return;
+      }
+
+      // Normal tabs
+      document.body.classList.remove('score-mode');
       const data = TABS_DATA[tabName];
       const titleEl = document.getElementById('mainTitle');
       const subtitleEl = document.getElementById('mainSubtitle');
@@ -4769,13 +6101,822 @@
     });
   });
 
-  document.getElementById('discoverBtn').addEventListener('click', discoverNew);
-  document.getElementById('archiveBtn').addEventListener('click', openArchive);
-  document.getElementById('archiveClose').addEventListener('click', () => document.getElementById('archiveModal').classList.remove('active'));
-  document.getElementById('archiveModal').addEventListener('click', (e) => {
-    if (e.target.id === 'archiveModal') document.getElementById('archiveModal').classList.remove('active');
-  });
 
+
+  // ============= GOALS / REWARDS SYSTEM =============
+  const GOALS_KEY = 'tefilot_goals_v1';
+  const GOAL_ICONS = ['🍦','📖','🍽️','🚗','🤝','⭐','🏆','🎁','🍕','☕','🎮','🎵','📚','💎','👑','🎨','🌟','🎯'];
+
+  const DEFAULT_GOALS = [
+    { id: 'g1', points: 500, name: 'ארטיק / קינוח קטן', icon: '🍦', claimed: false },
+    { id: 'g2', points: 1000, name: 'ספר קודש / קפה', icon: '📖', claimed: false },
+    { id: 'g3', points: 2000, name: 'ערב מסעדה עם טל', icon: '🍽️', claimed: false },
+    { id: 'g4', points: 3000, name: 'טיול משפחתי', icon: '🚗', claimed: false },
+    { id: 'g5', points: 5000, name: 'תרומה ע״ש המשפחה', icon: '🤝', claimed: false },
+    { id: 'g6', points: 7500, name: 'אבן דרך מיוחדת', icon: '⭐', claimed: false },
+    { id: 'g7', points: 10000, name: 'הישג גדול', icon: '🏆', claimed: false }
+  ];
+
+  let goalsState = [];
+  let editingGoalId = null;
+  let selectedIconForEdit = '🎁';
+  let lastTriggeredGoalId = null;
+
+  function loadGoals() {
+    try {
+      const raw = localStorage.getItem(GOALS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          goalsState = parsed;
+          return;
+        }
+      }
+    } catch(e) {}
+    // Initialize with defaults
+    goalsState = JSON.parse(JSON.stringify(DEFAULT_GOALS));
+    saveGoals();
+  }
+
+  function saveGoals() {
+    try { localStorage.setItem(GOALS_KEY, JSON.stringify(goalsState)); } catch(e) {}
+  }
+
+  function getTotalLifetimePoints() {
+    const history = loadHistory();
+    const today = getTodayDate();
+    let total = calculateTodayScore();
+    history.forEach(h => {
+      if (h.date !== today) total += h.score;
+    });
+    return total;
+  }
+
+  function renderGoals() {
+    // Sort by points ascending
+    goalsState.sort((a, b) => a.points - b.points);
+    const total = getTotalLifetimePoints();
+
+    // Find next unlocked goal
+    const nextGoal = goalsState.find(g => !g.claimed && total < g.points);
+    const nextEl = document.getElementById('goalsNext');
+    if (nextGoal) {
+      const remaining = nextGoal.points - total;
+      const prevThreshold = goalsState
+        .filter(g => g.points < nextGoal.points)
+        .reduce((max, g) => Math.max(max, g.points), 0);
+      const progressBase = Math.max(prevThreshold, 0);
+      const progressTotal = nextGoal.points - progressBase;
+      const progressCurrent = total - progressBase;
+      const pct = Math.max(0, Math.min(100, (progressCurrent / progressTotal) * 100));
+      nextEl.innerHTML = `
+        <div class="goals-next">
+          <div class="goals-next-label">היעד הבא</div>
+          <div class="goals-next-name">
+            <span style="font-size:26px">${nextGoal.icon}</span>
+            <span>${nextGoal.name}</span>
+          </div>
+          <div class="goals-next-progress">
+            <div class="goals-next-progress-fill" style="width: ${pct}%"></div>
+          </div>
+          <div class="goals-next-stats">עוד ${remaining} נקודות (${total} / ${nextGoal.points})</div>
+        </div>
+      `;
+    } else {
+      nextEl.innerHTML = '';
+    }
+
+    // Render all goals
+    const listEl = document.getElementById('goalsList');
+    listEl.innerHTML = goalsState.map(g => {
+      const unlocked = total >= g.points && !g.claimed;
+      const cls = g.claimed ? 'claimed' : (unlocked ? 'unlocked' : '');
+      return `
+        <div class="goal-card ${cls}" data-id="${g.id}">
+          <div class="goal-icon">${g.icon}</div>
+          <div class="goal-info">
+            <div class="goal-name">${g.name}</div>
+            <div class="goal-points">${g.points} נקודות${g.claimed ? ' · מומש ✓' : (unlocked ? ' · זמין!' : '')}</div>
+          </div>
+          <div class="goal-actions">
+            ${unlocked ? `<button class="goal-btn claim" data-action="claim" title="מימשתי">✓</button>` : ''}
+            <button class="goal-btn" data-action="edit" title="ערוך">✏️</button>
+            <button class="goal-btn delete" data-action="delete" title="מחק">×</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Attach listeners
+    listEl.querySelectorAll('.goal-card').forEach(card => {
+      const id = card.dataset.id;
+      const claimBtn = card.querySelector('[data-action="claim"]');
+      if (claimBtn) claimBtn.addEventListener('click', () => claimGoal(id));
+      card.querySelector('[data-action="edit"]').addEventListener('click', () => openGoalEdit(id));
+      card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteGoal(id));
+    });
+
+    // Check for newly unlocked goals (celebration)
+    checkForCelebration(total);
+  }
+
+  function checkForCelebration(total) {
+    // Find the highest unlocked-but-not-celebrated goal
+    const unlocked = goalsState.filter(g => total >= g.points && !g.claimed);
+    if (unlocked.length === 0) { lastTriggeredGoalId = null; return; }
+    // Get the highest threshold unlocked
+    unlocked.sort((a, b) => b.points - a.points);
+    const top = unlocked[0];
+    // Only celebrate if it's a new unlock since last render
+    if (top.id !== lastTriggeredGoalId) {
+      // Check if we previously knew this was locked (state in localStorage)
+      const seenKey = 'tefilot_goal_seen_' + top.id;
+      const seen = localStorage.getItem(seenKey);
+      if (!seen) {
+        try { localStorage.setItem(seenKey, '1'); } catch(e) {}
+        showGoalCelebration(top);
+      }
+      lastTriggeredGoalId = top.id;
+    }
+  }
+
+  function showGoalCelebration(goal) {
+    document.getElementById('celebIcon').textContent = goal.icon;
+    document.getElementById('celebTitle').textContent = goal.name;
+    document.getElementById('celebPoints').textContent = goal.points + ' נקודות';
+    document.getElementById('celebClaimBtn').onclick = () => {
+      claimGoal(goal.id);
+      document.getElementById('goalCelebrationModal').classList.remove('active');
+    };
+    document.getElementById('goalCelebrationModal').classList.add('active');
+  }
+
+  function claimGoal(id) {
+    const goal = goalsState.find(g => g.id === id);
+    if (goal) {
+      goal.claimed = true;
+      saveGoals();
+      renderGoals();
+    }
+  }
+
+  function deleteGoal(id) {
+    const goal = goalsState.find(g => g.id === id);
+    if (!goal) return;
+    if (!confirm(`למחוק את היעד "${goal.name}"?`)) return;
+    goalsState = goalsState.filter(g => g.id !== id);
+    saveGoals();
+    renderGoals();
+  }
+
+  function openGoalEdit(id) {
+    editingGoalId = id;
+    const goal = id ? goalsState.find(g => g.id === id) : null;
+    document.getElementById('goalEditTitle').textContent = goal ? 'ערוך יעד' : 'יעד חדש';
+    document.getElementById('goalNameInput').value = goal ? goal.name : '';
+    document.getElementById('goalPointsInput').value = goal ? goal.points : '';
+    selectedIconForEdit = goal ? goal.icon : '🎁';
+    renderIconGrid();
+    document.getElementById('goalEditModal').classList.add('active');
+  }
+
+  function renderIconGrid() {
+    const grid = document.getElementById('goalIconGrid');
+    grid.innerHTML = GOAL_ICONS.map(icon => `
+      <button class="goal-icon-option${icon === selectedIconForEdit ? ' selected' : ''}" data-icon="${icon}">${icon}</button>
+    `).join('');
+    grid.querySelectorAll('.goal-icon-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedIconForEdit = btn.dataset.icon;
+        renderIconGrid();
+      });
+    });
+  }
+
+  function saveGoalEdit() {
+    const name = document.getElementById('goalNameInput').value.trim();
+    const points = parseInt(document.getElementById('goalPointsInput').value, 10);
+    if (!name) { alert('נא להזין שם לפרס'); return; }
+    if (!points || points < 1) { alert('נא להזין מספר נקודות תקין'); return; }
+
+    if (editingGoalId) {
+      const goal = goalsState.find(g => g.id === editingGoalId);
+      if (goal) {
+        goal.name = name;
+        goal.points = points;
+        goal.icon = selectedIconForEdit;
+      }
+    } else {
+      const newId = 'g' + Date.now();
+      goalsState.push({ id: newId, points, name, icon: selectedIconForEdit, claimed: false });
+    }
+    saveGoals();
+    document.getElementById('goalEditModal').classList.remove('active');
+    renderGoals();
+  }
+
+  function addNewGoal() {
+    openGoalEdit(null);
+  }
+
+
+    // ============= SCORE TAB SYSTEM =============
+  const SCORE_KEY_HISTORY = 'tefilot_score_history_v1';
+  const SCORE_KEY_TODAY = 'tefilot_score_today_v1';
+
+  const MITZVOT = [
+    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true },
+    { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
+    { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false },
+    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false }
+  ];
+
+  let todayState = {};  // { date: 'YYYY-MM-DD', items: { shacharit: { done, minyan }, ... } }
+
+  function getTodayDate() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function formatHebrewDate(dateStr) {
+    try {
+      const d = new Date(dateStr);
+      const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+      const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+      return `יום ${days[d.getDay()]}, ${d.getDate()} ב${months[d.getMonth()]}`;
+    } catch(e) { return dateStr; }
+  }
+
+  function loadTodayState() {
+    try {
+      const raw = localStorage.getItem(SCORE_KEY_TODAY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // If saved date is not today, reset
+        if (parsed.date === getTodayDate()) {
+          todayState = parsed;
+          return;
+        }
+      }
+    } catch(e) {}
+    // Initialize fresh
+    todayState = { date: getTodayDate(), items: {} };
+    MITZVOT.forEach(m => {
+      todayState.items[m.id] = { done: false, minyan: false };
+    });
+  }
+
+  function saveTodayState() {
+    try {
+      localStorage.setItem(SCORE_KEY_TODAY, JSON.stringify(todayState));
+    } catch(e) {}
+  }
+
+  function calculateTodayScore() {
+    let total = 0;
+    MITZVOT.forEach(m => {
+      const item = todayState.items[m.id];
+      if (item && item.done) {
+        if (m.hasMinyan && item.minyan) {
+          total += m.points * 2;
+        } else {
+          total += m.points;
+        }
+      }
+    });
+    return total;
+  }
+
+  function calculateMaxScore() {
+    let max = 0;
+    MITZVOT.forEach(m => {
+      max += m.hasMinyan ? m.points * 2 : m.points;
+    });
+    return max;
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(SCORE_KEY_HISTORY);
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return [];
+  }
+
+  function saveHistory(history) {
+    try {
+      localStorage.setItem(SCORE_KEY_HISTORY, JSON.stringify(history));
+    } catch(e) {}
+  }
+
+  function renderScoreView() {
+    if (!todayState.date) loadTodayState();
+    // Check if date changed (passed midnight)
+    if (todayState.date !== getTodayDate()) {
+      loadTodayState();
+    }
+
+    document.getElementById('scoreDateValue').textContent = formatHebrewDate(todayState.date);
+    document.getElementById('scoreTodayMax').textContent = calculateMaxScore();
+
+    const list = document.getElementById('mitzvotList');
+    list.innerHTML = MITZVOT.map(m => {
+      const item = todayState.items[m.id] || { done: false, minyan: false };
+      const effectivePoints = (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+      return `
+        <div class="mitzva-card${item.done ? ' done' : ''}" data-id="${m.id}">
+          <div class="mitzva-row">
+            <div class="mitzva-icon">${m.icon}</div>
+            <div class="mitzva-info">
+              <div class="mitzva-name">${m.name}</div>
+              <div class="mitzva-points"><strong>${effectivePoints}</strong> נקודות${m.hasMinyan && item.minyan ? ' (×2 במניין)' : ''}</div>
+            </div>
+            <button class="mitzva-check" data-action="check" aria-label="סמן">
+              <svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>
+            </button>
+          </div>
+          ${m.hasMinyan ? `
+            <div class="minyan-toggle">
+              <div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div>
+              <label class="switch">
+                <input type="checkbox" data-action="minyan" ${item.minyan ? 'checked' : ''}>
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+
+    // Attach listeners
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => toggleMitzva(id));
+      const minyanInput = card.querySelector('[data-action="minyan"]');
+      if (minyanInput) {
+        minyanInput.addEventListener('change', () => toggleMinyan(id, minyanInput.checked));
+      }
+    });
+
+    document.getElementById('scoreToday').textContent = calculateTodayScore();
+    renderSummary();
+    renderHistory();
+    renderChart();
+    renderGoals();
+  }
+
+  function toggleMitzva(id) {
+    if (!todayState.items[id]) todayState.items[id] = { done: false, minyan: false };
+    todayState.items[id].done = !todayState.items[id].done;
+    saveTodayState();
+    renderScoreView();
+  }
+
+  function toggleMinyan(id, checked) {
+    if (!todayState.items[id]) todayState.items[id] = { done: false, minyan: false };
+    todayState.items[id].minyan = checked;
+    saveTodayState();
+    renderScoreView();
+  }
+
+  function endDay() {
+    const score = calculateTodayScore();
+    if (score === 0) {
+      alert('עוד לא סימנת כלום היום. סמן לפחות מצווה אחת לפני שמסיימים.');
+      return;
+    }
+    const history = loadHistory();
+    // Remove existing entry for today if exists (allow re-save)
+    const filtered = history.filter(h => h.date !== todayState.date);
+    filtered.push({
+      date: todayState.date,
+      score: score,
+      items: JSON.parse(JSON.stringify(todayState.items))
+    });
+    // Keep only last 90 days
+    filtered.sort((a, b) => a.date.localeCompare(b.date));
+    const trimmed = filtered.slice(-90);
+    saveHistory(trimmed);
+    alert(`היום נשמר! קיבלת ${score} נקודות 🎉`);
+    renderScoreView();
+  }
+
+  function renderSummary() {
+    const history = loadHistory();
+    const today = getTodayDate();
+    const todayScore = calculateTodayScore();
+
+    // Calculate week (last 7 days including today)
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 6);
+    const weekAgoStr = weekAgo.toISOString().slice(0, 10);
+    let weekScore = todayScore;
+    history.forEach(h => {
+      if (h.date >= weekAgoStr && h.date < today) weekScore += h.score;
+    });
+
+    // Calculate month (last 30 days)
+    const monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 29);
+    const monthAgoStr = monthAgo.toISOString().slice(0, 10);
+    let monthScore = todayScore;
+    history.forEach(h => {
+      if (h.date >= monthAgoStr && h.date < today) monthScore += h.score;
+    });
+
+    // Total
+    let totalScore = todayScore;
+    history.forEach(h => {
+      if (h.date !== today) totalScore += h.score;
+    });
+
+    document.getElementById('scoreWeek').textContent = weekScore;
+    document.getElementById('scoreMonth').textContent = monthScore;
+    document.getElementById('scoreTotal').textContent = totalScore;
+  }
+
+  function renderHistory() {
+    const history = loadHistory();
+    const today = getTodayDate();
+    // Include today if it has any progress
+    const todayScore = calculateTodayScore();
+    let allDays = [...history];
+    if (todayScore > 0 && !history.find(h => h.date === today)) {
+      allDays.push({ date: today, score: todayScore, items: todayState.items });
+    } else if (todayScore > 0) {
+      allDays = allDays.map(h => h.date === today ? { ...h, score: todayScore, items: todayState.items } : h);
+    }
+    const sorted = allDays.sort((a, b) => b.date.localeCompare(a.date)).slice(0, 14);
+    const container = document.getElementById('scoreHistory');
+    if (sorted.length === 0) {
+      container.innerHTML = '<div class="history-empty">עוד אין היסטוריה. סיים את היום הראשון!</div>';
+      return;
+    }
+    const max = calculateMaxScore();
+    container.innerHTML = sorted.map(h => {
+      const pct = Math.min(100, (h.score / max) * 100);
+      const isToday = h.date === today;
+      return `
+        <div class="history-row" data-date="${h.date}">
+          <div class="history-date">${formatHebrewDate(h.date)}${isToday ? ' · היום' : ''}</div>
+          <div class="history-bar"><div class="history-bar-fill" style="width: ${pct}%"></div></div>
+          <div class="history-score">${h.score}</div>
+          <div class="history-row-edit-hint">✏️</div>
+        </div>
+      `;
+    }).join('');
+    // Attach click handlers
+    container.querySelectorAll('.history-row').forEach(row => {
+      row.addEventListener('click', () => openEditDay(row.dataset.date));
+    });
+  }
+
+
+  // ============= PROGRESS CHART =============
+  let chartRange = 14; // default
+
+  function renderChart() {
+    const content = document.getElementById('chartContent');
+    const statsEl = document.getElementById('chartStats');
+    const tooltip = document.getElementById('chartTooltip');
+    if (!content) return;
+
+    const history = loadHistory();
+    const today = getTodayDate();
+    const todayScore = calculateTodayScore();
+
+    // Build complete data array (including days without entries = 0)
+    const days = [];
+    for (let i = chartRange - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      let score = 0;
+      if (dateStr === today) {
+        score = todayScore;
+      } else {
+        const entry = history.find(h => h.date === dateStr);
+        if (entry) score = entry.score;
+      }
+      days.push({ date: dateStr, score, isToday: dateStr === today });
+    }
+
+    // Check if any data exists
+    const hasData = days.some(d => d.score > 0);
+    if (!hasData) {
+      content.innerHTML = '<div class="chart-empty">עוד אין מספיק נתונים.<br>סיים יום אחד לפחות כדי לראות את הגרף.</div>';
+      statsEl.innerHTML = '';
+      return;
+    }
+
+    // Chart dimensions
+    const W = 320;  // viewBox width
+    const H = 180;
+    const padTop = 16;
+    const padBottom = 28;
+    const padLeft = 30;
+    const padRight = 10;
+    const chartW = W - padLeft - padRight;
+    const chartH = H - padTop - padBottom;
+
+    const max = calculateMaxScore();
+    // Use max possible score as ceiling, but if exceeded use actual max
+    const yMax = Math.max(max, ...days.map(d => d.score));
+    const yStep = Math.ceil(yMax / 4 / 25) * 25; // round to 25
+    const yCeil = yStep * 4 || 100;
+
+    // Calculate positions
+    const stepX = chartW / Math.max(1, days.length - 1);
+    const points = days.map((d, i) => ({
+      x: padLeft + i * stepX,
+      y: padTop + chartH - (d.score / yCeil) * chartH,
+      score: d.score,
+      date: d.date,
+      isToday: d.isToday
+    }));
+
+    // Build SVG
+    const linePath = points.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+    const areaPath = linePath + ' L' + points[points.length-1].x.toFixed(1) + ',' + (padTop + chartH) + ' L' + points[0].x.toFixed(1) + ',' + (padTop + chartH) + ' Z';
+
+    // Grid lines (y-axis)
+    let gridLines = '';
+    for (let i = 0; i <= 4; i++) {
+      const y = padTop + (chartH * i / 4);
+      const label = yCeil - (yCeil * i / 4);
+      gridLines += `<line class="chart-grid-line" x1="${padLeft}" y1="${y}" x2="${W - padRight}" y2="${y}"/>`;
+      gridLines += `<text class="chart-axis-label" x="${padLeft - 4}" y="${y + 3}" text-anchor="end">${Math.round(label)}</text>`;
+    }
+
+    // X-axis labels (show every Nth day depending on range)
+    const xLabelEvery = chartRange <= 7 ? 1 : (chartRange <= 14 ? 2 : 5);
+    let xLabels = '';
+    points.forEach((p, i) => {
+      if (i % xLabelEvery === 0 || i === points.length - 1) {
+        const d = new Date(p.date);
+        const txt = d.getDate() + '/' + (d.getMonth() + 1);
+        xLabels += `<text class="chart-axis-label" x="${p.x}" y="${H - 12}" text-anchor="middle">${txt}</text>`;
+      }
+    });
+
+    // Points
+    let circles = '';
+    points.forEach((p, i) => {
+      circles += `<circle class="chart-point${p.isToday ? ' today' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" data-idx="${i}"/>`;
+    });
+
+    content.innerHTML = `
+      <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c9a961" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#c9a961" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${gridLines}
+        ${xLabels}
+        <path class="chart-area" d="${areaPath}"/>
+        <path class="chart-line" d="${linePath}"/>
+        ${circles}
+      </svg>
+    `;
+
+    // Tooltip interactions
+    content.querySelectorAll('.chart-point').forEach(circle => {
+      circle.addEventListener('mouseenter', (e) => {
+        const idx = parseInt(circle.dataset.idx, 10);
+        const p = points[idx];
+        const d = new Date(p.date);
+        const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${p.score} נק׳`;
+        const svgRect = content.querySelector('svg').getBoundingClientRect();
+        const containerRect = content.parentElement.getBoundingClientRect();
+        const scaleX = svgRect.width / W;
+        const scaleY = svgRect.height / H;
+        tooltip.style.left = (svgRect.left - containerRect.left + p.x * scaleX) + 'px';
+        tooltip.style.top = (svgRect.top - containerRect.top + p.y * scaleY - 8) + 'px';
+        tooltip.classList.add('active');
+      });
+      circle.addEventListener('mouseleave', () => tooltip.classList.remove('active'));
+      // Also support touch (tap)
+      circle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(circle.dataset.idx, 10);
+        const p = points[idx];
+        const d = new Date(p.date);
+        const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${p.score} נק׳`;
+        const svgRect = content.querySelector('svg').getBoundingClientRect();
+        const containerRect = content.parentElement.getBoundingClientRect();
+        const scaleX = svgRect.width / W;
+        const scaleY = svgRect.height / H;
+        tooltip.style.left = (svgRect.left - containerRect.left + p.x * scaleX) + 'px';
+        tooltip.style.top = (svgRect.top - containerRect.top + p.y * scaleY - 8) + 'px';
+        tooltip.classList.add('active');
+        setTimeout(() => tooltip.classList.remove('active'), 2000);
+      });
+    });
+
+    // Calculate stats
+    const totalRange = days.reduce((s, d) => s + d.score, 0);
+    const daysWithScore = days.filter(d => d.score > 0).length;
+    const avg = daysWithScore > 0 ? Math.round(totalRange / daysWithScore) : 0;
+    const best = Math.max(...days.map(d => d.score));
+    // Streak: consecutive days ending today with score > 0
+    let streak = 0;
+    for (let i = days.length - 1; i >= 0; i--) {
+      if (days[i].score > 0) streak++;
+      else if (i !== days.length - 1) break; // allow today to be 0 if no marking yet
+      else continue;
+    }
+
+    statsEl.innerHTML = `
+      <div class="chart-stat">
+        <div class="chart-stat-value">${avg}</div>
+        <div class="chart-stat-label">ממוצע יומי</div>
+      </div>
+      <div class="chart-stat">
+        <div class="chart-stat-value">${best}</div>
+        <div class="chart-stat-label">שיא</div>
+      </div>
+      <div class="chart-stat">
+        <div class="chart-stat-value">${streak}</div>
+        <div class="chart-stat-label">רצף ימים</div>
+      </div>
+      <div class="chart-stat">
+        <div class="chart-stat-value">${totalRange}</div>
+        <div class="chart-stat-label">סה״כ</div>
+      </div>
+    `;
+  }
+
+
+  // ============= EDIT DAY =============
+  let editingDayDate = null;
+  let editingDayItems = {};
+
+  function openEditDay(dateStr) {
+    editingDayDate = dateStr;
+    const today = getTodayDate();
+
+    // Get the items for this day
+    if (dateStr === today) {
+      editingDayItems = JSON.parse(JSON.stringify(todayState.items));
+    } else {
+      const history = loadHistory();
+      const entry = history.find(h => h.date === dateStr);
+      if (entry && entry.items) {
+        editingDayItems = JSON.parse(JSON.stringify(entry.items));
+      } else {
+        // Initialize empty
+        editingDayItems = {};
+        MITZVOT.forEach(m => {
+          editingDayItems[m.id] = { done: false, minyan: false };
+        });
+      }
+    }
+
+    // Make sure all mitzvot exist (in case MITZVOT changed)
+    MITZVOT.forEach(m => {
+      if (!editingDayItems[m.id]) editingDayItems[m.id] = { done: false, minyan: false };
+    });
+
+    document.getElementById('editDayDate').textContent = formatHebrewDate(dateStr) + (dateStr === today ? ' · היום' : '');
+    renderEditDayMitzvot();
+    document.getElementById('editDayModal').classList.add('active');
+  }
+
+  function calculateEditingScore() {
+    let total = 0;
+    MITZVOT.forEach(m => {
+      const item = editingDayItems[m.id];
+      if (item && item.done) {
+        if (m.hasMinyan && item.minyan) total += m.points * 2;
+        else total += m.points;
+      }
+    });
+    return total;
+  }
+
+  function renderEditDayMitzvot() {
+    const list = document.getElementById('editDayMitzvot');
+    list.innerHTML = MITZVOT.map(m => {
+      const item = editingDayItems[m.id] || { done: false, minyan: false };
+      const effectivePoints = (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+      return `
+        <div class="mitzva-card${item.done ? ' done' : ''}" data-id="${m.id}">
+          <div class="mitzva-row">
+            <div class="mitzva-icon">${m.icon}</div>
+            <div class="mitzva-info">
+              <div class="mitzva-name">${m.name}</div>
+              <div class="mitzva-points"><strong>${effectivePoints}</strong> נקודות${m.hasMinyan && item.minyan ? ' (×2 במניין)' : ''}</div>
+            </div>
+            <button class="mitzva-check" data-action="check" aria-label="סמן">
+              <svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>
+            </button>
+          </div>
+          ${m.hasMinyan ? `
+            <div class="minyan-toggle">
+              <div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div>
+              <label class="switch">
+                <input type="checkbox" data-action="minyan" ${item.minyan ? 'checked' : ''}>
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
+
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => toggleEditMitzva(id));
+      const minyanInput = card.querySelector('[data-action="minyan"]');
+      if (minyanInput) {
+        minyanInput.addEventListener('change', () => toggleEditMinyan(id, minyanInput.checked));
+      }
+    });
+
+    document.getElementById('editDayScore').textContent = calculateEditingScore();
+  }
+
+  function toggleEditMitzva(id) {
+    if (!editingDayItems[id]) editingDayItems[id] = { done: false, minyan: false };
+    editingDayItems[id].done = !editingDayItems[id].done;
+    renderEditDayMitzvot();
+  }
+
+  function toggleEditMinyan(id, checked) {
+    if (!editingDayItems[id]) editingDayItems[id] = { done: false, minyan: false };
+    editingDayItems[id].minyan = checked;
+    renderEditDayMitzvot();
+  }
+
+  function saveEditDay() {
+    if (!editingDayDate) return;
+    const score = calculateEditingScore();
+    const today = getTodayDate();
+
+    if (editingDayDate === today) {
+      // Update today's state
+      todayState.items = JSON.parse(JSON.stringify(editingDayItems));
+      saveTodayState();
+    } else {
+      // Update history
+      const history = loadHistory();
+      const filtered = history.filter(h => h.date !== editingDayDate);
+      if (score > 0) {
+        filtered.push({
+          date: editingDayDate,
+          score: score,
+          items: JSON.parse(JSON.stringify(editingDayItems))
+        });
+      }
+      filtered.sort((a, b) => a.date.localeCompare(b.date));
+      saveHistory(filtered.slice(-90));
+    }
+
+    document.getElementById('editDayModal').classList.remove('active');
+    renderScoreView();
+  }
+
+  function deleteEditDay() {
+    if (!editingDayDate) return;
+    if (!confirm('למחוק את כל הסימונים של יום זה?')) return;
+    const today = getTodayDate();
+
+    if (editingDayDate === today) {
+      MITZVOT.forEach(m => {
+        todayState.items[m.id] = { done: false, minyan: false };
+      });
+      saveTodayState();
+    } else {
+      const history = loadHistory();
+      const filtered = history.filter(h => h.date !== editingDayDate);
+      saveHistory(filtered);
+    }
+
+    document.getElementById('editDayModal').classList.remove('active');
+    renderScoreView();
+  }
+
+    function setupChartTabs() {
+    document.querySelectorAll('.chart-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        chartRange = parseInt(tab.dataset.range, 10);
+        renderChart();
+      });
+    });
+  }
+
+
+    document.getElementById('discoverBtn').addEventListener('click', discoverNew);
   document.getElementById('favsBtn').addEventListener('click', openFavs);
   document.getElementById('favsClose').addEventListener('click', () => document.getElementById('favsModal').classList.remove('active'));
   document.getElementById('favsModal').addEventListener('click', (e) => {
@@ -4786,9 +6927,33 @@
   document.getElementById('confirmNo').addEventListener('click', cancelReset);
   document.getElementById('celebBtn').addEventListener('click', () => document.getElementById('celebration').classList.remove('active'));
 
+
+  // Auto-refresh date when user returns to app
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && currentTab === 'score') {
+      const stillSameDate = todayState.date === getTodayDate();
+      if (!stillSameDate) {
+        loadTodayState();
+      }
+      renderScoreView();
+    }
+  });
+
   try {
     const savedTab = localStorage.getItem(STORAGE_KEY_TAB);
-    if (savedTab && TABS_DATA[savedTab]) {
+    if (savedTab === 'score') {
+      currentTab = 'score';
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === 'score');
+      });
+      document.body.classList.add('score-mode');
+      document.getElementById('mainTitle').textContent = 'ניקוד יומי';
+      document.getElementById('mainSubtitle').textContent = 'מעקב מצוות וצבירת זכויות';
+      document.getElementById('mainVerse').textContent = '״ויעקב הלך לדרכו ויפגעו בו מלאכי אלוהים״';
+      loadTodayState();
+      loadGoals();
+      renderScoreView();
+    } else if (savedTab && TABS_DATA[savedTab]) {
       currentTab = savedTab;
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === savedTab);
@@ -4797,13 +6962,43 @@
       document.getElementById('mainTitle').textContent = data.title;
       document.getElementById('mainSubtitle').textContent = data.subtitle;
       document.getElementById('mainVerse').textContent = data.verse;
+      loadState();
+      updateStats();
+      renderPrayers();
+    } else {
+      loadState();
+      updateStats();
+      renderPrayers();
     }
-  } catch(e) {}
-
-  loadState();
-  updateStats();
-  renderPrayers();
+  } catch(e) {
+    loadState();
+    updateStats();
+    renderPrayers();
+  }
 </script>
+
+
+
+<div class="modal-backdrop" id="editDayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">עריכת יום</div>
+      <button class="modal-close" id="editDayClose">×</button>
+    </div>
+    <div class="edit-day-body">
+      <div class="edit-day-date" id="editDayDate">—</div>
+      <div class="edit-day-score-preview">
+        <div class="edit-day-score-label">נקודות ביום זה</div>
+        <div class="edit-day-score-value" id="editDayScore">0</div>
+      </div>
+      <div id="editDayMitzvot"></div>
+    </div>
+    <div class="edit-day-actions">
+      <button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button>
+      <button class="edit-day-btn save" id="editDaySave">שמור שינויים</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
