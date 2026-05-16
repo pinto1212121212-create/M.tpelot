@@ -2180,7 +2180,7 @@
 <div class="celebration" id="celebration">
   <div class="celebration-card">
     <div class="celebration-icon">✦</div>
-    <div class="celebration-title" id="celebTitle">כל הכבוד!</div>
+    <div class="celebration-title" id="celebMainTitle">כל הכבוד!</div>
     <div class="celebration-num" id="celebNum"></div>
     <div class="celebration-text" id="celebText"></div>
     <button class="celebration-btn" id="celebBtn">המשך</button>
@@ -5875,7 +5875,7 @@
   }
 
   function showCelebration(num, info) {
-    document.getElementById('celebTitle').textContent = info.title;
+    document.getElementById('celebMainTitle').textContent = info.title;
     document.getElementById('celebNum').textContent = toGematria(num);
     document.getElementById('celebText').textContent = info.text;
     const cel = document.getElementById('celebration');
@@ -6922,10 +6922,45 @@
   document.getElementById('favsModal').addEventListener('click', (e) => {
     if (e.target.id === 'favsModal') document.getElementById('favsModal').classList.remove('active');
   });
+  document.getElementById('archiveBtn').addEventListener('click', openArchive);
+  document.getElementById('archiveClose').addEventListener('click', () => document.getElementById('archiveModal').classList.remove('active'));
+  document.getElementById('archiveModal').addEventListener('click', (e) => {
+    if (e.target.id === 'archiveModal') document.getElementById('archiveModal').classList.remove('active');
+  });
   document.getElementById('resetBtn').addEventListener('click', requestReset);
   document.getElementById('confirmYes').addEventListener('click', confirmReset);
   document.getElementById('confirmNo').addEventListener('click', cancelReset);
   document.getElementById('celebBtn').addEventListener('click', () => document.getElementById('celebration').classList.remove('active'));
+
+  // ===== Score tab buttons =====
+  document.getElementById('endDayBtn').addEventListener('click', endDay);
+
+  // ===== Goals buttons =====
+  document.getElementById('addGoalBtn').addEventListener('click', addNewGoal);
+  document.getElementById('goalSaveBtn').addEventListener('click', saveGoalEdit);
+  document.getElementById('goalCancelBtn').addEventListener('click', () => document.getElementById('goalEditModal').classList.remove('active'));
+  document.getElementById('goalEditClose').addEventListener('click', () => document.getElementById('goalEditModal').classList.remove('active'));
+  document.getElementById('goalEditModal').addEventListener('click', (e) => {
+    if (e.target.id === 'goalEditModal') document.getElementById('goalEditModal').classList.remove('active');
+  });
+
+  // ===== Goal celebration modal =====
+  document.getElementById('goalCelebClose').addEventListener('click', () => document.getElementById('goalCelebrationModal').classList.remove('active'));
+  document.getElementById('celebLaterBtn').addEventListener('click', () => document.getElementById('goalCelebrationModal').classList.remove('active'));
+  document.getElementById('goalCelebrationModal').addEventListener('click', (e) => {
+    if (e.target.id === 'goalCelebrationModal') document.getElementById('goalCelebrationModal').classList.remove('active');
+  });
+
+  // ===== Edit day modal =====
+  document.getElementById('editDayClose').addEventListener('click', () => document.getElementById('editDayModal').classList.remove('active'));
+  document.getElementById('editDaySave').addEventListener('click', saveEditDay);
+  document.getElementById('editDayDelete').addEventListener('click', deleteEditDay);
+  document.getElementById('editDayModal').addEventListener('click', (e) => {
+    if (e.target.id === 'editDayModal') document.getElementById('editDayModal').classList.remove('active');
+  });
+
+  // ===== Chart range tabs (7/14/30 days) =====
+  setupChartTabs();
 
 
   // Auto-refresh date when user returns to app
