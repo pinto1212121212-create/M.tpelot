@@ -2376,6 +2376,27 @@
   </div>
 </div>
 
+<div class="modal-backdrop" id="editDayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">עריכת יום</div>
+      <button class="modal-close" id="editDayClose">×</button>
+    </div>
+    <div class="edit-day-body">
+      <div class="edit-day-date" id="editDayDate">—</div>
+      <div class="edit-day-score-preview">
+        <div class="edit-day-score-label">נקודות ביום זה</div>
+        <div class="edit-day-score-value" id="editDayScore">0</div>
+      </div>
+      <div id="editDayMitzvot"></div>
+    </div>
+    <div class="edit-day-actions">
+      <button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button>
+      <button class="edit-day-btn save" id="editDaySave">שמור שינויים</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ============= TEFILOT POOL (1-30) =============
   const TEFILOT = [
@@ -7287,29 +7308,6 @@
     renderPrayers();
   }
 </script>
-
-
-
-<div class="modal-backdrop" id="editDayModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">עריכת יום</div>
-      <button class="modal-close" id="editDayClose">×</button>
-    </div>
-    <div class="edit-day-body">
-      <div class="edit-day-date" id="editDayDate">—</div>
-      <div class="edit-day-score-preview">
-        <div class="edit-day-score-label">נקודות ביום זה</div>
-        <div class="edit-day-score-value" id="editDayScore">0</div>
-      </div>
-      <div id="editDayMitzvot"></div>
-    </div>
-    <div class="edit-day-actions">
-      <button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button>
-      <button class="edit-day-btn save" id="editDaySave">שמור שינויים</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
