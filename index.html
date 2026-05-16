@@ -790,6 +790,183 @@
     font-style: italic;
   }
 
+  /* === Journal (Detailed Log) === */
+  .journal-section {
+    margin: 24px 0 10px;
+  }
+  .journal-section-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--brown-deep);
+    margin-bottom: 4px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--gold);
+  }
+  .journal-section-subtitle {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown-light);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .journal-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .journal-filter-btn {
+    padding: 6px 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 16px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .journal-filter-btn:hover {
+    border-color: var(--gold);
+  }
+  .journal-filter-btn.active {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border-color: var(--gold-dark);
+    font-weight: 600;
+  }
+  .journal-list {
+    max-height: 520px;
+    overflow-y: auto;
+    padding-left: 4px;
+    padding-right: 2px;
+    margin: 0 -2px;
+  }
+  .journal-list::-webkit-scrollbar { width: 6px; }
+  .journal-list::-webkit-scrollbar-track {
+    background: var(--parchment-dark);
+    border-radius: 3px;
+  }
+  .journal-list::-webkit-scrollbar-thumb {
+    background: var(--gold-dark);
+    border-radius: 3px;
+  }
+  .journal-entry {
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-family: 'Frank Ruhl Libre', serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .journal-entry:hover {
+    border-color: var(--gold);
+    transform: translateX(-2px);
+    box-shadow: 0 2px 8px rgba(201,169,97,0.15);
+  }
+  .journal-entry.today {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(201,169,97,0.10), rgba(212,182,121,0.05));
+    box-shadow: 0 2px 8px rgba(201,169,97,0.18);
+  }
+  .journal-entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--gold);
+    gap: 8px;
+  }
+  .journal-entry-date {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--brown-deep);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .journal-entry-today-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--gold);
+    color: var(--brown-deep);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .journal-entry-score {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--wine);
+    white-space: nowrap;
+  }
+  .journal-mitzvot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .journal-mitzva-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 8px;
+    font-size: 14px;
+    color: var(--brown);
+    background: rgba(255,250,240,0.5);
+    border-radius: 5px;
+  }
+  .journal-mitzva-item-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .journal-mitzva-item-name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .journal-mitzva-item-name .minyan-mark {
+    font-size: 11px;
+    color: var(--gold-dark);
+    font-weight: 600;
+    background: rgba(201,169,97,0.15);
+    padding: 1px 6px;
+    border-radius: 8px;
+  }
+  .journal-mitzva-item-points {
+    color: var(--wine);
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .journal-entry-empty {
+    font-style: italic;
+    color: var(--brown-light);
+    font-size: 13px;
+    padding: 6px;
+    text-align: center;
+  }
+  .journal-empty {
+    text-align: center;
+    padding: 24px 12px;
+    color: var(--brown-light);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-style: italic;
+    background: var(--parchment-light);
+    border: 1px dashed var(--brown-light);
+    border-radius: 8px;
+  }
+
 
   /* === Goals System === */
   .goals-section {
@@ -2087,6 +2264,18 @@
     <div class="score-history">
       <div class="score-history-title">היסטוריה · לחץ ליום לעריכה</div>
       <div id="scoreHistory"></div>
+    </div>
+
+    <div class="journal-section">
+      <div class="journal-section-title">📖 יומן מפורט</div>
+      <div class="journal-section-subtitle">כל מה שעשית — לפי יום, מהאחרון לישן. לחץ על יום כדי לערוך.</div>
+      <div class="journal-controls">
+        <button class="journal-filter-btn active" data-filter="all">הכל</button>
+        <button class="journal-filter-btn" data-filter="week">שבוע</button>
+        <button class="journal-filter-btn" data-filter="month">חודש</button>
+        <button class="journal-filter-btn" data-filter="active">רק ימים עם פעילות</button>
+      </div>
+      <div class="journal-list" id="journalList"></div>
     </div>
   </div>
 
@@ -6465,8 +6654,92 @@
     document.getElementById('scoreToday').textContent = calculateTodayScore();
     renderSummary();
     renderHistory();
+    renderJournal();
     renderChart();
     renderGoals();
+  }
+
+  // ============= JOURNAL =============
+  let journalFilter = 'all';
+
+  function renderJournal() {
+    const container = document.getElementById('journalList');
+    if (!container) return;
+    const history = loadHistory();
+    const today = getTodayDate();
+    const todayScore = calculateTodayScore();
+    const todayHasItems = todayState && todayState.items &&
+      Object.values(todayState.items).some(it => it && it.done);
+
+    let allDays = history.filter(h => h.date !== today);
+    if (todayScore > 0 || todayHasItems) {
+      allDays.push({ date: today, score: todayScore, items: todayState.items });
+    }
+
+    if (journalFilter === 'week' || journalFilter === 'month') {
+      const days = journalFilter === 'week' ? 6 : 29;
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      const cutoffStr = cutoff.toISOString().slice(0, 10);
+      allDays = allDays.filter(h => h.date >= cutoffStr);
+    } else if (journalFilter === 'active') {
+      allDays = allDays.filter(h => h.score > 0);
+    }
+
+    const sorted = allDays.sort((a, b) => b.date.localeCompare(a.date));
+
+    if (sorted.length === 0) {
+      container.innerHTML = '<div class="journal-empty">עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.</div>';
+      return;
+    }
+
+    container.innerHTML = sorted.map(h => {
+      const isToday = h.date === today;
+      const items = h.items || {};
+      const doneMitzvot = MITZVOT.filter(m => items[m.id] && items[m.id].done);
+
+      const mitzvotHtml = doneMitzvot.length > 0
+        ? doneMitzvot.map(m => {
+            const item = items[m.id];
+            const withMinyan = m.hasMinyan && item.minyan;
+            const points = withMinyan ? m.points * 2 : m.points;
+            const minyanMark = withMinyan ? '<span class="minyan-mark">×2 במניין</span>' : '';
+            return `
+              <div class="journal-mitzva-item">
+                <div class="journal-mitzva-item-icon">${m.icon}</div>
+                <div class="journal-mitzva-item-name">${m.name}${minyanMark}</div>
+                <div class="journal-mitzva-item-points">+${points}</div>
+              </div>
+            `;
+          }).join('')
+        : '<div class="journal-entry-empty">ללא סימונים ביום זה</div>';
+
+      const todayBadge = isToday ? '<span class="journal-entry-today-badge">היום</span>' : '';
+      return `
+        <div class="journal-entry${isToday ? ' today' : ''}" data-date="${h.date}">
+          <div class="journal-entry-header">
+            <div class="journal-entry-date">${formatHebrewDate(h.date)}${todayBadge}</div>
+            <div class="journal-entry-score">${h.score} נק׳</div>
+          </div>
+          <div class="journal-mitzvot-list">${mitzvotHtml}</div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.journal-entry').forEach(entry => {
+      entry.addEventListener('click', () => openEditDay(entry.dataset.date));
+    });
+  }
+
+  function setupJournalFilters() {
+    document.querySelectorAll('.journal-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.journal-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        journalFilter = btn.dataset.filter;
+        renderJournal();
+      });
+    });
   }
 
   function toggleMitzva(id) {
@@ -6961,6 +7234,9 @@
 
   // ===== Chart range tabs (7/14/30 days) =====
   setupChartTabs();
+
+  // ===== Journal filters =====
+  setupJournalFilters();
 
 
   // Auto-refresh date when user returns to app
