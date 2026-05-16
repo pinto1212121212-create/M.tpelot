@@ -967,6 +967,234 @@
     border-radius: 8px;
   }
 
+  /* === Journal CRM: stats, search, perfect badge, notes === */
+  .journal-stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+    padding: 12px 8px;
+    background: linear-gradient(135deg, rgba(201,169,97,0.12), rgba(212,182,121,0.05));
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+  }
+  .journal-stat {
+    text-align: center;
+    font-family: 'Frank Ruhl Libre', serif;
+  }
+  .journal-stat-value {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--wine);
+    line-height: 1;
+  }
+  .journal-stat-label {
+    font-size: 11px;
+    color: var(--brown);
+    margin-top: 4px;
+    line-height: 1.2;
+  }
+
+  .journal-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .journal-search {
+    flex: 1;
+    min-width: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .journal-search input {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown-deep);
+    direction: rtl;
+    text-align: right;
+    box-sizing: border-box;
+  }
+  .journal-search input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .journal-clear-search {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--brown-light);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 2px 8px;
+    line-height: 1;
+    display: none;
+  }
+  .journal-clear-search.active {
+    display: inline-block;
+  }
+  .journal-clear-search:hover {
+    color: var(--wine);
+  }
+  .journal-export-btn {
+    padding: 8px 14px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 6px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown-deep);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .journal-export-btn:hover {
+    border-color: var(--gold);
+    background: var(--parchment);
+  }
+
+  .journal-entry.perfect {
+    border-color: var(--gold-dark);
+    background: linear-gradient(135deg, rgba(201,169,97,0.16), rgba(212,182,121,0.08));
+    box-shadow: 0 3px 12px rgba(201,169,97,0.22);
+  }
+  .journal-perfect-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #c9a961, #d4b679);
+    color: var(--brown-deep);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .journal-mitzva-item.skipped {
+    background: rgba(120,80,60,0.04);
+    opacity: 0.6;
+  }
+  .journal-mitzva-item.skipped .journal-mitzva-item-icon {
+    filter: grayscale(0.6);
+  }
+  .journal-mitzva-item.skipped .journal-mitzva-item-points {
+    color: var(--brown-light);
+  }
+  .journal-mitzva-status {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .journal-mitzva-status.done {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+  }
+  .journal-mitzva-status.skipped {
+    background: var(--parchment-dark);
+    color: var(--brown-light);
+    border: 1px solid var(--brown-light);
+  }
+
+  .journal-note-section {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--gold);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .journal-note-icon {
+    font-size: 14px;
+    color: var(--brown);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .journal-note-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--brown-deep);
+    font-style: italic;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+  .journal-note-empty {
+    flex: 1;
+    font-size: 12px;
+    color: var(--brown-light);
+    font-style: italic;
+  }
+  .journal-note-edit {
+    background: transparent;
+    border: 1px solid var(--brown-light);
+    color: var(--brown);
+    cursor: pointer;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-family: 'Frank Ruhl Libre', serif;
+  }
+  .journal-note-edit:hover {
+    background: var(--parchment);
+    color: var(--wine);
+    border-color: var(--gold);
+  }
+
+  /* === Note editor modal === */
+  .note-editor-textarea {
+    width: 100%;
+    min-height: 130px;
+    padding: 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px;
+    color: var(--brown-deep);
+    direction: rtl;
+    text-align: right;
+    resize: vertical;
+    box-sizing: border-box;
+    line-height: 1.5;
+  }
+  .note-editor-textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .note-editor-date {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown);
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .note-editor-counter {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 11px;
+    color: var(--brown-light);
+    margin-top: 6px;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+
 
   /* === Goals System === */
   .goals-section {
@@ -2268,13 +2496,27 @@
 
     <div class="journal-section">
       <div class="journal-section-title">📖 יומן מפורט</div>
-      <div class="journal-section-subtitle">כל מה שעשית — לפי יום, מהאחרון לישן. לחץ על יום כדי לערוך.</div>
+      <div class="journal-section-subtitle">היסטוריה מלאה — סנן, חפש, הוסף הערות לכל יום.</div>
+
+      <div class="journal-stats-bar" id="journalStatsBar"></div>
+
       <div class="journal-controls">
         <button class="journal-filter-btn active" data-filter="all">הכל</button>
         <button class="journal-filter-btn" data-filter="week">שבוע</button>
         <button class="journal-filter-btn" data-filter="month">חודש</button>
-        <button class="journal-filter-btn" data-filter="active">רק ימים עם פעילות</button>
+        <button class="journal-filter-btn" data-filter="active">פעיל</button>
+        <button class="journal-filter-btn" data-filter="perfect">⭐ מושלם</button>
+        <button class="journal-filter-btn" data-filter="notes">📝 עם הערות</button>
       </div>
+
+      <div class="journal-tools">
+        <div class="journal-search">
+          <input type="date" id="journalDateSearch" aria-label="חיפוש לפי תאריך" />
+          <button class="journal-clear-search" id="journalClearSearch" type="button" title="נקה חיפוש">×</button>
+        </div>
+        <button class="journal-export-btn" id="journalExportBtn" type="button">⤓ ייצוא</button>
+      </div>
+
       <div class="journal-list" id="journalList"></div>
     </div>
   </div>
@@ -2393,6 +2635,24 @@
     <div class="edit-day-actions">
       <button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button>
       <button class="edit-day-btn save" id="editDaySave">שמור שינויים</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="noteEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📝 הערה ליום</div>
+      <button class="modal-close" id="noteEditClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="note-editor-date" id="noteEditDate">—</div>
+      <textarea class="note-editor-textarea" id="noteEditTextarea" placeholder="כתוב כאן הערה ליום זה — הרגשות, מחשבות, אירועים שקרו..."></textarea>
+      <div class="note-editor-counter"><span id="noteEditCounter">0</span> תווים</div>
+      <div class="goal-form-buttons">
+        <button class="goal-form-btn save" id="noteEditSave">שמור הערה</button>
+        <button class="goal-form-btn cancel" id="noteEditCancel">ביטול</button>
+      </div>
     </div>
   </div>
 </div>
@@ -6680,87 +6940,338 @@
     renderGoals();
   }
 
-  // ============= JOURNAL =============
+  // ============= JOURNAL (CRM) =============
   let journalFilter = 'all';
+  let journalSearchDate = '';
 
-  function renderJournal() {
-    const container = document.getElementById('journalList');
-    if (!container) return;
+  // ----- Notes storage -----
+  const JOURNAL_NOTES_KEY = 'tefilot_journal_notes_v1';
+  function loadJournalNotes() {
+    try {
+      const raw = localStorage.getItem(JOURNAL_NOTES_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+  }
+  function saveJournalNotes(notes) {
+    try { localStorage.setItem(JOURNAL_NOTES_KEY, JSON.stringify(notes)); } catch(e) {}
+  }
+  function getDayNote(date) {
+    const notes = loadJournalNotes();
+    return notes[date] || '';
+  }
+  function setDayNote(date, text) {
+    const notes = loadJournalNotes();
+    const trimmed = (text || '').trim();
+    if (trimmed) notes[date] = trimmed;
+    else delete notes[date];
+    saveJournalNotes(notes);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
+  }
+
+  // ----- Build a normalized day list -----
+  function getAllJournalDays() {
     const history = loadHistory();
     const today = getTodayDate();
     const todayScore = calculateTodayScore();
     const todayHasItems = todayState && todayState.items &&
       Object.values(todayState.items).some(it => it && it.done);
+    const notes = loadJournalNotes();
 
-    let allDays = history.filter(h => h.date !== today);
+    // Start from history (excluding today, we add fresh today below)
+    const all = history.filter(h => h.date !== today).map(h => ({
+      date: h.date,
+      score: h.score || 0,
+      items: h.items || {},
+      note: notes[h.date] || ''
+    }));
+
     if (todayScore > 0 || todayHasItems) {
-      allDays.push({ date: today, score: todayScore, items: todayState.items });
+      all.push({
+        date: today,
+        score: todayScore,
+        items: todayState.items || {},
+        note: notes[today] || ''
+      });
+    } else if (notes[today]) {
+      all.push({ date: today, score: 0, items: {}, note: notes[today] });
     }
 
-    if (journalFilter === 'week' || journalFilter === 'month') {
+    return all;
+  }
+
+  function isPerfectDay(items) {
+    return MITZVOT.every(m => items[m.id] && items[m.id].done);
+  }
+
+  // ----- Stats bar -----
+  function renderJournalStats() {
+    const container = document.getElementById('journalStatsBar');
+    if (!container) return;
+    const all = getAllJournalDays();
+
+    const totalDays = all.length;
+    const totalPoints = all.reduce((s, d) => s + (d.score || 0), 0);
+    const perfectDays = all.filter(d => isPerfectDay(d.items)).length;
+
+    // Best streak of consecutive days with score > 0
+    let bestStreak = 0;
+    const activeDates = all.filter(d => d.score > 0).map(d => d.date).sort();
+    let currentStreak = 0;
+    let prev = null;
+    activeDates.forEach(date => {
+      if (prev) {
+        const prevD = new Date(prev);
+        prevD.setDate(prevD.getDate() + 1);
+        const expected = prevD.toISOString().slice(0, 10);
+        currentStreak = (expected === date) ? currentStreak + 1 : 1;
+      } else {
+        currentStreak = 1;
+      }
+      if (currentStreak > bestStreak) bestStreak = currentStreak;
+      prev = date;
+    });
+
+    container.innerHTML = `
+      <div class="journal-stat">
+        <div class="journal-stat-value">${totalDays}</div>
+        <div class="journal-stat-label">ימים</div>
+      </div>
+      <div class="journal-stat">
+        <div class="journal-stat-value">${perfectDays}</div>
+        <div class="journal-stat-label">⭐ מושלמים</div>
+      </div>
+      <div class="journal-stat">
+        <div class="journal-stat-value">${bestStreak}</div>
+        <div class="journal-stat-label">רצף שיא</div>
+      </div>
+      <div class="journal-stat">
+        <div class="journal-stat-value">${totalPoints}</div>
+        <div class="journal-stat-label">סה״כ נק׳</div>
+      </div>
+    `;
+  }
+
+  // ----- Main journal render -----
+  function renderJournal() {
+    renderJournalStats();
+    const container = document.getElementById('journalList');
+    if (!container) return;
+    const today = getTodayDate();
+    let all = getAllJournalDays();
+
+    // Apply filters
+    if (journalSearchDate) {
+      all = all.filter(d => d.date === journalSearchDate);
+    } else if (journalFilter === 'week' || journalFilter === 'month') {
       const days = journalFilter === 'week' ? 6 : 29;
       const cutoff = new Date();
       cutoff.setDate(cutoff.getDate() - days);
       const cutoffStr = cutoff.toISOString().slice(0, 10);
-      allDays = allDays.filter(h => h.date >= cutoffStr);
+      all = all.filter(d => d.date >= cutoffStr);
     } else if (journalFilter === 'active') {
-      allDays = allDays.filter(h => h.score > 0);
+      all = all.filter(d => d.score > 0);
+    } else if (journalFilter === 'perfect') {
+      all = all.filter(d => isPerfectDay(d.items));
+    } else if (journalFilter === 'notes') {
+      all = all.filter(d => d.note && d.note.length > 0);
     }
 
-    const sorted = allDays.sort((a, b) => b.date.localeCompare(a.date));
+    const sorted = all.sort((a, b) => b.date.localeCompare(a.date));
 
     if (sorted.length === 0) {
-      container.innerHTML = '<div class="journal-empty">עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.</div>';
+      const emptyMsg = journalSearchDate
+        ? 'לא נמצא רישום לתאריך זה.'
+        : (journalFilter === 'all'
+            ? 'עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.'
+            : 'אין רישומים תואמים לפילטר זה.');
+      container.innerHTML = `<div class="journal-empty">${emptyMsg}</div>`;
       return;
     }
 
     container.innerHTML = sorted.map(h => {
       const isToday = h.date === today;
       const items = h.items || {};
-      const doneMitzvot = MITZVOT.filter(m => items[m.id] && items[m.id].done);
+      const perfect = isPerfectDay(items);
 
-      const mitzvotHtml = doneMitzvot.length > 0
-        ? doneMitzvot.map(m => {
-            const item = items[m.id];
-            const withMinyan = m.hasMinyan && item.minyan;
-            const points = withMinyan ? m.points * 2 : m.points;
-            const minyanMark = withMinyan ? '<span class="minyan-mark">×2 במניין</span>' : '';
-            return `
-              <div class="journal-mitzva-item">
-                <div class="journal-mitzva-item-icon">${m.icon}</div>
-                <div class="journal-mitzva-item-name">${m.name}${minyanMark}</div>
-                <div class="journal-mitzva-item-points">+${points}</div>
-              </div>
-            `;
-          }).join('')
-        : '<div class="journal-entry-empty">ללא סימונים ביום זה</div>';
+      // Show ALL mitzvot (done + skipped)
+      const mitzvotHtml = MITZVOT.map(m => {
+        const item = items[m.id] || { done: false, minyan: false };
+        const done = !!item.done;
+        const withMinyan = done && m.hasMinyan && item.minyan;
+        const points = withMinyan ? m.points * 2 : m.points;
+        const minyanMark = withMinyan ? '<span class="minyan-mark">×2 במניין</span>' : '';
+        const status = done
+          ? '<span class="journal-mitzva-status done">✓</span>'
+          : '<span class="journal-mitzva-status skipped">○</span>';
+        const cls = done ? '' : ' skipped';
+        return `
+          <div class="journal-mitzva-item${cls}">
+            ${status}
+            <div class="journal-mitzva-item-icon">${m.icon}</div>
+            <div class="journal-mitzva-item-name">${m.name}${minyanMark}</div>
+            <div class="journal-mitzva-item-points">${done ? '+' + points : '—'}</div>
+          </div>
+        `;
+      }).join('');
 
-      const todayBadge = isToday ? '<span class="journal-entry-today-badge">היום</span>' : '';
+      const badges = [];
+      if (isToday) badges.push('<span class="journal-entry-today-badge">היום</span>');
+      if (perfect) badges.push('<span class="journal-perfect-badge">⭐ מושלם</span>');
+
+      const noteHtml = h.note
+        ? `<div class="journal-note-text">${escapeHtml(h.note)}</div>`
+        : `<div class="journal-note-empty">אין הערה ליום זה</div>`;
+
       return `
-        <div class="journal-entry${isToday ? ' today' : ''}" data-date="${h.date}">
+        <div class="journal-entry${isToday ? ' today' : ''}${perfect ? ' perfect' : ''}" data-date="${h.date}">
           <div class="journal-entry-header">
-            <div class="journal-entry-date">${formatHebrewDate(h.date)}${todayBadge}</div>
+            <div class="journal-entry-date">${formatHebrewDate(h.date)}${badges.join('')}</div>
             <div class="journal-entry-score">${h.score} נק׳</div>
           </div>
           <div class="journal-mitzvot-list">${mitzvotHtml}</div>
+          <div class="journal-note-section">
+            <div class="journal-note-icon">📝</div>
+            ${noteHtml}
+            <button class="journal-note-edit" data-note-edit="${h.date}" type="button">${h.note ? 'ערוך' : '+ הוסף'}</button>
+          </div>
         </div>
       `;
     }).join('');
 
+    // Attach listeners (delegated within container scope for clarity)
     container.querySelectorAll('.journal-entry').forEach(entry => {
-      entry.addEventListener('click', () => openEditDay(entry.dataset.date));
+      entry.addEventListener('click', (e) => {
+        // Don't trigger when note edit button was clicked
+        if (e.target.closest('[data-note-edit]')) return;
+        openEditDay(entry.dataset.date);
+      });
+    });
+    container.querySelectorAll('[data-note-edit]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openNoteEditor(btn.dataset.noteEdit);
+      });
     });
   }
 
+  // ----- Filter buttons -----
   function setupJournalFilters() {
     document.querySelectorAll('.journal-filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.journal-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         journalFilter = btn.dataset.filter;
+        // Clear date search when changing filter
+        journalSearchDate = '';
+        const dateInput = document.getElementById('journalDateSearch');
+        if (dateInput) dateInput.value = '';
+        const clearBtn = document.getElementById('journalClearSearch');
+        if (clearBtn) clearBtn.classList.remove('active');
         renderJournal();
       });
     });
+  }
+
+  // ----- Date search -----
+  function setupJournalDateSearch() {
+    const input = document.getElementById('journalDateSearch');
+    const clearBtn = document.getElementById('journalClearSearch');
+    if (!input) return;
+    input.max = getTodayDate();
+    input.addEventListener('change', () => {
+      journalSearchDate = input.value || '';
+      if (clearBtn) clearBtn.classList.toggle('active', !!journalSearchDate);
+      renderJournal();
+    });
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        journalSearchDate = '';
+        clearBtn.classList.remove('active');
+        renderJournal();
+      });
+    }
+  }
+
+  // ----- Export -----
+  function exportJournal() {
+    const all = getAllJournalDays();
+    if (all.length === 0) {
+      alert('אין עדיין רישומים לייצא.');
+      return;
+    }
+    const sorted = all.sort((a, b) => b.date.localeCompare(a.date));
+    const lines = [];
+    lines.push('יומן ניקוד יומי');
+    lines.push('═══════════════════════════');
+    lines.push('יוצא בתאריך: ' + formatHebrewDate(getTodayDate()));
+    lines.push('סך ימים: ' + all.length);
+    lines.push('סך נקודות: ' + all.reduce((s, d) => s + d.score, 0));
+    lines.push('');
+
+    sorted.forEach(h => {
+      lines.push('───────────────────────────');
+      lines.push(formatHebrewDate(h.date) + ' · ' + h.score + ' נקודות' + (isPerfectDay(h.items) ? ' ⭐ מושלם' : ''));
+      MITZVOT.forEach(m => {
+        const item = h.items[m.id] || { done: false, minyan: false };
+        const mark = item.done ? '✓' : '✗';
+        const minyan = item.done && m.hasMinyan && item.minyan ? ' (במניין ×2)' : '';
+        lines.push('  ' + mark + ' ' + m.name + minyan);
+      });
+      if (h.note) {
+        lines.push('  📝 ' + h.note);
+      }
+    });
+
+    const text = lines.join('\n');
+    try {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'יומן-ניקוד-' + getTodayDate() + '.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch(e) {
+      // Fallback: show in alert
+      alert(text);
+    }
+  }
+
+  // ----- Note editor modal -----
+  let editingNoteDate = null;
+  function openNoteEditor(date) {
+    editingNoteDate = date;
+    const dateEl = document.getElementById('noteEditDate');
+    const textarea = document.getElementById('noteEditTextarea');
+    const counter = document.getElementById('noteEditCounter');
+    if (dateEl) dateEl.textContent = formatHebrewDate(date);
+    if (textarea) {
+      textarea.value = getDayNote(date);
+      if (counter) counter.textContent = textarea.value.length;
+    }
+    document.getElementById('noteEditModal').classList.add('active');
+    if (textarea) setTimeout(() => textarea.focus(), 50);
+  }
+  function saveNoteEditor() {
+    if (!editingNoteDate) return;
+    const textarea = document.getElementById('noteEditTextarea');
+    const text = textarea ? textarea.value : '';
+    setDayNote(editingNoteDate, text);
+    document.getElementById('noteEditModal').classList.remove('active');
+    editingNoteDate = null;
+    renderJournal();
+  }
+  function closeNoteEditor() {
+    document.getElementById('noteEditModal').classList.remove('active');
+    editingNoteDate = null;
   }
 
   function toggleMitzva(id) {
@@ -7210,54 +7721,73 @@
   }
 
 
-    document.getElementById('discoverBtn').addEventListener('click', discoverNew);
-  document.getElementById('favsBtn').addEventListener('click', openFavs);
-  document.getElementById('favsClose').addEventListener('click', () => document.getElementById('favsModal').classList.remove('active'));
-  document.getElementById('favsModal').addEventListener('click', (e) => {
-    if (e.target.id === 'favsModal') document.getElementById('favsModal').classList.remove('active');
-  });
-  document.getElementById('archiveBtn').addEventListener('click', openArchive);
-  document.getElementById('archiveClose').addEventListener('click', () => document.getElementById('archiveModal').classList.remove('active'));
-  document.getElementById('archiveModal').addEventListener('click', (e) => {
-    if (e.target.id === 'archiveModal') document.getElementById('archiveModal').classList.remove('active');
-  });
-  document.getElementById('resetBtn').addEventListener('click', requestReset);
-  document.getElementById('confirmYes').addEventListener('click', confirmReset);
-  document.getElementById('confirmNo').addEventListener('click', cancelReset);
-  document.getElementById('celebBtn').addEventListener('click', () => document.getElementById('celebration').classList.remove('active'));
+  // Defensive helpers - don't crash if element is missing
+  function on(id, event, handler) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, handler);
+    else console.warn('[init] missing element:', id);
+  }
+  function onBackdrop(modalId) {
+    on(modalId, 'click', (e) => {
+      if (e.target.id === modalId) document.getElementById(modalId).classList.remove('active');
+    });
+  }
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  }
+
+  on('discoverBtn', 'click', discoverNew);
+  on('favsBtn', 'click', openFavs);
+  on('favsClose', 'click', () => closeModal('favsModal'));
+  onBackdrop('favsModal');
+  on('archiveBtn', 'click', openArchive);
+  on('archiveClose', 'click', () => closeModal('archiveModal'));
+  onBackdrop('archiveModal');
+  on('resetBtn', 'click', requestReset);
+  on('confirmYes', 'click', confirmReset);
+  on('confirmNo', 'click', cancelReset);
+  on('celebBtn', 'click', () => closeModal('celebration'));
 
   // ===== Score tab buttons =====
-  document.getElementById('endDayBtn').addEventListener('click', endDay);
+  on('endDayBtn', 'click', endDay);
 
   // ===== Goals buttons =====
-  document.getElementById('addGoalBtn').addEventListener('click', addNewGoal);
-  document.getElementById('goalSaveBtn').addEventListener('click', saveGoalEdit);
-  document.getElementById('goalCancelBtn').addEventListener('click', () => document.getElementById('goalEditModal').classList.remove('active'));
-  document.getElementById('goalEditClose').addEventListener('click', () => document.getElementById('goalEditModal').classList.remove('active'));
-  document.getElementById('goalEditModal').addEventListener('click', (e) => {
-    if (e.target.id === 'goalEditModal') document.getElementById('goalEditModal').classList.remove('active');
-  });
+  on('addGoalBtn', 'click', addNewGoal);
+  on('goalSaveBtn', 'click', saveGoalEdit);
+  on('goalCancelBtn', 'click', () => closeModal('goalEditModal'));
+  on('goalEditClose', 'click', () => closeModal('goalEditModal'));
+  onBackdrop('goalEditModal');
 
   // ===== Goal celebration modal =====
-  document.getElementById('goalCelebClose').addEventListener('click', () => document.getElementById('goalCelebrationModal').classList.remove('active'));
-  document.getElementById('celebLaterBtn').addEventListener('click', () => document.getElementById('goalCelebrationModal').classList.remove('active'));
-  document.getElementById('goalCelebrationModal').addEventListener('click', (e) => {
-    if (e.target.id === 'goalCelebrationModal') document.getElementById('goalCelebrationModal').classList.remove('active');
-  });
+  on('goalCelebClose', 'click', () => closeModal('goalCelebrationModal'));
+  on('celebLaterBtn', 'click', () => closeModal('goalCelebrationModal'));
+  onBackdrop('goalCelebrationModal');
 
   // ===== Edit day modal =====
-  document.getElementById('editDayClose').addEventListener('click', () => document.getElementById('editDayModal').classList.remove('active'));
-  document.getElementById('editDaySave').addEventListener('click', saveEditDay);
-  document.getElementById('editDayDelete').addEventListener('click', deleteEditDay);
-  document.getElementById('editDayModal').addEventListener('click', (e) => {
-    if (e.target.id === 'editDayModal') document.getElementById('editDayModal').classList.remove('active');
+  on('editDayClose', 'click', () => closeModal('editDayModal'));
+  on('editDaySave', 'click', saveEditDay);
+  on('editDayDelete', 'click', deleteEditDay);
+  onBackdrop('editDayModal');
+
+  // ===== Note editor modal =====
+  on('noteEditClose', 'click', closeNoteEditor);
+  on('noteEditCancel', 'click', closeNoteEditor);
+  on('noteEditSave', 'click', saveNoteEditor);
+  onBackdrop('noteEditModal');
+  on('noteEditTextarea', 'input', () => {
+    const ta = document.getElementById('noteEditTextarea');
+    const counter = document.getElementById('noteEditCounter');
+    if (ta && counter) counter.textContent = ta.value.length;
   });
 
   // ===== Chart range tabs (7/14/30 days) =====
   setupChartTabs();
 
-  // ===== Journal filters =====
+  // ===== Journal filters + search + export =====
   setupJournalFilters();
+  setupJournalDateSearch();
+  on('journalExportBtn', 'click', exportJournal);
 
 
   // Auto-refresh date when user returns to app
