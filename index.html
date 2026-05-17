@@ -1998,7 +1998,13 @@
 
   .edit-day-body {
     padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
   }
+  .edit-day-body::-webkit-scrollbar { width: 8px; }
+  .edit-day-body::-webkit-scrollbar-track { background: var(--parchment-dark); }
+  .edit-day-body::-webkit-scrollbar-thumb { background: var(--brown); border-radius: 4px; }
   .edit-day-date {
     text-align: center;
     font-family: 'Frank Ruhl Libre', serif;
