@@ -2302,13 +2302,26 @@
     margin-bottom: 22px;
     padding-bottom: 14px;
     border-bottom: 2px solid var(--gold);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+    scroll-padding: 8px;
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
   }
   .tab-btn {
-    flex: 1;
+    flex: 0 0 auto;
+    min-width: 100px;
+    max-width: 130px;
     background: var(--parchment-light);
     border: 2px solid var(--brown);
     color: var(--brown-deep);
-    padding: 12px 6px;
+    padding: 12px 10px;
     border-radius: 8px;
     font-family: 'Frank Ruhl Libre', serif;
     font-weight: 700;
@@ -2325,6 +2338,7 @@
     text-align: center;
     white-space: normal;
     word-break: keep-all;
+    scroll-snap-align: start;
   }
   .tab-btn.active {
     background: var(--wine);
@@ -2418,18 +2432,6 @@
       עושר ושפע
       <span class="tab-subtitle">515 תפילות</span>
     </button>
-    <button class="tab-btn" data-tab="brit">
-      שמירת הברית
-      <span class="tab-subtitle">בקדושה ובטהרה</span>
-    </button>
-    <button class="tab-btn" data-tab="bitachon">
-      ביטחון בה׳
-      <span class="tab-subtitle">חובת הלבבות</span>
-    </button>
-    <button class="tab-btn" data-tab="hochma">
-      חכמה
-      <span class="tab-subtitle">515 תפילות</span>
-    </button>
     <button class="tab-btn" data-tab="roei">
       רועי בני
       <span class="tab-subtitle">515 תפילות</span>
@@ -2437,6 +2439,18 @@
     <button class="tab-btn" data-tab="refua">
       רפואה שלמה
       <span class="tab-subtitle">להרב דב קוק</span>
+    </button>
+    <button class="tab-btn" data-tab="hochma">
+      חכמה
+      <span class="tab-subtitle">515 תפילות</span>
+    </button>
+    <button class="tab-btn" data-tab="bitachon">
+      ביטחון בה׳
+      <span class="tab-subtitle">חובת הלבבות</span>
+    </button>
+    <button class="tab-btn" data-tab="brit">
+      שמירת הברית
+      <span class="tab-subtitle">בקדושה ובטהרה</span>
     </button>
     <button class="tab-btn" data-tab="score">
       ניקוד יומי
