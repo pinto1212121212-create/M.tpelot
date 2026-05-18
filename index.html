@@ -2312,10 +2312,19 @@
     border-radius: 8px;
     font-family: 'Frank Ruhl Libre', serif;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.25s;
     letter-spacing: 0.3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.25;
+    min-height: 64px;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
   }
   .tab-btn.active {
     background: var(--wine);
@@ -2332,6 +2341,30 @@
   }
   .tab-btn.locked .tab-subtitle {
     opacity: 0;
+  }
+  .tab-btn.daily-done {
+    background: linear-gradient(135deg, #2d7d4f 0%, #1f5e3a 100%);
+    color: #fff;
+    border-color: #4caf50;
+    box-shadow: 0 2px 8px rgba(76,175,80,0.35);
+    position: relative;
+  }
+  .tab-btn.daily-done::after {
+    content: '✓';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    font-size: 11px;
+    color: #c8e6c9;
+    font-weight: 900;
+  }
+  .tab-btn.daily-done.active {
+    background: linear-gradient(135deg, #1f5e3a 0%, #134026 100%);
+    border-color: var(--gold);
+  }
+  .tab-btn.daily-done .tab-subtitle {
+    color: #c8e6c9;
+    opacity: 1;
   }
   .tab-subtitle {
     font-family: 'Heebo', sans-serif;
@@ -2398,8 +2431,8 @@
       <span class="tab-subtitle">515 תפילות</span>
     </button>
     <button class="tab-btn" data-tab="refua">
-      רפואת הרב דב קוק
-      <span class="tab-subtitle">50 תפילות</span>
+      רפואה שלמה
+      <span class="tab-subtitle">להרב דב קוק</span>
     </button>
     <button class="tab-btn" data-tab="score">
       ניקוד יומי
@@ -6920,6 +6953,8 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_BRIT = 'tefilot_brit_said_v1';
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_HOCHMA = 'tefilot_hochma_said_v1';
+  const STORAGE_KEY_DAILY = 'tefilot_daily_counts_v1';
+  const DAILY_TARGET = 10;
   const FAV_KEY_OSHER = 'tefilot_osher_fav_v1';
   const FAV_KEY_BRIT = 'tefilot_brit_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
@@ -7009,6 +7044,48 @@ const TOTAL_OSHER = TEFILOT.length;
   function getActiveTotal() { return TABS_DATA[currentTab].total; }
   function getActiveStorageKey() { return TABS_DATA[currentTab].storageKey; }
   function getActivePoolLength() { return TABS_DATA[currentTab].poolLength; }
+
+  // ============= Daily Counter (green tab when 10 prayers said today) =============
+  function getTodayDate() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function loadDailyCounts() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY_DAILY);
+      if (!raw) return {};
+      const data = JSON.parse(raw);
+      if (data.date !== getTodayDate()) return {};
+      return data.counts || {};
+    } catch(e) { return {}; }
+  }
+  function saveDailyCounts(counts) {
+    try {
+      localStorage.setItem(STORAGE_KEY_DAILY, JSON.stringify({
+        date: getTodayDate(),
+        counts: counts
+      }));
+    } catch(e) {}
+  }
+  function incrementDailyCount(tabName) {
+    if (!tabName || tabName === 'score') return;
+    const counts = loadDailyCounts();
+    counts[tabName] = (counts[tabName] || 0) + 1;
+    saveDailyCounts(counts);
+    updateTabColors();
+  }
+  function updateTabColors() {
+    const counts = loadDailyCounts();
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      const tab = btn.dataset.tab;
+      if (!tab || tab === 'score') return;
+      if ((counts[tab] || 0) >= DAILY_TARGET) {
+        btn.classList.add('daily-done');
+      } else {
+        btn.classList.remove('daily-done');
+      }
+    });
+  }
 
   function loadState() {
     try {
@@ -7103,6 +7180,7 @@ const TOTAL_OSHER = TEFILOT.length;
   function markSaid(idx, card) {
     saidSet.add(idx);
     saveState();
+    incrementDailyCount(currentTab);
     displayedIndices = displayedIndices.filter(i => i !== idx);
     card.classList.add('removing');
     setTimeout(() => {
@@ -7316,6 +7394,7 @@ const TOTAL_OSHER = TEFILOT.length;
       loadState();
       renderPrayers();
       updateStats();
+      updateTabColors();
     } catch(err) {
       console.error('switchTab error:', err);
     }
@@ -8738,6 +8817,8 @@ const TOTAL_OSHER = TEFILOT.length;
     updateStats();
     renderPrayers();
   }
+  // Initialize daily tab colors on page load
+  try { updateTabColors(); } catch(e) {}
 </script>
 
 </body>
