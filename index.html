@@ -2369,6 +2369,52 @@
     font-weight: 700;
     font-size: 28px;
   }
+  .partner-prayers-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    color: var(--brown-deep);
+    font-size: 14px;
+    margin: 18px 0 10px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--gold);
+  }
+  .partner-prayers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+  }
+  .partner-prayer-card {
+    background: rgba(255, 250, 235, 0.7);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+  }
+  .partner-prayer-card .name {
+    font-size: 11px;
+    color: var(--brown);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .partner-prayer-card .count {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    color: var(--wine);
+    font-size: 16px;
+  }
+  .partner-prayer-card .bar {
+    height: 4px;
+    background: #ebe1c4;
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .partner-prayer-card .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #b48c3c 0%, #8b6420 100%);
+    border-radius: 2px;
+    transition: width 0.4s;
+  }
   .tabs {
     display: flex;
     gap: 8px;
@@ -2604,6 +2650,9 @@
           <div class="partner-stat-value" id="partnerPrayers">0</div>
         </div>
       </div>
+
+      <div class="partner-prayers-title">📿 התקדמות בתפילות (סה״כ)</div>
+      <div class="partner-prayers-grid" id="partnerPrayersGrid"></div>
     </div>
 
     <div id="mitzvotList"></div>
@@ -8212,6 +8261,35 @@ const TOTAL_OSHER = TEFILOT.length;
       const prayersEl = document.getElementById('partnerPrayers');
       if (scoreEl) scoreEl.textContent = partnerScore;
       if (prayersEl) prayersEl.textContent = partnerPrayers;
+
+      // Partner's total prayer progress per category
+      const categories = [
+        { label: 'עושר', key: 'tefilot_said_v2', total: 515 },
+        { label: 'חכמה', key: 'tefilot_hochma_said_v1', total: 515 },
+        { label: 'ברית', key: 'tefilot_brit_said_v1', total: 515 },
+        { label: 'ביטחון', key: 'tefilot_bitachon_said_v1', total: 520 },
+        { label: 'רועי', key: 'tefilot_roei_said_v1', total: 515 },
+        { label: 'רפואה', key: 'tefilot_refua_said_v1', total: 50 }
+      ];
+      const grid = document.getElementById('partnerPrayersGrid');
+      if (grid) {
+        grid.innerHTML = categories.map(cat => {
+          let count = 0;
+          try {
+            const raw = localStorage.getItem(pkFor(partner, cat.key));
+            if (raw) {
+              const arr = JSON.parse(raw);
+              if (Array.isArray(arr)) count = arr.length;
+            }
+          } catch(e) {}
+          const pct = Math.round((count / cat.total) * 100);
+          return '<div class="partner-prayer-card">' +
+            '<div class="name">' + cat.label + '</div>' +
+            '<div class="count">' + count + ' / ' + cat.total + '</div>' +
+            '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+            '</div>';
+        }).join('');
+      }
     } catch(e) {}
   }
   const FAV_KEY_OSHER = 'tefilot_osher_fav_v1';
