@@ -10204,10 +10204,46 @@ const TOTAL_OSHER = TEFILOT.length;
   window.addEventListener('focus', function() {
     try { MITZVOT = getActiveMitzvot(); } catch(e) {}
     try { updateTabColors(); } catch(e) {}
+    try { loadState(); } catch(e) {}
+    try { updateStats(); } catch(e) {}
     if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+      try { loadTodayState(); } catch(e) {}
       try { renderScoreView(); } catch(e) {}
+    } else {
+      try { renderPrayers(); } catch(e) {}
     }
   });
+
+  // Instant sync: when another browser tab/window modifies localStorage
+  // (e.g. the other profile saves a mitzva or a prayer), refresh this tab live
+  window.addEventListener('storage', function(e) {
+    if (!e || !e.key) return;
+    try { MITZVOT = getActiveMitzvot(); } catch(err) {}
+    try { loadState(); } catch(err) {}
+    try { updateStats(); } catch(err) {}
+    try { updateTabColors(); } catch(err) {}
+    if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+      try { loadTodayState(); } catch(err) {}
+      try { renderScoreView(); } catch(err) {}
+    } else {
+      try { renderPrayers(); } catch(err) {}
+    }
+  });
+
+  // Periodic refresh every 30 seconds while the page is open and visible,
+  // so partner activity shows up even without manual focus/visibility change
+  setInterval(function() {
+    if (document.hidden) return;
+    try {
+      if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+        loadTodayState();
+        renderScoreView();
+      } else {
+        loadState();
+        updateStats();
+      }
+    } catch(e) {}
+  }, 30000);
 </script>
 
 </body>
