@@ -8143,6 +8143,8 @@ const TOTAL_OSHER = TEFILOT.length;
     if (newProfile === currentProfile) return;
     currentProfile = newProfile;
     try { localStorage.setItem(PROFILE_KEY, newProfile); } catch(e) {}
+    // Update active mitzvot list based on profile
+    try { MITZVOT = getActiveMitzvot(); } catch(e) {}
     updateProfileButtons();
     // Reload state for new profile
     try { loadState(); } catch(e) {}
@@ -8182,9 +8184,10 @@ const TOTAL_OSHER = TEFILOT.length;
           const todayData = JSON.parse(rawToday);
           // Only count if it's today
           if (todayData.date === getTodayDate() && todayData.items) {
+            const partnerMitzvot = partner === 'tal' ? MITZVOT_TAL : MITZVOT_PINTO;
             for (const [id, item] of Object.entries(todayData.items)) {
               if (!item.done) continue;
-              const mitzva = MITZVOT.find(m => m.id === id);
+              const mitzva = partnerMitzvot.find(m => m.id === id);
               if (!mitzva) continue;
               const pts = (mitzva.hasMinyan && item.minyan) ? mitzva.points * 2 : mitzva.points;
               partnerScore += pts;
@@ -9040,13 +9043,26 @@ const TOTAL_OSHER = TEFILOT.length;
   const SCORE_KEY_HISTORY = 'tefilot_score_history_v1';
   const SCORE_KEY_TODAY = 'tefilot_score_today_v1';
 
-  const MITZVOT = [
+  const MITZVOT_PINTO = [
     { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true },
     { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
     { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
     { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false },
     { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false }
   ];
+
+  const MITZVOT_TAL = [
+    { id: 'tal_tefila', name: 'תפילה יומית', icon: '🙏', points: 40, hasMinyan: false },
+    { id: 'tal_seder', name: 'סדר בבית — חצי שעה', icon: '🏡', points: 50, hasMinyan: false },
+    { id: 'tal_kosher', name: 'כושר (2 פעמים בשבוע)', icon: '💪', points: 35, hasMinyan: false }
+  ];
+
+  function getActiveMitzvot() {
+    return currentProfile === 'tal' ? MITZVOT_TAL : MITZVOT_PINTO;
+  }
+
+  // Backward compatibility - some code still uses MITZVOT
+  let MITZVOT = getActiveMitzvot();
 
   let todayState = {};  // { date: 'YYYY-MM-DD', items: { shacharit: { done, minyan }, ... } }
 
@@ -10087,6 +10103,34 @@ const TOTAL_OSHER = TEFILOT.length;
   // Initialize daily tab colors on page load
   try { updateTabColors(); } catch(e) {}
   try { updateProfileButtons(); } catch(e) {}
+  try { MITZVOT = getActiveMitzvot(); } catch(e) {}
+
+  // Refresh data when user returns to the page (e.g., from background)
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+      try { MITZVOT = getActiveMitzvot(); } catch(e) {}
+      try { loadState(); } catch(e) {}
+      try { updateStats(); } catch(e) {}
+      try { updateTabColors(); } catch(e) {}
+      try { updateProfileButtons(); } catch(e) {}
+      if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+        try { loadTodayState(); } catch(e) {}
+        try { loadGoals(); } catch(e) {}
+        try { renderScoreView(); } catch(e) {}
+      } else {
+        try { renderPrayers(); } catch(e) {}
+      }
+    }
+  });
+
+  // Also refresh on window focus
+  window.addEventListener('focus', function() {
+    try { MITZVOT = getActiveMitzvot(); } catch(e) {}
+    try { updateTabColors(); } catch(e) {}
+    if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+      try { renderScoreView(); } catch(e) {}
+    }
+  });
 </script>
 
 </body>
