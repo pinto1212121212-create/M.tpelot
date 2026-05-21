@@ -10390,6 +10390,13 @@ const TOTAL_OSHER = TEFILOT.length;
   // Stores all shared prayer data + per-profile score data in a Firebase Realtime
   // Database so both devices see live updates from each other.
   const SYNC_URL_KEY = 'tefilot_sync_url_v1';
+  const DEFAULT_SYNC_URL = 'https://tpilot-60f17-default-rtdb.firebaseio.com';
+  // Auto-configure sync on first load so users don't need to paste anything
+  try {
+    if (!localStorage.getItem(SYNC_URL_KEY)) {
+      localStorage.setItem(SYNC_URL_KEY, DEFAULT_SYNC_URL);
+    }
+  } catch(e) {}
   const SYNCED_SHARED_KEYS = [
     'tefilot_said_v2', 'tefilot_brit_said_v1', 'tefilot_bitachon_said_v1',
     'tefilot_hochma_said_v1', 'tefilot_roei_said_v1', 'tefilot_refua_said_v1',
