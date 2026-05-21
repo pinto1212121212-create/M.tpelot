@@ -2296,6 +2296,79 @@
   }
   footer .ornament { color: var(--gold); margin: 0 8px; }
 
+  .profile-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .profile-btn {
+    background: var(--parchment-light);
+    border: 2px solid var(--brown);
+    color: var(--brown-deep);
+    padding: 10px 22px;
+    border-radius: 24px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.55;
+  }
+  .profile-btn.active {
+    background: var(--wine);
+    color: var(--parchment-light);
+    border-color: var(--gold);
+    box-shadow: 0 4px 12px rgba(107,31,45,0.3);
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  .profile-btn:not(.active):hover {
+    opacity: 0.8;
+    background: var(--parchment-dark);
+  }
+  .profile-icon {
+    font-size: 18px;
+  }
+  .partner-view {
+    background: linear-gradient(135deg, #f5f0e3 0%, #ede4ce 100%);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(180,140,60,0.15);
+  }
+  .partner-view-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    color: var(--brown-deep);
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .partner-view-stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  .partner-stat {
+    flex: 1;
+    max-width: 140px;
+  }
+  .partner-stat-label {
+    color: var(--brown);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .partner-stat-value {
+    color: var(--wine);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 28px;
+  }
   .tabs {
     display: flex;
     gap: 8px;
@@ -2427,6 +2500,17 @@
     <div class="verse" id="mainVerse">״ואתחנן אל ה׳ בעת ההיא לאמר״</div>
   </header>
 
+  <div class="profile-selector">
+    <button class="profile-btn" data-profile="pinto" onclick="setProfile('pinto')">
+      <span class="profile-icon">👨</span>
+      <span class="profile-label">פינטו</span>
+    </button>
+    <button class="profile-btn" data-profile="tal" onclick="setProfile('tal')">
+      <span class="profile-icon">👩</span>
+      <span class="profile-label">טל</span>
+    </button>
+  </div>
+
   <div class="tabs">
     <button class="tab-btn active" data-tab="osher">
       עושר ושפע
@@ -2506,6 +2590,20 @@
       <div class="label">סך הניקוד היום</div>
       <div class="value"><span id="scoreToday">0</span></div>
       <div class="max">מתוך <span id="scoreTodayMax">125</span></div>
+    </div>
+
+    <div class="partner-view" id="partnerView">
+      <div class="partner-view-title">👥 ההתקדמות של <span id="partnerName">בן הזוג</span> היום</div>
+      <div class="partner-view-stats">
+        <div class="partner-stat">
+          <div class="partner-stat-label">ניקוד</div>
+          <div class="partner-stat-value" id="partnerScore">0</div>
+        </div>
+        <div class="partner-stat">
+          <div class="partner-stat-label">תפילות נאמרו</div>
+          <div class="partner-stat-value" id="partnerPrayers">0</div>
+        </div>
+      </div>
     </div>
 
     <div id="mitzvotList"></div>
@@ -8008,6 +8106,111 @@ const TOTAL_OSHER = TEFILOT.length;
   const DAILY_TARGET = 10;
   const STORAGE_KEY_ROEI = 'tefilot_roei_said_v1';
   const FAV_KEY_ROEI = 'tefilot_roei_fav_v1';
+
+  // ============= Multi-profile support (פינטו / טל) =============
+  const PROFILE_KEY = '_active_profile_v1';
+  const PROFILES = {
+    pinto: { name: 'פינטו', icon: '👨' },
+    tal: { name: 'טל', icon: '👩' }
+  };
+  let currentProfile = 'pinto';
+  try {
+    const saved = localStorage.getItem(PROFILE_KEY);
+    if (saved && PROFILES[saved]) currentProfile = saved;
+  } catch(e) {}
+
+  // Migration: if unprefixed legacy data exists and no pinto-prefixed data, treat existing as pinto's
+  try {
+    const legacyKeys = ['tefilot_said_v2', 'tefilot_brit_said_v1', 'tefilot_bitachon_said_v1',
+                        'tefilot_hochma_said_v1', 'tefilot_roei_said_v1', 'tefilot_refua_said_v1',
+                        'tefilot_score_today_v1', 'tefilot_score_history_v1', 'tefilot_daily_counts_v1',
+                        'tefilot_goals_v1', 'tefilot_journal_notes_v1'];
+    for (const k of legacyKeys) {
+      const legacyVal = localStorage.getItem(k);
+      const newVal = localStorage.getItem('pinto_' + k);
+      if (legacyVal && !newVal) {
+        localStorage.setItem('pinto_' + k, legacyVal);
+      }
+    }
+  } catch(e) {}
+
+  // Returns profile-prefixed key (for user-specific data)
+  function pk(key) { return currentProfile + '_' + key; }
+  function pkFor(profile, key) { return profile + '_' + key; }
+
+  function setProfile(newProfile) {
+    if (!PROFILES[newProfile]) return;
+    if (newProfile === currentProfile) return;
+    currentProfile = newProfile;
+    try { localStorage.setItem(PROFILE_KEY, newProfile); } catch(e) {}
+    updateProfileButtons();
+    // Reload state for new profile
+    try { loadState(); } catch(e) {}
+    try { updateStats(); } catch(e) {}
+    try { renderPrayers(); } catch(e) {}
+    try { updateTabColors(); } catch(e) {}
+    if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+      try { loadTodayState(); } catch(e) {}
+      try { loadGoals(); } catch(e) {}
+      try { renderScoreView(); } catch(e) {}
+    }
+  }
+
+  function updateProfileButtons() {
+    document.querySelectorAll('.profile-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.profile === currentProfile);
+    });
+  }
+
+  function getPartnerProfile() {
+    return currentProfile === 'pinto' ? 'tal' : 'pinto';
+  }
+
+  function updatePartnerView() {
+    try {
+      const partner = getPartnerProfile();
+      const partnerName = PROFILES[partner].name;
+      const partnerIcon = PROFILES[partner].icon;
+      const titleEl = document.getElementById('partnerName');
+      if (titleEl) titleEl.textContent = partnerIcon + ' ' + partnerName;
+
+      // Get partner's daily score
+      let partnerScore = 0;
+      try {
+        const rawToday = localStorage.getItem(pkFor(partner, 'tefilot_score_today_v1'));
+        if (rawToday) {
+          const todayData = JSON.parse(rawToday);
+          // Only count if it's today
+          if (todayData.date === getTodayDate() && todayData.items) {
+            for (const [id, item] of Object.entries(todayData.items)) {
+              if (!item.done) continue;
+              const mitzva = MITZVOT.find(m => m.id === id);
+              if (!mitzva) continue;
+              const pts = (mitzva.hasMinyan && item.minyan) ? mitzva.points * 2 : mitzva.points;
+              partnerScore += pts;
+            }
+          }
+        }
+      } catch(e) {}
+
+      // Get partner's daily prayers count
+      let partnerPrayers = 0;
+      try {
+        const rawDaily = localStorage.getItem(pkFor(partner, 'tefilot_daily_counts_v1'));
+        if (rawDaily) {
+          const data = JSON.parse(rawDaily);
+          if (data.date === getTodayDate() && data.counts) {
+            partnerPrayers = Object.values(data.counts).reduce((sum, c) => sum + (c || 0), 0);
+          }
+        }
+      } catch(e) {}
+
+      const scoreEl = document.getElementById('partnerScore');
+      const prayersEl = document.getElementById('partnerPrayers');
+      if (scoreEl) scoreEl.textContent = partnerScore;
+      if (prayersEl) prayersEl.textContent = partnerPrayers;
+    } catch(e) {}
+  }
   const FAV_KEY_OSHER = 'tefilot_osher_fav_v1';
   const FAV_KEY_BRIT = 'tefilot_brit_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
@@ -8105,7 +8308,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function getActivePool() { return TABS_DATA[currentTab].pool; }
   function getActiveTotal() { return TABS_DATA[currentTab].total; }
-  function getActiveStorageKey() { return TABS_DATA[currentTab].storageKey; }
+  function getActiveStorageKey() { return pk(TABS_DATA[currentTab].storageKey); }
   function getActivePoolLength() { return TABS_DATA[currentTab].poolLength; }
 
   // ============= Daily Counter (green tab when 10 prayers said today) =============
@@ -8115,7 +8318,7 @@ const TOTAL_OSHER = TEFILOT.length;
   }
   function loadDailyCounts() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY_DAILY);
+      const raw = localStorage.getItem(pk(STORAGE_KEY_DAILY));
       if (!raw) return {};
       const data = JSON.parse(raw);
       if (data.date !== getTodayDate()) return {};
@@ -8124,7 +8327,7 @@ const TOTAL_OSHER = TEFILOT.length;
   }
   function saveDailyCounts(counts) {
     try {
-      localStorage.setItem(STORAGE_KEY_DAILY, JSON.stringify({
+      localStorage.setItem(pk(STORAGE_KEY_DAILY), JSON.stringify({
         date: getTodayDate(),
         counts: counts
       }));
@@ -8166,7 +8369,7 @@ const TOTAL_OSHER = TEFILOT.length;
     localStorage.setItem(getActiveStorageKey(), JSON.stringify([...saidSet]));
     localStorage.setItem(getActiveFavStorageKey(), JSON.stringify([...favSet]));
   }
-  function getActiveFavStorageKey() { return TABS_DATA[currentTab].favStorageKey; }
+  function getActiveFavStorageKey() { return pk(TABS_DATA[currentTab].favStorageKey); }
 
   function updateStats() {
     updateFavCount();
@@ -8637,7 +8840,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function loadGoals() {
     try {
-      const raw = localStorage.getItem(GOALS_KEY);
+      const raw = localStorage.getItem(pk(GOALS_KEY));
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -8652,7 +8855,7 @@ const TOTAL_OSHER = TEFILOT.length;
   }
 
   function saveGoals() {
-    try { localStorage.setItem(GOALS_KEY, JSON.stringify(goalsState)); } catch(e) {}
+    try { localStorage.setItem(pk(GOALS_KEY), JSON.stringify(goalsState)); } catch(e) {}
   }
 
   function getTotalLifetimePoints() {
@@ -8866,7 +9069,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function loadTodayState() {
     try {
-      const raw = localStorage.getItem(SCORE_KEY_TODAY);
+      const raw = localStorage.getItem(pk(SCORE_KEY_TODAY));
       if (raw) {
         const parsed = JSON.parse(raw);
         // If saved date is not today, reset
@@ -8885,7 +9088,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function saveTodayState() {
     try {
-      localStorage.setItem(SCORE_KEY_TODAY, JSON.stringify(todayState));
+      localStorage.setItem(pk(SCORE_KEY_TODAY), JSON.stringify(todayState));
     } catch(e) {}
   }
 
@@ -8914,7 +9117,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function loadHistory() {
     try {
-      const raw = localStorage.getItem(SCORE_KEY_HISTORY);
+      const raw = localStorage.getItem(pk(SCORE_KEY_HISTORY));
       if (raw) return JSON.parse(raw);
     } catch(e) {}
     return [];
@@ -8922,7 +9125,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function saveHistory(history) {
     try {
-      localStorage.setItem(SCORE_KEY_HISTORY, JSON.stringify(history));
+      localStorage.setItem(pk(SCORE_KEY_HISTORY), JSON.stringify(history));
     } catch(e) {}
   }
 
@@ -8935,6 +9138,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
     document.getElementById('scoreDateValue').textContent = formatHebrewDate(todayState.date);
     document.getElementById('scoreTodayMax').textContent = calculateMaxScore();
+    try { updatePartnerView(); } catch(e) {}
 
     const list = document.getElementById('mitzvotList');
     list.innerHTML = MITZVOT.map(m => {
@@ -8991,12 +9195,12 @@ const TOTAL_OSHER = TEFILOT.length;
   const JOURNAL_NOTES_KEY = 'tefilot_journal_notes_v1';
   function loadJournalNotes() {
     try {
-      const raw = localStorage.getItem(JOURNAL_NOTES_KEY);
+      const raw = localStorage.getItem(pk(JOURNAL_NOTES_KEY));
       return raw ? JSON.parse(raw) : {};
     } catch(e) { return {}; }
   }
   function saveJournalNotes(notes) {
-    try { localStorage.setItem(JOURNAL_NOTES_KEY, JSON.stringify(notes)); } catch(e) {}
+    try { localStorage.setItem(pk(JOURNAL_NOTES_KEY), JSON.stringify(notes)); } catch(e) {}
   }
   function getDayNote(date) {
     const notes = loadJournalNotes();
@@ -9882,6 +10086,7 @@ const TOTAL_OSHER = TEFILOT.length;
   }
   // Initialize daily tab colors on page load
   try { updateTabColors(); } catch(e) {}
+  try { updateProfileButtons(); } catch(e) {}
 </script>
 
 </body>
