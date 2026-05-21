@@ -2415,6 +2415,113 @@
     border-radius: 2px;
     transition: width 0.4s;
   }
+  .sync-panel {
+    background: linear-gradient(135deg, #f5f0e3 0%, #ede4ce 100%);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(180,140,60,0.15);
+  }
+  .sync-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .sync-panel-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    color: var(--brown-deep);
+    font-size: 15px;
+  }
+  .sync-status {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: #d2b266;
+    color: white;
+    font-weight: 600;
+  }
+  .sync-status.active {
+    background: #6b9b47;
+  }
+  .sync-help-title {
+    font-size: 13px;
+    color: var(--brown-deep);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .sync-help-list {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--brown-deep);
+    margin: 0 18px 8px 0;
+    padding: 0;
+  }
+  .sync-help-list a {
+    color: #5a8a2f;
+    font-weight: 700;
+  }
+  .sync-help-list code {
+    background: rgba(180,140,60,0.15);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+    direction: ltr;
+    display: inline-block;
+  }
+  .sync-input-row {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0 4px;
+  }
+  .sync-input-row input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--brown);
+    border-radius: 6px;
+    background: white;
+    font-size: 12px;
+    font-family: monospace;
+  }
+  .sync-input-row button {
+    background: var(--brown);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .sync-help-note {
+    font-size: 11px;
+    color: #7a5a30;
+    margin-top: 6px;
+    font-style: italic;
+  }
+  .sync-active-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--brown-deep);
+    margin: 4px 0;
+  }
+  .sync-last {
+    font-size: 11px;
+    color: #7a5a30;
+  }
+  .sync-disconnect-btn {
+    background: transparent;
+    border: 1px solid var(--brown);
+    color: var(--brown);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+  }
   .tabs {
     display: flex;
     gap: 8px;
@@ -2651,6 +2758,40 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="sync-panel" id="syncPanel">
+      <div class="sync-panel-header">
+        <span class="sync-panel-title">☁️ סנכרון בין מכשירים</span>
+        <span class="sync-status" id="syncStatus">לא מסונכרן</span>
+      </div>
+      <div class="sync-panel-body" id="syncPanelBody">
+        <div class="sync-help" id="syncHelp">
+          <div class="sync-help-title">איך להפעיל סנכרון אמיתי בין הטלפון שלך לטלפון של טל:</div>
+          <ol class="sync-help-list">
+            <li>היכנס ל-<a href="https://console.firebase.google.com/" target="_blank">console.firebase.google.com</a></li>
+            <li>צור פרויקט חדש (Add project) — אפשר ללא Google Analytics</li>
+            <li>בתפריט הצד בחר <b>Build → Realtime Database</b></li>
+            <li>לחץ <b>Create Database</b> ובחר <b>Start in test mode</b></li>
+            <li>העתק את ה-URL שמופיע למעלה (משהו כמו <code>https://xxx-default-rtdb.firebaseio.com</code>)</li>
+            <li>הדבק אותו כאן ולחץ "התחבר":</li>
+          </ol>
+          <div class="sync-input-row">
+            <input type="text" id="syncUrlInput" placeholder="https://your-project-default-rtdb.firebaseio.com" dir="ltr"/>
+            <button id="syncConnectBtn">התחבר</button>
+          </div>
+          <div class="sync-help-note">לאחר שתתחבר במכשיר שלך, פתח את האפליקציה במכשיר של טל ושים את אותו URL — שניכם תהיו מסונכרנים מיידית.</div>
+        </div>
+        <div class="sync-active" id="syncActive" style="display:none;">
+          <div class="sync-active-row">
+            <span>מחובר ל-Firebase ✓</span>
+            <span class="sync-last" id="syncLast"></span>
+          </div>
+          <div class="sync-active-row">
+            <button id="syncDisconnectBtn" class="sync-disconnect-btn">נתק</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="mitzvotList"></div>
@@ -10244,6 +10385,289 @@ const TOTAL_OSHER = TEFILOT.length;
       }
     } catch(e) {}
   }, 30000);
+
+  // ============= Firebase cloud sync (cross-device, real-time) =============
+  // Stores all shared prayer data + per-profile score data in a Firebase Realtime
+  // Database so both devices see live updates from each other.
+  const SYNC_URL_KEY = 'tefilot_sync_url_v1';
+  const SYNCED_SHARED_KEYS = [
+    'tefilot_said_v2', 'tefilot_brit_said_v1', 'tefilot_bitachon_said_v1',
+    'tefilot_hochma_said_v1', 'tefilot_roei_said_v1', 'tefilot_refua_said_v1',
+    'tefilot_osher_fav_v1', 'tefilot_brit_fav_v1', 'tefilot_bitachon_fav_v1',
+    'tefilot_hochma_fav_v1', 'tefilot_roei_fav_v1', 'tefilot_refua_fav_v1'
+  ];
+  const SYNCED_PROFILE_KEYS = [
+    'tefilot_score_today_v1', 'tefilot_score_history_v1',
+    'tefilot_daily_counts_v1', 'tefilot_goals_v1', 'tefilot_journal_notes_v1'
+  ];
+
+  function getSyncUrl() {
+    try {
+      const url = (localStorage.getItem(SYNC_URL_KEY) || '').trim().replace(/\/$/, '');
+      return url || null;
+    } catch(e) { return null; }
+  }
+
+  function isSyncActive() { return !!getSyncUrl(); }
+
+  let syncUpTimer = null;
+  let lastSyncUpAt = 0;
+  let lastSyncDownAt = 0;
+  let isSyncing = false;
+
+  function pullState() {
+    const out = { shared: {}, profiles: { pinto: {}, tal: {} } };
+    const now = Date.now();
+    for (const k of SYNCED_SHARED_KEYS) {
+      const v = localStorage.getItem(k);
+      if (v != null) {
+        try { out.shared[k] = { data: JSON.parse(v), ts: now }; } catch(e) {}
+      }
+    }
+    for (const p of ['pinto', 'tal']) {
+      for (const k of SYNCED_PROFILE_KEYS) {
+        const v = localStorage.getItem(p + '_' + k);
+        if (v != null) {
+          try { out.profiles[p][k] = { data: JSON.parse(v), ts: now }; } catch(e) {}
+        }
+      }
+    }
+    return out;
+  }
+
+  function mergeRemoteIntoLocal(remote) {
+    if (!remote) return false;
+    let changed = false;
+
+    // Shared keys: UNION arrays (union of sets)
+    for (const k of SYNCED_SHARED_KEYS) {
+      const remoteItem = remote.shared && remote.shared[k];
+      if (!remoteItem || !Array.isArray(remoteItem.data)) continue;
+      let local = [];
+      const raw = localStorage.getItem(k);
+      if (raw) { try { local = JSON.parse(raw); } catch(e) { local = []; } }
+      if (!Array.isArray(local)) local = [];
+      const merged = Array.from(new Set([...local, ...remoteItem.data]));
+      if (merged.length !== local.length || merged.some(v => !local.includes(v))) {
+        localStorage.setItem(k, JSON.stringify(merged));
+        changed = true;
+      }
+    }
+
+    // Per-profile keys: newer timestamp wins (replace local if remote is newer)
+    for (const p of ['pinto', 'tal']) {
+      const remoteProf = remote.profiles && remote.profiles[p];
+      if (!remoteProf) continue;
+      for (const k of SYNCED_PROFILE_KEYS) {
+        const remoteItem = remoteProf[k];
+        if (!remoteItem) continue;
+        const tsKey = '_sync_ts_' + p + '_' + k;
+        const localTs = parseInt(localStorage.getItem(tsKey) || '0', 10);
+        const remoteTs = remoteItem.ts || 0;
+        if (remoteTs > localTs && remoteItem.data != null) {
+          localStorage.setItem(p + '_' + k, JSON.stringify(remoteItem.data));
+          localStorage.setItem(tsKey, String(remoteTs));
+          changed = true;
+        }
+      }
+    }
+    return changed;
+  }
+
+  async function syncUp() {
+    const url = getSyncUrl();
+    if (!url || isSyncing) return;
+    isSyncing = true;
+    try {
+      const payload = pullState();
+      // Fetch remote, merge, then PUT back so we don't overwrite the partner's recent changes
+      const resp = await fetch(url + '/state.json', { cache: 'no-store' });
+      let remote = null;
+      try { remote = await resp.json(); } catch(e) {}
+      const merged = { shared: {}, profiles: { pinto: {}, tal: {} } };
+
+      // Merge shared: UNION
+      const sharedKeys = new Set([
+        ...Object.keys(payload.shared),
+        ...Object.keys((remote && remote.shared) || {})
+      ]);
+      for (const k of sharedKeys) {
+        const a = payload.shared[k];
+        const b = remote && remote.shared && remote.shared[k];
+        const aData = (a && Array.isArray(a.data)) ? a.data : [];
+        const bData = (b && Array.isArray(b.data)) ? b.data : [];
+        merged.shared[k] = {
+          data: Array.from(new Set([...aData, ...bData])),
+          ts: Math.max((a && a.ts) || 0, (b && b.ts) || 0)
+        };
+      }
+
+      // Merge profiles: newer ts wins
+      for (const p of ['pinto', 'tal']) {
+        const aProf = payload.profiles[p] || {};
+        const bProf = (remote && remote.profiles && remote.profiles[p]) || {};
+        const keys = new Set([...Object.keys(aProf), ...Object.keys(bProf)]);
+        for (const k of keys) {
+          const a = aProf[k]; const b = bProf[k];
+          const aTs = (a && a.ts) || 0;
+          const bTs = (b && b.ts) || 0;
+          merged.profiles[p][k] = (aTs >= bTs) ? a : b;
+        }
+      }
+
+      await fetch(url + '/state.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(merged)
+      });
+
+      // Update timestamps for our profile so future merges don't fight us
+      const now = Date.now();
+      for (const k of SYNCED_PROFILE_KEYS) {
+        localStorage.setItem('_sync_ts_' + currentProfile + '_' + k, String(now));
+      }
+
+      lastSyncUpAt = Date.now();
+      updateSyncStatus();
+    } catch(e) {
+      console.warn('sync up failed', e);
+    } finally {
+      isSyncing = false;
+    }
+  }
+
+  async function syncDown() {
+    const url = getSyncUrl();
+    if (!url) return;
+    try {
+      const resp = await fetch(url + '/state.json', { cache: 'no-store' });
+      let remote = null;
+      try { remote = await resp.json(); } catch(e) {}
+      const changed = mergeRemoteIntoLocal(remote);
+      lastSyncDownAt = Date.now();
+      updateSyncStatus();
+      if (changed) {
+        try { loadState(); } catch(e) {}
+        try { updateStats(); } catch(e) {}
+        try { updateTabColors(); } catch(e) {}
+        if (typeof currentTab !== 'undefined' && currentTab === 'score') {
+          try { loadTodayState(); } catch(e) {}
+          try { renderScoreView(); } catch(e) {}
+        } else {
+          try { renderPrayers(); } catch(e) {}
+        }
+      }
+    } catch(e) {
+      console.warn('sync down failed', e);
+    }
+  }
+
+  function scheduleSyncUp() {
+    if (!isSyncActive()) return;
+    if (syncUpTimer) clearTimeout(syncUpTimer);
+    syncUpTimer = setTimeout(syncUp, 600);
+  }
+
+  // Intercept localStorage.setItem to auto-push relevant changes upstream
+  (function() {
+    const orig = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function(key, value) {
+      orig(key, value);
+      if (!key || key.indexOf('_sync_ts_') === 0) return;
+      const isShared = SYNCED_SHARED_KEYS.includes(key);
+      const isProfileKey = SYNCED_PROFILE_KEYS.some(k =>
+        key === 'pinto_' + k || key === 'tal_' + k
+      );
+      if (isShared || isProfileKey) {
+        if (isProfileKey) {
+          // Stamp ts so we win the merge
+          const parts = key.split('_');
+          const prof = parts[0];
+          const inner = key.slice(prof.length + 1);
+          orig('_sync_ts_' + prof + '_' + inner, String(Date.now()));
+        }
+        scheduleSyncUp();
+      }
+    };
+  })();
+
+  function updateSyncStatus() {
+    const statusEl = document.getElementById('syncStatus');
+    const helpEl = document.getElementById('syncHelp');
+    const activeEl = document.getElementById('syncActive');
+    const lastEl = document.getElementById('syncLast');
+    if (!statusEl) return;
+    if (isSyncActive()) {
+      statusEl.textContent = 'מסונכרן';
+      statusEl.classList.add('active');
+      if (helpEl) helpEl.style.display = 'none';
+      if (activeEl) activeEl.style.display = 'block';
+      if (lastEl) {
+        const t = Math.max(lastSyncUpAt, lastSyncDownAt);
+        if (t > 0) {
+          const d = new Date(t);
+          const hh = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          const ss = String(d.getSeconds()).padStart(2, '0');
+          lastEl.textContent = 'עודכן: ' + hh + ':' + mm + ':' + ss;
+        }
+      }
+    } else {
+      statusEl.textContent = 'לא מסונכרן';
+      statusEl.classList.remove('active');
+      if (helpEl) helpEl.style.display = 'block';
+      if (activeEl) activeEl.style.display = 'none';
+    }
+  }
+
+  function connectSync() {
+    const input = document.getElementById('syncUrlInput');
+    if (!input) return;
+    const url = (input.value || '').trim().replace(/\/$/, '');
+    if (!url || !/^https?:\/\//i.test(url)) {
+      alert('נא להזין URL תקין של Firebase Realtime Database');
+      return;
+    }
+    try { localStorage.setItem(SYNC_URL_KEY, url); } catch(e) {}
+    updateSyncStatus();
+    syncDown().then(() => syncUp());
+  }
+
+  function disconnectSync() {
+    try { localStorage.removeItem(SYNC_URL_KEY); } catch(e) {}
+    updateSyncStatus();
+  }
+
+  // Wire UI when DOM is ready
+  setTimeout(function() {
+    const connectBtn = document.getElementById('syncConnectBtn');
+    const disconnectBtn = document.getElementById('syncDisconnectBtn');
+    const urlInput = document.getElementById('syncUrlInput');
+    if (connectBtn) connectBtn.addEventListener('click', connectSync);
+    if (disconnectBtn) disconnectBtn.addEventListener('click', disconnectSync);
+    if (urlInput) {
+      const existing = getSyncUrl();
+      if (existing) urlInput.value = existing;
+    }
+    updateSyncStatus();
+    if (isSyncActive()) {
+      syncDown();
+    }
+  }, 0);
+
+  // Periodic pull from cloud (every 5 seconds when active and visible)
+  setInterval(function() {
+    if (document.hidden) return;
+    if (isSyncActive()) syncDown();
+  }, 5000);
+
+  // Push/pull on focus and visibility
+  window.addEventListener('focus', function() {
+    if (isSyncActive()) { syncDown(); }
+  });
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden && isSyncActive()) syncDown();
+  });
 </script>
 
 </body>
