@@ -2651,8 +2651,6 @@
         </div>
       </div>
 
-      <div class="partner-prayers-title">📿 התקדמות בתפילות (סה״כ)</div>
-      <div class="partner-prayers-grid" id="partnerPrayersGrid"></div>
     </div>
 
     <div id="mitzvotList"></div>
@@ -8168,17 +8166,47 @@ const TOTAL_OSHER = TEFILOT.length;
     if (saved && PROFILES[saved]) currentProfile = saved;
   } catch(e) {}
 
-  // Migration: if unprefixed legacy data exists and no pinto-prefixed data, treat existing as pinto's
+  // Shared prayer keys (NOT profile-prefixed) - both profiles progress on the same prayers
+  const SHARED_PRAYER_KEYS = new Set([
+    'tefilot_said_v2', 'tefilot_brit_said_v1', 'tefilot_bitachon_said_v1',
+    'tefilot_hochma_said_v1', 'tefilot_roei_said_v1', 'tefilot_refua_said_v1',
+    'tefilot_osher_fav_v1', 'tefilot_brit_fav_v1', 'tefilot_bitachon_fav_v1',
+    'tefilot_hochma_fav_v1', 'tefilot_roei_fav_v1', 'tefilot_refua_fav_v1'
+  ]);
+
+  // Migration: per-profile keys (score/goals/journal/daily) - move legacy unprefixed to pinto_
   try {
-    const legacyKeys = ['tefilot_said_v2', 'tefilot_brit_said_v1', 'tefilot_bitachon_said_v1',
-                        'tefilot_hochma_said_v1', 'tefilot_roei_said_v1', 'tefilot_refua_said_v1',
-                        'tefilot_score_today_v1', 'tefilot_score_history_v1', 'tefilot_daily_counts_v1',
-                        'tefilot_goals_v1', 'tefilot_journal_notes_v1'];
-    for (const k of legacyKeys) {
+    const perProfileKeys = ['tefilot_score_today_v1', 'tefilot_score_history_v1',
+                            'tefilot_daily_counts_v1', 'tefilot_goals_v1', 'tefilot_journal_notes_v1'];
+    for (const k of perProfileKeys) {
       const legacyVal = localStorage.getItem(k);
       const newVal = localStorage.getItem('pinto_' + k);
       if (legacyVal && !newVal) {
         localStorage.setItem('pinto_' + k, legacyVal);
+      }
+    }
+  } catch(e) {}
+
+  // Migration: merge any previously-split prayer/fav data (pinto_/tal_ prefixed) back into shared unprefixed keys
+  try {
+    for (const k of SHARED_PRAYER_KEYS) {
+      const merged = new Set();
+      const sharedRaw = localStorage.getItem(k);
+      if (sharedRaw) {
+        try { const arr = JSON.parse(sharedRaw); if (Array.isArray(arr)) arr.forEach(v => merged.add(v)); } catch(e) {}
+      }
+      let foundPrefixed = false;
+      for (const prof of ['pinto', 'tal']) {
+        const raw = localStorage.getItem(prof + '_' + k);
+        if (raw) {
+          foundPrefixed = true;
+          try { const arr = JSON.parse(raw); if (Array.isArray(arr)) arr.forEach(v => merged.add(v)); } catch(e) {}
+        }
+      }
+      if (foundPrefixed) {
+        localStorage.setItem(k, JSON.stringify([...merged]));
+        localStorage.removeItem('pinto_' + k);
+        localStorage.removeItem('tal_' + k);
       }
     }
   } catch(e) {}
@@ -8261,35 +8289,6 @@ const TOTAL_OSHER = TEFILOT.length;
       const prayersEl = document.getElementById('partnerPrayers');
       if (scoreEl) scoreEl.textContent = partnerScore;
       if (prayersEl) prayersEl.textContent = partnerPrayers;
-
-      // Partner's total prayer progress per category
-      const categories = [
-        { label: 'עושר', key: 'tefilot_said_v2', total: 515 },
-        { label: 'חכמה', key: 'tefilot_hochma_said_v1', total: 515 },
-        { label: 'ברית', key: 'tefilot_brit_said_v1', total: 515 },
-        { label: 'ביטחון', key: 'tefilot_bitachon_said_v1', total: 520 },
-        { label: 'רועי', key: 'tefilot_roei_said_v1', total: 515 },
-        { label: 'רפואה', key: 'tefilot_refua_said_v1', total: 50 }
-      ];
-      const grid = document.getElementById('partnerPrayersGrid');
-      if (grid) {
-        grid.innerHTML = categories.map(cat => {
-          let count = 0;
-          try {
-            const raw = localStorage.getItem(pkFor(partner, cat.key));
-            if (raw) {
-              const arr = JSON.parse(raw);
-              if (Array.isArray(arr)) count = arr.length;
-            }
-          } catch(e) {}
-          const pct = Math.round((count / cat.total) * 100);
-          return '<div class="partner-prayer-card">' +
-            '<div class="name">' + cat.label + '</div>' +
-            '<div class="count">' + count + ' / ' + cat.total + '</div>' +
-            '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
-            '</div>';
-        }).join('');
-      }
     } catch(e) {}
   }
   const FAV_KEY_OSHER = 'tefilot_osher_fav_v1';
@@ -8389,7 +8388,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function getActivePool() { return TABS_DATA[currentTab].pool; }
   function getActiveTotal() { return TABS_DATA[currentTab].total; }
-  function getActiveStorageKey() { return pk(TABS_DATA[currentTab].storageKey); }
+  function getActiveStorageKey() { return TABS_DATA[currentTab].storageKey; }
   function getActivePoolLength() { return TABS_DATA[currentTab].poolLength; }
 
   // ============= Daily Counter (green tab when 10 prayers said today) =============
@@ -8450,7 +8449,7 @@ const TOTAL_OSHER = TEFILOT.length;
     localStorage.setItem(getActiveStorageKey(), JSON.stringify([...saidSet]));
     localStorage.setItem(getActiveFavStorageKey(), JSON.stringify([...favSet]));
   }
-  function getActiveFavStorageKey() { return pk(TABS_DATA[currentTab].favStorageKey); }
+  function getActiveFavStorageKey() { return TABS_DATA[currentTab].favStorageKey; }
 
   function updateStats() {
     updateFavCount();
