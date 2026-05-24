@@ -492,10 +492,6 @@
   .score-date-header:active {
     filter: brightness(1.15);
   }
-  .score-date-header.editing-past {
-    background: linear-gradient(135deg, #5a4a2a, #7a6230);
-    box-shadow: 0 0 0 2px var(--gold), 0 2px 8px rgba(60,30,10,0.3);
-  }
   #scoreDatePicker {
     position: absolute;
     inset: 0;
@@ -507,20 +503,6 @@
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
-  }
-  .back-to-today {
-    display: block;
-    margin: -8px auto 18px;
-    background: var(--parchment-light);
-    border: 1.5px solid var(--gold);
-    color: var(--brown-deep);
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-family: 'Frank Ruhl Libre', serif;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 1px 4px rgba(60,30,10,0.15);
   }
   .score-date-header .date-label {
     font-family: 'Frank Ruhl Libre', serif;
@@ -2804,11 +2786,10 @@
 
   <div id="scoreView">
     <div class="score-date-header" id="scoreDateHeader">
-      <div class="date-label">תאריך · לחץ לבחירת יום אחר 📅</div>
+      <div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div>
       <div class="date-value" id="scoreDateValue">—</div>
       <input type="date" id="scoreDatePicker" aria-label="בחר תאריך" />
     </div>
-    <button id="backToTodayBtn" class="back-to-today" style="display:none;">← חזרה להיום</button>
 
     <div class="score-today-total">
       <div class="label">סך הניקוד היום</div>
@@ -8440,7 +8421,6 @@ const TOTAL_OSHER = TEFILOT.length;
     try { updateStats(); } catch(e) {}
     try { renderPrayers(); } catch(e) {}
     try { updateTabColors(); } catch(e) {}
-    editingDate = null;
     if (typeof currentTab !== 'undefined' && currentTab === 'score') {
       try { loadTodayState(); } catch(e) {}
       try { loadGoals(); } catch(e) {}
@@ -8930,7 +8910,6 @@ const TOTAL_OSHER = TEFILOT.length;
         if (subtitleEl) subtitleEl.textContent = 'מעקב מצוות וצבירת זכויות';
         if (verseEl) verseEl.textContent = '״ויעקב הלך לדרכו ויפגעו בו מלאכי אלוהים״';
         try { localStorage.setItem(STORAGE_KEY_TAB, tabName); } catch(e) {}
-        editingDate = null;
         loadTodayState();
         loadGoals();
         renderScoreView();
@@ -9357,9 +9336,6 @@ const TOTAL_OSHER = TEFILOT.length;
   let MITZVOT = getActiveMitzvot();
 
   let todayState = {};  // { date: 'YYYY-MM-DD', items: { shacharit: { done, minyan }, ... } }
-  let editingDate = null;  // null = today; otherwise a past 'YYYY-MM-DD' being edited
-
-  function getActiveDate() { return editingDate || getTodayDate(); }
 
   function getTodayDate() {
     const d = new Date();
@@ -9379,58 +9355,27 @@ const TOTAL_OSHER = TEFILOT.length;
   }
 
   function loadTodayState() {
-    const active = getActiveDate();
-    if (active === getTodayDate()) {
-      // Editing today — use the live "today" slot
-      try {
-        const raw = localStorage.getItem(pk(SCORE_KEY_TODAY));
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed.date === getTodayDate()) {
-            todayState = parsed;
-            MITZVOT.forEach(m => {
-              if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false };
-            });
-            return;
-          }
+    try {
+      const raw = localStorage.getItem(pk(SCORE_KEY_TODAY));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.date === getTodayDate()) {
+          todayState = parsed;
+          MITZVOT.forEach(m => {
+            if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false };
+          });
+          return;
         }
-      } catch(e) {}
-      todayState = { date: getTodayDate(), items: {} };
-      MITZVOT.forEach(m => { todayState.items[m.id] = { done: false, minyan: false }; });
-      return;
-    }
-    // Editing a past date — load from history (or start empty)
-    const history = loadHistory();
-    const entry = history.find(h => h.date === active);
-    todayState = { date: active, items: {} };
-    MITZVOT.forEach(m => {
-      const it = entry && entry.items && entry.items[m.id];
-      todayState.items[m.id] = it
-        ? { done: !!it.done, minyan: !!it.minyan, extras: it.extras ? { ...it.extras } : {} }
-        : { done: false, minyan: false, extras: {} };
-    });
+      }
+    } catch(e) {}
+    todayState = { date: getTodayDate(), items: {} };
+    MITZVOT.forEach(m => { todayState.items[m.id] = { done: false, minyan: false }; });
   }
 
   function saveTodayState() {
-    if (todayState.date === getTodayDate()) {
-      try {
-        localStorage.setItem(pk(SCORE_KEY_TODAY), JSON.stringify(todayState));
-      } catch(e) {}
-      return;
-    }
-    // Past date — persist into history
-    const history = loadHistory();
-    const score = calculateTodayScore();
-    const idx = history.findIndex(h => h.date === todayState.date);
-    if (score === 0) {
-      if (idx >= 0) history.splice(idx, 1);
-    } else {
-      const entry = { date: todayState.date, score, items: JSON.parse(JSON.stringify(todayState.items)) };
-      if (idx >= 0) history[idx] = entry;
-      else history.push(entry);
-    }
-    history.sort((a, b) => a.date.localeCompare(b.date));
-    saveHistory(history.slice(-90));
+    try {
+      localStorage.setItem(pk(SCORE_KEY_TODAY), JSON.stringify(todayState));
+    } catch(e) {}
   }
 
   // Points earned for a single mitzva given its item state (done + minyan + extras)
@@ -9526,26 +9471,14 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function renderScoreView() {
     if (!todayState.date) loadTodayState();
-    // Auto-reset to today only when viewing today (passed midnight)
-    if (!editingDate && todayState.date !== getTodayDate()) {
+    // Check if date changed (passed midnight)
+    if (todayState.date !== getTodayDate()) {
       loadTodayState();
     }
 
     document.getElementById('scoreDateValue').textContent = formatHebrewDate(todayState.date);
     document.getElementById('scoreTodayMax').textContent = calculateMaxScore();
-
-    // Toggle "editing a past day" UI state
-    const headerEl = document.getElementById('scoreDateHeader');
-    const backBtn = document.getElementById('backToTodayBtn');
-    const totalLabel = document.querySelector('.score-today-total .label');
-    const isPast = !!editingDate;
-    if (headerEl) headerEl.classList.toggle('editing-past', isPast);
-    if (backBtn) backBtn.style.display = isPast ? 'block' : 'none';
-    if (totalLabel) totalLabel.textContent = isPast ? 'סך הניקוד ליום זה' : 'סך הניקוד היום';
-    const partnerEl = document.getElementById('partnerView');
-    if (partnerEl) partnerEl.style.display = isPast ? 'none' : '';
-
-    try { if (!isPast) updatePartnerView(); } catch(e) {}
+    try { updatePartnerView(); } catch(e) {}
 
     const list = document.getElementById('mitzvotList');
     list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, todayState.items[m.id])).join('');
@@ -10376,13 +10309,12 @@ const TOTAL_OSHER = TEFILOT.length;
   // ===== Score tab buttons =====
   on('endDayBtn', 'click', endDay);
 
-  // ===== Date picker: edit the daily score of any past day =====
+  // ===== Date picker: pick any day to open its editor =====
   (function() {
     const picker = document.getElementById('scoreDatePicker');
     if (picker) {
-      // Prime value/limits whenever the user is about to open the picker
       const prime = () => {
-        picker.value = getActiveDate();
+        picker.value = getTodayDate();
         picker.max = getTodayDate();
       };
       picker.addEventListener('focus', prime);
@@ -10390,16 +10322,9 @@ const TOTAL_OSHER = TEFILOT.length;
       picker.addEventListener('change', () => {
         const val = picker.value;
         if (!val) return;
-        editingDate = (val === getTodayDate()) ? null : val;
-        loadTodayState();
-        renderScoreView();
+        openEditDay(val);
       });
     }
-    on('backToTodayBtn', 'click', () => {
-      editingDate = null;
-      loadTodayState();
-      renderScoreView();
-    });
   })();
 
   // ===== Goals buttons =====
@@ -10604,7 +10529,10 @@ const TOTAL_OSHER = TEFILOT.length;
       for (const k of SYNCED_PROFILE_KEYS) {
         const v = localStorage.getItem(p + '_' + k);
         if (v != null) {
-          try { out.profiles[p][k] = { data: JSON.parse(v), ts: now }; } catch(e) {}
+          // Use the stored per-key timestamp so unchanged data does not clobber
+          // the partner's newer data during merge (avoids lost updates).
+          const ts = parseInt(localStorage.getItem('_sync_ts_' + p + '_' + k) || '0', 10) || now;
+          try { out.profiles[p][k] = { data: JSON.parse(v), ts }; } catch(e) {}
         }
       }
     }
