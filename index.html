@@ -485,6 +485,24 @@
     border-radius: 8px;
     color: var(--gold-light);
     box-shadow: 0 2px 8px rgba(60,30,10,0.2);
+    position: relative;
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+  .score-date-header:active {
+    filter: brightness(1.15);
+  }
+  #scoreDatePicker {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .score-date-header .date-label {
     font-family: 'Frank Ruhl Libre', serif;
@@ -625,6 +643,39 @@
     100% { transform: scale(1); }
   }
 
+  .mitzva-expand {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 1.5px solid var(--gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .mitzva-expand svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--brown);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s;
+  }
+  .mitzva-card.expanded .mitzva-expand svg {
+    transform: rotate(180deg);
+  }
+  .mitzva-extras {
+    display: none;
+  }
+  .mitzva-card.expanded .mitzva-extras {
+    display: block;
+  }
   .minyan-toggle {
     margin-top: 12px;
     padding-top: 12px;
@@ -2734,9 +2785,10 @@
   </div>
 
   <div id="scoreView">
-    <div class="score-date-header">
-      <div class="date-label">תאריך</div>
+    <div class="score-date-header" id="scoreDateHeader">
+      <div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div>
       <div class="date-value" id="scoreDateValue">—</div>
+      <input type="date" id="scoreDatePicker" aria-label="בחר תאריך" />
     </div>
 
     <div class="score-today-total">
@@ -8291,7 +8343,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_HOCHMA = 'tefilot_hochma_said_v1';
   const STORAGE_KEY_DAILY = 'tefilot_daily_counts_v1';
-  const DAILY_TARGET = 10;
+  const DAILY_TARGET = 5;
   const STORAGE_KEY_ROEI = 'tefilot_roei_said_v1';
   const FAV_KEY_ROEI = 'tefilot_roei_fav_v1';
 
@@ -8407,8 +8459,7 @@ const TOTAL_OSHER = TEFILOT.length;
               if (!item.done) continue;
               const mitzva = partnerMitzvot.find(m => m.id === id);
               if (!mitzva) continue;
-              const pts = (mitzva.hasMinyan && item.minyan) ? mitzva.points * 2 : mitzva.points;
-              partnerScore += pts;
+              partnerScore += mitzvaItemPoints(mitzva, item);
             }
           }
         }
@@ -9262,10 +9313,12 @@ const TOTAL_OSHER = TEFILOT.length;
   const SCORE_KEY_TODAY = 'tefilot_score_today_v1';
 
   const MITZVOT_PINTO = [
-    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true },
+    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true,
+      extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
     { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
     { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
-    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false },
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false,
+      extras: [{ id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 }] },
     { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false }
   ];
 
@@ -9306,18 +9359,17 @@ const TOTAL_OSHER = TEFILOT.length;
       const raw = localStorage.getItem(pk(SCORE_KEY_TODAY));
       if (raw) {
         const parsed = JSON.parse(raw);
-        // If saved date is not today, reset
         if (parsed.date === getTodayDate()) {
           todayState = parsed;
+          MITZVOT.forEach(m => {
+            if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false };
+          });
           return;
         }
       }
     } catch(e) {}
-    // Initialize fresh
     todayState = { date: getTodayDate(), items: {} };
-    MITZVOT.forEach(m => {
-      todayState.items[m.id] = { done: false, minyan: false };
-    });
+    MITZVOT.forEach(m => { todayState.items[m.id] = { done: false, minyan: false }; });
   }
 
   function saveTodayState() {
@@ -9326,26 +9378,88 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) {}
   }
 
+  // Points earned for a single mitzva given its item state (done + minyan + extras).
+  // Extras marked `independent` count even if the mitzva itself isn't done
+  // (e.g. tefillin counts on its own); other extras are bonuses requiring done.
+  function mitzvaItemPoints(m, item) {
+    if (!item) return 0;
+    let pts = 0;
+    if (item.done) {
+      pts += (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+    }
+    if (m.extras && item.extras) {
+      m.extras.forEach(ex => {
+        if (!item.extras[ex.id]) return;
+        if (ex.independent || item.done) pts += ex.points;
+      });
+    }
+    return pts;
+  }
+
+  // Maximum possible points for a single mitzva (minyan + all extras)
+  function mitzvaMaxPoints(m) {
+    let pts = m.hasMinyan ? m.points * 2 : m.points;
+    if (m.extras) m.extras.forEach(ex => { pts += ex.points; });
+    return pts;
+  }
+
+  // Shared markup for a mitzva card (used in the score tab and the edit-day modal)
+  function renderMitzvaCard(m, rawItem) {
+    const item = rawItem || { done: false, minyan: false, extras: {} };
+    const extras = item.extras || {};
+    const effectivePoints = mitzvaItemPoints(m, { ...item, done: true });
+    const hasExtras = m.extras && m.extras.length;
+    const anyExtraOn = hasExtras && m.extras.some(ex => extras[ex.id]);
+    const bonusLabel = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') +
+      (hasExtras ? m.extras.filter(ex => extras[ex.id]).map(ex => ' +' + ex.points).join('') : '');
+    return `
+      <div class="mitzva-card${item.done ? ' done' : ''}${anyExtraOn ? ' expanded' : ''}" data-id="${m.id}">
+        <div class="mitzva-row">
+          ${hasExtras ? `<button class="mitzva-expand" data-action="expand" aria-label="הצג בונוס">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>` : ''}
+          <div class="mitzva-icon">${m.icon}</div>
+          <div class="mitzva-info">
+            <div class="mitzva-name">${m.name}</div>
+            <div class="mitzva-points"><strong>${effectivePoints}</strong> נקודות${bonusLabel}</div>
+          </div>
+          <button class="mitzva-check" data-action="check" aria-label="סמן">
+            <svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>
+          </button>
+        </div>
+        ${m.hasMinyan ? `
+          <div class="minyan-toggle">
+            <div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div>
+            <label class="switch">
+              <input type="checkbox" data-action="minyan" ${item.minyan ? 'checked' : ''}>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        ` : ''}
+        ${hasExtras ? `<div class="mitzva-extras">
+          ${m.extras.map(ex => `
+            <div class="minyan-toggle">
+              <div class="minyan-toggle-label">${ex.label} <span class="bonus">+${ex.points} נקודות</span></div>
+              <label class="switch">
+                <input type="checkbox" data-action="extra" data-extra="${ex.id}" ${extras[ex.id] ? 'checked' : ''}>
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          `).join('')}
+        </div>` : ''}
+      </div>
+    `;
+  }
+
   function calculateTodayScore() {
     let total = 0;
-    MITZVOT.forEach(m => {
-      const item = todayState.items[m.id];
-      if (item && item.done) {
-        if (m.hasMinyan && item.minyan) {
-          total += m.points * 2;
-        } else {
-          total += m.points;
-        }
-      }
-    });
+    MITZVOT.forEach(m => { total += mitzvaItemPoints(m, todayState.items[m.id]); });
     return total;
   }
 
   function calculateMaxScore() {
     let max = 0;
-    MITZVOT.forEach(m => {
-      max += m.hasMinyan ? m.points * 2 : m.points;
-    });
+    MITZVOT.forEach(m => { max += mitzvaMaxPoints(m); });
     return max;
   }
 
@@ -9375,33 +9489,7 @@ const TOTAL_OSHER = TEFILOT.length;
     try { updatePartnerView(); } catch(e) {}
 
     const list = document.getElementById('mitzvotList');
-    list.innerHTML = MITZVOT.map(m => {
-      const item = todayState.items[m.id] || { done: false, minyan: false };
-      const effectivePoints = (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
-      return `
-        <div class="mitzva-card${item.done ? ' done' : ''}" data-id="${m.id}">
-          <div class="mitzva-row">
-            <div class="mitzva-icon">${m.icon}</div>
-            <div class="mitzva-info">
-              <div class="mitzva-name">${m.name}</div>
-              <div class="mitzva-points"><strong>${effectivePoints}</strong> נקודות${m.hasMinyan && item.minyan ? ' (×2 במניין)' : ''}</div>
-            </div>
-            <button class="mitzva-check" data-action="check" aria-label="סמן">
-              <svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>
-            </button>
-          </div>
-          ${m.hasMinyan ? `
-            <div class="minyan-toggle">
-              <div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div>
-              <label class="switch">
-                <input type="checkbox" data-action="minyan" ${item.minyan ? 'checked' : ''}>
-                <span class="switch-slider"></span>
-              </label>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }).join('');
+    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, todayState.items[m.id])).join('');
 
     // Attach listeners
     list.querySelectorAll('.mitzva-card').forEach(card => {
@@ -9411,6 +9499,11 @@ const TOTAL_OSHER = TEFILOT.length;
       if (minyanInput) {
         minyanInput.addEventListener('change', () => toggleMinyan(id, minyanInput.checked));
       }
+      const expandBtn = card.querySelector('[data-action="expand"]');
+      if (expandBtn) expandBtn.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => {
+        inp.addEventListener('change', () => toggleExtra(id, inp.dataset.extra, inp.checked));
+      });
     });
 
     document.getElementById('scoreToday').textContent = calculateTodayScore();
@@ -9584,8 +9677,11 @@ const TOTAL_OSHER = TEFILOT.length;
         const item = items[m.id] || { done: false, minyan: false };
         const done = !!item.done;
         const withMinyan = done && m.hasMinyan && item.minyan;
-        const points = withMinyan ? m.points * 2 : m.points;
-        const minyanMark = withMinyan ? '<span class="minyan-mark">×2 במניין</span>' : '';
+        const points = mitzvaItemPoints(m, item);
+        const extraMarks = (done && m.extras && item.extras)
+          ? m.extras.filter(ex => item.extras[ex.id]).map(ex => '<span class="minyan-mark">' + ex.label + '</span>').join('')
+          : '';
+        const minyanMark = (withMinyan ? '<span class="minyan-mark">×2 במניין</span>' : '') + extraMarks;
         const status = done
           ? '<span class="journal-mitzva-status done">✓</span>'
           : '<span class="journal-mitzva-status skipped">○</span>';
@@ -9765,6 +9861,14 @@ const TOTAL_OSHER = TEFILOT.length;
   function toggleMinyan(id, checked) {
     if (!todayState.items[id]) todayState.items[id] = { done: false, minyan: false };
     todayState.items[id].minyan = checked;
+    saveTodayState();
+    renderScoreView();
+  }
+
+  function toggleExtra(id, extraId, checked) {
+    if (!todayState.items[id]) todayState.items[id] = { done: false, minyan: false };
+    if (!todayState.items[id].extras) todayState.items[id].extras = {};
+    todayState.items[id].extras[extraId] = checked;
     saveTodayState();
     renderScoreView();
   }
@@ -10078,45 +10182,13 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function calculateEditingScore() {
     let total = 0;
-    MITZVOT.forEach(m => {
-      const item = editingDayItems[m.id];
-      if (item && item.done) {
-        if (m.hasMinyan && item.minyan) total += m.points * 2;
-        else total += m.points;
-      }
-    });
+    MITZVOT.forEach(m => { total += mitzvaItemPoints(m, editingDayItems[m.id]); });
     return total;
   }
 
   function renderEditDayMitzvot() {
     const list = document.getElementById('editDayMitzvot');
-    list.innerHTML = MITZVOT.map(m => {
-      const item = editingDayItems[m.id] || { done: false, minyan: false };
-      const effectivePoints = (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
-      return `
-        <div class="mitzva-card${item.done ? ' done' : ''}" data-id="${m.id}">
-          <div class="mitzva-row">
-            <div class="mitzva-icon">${m.icon}</div>
-            <div class="mitzva-info">
-              <div class="mitzva-name">${m.name}</div>
-              <div class="mitzva-points"><strong>${effectivePoints}</strong> נקודות${m.hasMinyan && item.minyan ? ' (×2 במניין)' : ''}</div>
-            </div>
-            <button class="mitzva-check" data-action="check" aria-label="סמן">
-              <svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg>
-            </button>
-          </div>
-          ${m.hasMinyan ? `
-            <div class="minyan-toggle">
-              <div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div>
-              <label class="switch">
-                <input type="checkbox" data-action="minyan" ${item.minyan ? 'checked' : ''}>
-                <span class="switch-slider"></span>
-              </label>
-            </div>
-          ` : ''}
-        </div>
-      `;
-    }).join('');
+    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, editingDayItems[m.id])).join('');
 
     list.querySelectorAll('.mitzva-card').forEach(card => {
       const id = card.dataset.id;
@@ -10125,6 +10197,11 @@ const TOTAL_OSHER = TEFILOT.length;
       if (minyanInput) {
         minyanInput.addEventListener('change', () => toggleEditMinyan(id, minyanInput.checked));
       }
+      const expandBtn = card.querySelector('[data-action="expand"]');
+      if (expandBtn) expandBtn.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => {
+        inp.addEventListener('change', () => toggleEditExtra(id, inp.dataset.extra, inp.checked));
+      });
     });
 
     document.getElementById('editDayScore').textContent = calculateEditingScore();
@@ -10139,6 +10216,13 @@ const TOTAL_OSHER = TEFILOT.length;
   function toggleEditMinyan(id, checked) {
     if (!editingDayItems[id]) editingDayItems[id] = { done: false, minyan: false };
     editingDayItems[id].minyan = checked;
+    renderEditDayMitzvot();
+  }
+
+  function toggleEditExtra(id, extraId, checked) {
+    if (!editingDayItems[id]) editingDayItems[id] = { done: false, minyan: false };
+    if (!editingDayItems[id].extras) editingDayItems[id].extras = {};
+    editingDayItems[id].extras[extraId] = checked;
     renderEditDayMitzvot();
   }
 
@@ -10232,6 +10316,24 @@ const TOTAL_OSHER = TEFILOT.length;
 
   // ===== Score tab buttons =====
   on('endDayBtn', 'click', endDay);
+
+  // ===== Date picker: pick any day to open its editor =====
+  (function() {
+    const picker = document.getElementById('scoreDatePicker');
+    if (picker) {
+      const prime = () => {
+        picker.value = getTodayDate();
+        picker.max = getTodayDate();
+      };
+      picker.addEventListener('focus', prime);
+      picker.addEventListener('click', prime);
+      picker.addEventListener('change', () => {
+        const val = picker.value;
+        if (!val) return;
+        openEditDay(val);
+      });
+    }
+  })();
 
   // ===== Goals buttons =====
   on('addGoalBtn', 'click', addNewGoal);
@@ -10435,7 +10537,10 @@ const TOTAL_OSHER = TEFILOT.length;
       for (const k of SYNCED_PROFILE_KEYS) {
         const v = localStorage.getItem(p + '_' + k);
         if (v != null) {
-          try { out.profiles[p][k] = { data: JSON.parse(v), ts: now }; } catch(e) {}
+          // Use the stored per-key timestamp so unchanged data does not clobber
+          // the partner's newer data during merge (avoids lost updates).
+          const ts = parseInt(localStorage.getItem('_sync_ts_' + p + '_' + k) || '0', 10) || now;
+          try { out.profiles[p][k] = { data: JSON.parse(v), ts }; } catch(e) {}
         }
       }
     }
