@@ -381,7 +381,7 @@
     color: var(--wine);
   }
 
-  .prayer-actions { display: flex; gap: 8px; }
+  .prayer-actions { display: flex; gap: 8px; align-items: center; }
   .prayer-btn {
     flex: 1;
     padding: 12px;
@@ -416,9 +416,9 @@
 
   /* === Favorites Heart Button === */
   .fav-heart {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     border-radius: 50%;
     background: var(--parchment);
     border: 1.5px solid var(--gold);
@@ -428,7 +428,6 @@
     justify-content: center;
     transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     padding: 0;
-    margin-left: 10px;
     box-shadow: 0 1px 3px rgba(60,30,10,0.1);
     flex-shrink: 0;
   }
@@ -791,6 +790,26 @@
     transform: none;
   }
 
+  .score-export-excel {
+    margin: 0 0 18px;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(160,133,64,0.3);
+  }
+  .score-export-excel:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(160,133,64,0.4);
+  }
+
   .score-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -872,6 +891,173 @@
   }
 
   /* === Journal (Detailed Log) === */
+  .private-reflection-section {
+    margin: 20px 0;
+    padding: 16px;
+    background: linear-gradient(160deg, rgba(107,31,45,0.06), rgba(201,169,97,0.05));
+    border: 1.5px solid var(--wine);
+    border-radius: 10px;
+  }
+  .private-reflection-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--wine);
+    margin-bottom: 4px;
+  }
+  .private-reflection-subtitle {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12.5px;
+    color: var(--brown-light);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .private-reflection-date {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .private-reflection-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px;
+    color: var(--brown-deep);
+    direction: rtl;
+    text-align: right;
+    resize: vertical;
+    box-sizing: border-box;
+    line-height: 1.5;
+  }
+  .private-reflection-textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .private-reflection-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12.5px;
+    color: var(--brown-light);
+  }
+  .private-reflection-saved {
+    color: var(--gold-dark);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .private-reflection-saved.show {
+    opacity: 1;
+  }
+
+  .brit-log-section {
+    margin: 16px 0;
+    padding: 16px;
+    background: linear-gradient(160deg, rgba(60,36,16,0.05), rgba(122,82,48,0.05));
+    border: 1.5px solid var(--brown-light);
+    border-radius: 10px;
+  }
+  .brit-log-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--brown-deep);
+    margin-bottom: 4px;
+  }
+  .brit-log-subtitle {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12.5px;
+    color: var(--brown-light);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .brit-log-input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .brit-log-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    background: var(--parchment-light);
+    border: 1.5px solid var(--brown-light);
+    border-radius: 8px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown-deep);
+    direction: rtl;
+    text-align: right;
+  }
+  .brit-log-input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .brit-log-add-btn {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: var(--brown);
+    color: var(--parchment-light);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .brit-log-add-btn:active { background: var(--brown-deep); }
+  .brit-log-list { display: flex; flex-direction: column; gap: 8px; }
+  .brit-log-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--parchment-light);
+    border: 1px solid var(--parchment-dark);
+    border-radius: 8px;
+  }
+  .brit-log-entry-content { flex: 1; min-width: 0; }
+  .brit-log-entry-time {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12px;
+    color: var(--gold-dark);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .brit-log-entry-text {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 14px;
+    color: var(--brown-deep);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .brit-log-entry-del {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--brown-light);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
+  }
+  .brit-log-empty {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 13px;
+    color: var(--brown-light);
+    font-style: italic;
+    text-align: center;
+    padding: 6px 0;
+  }
+
   .journal-section {
     margin: 24px 0 10px;
   }
@@ -2883,7 +3069,30 @@
 
     <div id="mitzvotList"></div>
 
+    <div class="brit-log-section" id="britLogSection" style="display:none;">
+      <div class="brit-log-title">🛡️ תיעוד שמירת הברית</div>
+      <div class="brit-log-subtitle">אם הייתה נפילה — רק תיעוד, לא שיפוט. משפט אחד, והשעה תירשם אוטומטית. פרטי לחלוטין, לא מסונכרן ולא נראה לאף אחד אחר.</div>
+      <div class="brit-log-input-row">
+        <input type="text" id="britLogInput" class="brit-log-input" placeholder="מה קרה ומה הוביל לזה — משפט אחד" maxlength="200" />
+        <button id="britLogAddBtn" class="brit-log-add-btn">תעד</button>
+      </div>
+      <div id="britLogList" class="brit-log-list"></div>
+    </div>
+
+    <div class="private-reflection-section" id="privateReflectionSection" style="display:none;">
+      <div class="private-reflection-title">🔒 חשבון נפש אישי</div>
+      <div class="private-reflection-subtitle">פרטי לחלוטין — רק אתה רואה את זה. לא מסונכרן, לא נשמר בענן, ולא נראה לאף אחד אחר.</div>
+      <div class="private-reflection-date" id="privateReflectionDate">—</div>
+      <textarea class="private-reflection-textarea" id="privateReflectionTextarea" placeholder="מה היה לי היום? חשבון נפש, מחשבות, מה הלך טוב ומה פחות..."></textarea>
+      <div class="private-reflection-footer">
+        <span><span id="privateReflectionCounter">0</span> תווים</span>
+        <span class="private-reflection-saved" id="privateReflectionSaved">נשמר ✓</span>
+      </div>
+    </div>
+
     <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
+
+    <button class="score-export-excel" id="exportExcelBtn">⤓ ייצוא הכל לאקסל</button>
 
     <div class="score-summary-grid">
       <div class="score-summary-card">
@@ -8731,9 +8940,6 @@ const TOTAL_OSHER = TEFILOT.length;
         <div class="prayer-header">
           <div class="prayer-num">תפילה מספר ${num}</div>
           <div class="prayer-header-left">
-            <button class="fav-heart${isFav ? ' active' : ''}" data-action="fav" aria-label="הוסף למועדפים" title="הוסף למועדפים">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
             <div class="prayer-gematria">${toGematria(num)}</div>
           </div>
         </div>
@@ -8741,6 +8947,9 @@ const TOTAL_OSHER = TEFILOT.length;
         <div class="prayer-actions">
           <button class="prayer-btn said" data-action="said">אמרתי</button>
           <button class="prayer-btn skip" data-action="skip">דלג</button>
+          <button class="fav-heart${isFav ? ' active' : ''}" data-action="fav" aria-label="הוסף למועדפים" title="הוסף למועדפים">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
         </div>
       `;
       area.appendChild(card);
@@ -9394,7 +9603,8 @@ const TOTAL_OSHER = TEFILOT.length;
     { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
     { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false,
       extras: [{ id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 }] },
-    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false }
+    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false },
+    { id: 'kosher', name: 'כושר (2 פעמים בשבוע)', icon: '💪', points: 25, hasMinyan: false }
   ];
 
   const MITZVOT_TAL = [
@@ -9587,7 +9797,157 @@ const TOTAL_OSHER = TEFILOT.length;
     renderJournal();
     renderChart();
     renderGoals();
+    renderPrivateReflection();
+    renderBritLog();
   }
+
+  // ============= PRIVATE REFLECTION (חשבון נפש) =============
+  // Device-local ONLY for אוריאל (pinto). Deliberately excluded from the
+  // Firebase sync key lists so it is never uploaded and never reaches טל's
+  // device. Visible exclusively in the pinto profile.
+  const PRIVATE_REFLECTION_KEY = 'tefilot_private_reflection_v1';
+  function loadPrivateReflections() {
+    try {
+      const raw = localStorage.getItem('pinto_' + PRIVATE_REFLECTION_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+  }
+  function savePrivateReflections(map) {
+    try { localStorage.setItem('pinto_' + PRIVATE_REFLECTION_KEY, JSON.stringify(map)); } catch(e) {}
+  }
+  let privateReflectionSavedTimer = null;
+  function renderPrivateReflection() {
+    const section = document.getElementById('privateReflectionSection');
+    if (!section) return;
+    const ta0 = document.getElementById('privateReflectionTextarea');
+    if (currentProfile !== 'pinto') {
+      section.style.display = 'none';
+      if (ta0) { ta0.value = ''; delete ta0.dataset.boundDate; }
+      return;
+    }
+    section.style.display = 'block';
+    const date = todayState.date || getTodayDate();
+    const dateEl = document.getElementById('privateReflectionDate');
+    if (dateEl) dateEl.textContent = formatHebrewDate(date);
+    const ta = document.getElementById('privateReflectionTextarea');
+    const counter = document.getElementById('privateReflectionCounter');
+    if (ta && ta.dataset.boundDate !== date) {
+      const text = loadPrivateReflections()[date] || '';
+      ta.value = text;
+      ta.dataset.boundDate = date;
+      if (counter) counter.textContent = text.length;
+    }
+  }
+  function savePrivateReflectionNow() {
+    if (currentProfile !== 'pinto') return;
+    const ta = document.getElementById('privateReflectionTextarea');
+    if (!ta) return;
+    const date = ta.dataset.boundDate || todayState.date || getTodayDate();
+    const map = loadPrivateReflections();
+    const val = ta.value;
+    if (val.trim()) map[date] = val; else delete map[date];
+    savePrivateReflections(map);
+    const counter = document.getElementById('privateReflectionCounter');
+    if (counter) counter.textContent = val.length;
+    const saved = document.getElementById('privateReflectionSaved');
+    if (saved) {
+      saved.classList.add('show');
+      if (privateReflectionSavedTimer) clearTimeout(privateReflectionSavedTimer);
+      privateReflectionSavedTimer = setTimeout(() => saved.classList.remove('show'), 1500);
+    }
+  }
+  setTimeout(function() {
+    const ta = document.getElementById('privateReflectionTextarea');
+    if (ta) {
+      ta.addEventListener('input', () => {
+        const counter = document.getElementById('privateReflectionCounter');
+        if (counter) counter.textContent = ta.value.length;
+        savePrivateReflectionNow();
+      });
+    }
+  }, 0);
+
+  // ============= BRIT LOG (תיעוד שמירת הברית) =============
+  // Device-local ONLY for אוריאל (pinto). Excluded from the Firebase sync key
+  // lists, so it is never uploaded and never reaches טל's device. Documentation
+  // only — neutral timestamped notes, no judgment.
+  const BRIT_LOG_KEY = 'tefilot_brit_log_v1';
+  function loadBritLog() {
+    try {
+      const raw = localStorage.getItem('pinto_' + BRIT_LOG_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch(e) { return []; }
+  }
+  function saveBritLog(arr) {
+    try { localStorage.setItem('pinto_' + BRIT_LOG_KEY, JSON.stringify(arr)); } catch(e) {}
+  }
+  function formatBritLogTime(ts) {
+    try {
+      const d = new Date(ts);
+      const ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      return formatHebrewDate(ds) + ' · ' + hh + ':' + mm;
+    } catch(e) { return ''; }
+  }
+  function renderBritLog() {
+    const section = document.getElementById('britLogSection');
+    if (!section) return;
+    if (currentProfile !== 'pinto') {
+      section.style.display = 'none';
+      const inp = document.getElementById('britLogInput');
+      if (inp) inp.value = '';
+      const list = document.getElementById('britLogList');
+      if (list) list.innerHTML = '';
+      return;
+    }
+    section.style.display = 'block';
+    const list = document.getElementById('britLogList');
+    if (!list) return;
+    const entries = loadBritLog().slice().sort((a, b) => b.ts - a.ts);
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="brit-log-empty">אין תיעודים. בעזרת ה׳ שלא יהיו.</div>';
+      return;
+    }
+    list.innerHTML = entries.map(e => `
+      <div class="brit-log-entry">
+        <div class="brit-log-entry-content">
+          <div class="brit-log-entry-time">${formatBritLogTime(e.ts)}</div>
+          <div class="brit-log-entry-text">${escapeHtml(e.text)}</div>
+        </div>
+        <button class="brit-log-entry-del" data-ts="${e.ts}" aria-label="מחק">×</button>
+      </div>
+    `).join('');
+    list.querySelectorAll('.brit-log-entry-del').forEach(btn => {
+      btn.addEventListener('click', () => deleteBritLogEntry(parseInt(btn.dataset.ts, 10)));
+    });
+  }
+  function addBritLogEntry() {
+    if (currentProfile !== 'pinto') return;
+    const inp = document.getElementById('britLogInput');
+    if (!inp) return;
+    const text = (inp.value || '').trim();
+    if (!text) return;
+    const arr = loadBritLog();
+    arr.push({ ts: Date.now(), text });
+    saveBritLog(arr);
+    inp.value = '';
+    renderBritLog();
+  }
+  function deleteBritLogEntry(ts) {
+    const arr = loadBritLog().filter(e => e.ts !== ts);
+    saveBritLog(arr);
+    renderBritLog();
+  }
+  setTimeout(function() {
+    const btn = document.getElementById('britLogAddBtn');
+    const inp = document.getElementById('britLogInput');
+    if (btn) btn.addEventListener('click', addBritLogEntry);
+    if (inp) inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); addBritLogEntry(); }
+    });
+  }, 0);
 
   // ============= JOURNAL (CRM) =============
   let journalFilter = 'all';
@@ -9894,6 +10254,96 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) {
       // Fallback: show in alert
       alert(text);
+    }
+  }
+
+  // ----- Full Excel export (daily score + private brit log + private reflection) -----
+  // Produces an HTML-table .xls that Excel/Sheets open natively (no external lib).
+  // Private sections (brit log, reflection) are included ONLY for אוריאל (pinto).
+  function exportExcel() {
+    const isPinto = currentProfile === 'pinto';
+    const esc = (s) => escapeHtml(String(s == null ? '' : s));
+    const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+    const days = getAllJournalDays().slice().sort((a, b) => b.date.localeCompare(a.date));
+    const headBg = 'background:#c9a961;font-weight:bold;';
+
+    let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' +
+      'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
+      'xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>' +
+      '<body dir="rtl">';
+
+    // Table 1 — daily score
+    html += '<h2>ניקוד יומי</h2>';
+    html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>יום</th>';
+    MITZVOT.forEach(m => { html += '<th>' + esc(m.name) + '</th>'; });
+    html += '<th>הערה</th><th>ניקוד</th></tr>';
+    if (days.length === 0) {
+      html += '<tr><td colspan="' + (MITZVOT.length + 4) + '">אין נתונים</td></tr>';
+    } else {
+      days.forEach(d => {
+        const dd = new Date(d.date);
+        html += '<tr><td>' + esc(d.date) + '</td><td>' + esc(dayNames[dd.getDay()] || '') + '</td>';
+        MITZVOT.forEach(m => {
+          const item = (d.items && d.items[m.id]) || {};
+          let cell = item.done ? '✓' : '';
+          if (item.done && m.hasMinyan && item.minyan) cell += ' (מניין ×2)';
+          if (m.extras && item.extras) {
+            m.extras.forEach(ex => {
+              if (item.extras[ex.id] && (ex.independent || item.done)) cell += (cell ? ' ' : '') + '+' + esc(ex.label);
+            });
+          }
+          html += '<td>' + cell + '</td>';
+        });
+        html += '<td>' + esc(d.note || '') + '</td><td>' + esc(d.score) + '</td></tr>';
+      });
+    }
+    html += '</table><br/>';
+
+    // Tables 2 & 3 — private, אוריאל only
+    if (isPinto) {
+      const brit = loadBritLog().slice().sort((a, b) => b.ts - a.ts);
+      html += '<h2>תיעוד שמירת הברית</h2>';
+      html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>שעה</th><th>תיעוד</th></tr>';
+      if (brit.length === 0) {
+        html += '<tr><td colspan="3">אין תיעודים</td></tr>';
+      } else {
+        brit.forEach(e => {
+          const d = new Date(e.ts);
+          const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+          const hh = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+          html += '<tr><td>' + esc(ds) + '</td><td>' + esc(hh) + '</td><td>' + esc(e.text) + '</td></tr>';
+        });
+      }
+      html += '</table><br/>';
+
+      const refl = loadPrivateReflections();
+      const reflDates = Object.keys(refl).sort((a, b) => b.localeCompare(a));
+      html += '<h2>חשבון נפש יומי</h2>';
+      html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>חשבון נפש</th></tr>';
+      if (reflDates.length === 0) {
+        html += '<tr><td colspan="2">אין רישומים</td></tr>';
+      } else {
+        reflDates.forEach(dt => {
+          html += '<tr><td>' + esc(dt) + '</td><td>' + esc(refl[dt]) + '</td></tr>';
+        });
+      }
+      html += '</table>';
+    }
+
+    html += '</body></html>';
+
+    try {
+      const blob = new Blob(['﻿' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'תקטו-תפילות-' + (isPinto ? 'אוריאל' : 'טל') + '-' + getTodayDate() + '.xls';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch(e) {
+      alert('הייצוא נכשל: ' + e);
     }
   }
 
@@ -10391,6 +10841,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   // ===== Score tab buttons =====
   on('endDayBtn', 'click', endDay);
+  on('exportExcelBtn', 'click', exportExcel);
 
   // ===== Date picker: pick any day to open its editor =====
   (function() {
