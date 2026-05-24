@@ -413,6 +413,84 @@
   }
   .prayer-btn.skip:hover { background: var(--parchment-dark); }
 
+  /* === Edit (תיקון) Button === */
+  .edit-prayer-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 1.5px solid var(--gold);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 0;
+    box-shadow: 0 1px 3px rgba(60,30,10,0.1);
+    flex-shrink: 0;
+    color: var(--gold-dark);
+    font-size: 17px;
+    line-height: 1;
+  }
+  .edit-prayer-btn:hover {
+    transform: scale(1.1);
+    background: var(--parchment-light);
+    box-shadow: 0 2px 6px rgba(201,169,97,0.4);
+  }
+  .prayer-edit-textarea {
+    width: 100%;
+    min-height: 340px;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gold);
+    background: var(--parchment-light);
+    font-family: 'Heebo', sans-serif;
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--brown-deep);
+    resize: vertical;
+    direction: rtl;
+  }
+  .prayer-edit-textarea:focus { outline: none; border-color: var(--gold-dark); }
+
+  /* === Fall questionnaire === */
+  .fall-quiz-q {
+    font-family: 'Heebo', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--brown-deep);
+    margin: 14px 0 8px;
+  }
+  .fall-quiz-options { display: flex; gap: 10px; }
+  .fall-quiz-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gold);
+    background: var(--parchment-light);
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brown);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .fall-quiz-btn.selected {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--brown-deep);
+    border-color: var(--gold-dark);
+  }
+  .fall-quiz-note {
+    min-height: 22px;
+    margin: 14px 0 4px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--brown);
+  }
 
   /* === Favorites Heart Button === */
   .fav-heart {
@@ -3295,6 +3373,49 @@
       <div class="goal-form-buttons">
         <button class="goal-form-btn save" id="noteEditSave">שמור הערה</button>
         <button class="goal-form-btn cancel" id="noteEditCancel">ביטול</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="prayerEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✎ תיקון התפילה</div>
+      <button class="modal-close" id="prayerEditClose">×</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="prayer-edit-textarea" id="prayerEditTextarea" placeholder="ערוך כאן את נוסח התפילה..."></textarea>
+      <div class="goal-form-buttons">
+        <button class="goal-form-btn save" id="prayerEditSave">שמור תיקון</button>
+        <button class="goal-form-btn cancel" id="prayerEditReset">החזר למקור</button>
+        <button class="goal-form-btn cancel" id="prayerEditCancel">ביטול</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="fallQuizModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">רגע לפני — שתי שאלות</div>
+      <button class="modal-close" id="fallQuizClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="fall-quiz-q">1. האם ניסית להתקשר לחבר?</div>
+      <div class="fall-quiz-options" data-q="friend">
+        <button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button>
+        <button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button>
+      </div>
+      <div class="fall-quiz-q">2. האם השתמשת בשיטת המגינים?</div>
+      <div class="fall-quiz-options" data-q="method">
+        <button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button>
+        <button class="fall-quiz-btn" data-q="method" data-val="no">לא</button>
+      </div>
+      <div class="fall-quiz-note" id="fallQuizNote"></div>
+      <div class="goal-form-buttons">
+        <button class="goal-form-btn save" id="fallQuizSave">שמור תיעוד</button>
+        <button class="goal-form-btn cancel" id="fallQuizCancel">ביטול</button>
       </div>
     </div>
   </div>
@@ -8660,6 +8781,13 @@ const TOTAL_OSHER = TEFILOT.length;
     // Update active mitzvot list based on profile
     try { MITZVOT = getActiveMitzvot(); } catch(e) {}
     updateProfileButtons();
+    // Re-apply brit tab visibility (hidden entirely in טל's profile) and move off it.
+    try { applyBritLockState(); } catch(e) {}
+    try {
+      if (currentProfile !== 'pinto' && typeof currentTab !== 'undefined' && currentTab === 'brit') {
+        switchTab('osher');
+      }
+    } catch(e) {}
     // Reload state for new profile
     try { loadState(); } catch(e) {}
     try { updateStats(); } catch(e) {}
@@ -8705,6 +8833,7 @@ const TOTAL_OSHER = TEFILOT.length;
               if (!mitzva) continue;
               partnerScore += mitzvaItemPoints(mitzva, item);
             }
+            partnerScore -= (todayData.penalty || 0);
           }
         }
       } catch(e) {}
@@ -8943,6 +9072,95 @@ const TOTAL_OSHER = TEFILOT.length;
     }
   }
 
+  // ----- Prayer text corrections (תיקון). Synced cross-device with per-entry
+  // "newest wins" semantics. Stored as { [tab]: { [idx]: { text, ts } } }; falls
+  // back to the original pool text when there is no override for that prayer. -----
+  const PRAYER_EDITS_KEY = 'tefilot_prayer_edits_v1';
+  function loadPrayerEdits() {
+    try { return JSON.parse(localStorage.getItem(PRAYER_EDITS_KEY) || '{}') || {}; }
+    catch(e) { return {}; }
+  }
+  function savePrayerEdits(map) {
+    try { localStorage.setItem(PRAYER_EDITS_KEY, JSON.stringify(map)); } catch(e) {}
+  }
+  function editEntryText(e) {
+    if (e == null) return null;
+    return (typeof e === 'object') ? e.text : e; // tolerate legacy plain-string entries
+  }
+  function editEntryTs(e) {
+    if (e == null) return -1;
+    return (typeof e === 'object' && e.ts) ? e.ts : 0;
+  }
+  function getPrayerText(tab, idx) {
+    const edits = loadPrayerEdits();
+    const e = edits[tab] && edits[tab][idx];
+    const t = editEntryText(e);
+    if (t != null) return t;
+    return TABS_DATA[tab].pool[idx];
+  }
+  function setPrayerText(tab, idx, text) {
+    const edits = loadPrayerEdits();
+    const original = TABS_DATA[tab].pool[idx];
+    if (text === original) {
+      if (edits[tab]) { delete edits[tab][idx]; if (Object.keys(edits[tab]).length === 0) delete edits[tab]; }
+    } else {
+      if (!edits[tab]) edits[tab] = {};
+      edits[tab][idx] = { text: text, ts: Date.now() };
+    }
+    savePrayerEdits(edits);
+    try { scheduleSyncUp(); } catch(e) {}
+  }
+  // Union two edit maps; on the same prayer the entry with the newer ts wins.
+  function mergePrayerEditMaps(a, b) {
+    a = a || {}; b = b || {};
+    const out = {};
+    const tabs = new Set([...Object.keys(a), ...Object.keys(b)]);
+    for (const t of tabs) {
+      const at = a[t] || {}, bt = b[t] || {};
+      const idxs = new Set([...Object.keys(at), ...Object.keys(bt)]);
+      const merged = {};
+      for (const i of idxs) {
+        const pick = editEntryTs(bt[i]) > editEntryTs(at[i]) ? bt[i] : at[i];
+        if (pick != null) merged[i] = pick;
+      }
+      if (Object.keys(merged).length) out[t] = merged;
+    }
+    return out;
+  }
+
+  let editingPrayerIdx = null;
+  let editingPrayerTab = null;
+  function openPrayerEdit(idx) {
+    editingPrayerIdx = idx;
+    editingPrayerTab = currentTab;
+    const ta = document.getElementById('prayerEditTextarea');
+    if (ta) ta.value = getPrayerText(currentTab, idx);
+    const modal = document.getElementById('prayerEditModal');
+    if (modal) modal.classList.add('active');
+    if (ta) setTimeout(() => ta.focus(), 50);
+  }
+  function closePrayerEdit() {
+    editingPrayerIdx = null;
+    editingPrayerTab = null;
+    const modal = document.getElementById('prayerEditModal');
+    if (modal) modal.classList.remove('active');
+  }
+  function savePrayerEdit() {
+    if (editingPrayerIdx === null || editingPrayerTab === null) return;
+    const ta = document.getElementById('prayerEditTextarea');
+    const text = ta ? (ta.value || '').trim() : '';
+    if (text) setPrayerText(editingPrayerTab, editingPrayerIdx, text);
+    closePrayerEdit();
+    renderPrayers();
+  }
+  function resetPrayerEdit() {
+    if (editingPrayerIdx === null || editingPrayerTab === null) return;
+    const original = TABS_DATA[editingPrayerTab].pool[editingPrayerIdx];
+    setPrayerText(editingPrayerTab, editingPrayerIdx, original);
+    closePrayerEdit();
+    renderPrayers();
+  }
+
   function renderPrayers() {
     const area = document.getElementById('prayersArea');
     const empty = document.getElementById('emptyState');
@@ -8969,10 +9187,11 @@ const TOTAL_OSHER = TEFILOT.length;
             <div class="prayer-gematria">${toGematria(num)}</div>
           </div>
         </div>
-        <div class="prayer-text">${pool[idx]}</div>
+        <div class="prayer-text">${escapeHtml(getPrayerText(currentTab, idx))}</div>
         <div class="prayer-actions">
           <button class="prayer-btn said" data-action="said">אמרתי</button>
           <button class="prayer-btn skip" data-action="skip">דלג</button>
+          <button class="edit-prayer-btn" data-action="edit" aria-label="תיקון התפילה" title="תיקון התפילה">✎</button>
           <button class="fav-heart${isFav ? ' active' : ''}" data-action="fav" aria-label="הוסף למועדפים" title="הוסף למועדפים">
             <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
           </button>
@@ -8981,6 +9200,7 @@ const TOTAL_OSHER = TEFILOT.length;
       area.appendChild(card);
       card.querySelector('[data-action="said"]').addEventListener('click', () => markSaid(idx, card));
       card.querySelector('[data-action="skip"]').addEventListener('click', () => skipPrayer(idx, card));
+      card.querySelector('[data-action="edit"]').addEventListener('click', (e) => { e.stopPropagation(); openPrayerEdit(idx); });
       card.querySelector('[data-action="fav"]').addEventListener('click', (e) => { e.stopPropagation(); toggleFav(idx, card); });
     });
   }
@@ -9096,7 +9316,7 @@ const TOTAL_OSHER = TEFILOT.length;
               <div class="archive-item-gematria">${toGematria(num)}</div>
               <div class="archive-item-num">תפילה ${num} ♥</div>
             </div>
-            <div class="archive-item-text">${pool[idx]}</div>
+            <div class="archive-item-text">${escapeHtml(getPrayerText(currentTab, idx))}</div>
           </div>
         `;
       }).join('');
@@ -9119,7 +9339,7 @@ const TOTAL_OSHER = TEFILOT.length;
               <div class="archive-item-gematria">${toGematria(num)}</div>
               <div class="archive-item-num">תפילה ${num}</div>
             </div>
-            <div class="archive-item-text">${pool[idx]}</div>
+            <div class="archive-item-text">${escapeHtml(getPrayerText(currentTab, idx))}</div>
           </div>
         `;
       }).join('');
@@ -9325,6 +9545,12 @@ const TOTAL_OSHER = TEFILOT.length;
   function applyBritLockState() {
     const britBtn = document.querySelector('.tab-btn[data-tab="brit"]');
     if (!britBtn) return;
+    // In טל's profile the brit topic must not appear at all — hide the whole tab.
+    if (currentProfile !== 'pinto') {
+      britBtn.style.display = 'none';
+      return;
+    }
+    britBtn.style.display = '';
     if (britUnlocked) {
       britBtn.classList.remove('locked');
     } else {
@@ -9765,6 +9991,7 @@ const TOTAL_OSHER = TEFILOT.length;
   function calculateTodayScore() {
     let total = 0;
     MITZVOT.forEach(m => { total += mitzvaItemPoints(m, todayState.items[m.id]); });
+    total -= (todayState.penalty || 0);
     return total;
   }
 
@@ -9800,7 +10027,12 @@ const TOTAL_OSHER = TEFILOT.length;
     try { updatePartnerView(); } catch(e) {}
 
     const list = document.getElementById('mitzvotList');
-    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, todayState.items[m.id])).join('');
+    // The brit mitzvah card is shown only when brit is unlocked on this device (the
+    // secret code only אוריאל knows). Its points still count — scoring iterates the full
+    // MITZVOT array, not the rendered cards — so טל still sees the total, just no brit hint.
+    list.innerHTML = MITZVOT
+      .filter(m => m.id !== 'brit' || britUnlocked)
+      .map(m => renderMitzvaCard(m, todayState.items[m.id])).join('');
 
     // Attach listeners
     list.querySelectorAll('.mitzva-card').forEach(card => {
@@ -9920,7 +10152,7 @@ const TOTAL_OSHER = TEFILOT.length;
   function renderBritLog() {
     const section = document.getElementById('britLogSection');
     if (!section) return;
-    if (currentProfile !== 'pinto') {
+    if (currentProfile !== 'pinto' || !britUnlocked) {
       section.style.display = 'none';
       const inp = document.getElementById('britLogInput');
       if (inp) inp.value = '';
@@ -9955,17 +10187,85 @@ const TOTAL_OSHER = TEFILOT.length;
     if (!inp) return;
     const text = (inp.value || '').trim();
     if (!text) return;
-    const arr = loadBritLog();
-    arr.push({ ts: Date.now(), text });
-    saveBritLog(arr);
-    inp.value = '';
-    renderBritLog();
+    // A fall opens the questionnaire first; the 40-point penalty only applies if
+    // both coping tools were skipped (see saveFallQuiz).
+    openFallQuiz(text);
+  }
+  function tsToDate(ts) {
+    const d = new Date(ts);
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
   function deleteBritLogEntry(ts) {
-    const arr = loadBritLog().filter(e => e.ts !== ts);
+    const all = loadBritLog();
+    const entry = all.find(e => e.ts === ts);
+    const arr = all.filter(e => e.ts !== ts);
     saveBritLog(arr);
+    // Refund a same-day penalty so the daily score stays consistent.
+    if (entry && entry.penalty && tsToDate(entry.ts) === (todayState.date || getTodayDate())) {
+      todayState.penalty = Math.max(0, (todayState.penalty || 0) - entry.penalty);
+      saveTodayState();
+      try { renderScoreView(); } catch(e) {}
+    }
     renderBritLog();
   }
+
+  // ----- Fall questionnaire: deduct 40 only if both coping tools were skipped -----
+  let fallQuizText = '';
+  let fallQuizAnswers = { friend: null, method: null };
+  function openFallQuiz(text) {
+    fallQuizText = text;
+    fallQuizAnswers = { friend: null, method: null };
+    document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+    const note = document.getElementById('fallQuizNote');
+    if (note) note.textContent = '';
+    const modal = document.getElementById('fallQuizModal');
+    if (modal) modal.classList.add('active');
+  }
+  function closeFallQuiz() {
+    const modal = document.getElementById('fallQuizModal');
+    if (modal) modal.classList.remove('active');
+  }
+  function selectFallAnswer(q, val, btn) {
+    fallQuizAnswers[q] = val;
+    btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const note = document.getElementById('fallQuizNote');
+    if (!note) return;
+    if (fallQuizAnswers.friend === 'no' && fallQuizAnswers.method === 'no') {
+      note.textContent = 'שתי התשובות שליליות — יירדו 40 נקודות.';
+    } else if (fallQuizAnswers.friend && fallQuizAnswers.method) {
+      note.textContent = 'השתמשת בכלי התמודדות — לא יירדו נקודות. חזק!';
+    } else {
+      note.textContent = '';
+    }
+  }
+  function saveFallQuiz() {
+    if (!fallQuizAnswers.friend || !fallQuizAnswers.method) {
+      const note = document.getElementById('fallQuizNote');
+      if (note) note.textContent = 'אנא ענה על שתי השאלות.';
+      return;
+    }
+    const bothNo = fallQuizAnswers.friend === 'no' && fallQuizAnswers.method === 'no';
+    const arr = loadBritLog();
+    arr.push({
+      ts: Date.now(),
+      text: fallQuizText,
+      calledFriend: fallQuizAnswers.friend === 'yes',
+      usedMethod: fallQuizAnswers.method === 'yes',
+      penalty: bothNo ? 40 : 0
+    });
+    saveBritLog(arr);
+    if (bothNo) {
+      todayState.penalty = (todayState.penalty || 0) + 40;
+      saveTodayState();
+    }
+    const inp = document.getElementById('britLogInput');
+    if (inp) inp.value = '';
+    closeFallQuiz();
+    renderBritLog();
+    try { renderScoreView(); } catch(e) {}
+  }
+
   setTimeout(function() {
     const btn = document.getElementById('britLogAddBtn');
     const inp = document.getElementById('britLogInput');
@@ -10325,8 +10625,8 @@ const TOTAL_OSHER = TEFILOT.length;
     }
     html += '</table><br/>';
 
-    // Tables 2 & 3 — private, אוריאל only
-    if (isPinto) {
+    // Table 2 — brit log: private to אוריאל AND only when unlocked on this device.
+    if (isPinto && britUnlocked) {
       const brit = loadBritLog().slice().sort((a, b) => b.ts - a.ts);
       html += '<h2>תיעוד שמירת הברית</h2>';
       html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>שעה</th><th>תיעוד</th></tr>';
@@ -10341,7 +10641,10 @@ const TOTAL_OSHER = TEFILOT.length;
         });
       }
       html += '</table><br/>';
+    }
 
+    // Table 3 — private reflection: אוריאל only (independent of the brit unlock).
+    if (isPinto) {
       const refl = loadPrivateReflections();
       const reflDates = Object.keys(refl).sort((a, b) => b.localeCompare(a));
       html += '<h2>חשבון נפש יומי</h2>';
@@ -10739,7 +11042,9 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function renderEditDayMitzvot() {
     const list = document.getElementById('editDayMitzvot');
-    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, editingDayItems[m.id])).join('');
+    list.innerHTML = MITZVOT
+      .filter(m => m.id !== 'brit' || britUnlocked)
+      .map(m => renderMitzvaCard(m, editingDayItems[m.id])).join('');
 
     list.querySelectorAll('.mitzva-card').forEach(card => {
       const id = card.dataset.id;
@@ -10910,6 +11215,18 @@ const TOTAL_OSHER = TEFILOT.length;
   on('noteEditCancel', 'click', closeNoteEditor);
   on('noteEditSave', 'click', saveNoteEditor);
   onBackdrop('noteEditModal');
+  on('prayerEditClose', 'click', closePrayerEdit);
+  on('prayerEditCancel', 'click', closePrayerEdit);
+  on('prayerEditSave', 'click', savePrayerEdit);
+  on('prayerEditReset', 'click', resetPrayerEdit);
+  onBackdrop('prayerEditModal');
+  on('fallQuizClose', 'click', closeFallQuiz);
+  on('fallQuizCancel', 'click', closeFallQuiz);
+  on('fallQuizSave', 'click', saveFallQuiz);
+  onBackdrop('fallQuizModal');
+  document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(btn => {
+    btn.addEventListener('click', () => selectFallAnswer(btn.dataset.q, btn.dataset.val, btn));
+  });
   on('noteEditTextarea', 'input', () => {
     const ta = document.getElementById('noteEditTextarea');
     const counter = document.getElementById('noteEditCounter');
@@ -11085,6 +11402,11 @@ const TOTAL_OSHER = TEFILOT.length;
         try { out.shared[k] = { data: JSON.parse(v), ts: now }; } catch(e) {}
       }
     }
+    // Prayer corrections: shared object map (merged per-entry, not array union).
+    try {
+      const ev = localStorage.getItem(PRAYER_EDITS_KEY);
+      if (ev != null) out.shared[PRAYER_EDITS_KEY] = { data: JSON.parse(ev), ts: now };
+    } catch(e) {}
     for (const p of ['pinto', 'tal']) {
       for (const k of SYNCED_PROFILE_KEYS) {
         const v = localStorage.getItem(p + '_' + k);
@@ -11102,6 +11424,22 @@ const TOTAL_OSHER = TEFILOT.length;
   function mergeRemoteIntoLocal(remote) {
     if (!remote) return false;
     let changed = false;
+
+    // Prayer corrections: object map, merged per-entry (newest wins).
+    try {
+      const remoteEdits = remote.shared && remote.shared[PRAYER_EDITS_KEY];
+      if (remoteEdits && remoteEdits.data && typeof remoteEdits.data === 'object' && !Array.isArray(remoteEdits.data)) {
+        let local = {};
+        const raw = localStorage.getItem(PRAYER_EDITS_KEY);
+        if (raw) { try { local = JSON.parse(raw); } catch(e) { local = {}; } }
+        const merged = mergePrayerEditMaps(local, remoteEdits.data);
+        const mergedStr = JSON.stringify(merged);
+        if (mergedStr !== JSON.stringify(local)) {
+          localStorage.setItem(PRAYER_EDITS_KEY, mergedStr);
+          changed = true;
+        }
+      }
+    } catch(e) {}
 
     // Shared keys: UNION arrays (union of sets)
     for (const k of SYNCED_SHARED_KEYS) {
@@ -11158,6 +11496,16 @@ const TOTAL_OSHER = TEFILOT.length;
       for (const k of sharedKeys) {
         const a = payload.shared[k];
         const b = remote && remote.shared && remote.shared[k];
+        if (k === PRAYER_EDITS_KEY) {
+          // Object map: union entries, newest wins (not array union).
+          const aObj = (a && a.data && typeof a.data === 'object' && !Array.isArray(a.data)) ? a.data : {};
+          const bObj = (b && b.data && typeof b.data === 'object' && !Array.isArray(b.data)) ? b.data : {};
+          merged.shared[k] = {
+            data: mergePrayerEditMaps(aObj, bObj),
+            ts: Math.max((a && a.ts) || 0, (b && b.ts) || 0)
+          };
+          continue;
+        }
         const aData = (a && Array.isArray(a.data)) ? a.data : [];
         const bData = (b && Array.isArray(b.data)) ? b.data : [];
         merged.shared[k] = {
