@@ -234,6 +234,35 @@
     opacity: 0.6;
   }
 
+  .segula-card {
+    margin-top: 14px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #fdf8ec 0%, #f3e8cc 100%);
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(180,140,60,0.15);
+    animation: segulaFade 0.5s ease;
+  }
+  @keyframes segulaFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .segula-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--wine);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .segula-text {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--brown-deep);
+    text-align: center;
+  }
+
   .action-bar { display: flex; gap: 8px; margin-top: 12px; }
   .action-btn {
     flex: 1;
@@ -473,6 +502,7 @@
   body.score-mode .progress,
   body.score-mode .discover-btn,
   body.score-mode .action-bar,
+  body.score-mode .segula-card,
   body.score-mode #emptyState {
     display: none !important;
   }
@@ -2769,6 +2799,11 @@
   </div>
 
   <button class="discover-btn" id="discoverBtn">גלה 10 תפילות חדשות</button>
+
+  <div class="segula-card" id="segulaCard" style="display:none;">
+    <div class="segula-title">✨ סגולה לתפילה שמתקבלת</div>
+    <div class="segula-text" id="segulaText"></div>
+  </div>
 
   <div class="action-bar">
     <button class="action-btn favs" id="favsBtn">♥ המועדפים שלי <span class="fav-count" id="favCount">0</span></button>
@@ -8734,6 +8769,45 @@ const TOTAL_OSHER = TEFILOT.length;
     setTimeout(() => { renderPrayers(); updateStats(); }, 380);
   }
 
+  // Light, warm segulot for prayers being heard — one shown on each "discover" click
+  const SEGULOT = [
+    "כשאתה מתפלל — דבר אל ה׳ כמו אל אבא אוהב. אבא תמיד מקשיב לילד שלו.",
+    "דמעה אחת בתפילה פותחת שערים שאף מפתח לא פותח.",
+    "תתפלל קודם על מישהו אחר שצריך בדיוק מה שאתה צריך — ואתה תיענה ראשון.",
+    "מילה אחת מהלב שווה יותר מאלף מילים מהשפה.",
+    "תחייך כשאתה מתפלל — תפילה מתוך שמחה עולה ישר למעלה.",
+    "תקבע לך פינה קבועה לתפילה — ה׳ אוהב לפגוש אותך באותו מקום.",
+    "תן צדקה קטנה לפני שאתה מתפלל — וזה פותח לך את הדלת.",
+    "אמן בכוונה — כאילו אתה חותם בעצמך על הברכה.",
+    "תודה לפני הבקשה — מי שמודה, בקשתו מתקבלת באהבה.",
+    "תסלח היום למישהו — ובשמיים יעבירו לך על הכל.",
+    "שמור על הלשון — ופיך יישאר נקי להעלות כל תפילה.",
+    "תתפלל לאט. ה׳ לא ממהר לשום מקום כשמדובר בך.",
+    "תאמין שכבר נענית — האמונה עצמה היא חצי מהישועה.",
+    "תפילה בציבור אף פעם לא חוזרת ריקם.",
+    "כשקשה לך להתפלל — רק תגיד ׳אבא, עזור לי להתפלל׳. גם זו תפילה.",
+    "הזכר זכות של צדיק או של אבותיך — וזה עומד לך למעלה.",
+    "לב שבור? דווקא לב שבור הוא הכלי הכי שלם לתפילה.",
+    "בקש במילים שלך, בשפה שלך — ה׳ מבין בדיוק אותך.",
+    "כל תפילה נשמעת. גם אם התשובה מתעכבת — אף מילה לא הולכת לאיבוד.",
+    "סיים כל בקשה ב׳ואם לא עכשיו — אז כשטוב לי׳. הביטחון הזה הוא הסגולה."
+  ];
+  let lastSegulaIdx = -1;
+  function showSegula() {
+    const card = document.getElementById('segulaCard');
+    const textEl = document.getElementById('segulaText');
+    if (!card || !textEl || !SEGULOT.length) return;
+    let idx = Math.floor(Math.random() * SEGULOT.length);
+    if (SEGULOT.length > 1 && idx === lastSegulaIdx) idx = (idx + 1) % SEGULOT.length;
+    lastSegulaIdx = idx;
+    textEl.textContent = SEGULOT[idx];
+    card.style.display = 'block';
+    // restart fade animation
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+  }
+
   function discoverNew() {
     const pool = getActivePool();
     const available = [];
@@ -8747,6 +8821,7 @@ const TOTAL_OSHER = TEFILOT.length;
     displayedIndices = [...displayedIndices, ...picks];
     renderPrayers();
     updateStats();
+    showSegula();
     setTimeout(() => {
       const firstCard = document.querySelector('.prayers-area .prayer-card');
       if (firstCard) firstCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
