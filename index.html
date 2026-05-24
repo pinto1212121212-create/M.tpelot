@@ -8849,15 +8849,41 @@ const TOTAL_OSHER = TEFILOT.length;
       }));
     } catch(e) {}
   }
+  // Device-local per-profile counter that drives the green-tab badge.
+  // Deliberately NOT in any sync key list, so the badge reflects ONLY what the
+  // person read on THIS device today — it can never inherit the partner's reads.
+  const STORAGE_KEY_GREEN_LOCAL = 'tefilot_daily_green_local_v1';
+  function loadGreenCounts() {
+    try {
+      const raw = localStorage.getItem(pk(STORAGE_KEY_GREEN_LOCAL));
+      if (!raw) return {};
+      const data = JSON.parse(raw);
+      if (data.date !== getTodayDate()) return {};
+      return data.counts || {};
+    } catch(e) { return {}; }
+  }
+  function saveGreenCounts(counts) {
+    try {
+      localStorage.setItem(pk(STORAGE_KEY_GREEN_LOCAL), JSON.stringify({
+        date: getTodayDate(),
+        counts: counts
+      }));
+    } catch(e) {}
+  }
   function incrementDailyCount(tabName) {
     if (!tabName || tabName === 'score') return;
+    // Synced per-profile counter — powers the partner ("בן/בת הזוג") progress view.
     const counts = loadDailyCounts();
     counts[tabName] = (counts[tabName] || 0) + 1;
     saveDailyCounts(counts);
+    // Device-local counter — powers the green tab badge (per person, per device).
+    const green = loadGreenCounts();
+    green[tabName] = (green[tabName] || 0) + 1;
+    saveGreenCounts(green);
     updateTabColors();
   }
   function updateTabColors() {
-    const counts = loadDailyCounts();
+    const counts = loadGreenCounts();
     document.querySelectorAll('.tab-btn').forEach(btn => {
       const tab = btn.dataset.tab;
       if (!tab || tab === 'score') return;
