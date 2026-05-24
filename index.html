@@ -10588,85 +10588,85 @@ const TOTAL_OSHER = TEFILOT.length;
   // Private sections (brit log, reflection) are included ONLY for אוריאל (pinto).
   function exportExcel() {
     const isPinto = currentProfile === 'pinto';
-    const esc = (s) => escapeHtml(String(s == null ? '' : s));
     const dayNames = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
     const days = getAllJournalDays().slice().sort((a, b) => b.date.localeCompare(a.date));
-    const headBg = 'background:#c9a961;font-weight:bold;';
 
-    let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' +
-      'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
-      'xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"></head>' +
-      '<body dir="rtl">';
+    // Build a real CSV (UTF-8 + BOM) so Google Sheets / Excel / WPS open it natively.
+    // The previous HTML-table ".xls" was rejected by Sheets as "corrupted".
+    const cell = (s) => {
+      const str = String(s == null ? '' : s);
+      return /[",\n\r]/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str;
+    };
+    const lines = [];
+    const row = (arr) => lines.push(arr.map(cell).join(','));
 
-    // Table 1 — daily score
-    html += '<h2>ניקוד יומי</h2>';
-    html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>יום</th>';
-    MITZVOT.forEach(m => { html += '<th>' + esc(m.name) + '</th>'; });
-    html += '<th>הערה</th><th>ניקוד</th></tr>';
+    // Section 1 — daily score
+    row(['ניקוד יומי']);
+    const header1 = ['תאריך', 'יום'];
+    MITZVOT.forEach(m => header1.push(m.name));
+    header1.push('הערה', 'ניקוד');
+    row(header1);
     if (days.length === 0) {
-      html += '<tr><td colspan="' + (MITZVOT.length + 4) + '">אין נתונים</td></tr>';
+      row(['אין נתונים']);
     } else {
       days.forEach(d => {
         const dd = new Date(d.date);
-        html += '<tr><td>' + esc(d.date) + '</td><td>' + esc(dayNames[dd.getDay()] || '') + '</td>';
+        const r = [d.date, dayNames[dd.getDay()] || ''];
         MITZVOT.forEach(m => {
           const item = (d.items && d.items[m.id]) || {};
-          let cell = item.done ? '✓' : '';
-          if (item.done && m.hasMinyan && item.minyan) cell += ' (מניין ×2)';
+          let c = item.done ? '✓' : '';
+          if (item.done && m.hasMinyan && item.minyan) c += ' (מניין ×2)';
           if (m.extras && item.extras) {
             m.extras.forEach(ex => {
-              if (item.extras[ex.id] && (ex.independent || item.done)) cell += (cell ? ' ' : '') + '+' + esc(ex.label);
+              if (item.extras[ex.id] && (ex.independent || item.done)) c += (c ? ' ' : '') + '+' + ex.label;
             });
           }
-          html += '<td>' + cell + '</td>';
+          r.push(c);
         });
-        html += '<td>' + esc(d.note || '') + '</td><td>' + esc(d.score) + '</td></tr>';
+        r.push(d.note || '', d.score);
+        row(r);
       });
     }
-    html += '</table><br/>';
 
-    // Table 2 — brit log: private to אוריאל AND only when unlocked on this device.
+    // Section 2 — brit log: private to אוריאל AND only when unlocked on this device.
     if (isPinto && britUnlocked) {
       const brit = loadBritLog().slice().sort((a, b) => b.ts - a.ts);
-      html += '<h2>תיעוד שמירת הברית</h2>';
-      html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>שעה</th><th>תיעוד</th></tr>';
+      lines.push('');
+      row(['תיעוד שמירת הברית']);
+      row(['תאריך', 'שעה', 'תיעוד']);
       if (brit.length === 0) {
-        html += '<tr><td colspan="3">אין תיעודים</td></tr>';
+        row(['אין תיעודים']);
       } else {
         brit.forEach(e => {
           const d = new Date(e.ts);
           const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
           const hh = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-          html += '<tr><td>' + esc(ds) + '</td><td>' + esc(hh) + '</td><td>' + esc(e.text) + '</td></tr>';
+          row([ds, hh, e.text]);
         });
       }
-      html += '</table><br/>';
     }
 
-    // Table 3 — private reflection: אוריאל only (independent of the brit unlock).
+    // Section 3 — private reflection: אוריאל only (independent of the brit unlock).
     if (isPinto) {
       const refl = loadPrivateReflections();
       const reflDates = Object.keys(refl).sort((a, b) => b.localeCompare(a));
-      html += '<h2>חשבון נפש יומי</h2>';
-      html += '<table border="1"><tr style="' + headBg + '"><th>תאריך</th><th>חשבון נפש</th></tr>';
+      lines.push('');
+      row(['חשבון נפש יומי']);
+      row(['תאריך', 'חשבון נפש']);
       if (reflDates.length === 0) {
-        html += '<tr><td colspan="2">אין רישומים</td></tr>';
+        row(['אין רישומים']);
       } else {
-        reflDates.forEach(dt => {
-          html += '<tr><td>' + esc(dt) + '</td><td>' + esc(refl[dt]) + '</td></tr>';
-        });
+        reflDates.forEach(dt => row([dt, refl[dt]]));
       }
-      html += '</table>';
     }
 
-    html += '</body></html>';
-
     try {
-      const blob = new Blob(['﻿' + html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const csv = '﻿' + lines.join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'תקטו-תפילות-' + (isPinto ? 'אוריאל' : 'טל') + '-' + getTodayDate() + '.xls';
+      a.download = 'תקטו-תפילות-' + (isPinto ? 'אוריאל' : 'טל') + '-' + getTodayDate() + '.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
