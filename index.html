@@ -9314,7 +9314,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
   const MITZVOT_PINTO = [
     { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true,
-      extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5 }] },
+      extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
     { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
     { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
     { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false,
@@ -9378,12 +9378,20 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) {}
   }
 
-  // Points earned for a single mitzva given its item state (done + minyan + extras)
+  // Points earned for a single mitzva given its item state (done + minyan + extras).
+  // Extras marked `independent` count even if the mitzva itself isn't done
+  // (e.g. tefillin counts on its own); other extras are bonuses requiring done.
   function mitzvaItemPoints(m, item) {
-    if (!item || !item.done) return 0;
-    let pts = (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+    if (!item) return 0;
+    let pts = 0;
+    if (item.done) {
+      pts += (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+    }
     if (m.extras && item.extras) {
-      m.extras.forEach(ex => { if (item.extras[ex.id]) pts += ex.points; });
+      m.extras.forEach(ex => {
+        if (!item.extras[ex.id]) return;
+        if (ex.independent || item.done) pts += ex.points;
+      });
     }
     return pts;
   }
