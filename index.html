@@ -491,6 +491,45 @@
     text-align: center;
     color: var(--brown);
   }
+  .fall-quiz-intro {
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--brown);
+    background: var(--parchment-light);
+    border-right: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 2px 0 6px;
+  }
+  .fall-quiz-step {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-right: 4px;
+  }
+  .fall-quiz-sub {
+    margin: 8px 0 0;
+    padding: 4px 12px 12px;
+    background: rgba(0, 0, 0, 0.035);
+    border-radius: 8px;
+  }
+  .brit-log-entry-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .brit-log-tag {
+    font-family: 'Heebo', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--parchment-light);
+    border: 1px solid var(--gold);
+    color: var(--brown);
+  }
 
   /* === Favorites Heart Button === */
   .fav-heart {
@@ -3433,19 +3472,27 @@
 <div class="modal-backdrop" id="fallQuizModal">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">רגע לפני — שתי שאלות</div>
+      <div class="modal-title">רגע לפני — תיעוד נפילה</div>
       <button class="modal-close" id="fallQuizClose">×</button>
     </div>
     <div class="modal-body">
-      <div class="fall-quiz-q">1. האם ניסית להתקשר לחבר?</div>
+      <div class="fall-quiz-intro">סדר ההתמודדות: קודם המגינים (קו ההגנה הראשון), ואם לא הספיק — להתקשר לחבר, שהוא המוצא האחרון לפני נפילה.</div>
+      <div class="fall-quiz-q">1. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הראשון</span></div>
+      <div class="fall-quiz-options" data-q="method">
+        <button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button>
+        <button class="fall-quiz-btn" data-q="method" data-val="no">לא</button>
+      </div>
+      <div class="fall-quiz-q">2. האם התקשרת לחבר? <span class="fall-quiz-step">המוצא האחרון לפני נפילה</span></div>
       <div class="fall-quiz-options" data-q="friend">
         <button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button>
         <button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button>
       </div>
-      <div class="fall-quiz-q">2. האם השתמשת בשיטת המגינים?</div>
-      <div class="fall-quiz-options" data-q="method">
-        <button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button>
-        <button class="fall-quiz-btn" data-q="method" data-val="no">לא</button>
+      <div class="fall-quiz-sub" id="fallQuizFriendSub" style="display:none;">
+        <div class="fall-quiz-q">האם החבר ענה?</div>
+        <div class="fall-quiz-options" data-q="friendAnswered">
+          <button class="fall-quiz-btn" data-q="friendAnswered" data-val="yes">ענה</button>
+          <button class="fall-quiz-btn" data-q="friendAnswered" data-val="no">לא ענה</button>
+        </div>
       </div>
       <div class="fall-quiz-note" id="fallQuizNote"></div>
       <div class="goal-form-buttons">
@@ -8702,15 +8749,24 @@ const TOTAL_OSHER = TEFILOT.length;
       list.innerHTML = '<div class="brit-log-empty">אין תיעודים. בעזרת ה׳ שלא יהיו.</div>';
       return;
     }
-    list.innerHTML = entries.map(e => `
+    list.innerHTML = entries.map(e => {
+      const tags = [];
+      if (e.usedMethod) tags.push('🛡️ מגינים');
+      if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
+      const tagsHtml = tags.length
+        ? `<div class="brit-log-entry-tags">${tags.map(t => `<span class="brit-log-tag">${t}</span>`).join('')}</div>`
+        : '';
+      return `
       <div class="brit-log-entry">
         <div class="brit-log-entry-content">
           <div class="brit-log-entry-time">${formatBritLogTime(e.ts)}</div>
           <div class="brit-log-entry-text">${escapeHtml(e.text)}</div>
+          ${tagsHtml}
         </div>
         <button class="brit-log-entry-del" data-ts="${e.ts}" aria-label="מחק">×</button>
       </div>
-    `).join('');
+    `;
+    }).join('');
     list.querySelectorAll('.brit-log-entry-del').forEach(btn => {
       btn.addEventListener('click', () => deleteBritLogEntry(parseInt(btn.dataset.ts, 10)));
     });
@@ -8743,13 +8799,18 @@ const TOTAL_OSHER = TEFILOT.length;
     renderBritLog();
   }
 
-  // ----- Fall questionnaire: deduct 40 only if both coping tools were skipped -----
+  // ----- Fall questionnaire: escalation order is מגינים first, then calling a
+  // friend as the last resort before a fall. 40 points are deducted only if both
+  // coping tools were skipped. When a friend was called we also record whether he
+  // answered (tracking only — it does not change the penalty). -----
   let fallQuizText = '';
-  let fallQuizAnswers = { friend: null, method: null };
+  let fallQuizAnswers = { method: null, friend: null, friendAnswered: null };
   function openFallQuiz(text) {
     fallQuizText = text;
-    fallQuizAnswers = { friend: null, method: null };
+    fallQuizAnswers = { method: null, friend: null, friendAnswered: null };
     document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+    const sub = document.getElementById('fallQuizFriendSub');
+    if (sub) sub.style.display = 'none';
     const note = document.getElementById('fallQuizNote');
     if (note) note.textContent = '';
     const modal = document.getElementById('fallQuizModal');
@@ -8759,33 +8820,57 @@ const TOTAL_OSHER = TEFILOT.length;
     const modal = document.getElementById('fallQuizModal');
     if (modal) modal.classList.remove('active');
   }
-  function selectFallAnswer(q, val, btn) {
-    fallQuizAnswers[q] = val;
-    btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
+  function updateFallQuizNote() {
     const note = document.getElementById('fallQuizNote');
     if (!note) return;
-    if (fallQuizAnswers.friend === 'no' && fallQuizAnswers.method === 'no') {
-      note.textContent = 'שתי התשובות שליליות — יירדו 40 נקודות.';
-    } else if (fallQuizAnswers.friend && fallQuizAnswers.method) {
-      note.textContent = 'השתמשת בכלי התמודדות — לא יירדו נקודות. חזק!';
+    const a = fallQuizAnswers;
+    if (a.method === 'no' && a.friend === 'no') {
+      note.textContent = 'לא עברת דרך כלי ההתמודדות — יירדו 40 נקודות. בפעם הבאה: קודם המגינים, ואם לא עזר — להתקשר לחבר.';
+    } else if (a.method && a.friend) {
+      if (a.friend === 'yes' && a.friendAnswered === 'no') {
+        note.textContent = 'כל הכבוד שניסית להתמודד וגם להתקשר, גם אם החבר לא ענה. חזק! — לא יירדו נקודות.';
+      } else {
+        note.textContent = 'כל הכבוד שהשתמשת בכלי ההתמודדות — לא יירדו נקודות. חזק!';
+      }
     } else {
       note.textContent = '';
     }
   }
+  function selectFallAnswer(q, val, btn) {
+    fallQuizAnswers[q] = val;
+    btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    if (q === 'friend') {
+      const sub = document.getElementById('fallQuizFriendSub');
+      if (val === 'yes') {
+        if (sub) sub.style.display = 'block';
+      } else {
+        if (sub) sub.style.display = 'none';
+        fallQuizAnswers.friendAnswered = null;
+        document.querySelectorAll('#fallQuizFriendSub .fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+      }
+    }
+    updateFallQuizNote();
+  }
   function saveFallQuiz() {
-    if (!fallQuizAnswers.friend || !fallQuizAnswers.method) {
-      const note = document.getElementById('fallQuizNote');
+    const a = fallQuizAnswers;
+    const note = document.getElementById('fallQuizNote');
+    if (!a.method || !a.friend) {
       if (note) note.textContent = 'אנא ענה על שתי השאלות.';
       return;
     }
-    const bothNo = fallQuizAnswers.friend === 'no' && fallQuizAnswers.method === 'no';
+    if (a.friend === 'yes' && !a.friendAnswered) {
+      if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.';
+      return;
+    }
+    const bothNo = a.method === 'no' && a.friend === 'no';
     const arr = loadBritLog();
     arr.push({
       ts: Date.now(),
       text: fallQuizText,
-      calledFriend: fallQuizAnswers.friend === 'yes',
-      usedMethod: fallQuizAnswers.method === 'yes',
+      usedMethod: a.method === 'yes',
+      calledFriend: a.friend === 'yes',
+      friendAnswered: a.friend === 'yes' ? (a.friendAnswered === 'yes') : null,
       penalty: bothNo ? 40 : 0
     });
     saveBritLog(arr);
