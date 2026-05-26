@@ -196,6 +196,49 @@
   .note-editor-date { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); margin-bottom: 10px; text-align: center; font-weight: 600; }
   .note-editor-textarea { width: 100%; min-height: 130px; padding: 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown-deep); resize: vertical; line-height: 1.5; }
 
+  .score-date-header { position: relative; cursor: pointer; }
+  #scoreDatePicker { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .brit-log-section { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(60,36,16,0.05), rgba(122,82,48,0.05)); border: 1.5px solid var(--brown-light); border-radius: 10px; }
+  .brit-log-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); margin-bottom: 4px; }
+  .brit-log-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); font-style: italic; margin-bottom: 12px; }
+  .brit-log-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .brit-log-input { flex: 1; min-width: 0; padding: 10px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); }
+  .brit-log-add-btn { flex-shrink: 0; padding: 10px 16px; background: var(--brown); color: var(--parchment-light); border: none; border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .brit-log-list { display: flex; flex-direction: column; gap: 8px; }
+  .brit-log-entry { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--parchment-light); border: 1px solid var(--brown-light); border-radius: 8px; }
+  .brit-log-entry-content { flex: 1; min-width: 0; }
+  .brit-log-entry-time { font-size: 12px; color: var(--brown-light); margin-bottom: 3px; }
+  .brit-log-entry-text { font-size: 14px; color: var(--brown-deep); font-family: 'Frank Ruhl Libre', serif; word-break: break-word; }
+  .brit-log-entry-del { flex-shrink: 0; background: transparent; border: none; color: var(--wine); font-size: 20px; cursor: pointer; line-height: 1; padding: 0 4px; }
+  .brit-log-empty { text-align: center; color: var(--brown-light); font-style: italic; font-family: 'Frank Ruhl Libre', serif; padding: 8px; font-size: 13px; }
+  .brit-log-entry-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .brit-log-tag { font-family: 'Heebo', sans-serif; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: var(--parchment); border: 1px solid var(--gold); color: var(--brown); }
+  .fall-quiz-q { font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 600; color: var(--brown-deep); margin: 14px 0 8px; }
+  .fall-quiz-options { display: flex; gap: 10px; }
+  .fall-quiz-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1.5px solid var(--gold); background: var(--parchment-light); font-family: 'Heebo', sans-serif; font-size: 15px; font-weight: 600; color: var(--brown); cursor: pointer; transition: all 0.15s; }
+  .fall-quiz-btn.selected { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); }
+  .fall-quiz-note { min-height: 22px; margin: 14px 0 4px; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 600; text-align: center; color: var(--brown); }
+  .fall-quiz-intro { font-family: 'Heebo', sans-serif; font-size: 13px; line-height: 1.5; color: var(--brown); background: var(--parchment-light); border-right: 3px solid var(--gold); border-radius: 6px; padding: 10px 12px; margin: 2px 0 6px; }
+  .fall-quiz-step { font-size: 11.5px; font-weight: 700; color: var(--gold-dark); margin-right: 4px; }
+  .fall-quiz-sub { margin: 8px 0 0; padding: 4px 12px 12px; background: rgba(0,0,0,0.035); border-radius: 8px; }
+  .private-reflection-section { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(107,31,45,0.04), rgba(122,82,48,0.04)); border: 1.5px solid var(--brown-light); border-radius: 10px; }
+  .private-reflection-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); margin-bottom: 4px; }
+  .private-reflection-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); font-style: italic; margin-bottom: 10px; }
+  .private-reflection-date { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown); margin-bottom: 8px; font-weight: 600; }
+  .private-reflection-textarea { width: 100%; min-height: 120px; padding: 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown-deep); resize: vertical; line-height: 1.5; }
+  .private-reflection-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); }
+  .private-reflection-saved { color: var(--gold-dark); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+  .private-reflection-saved.show { opacity: 1; }
+  .edit-day-body { padding: 16px; overflow-y: auto; flex: 1; min-height: 0; }
+  .edit-day-date { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 17px; color: var(--brown-deep); margin-bottom: 4px; font-weight: 700; }
+  .edit-day-score-preview { text-align: center; margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, rgba(201,169,97,0.18), rgba(212,182,121,0.08)); border: 1.5px solid var(--gold); border-radius: 8px; }
+  .edit-day-score-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 2px; }
+  .edit-day-score-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 32px; color: var(--wine); line-height: 1; }
+  .edit-day-actions { display: flex; gap: 8px; padding: 0 16px 16px; }
+  .edit-day-btn { flex: 1; padding: 12px; border-radius: 6px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; border: 1.5px solid; }
+  .edit-day-btn.save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); flex: 2; }
+  .edit-day-btn.delete { background: transparent; color: var(--wine); border-color: var(--wine); }
+
   .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
   .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1100; }
   .toast.show { opacity: 1; }
@@ -208,7 +251,7 @@
     <div class="who">יוסף ביתן</div>
   </header>
 
-  <div class="score-date-header"><div class="date-label">תאריך</div><div class="date-value" id="dateValue">—</div></div>
+  <div class="score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
 
   <div class="score-today-total">
     <div class="label">סך הניקוד היום</div>
@@ -217,6 +260,24 @@
   </div>
 
   <div id="mitzvotList"></div>
+
+  <div class="brit-log-section" id="britLogSection">
+    <div class="brit-log-title">🛡️ תיעוד שמירת הברית</div>
+    <div class="brit-log-subtitle">אם הייתה נפילה — רק תיעוד, לא שיפוט. משפט אחד, והשעה תירשם אוטומטית.</div>
+    <div class="brit-log-input-row">
+      <input type="text" id="britLogInput" class="brit-log-input" placeholder="מה קרה ומה הוביל לזה — משפט אחד" maxlength="200" />
+      <button id="britLogAddBtn" class="brit-log-add-btn">תעד</button>
+    </div>
+    <div id="britLogList" class="brit-log-list"></div>
+  </div>
+
+  <div class="private-reflection-section">
+    <div class="private-reflection-title">🔒 חשבון נפש אישי</div>
+    <div class="private-reflection-subtitle">פרטי לחלוטין — רק אתה רואה את זה במכשיר הזה.</div>
+    <div class="private-reflection-date" id="reflectionDate">—</div>
+    <textarea class="private-reflection-textarea" id="reflectionTextarea" placeholder="מה היה לי היום? חשבון נפש, מחשבות, מה הלך טוב ומה פחות..."></textarea>
+    <div class="private-reflection-footer"><span><span id="reflectionCounter">0</span> תווים</span><span class="private-reflection-saved" id="reflectionSaved">נשמר ✓</span></div>
+  </div>
 
   <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
   <button class="score-export-excel" id="exportBtn">⤓ ייצוא היומן</button>
@@ -316,6 +377,39 @@
     </div>
   </div>
 
+  <!-- Edit day modal -->
+  <div class="modal-backdrop" id="editDayModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">עריכת יום</div><button class="modal-close" id="editDayClose">×</button></div>
+      <div class="edit-day-body">
+        <div class="edit-day-date" id="editDayDate">—</div>
+        <div class="edit-day-score-preview"><div class="edit-day-score-label">נקודות ביום זה</div><div class="edit-day-score-value" id="editDayScore">0</div></div>
+        <div id="editDayMitzvot"></div>
+      </div>
+      <div class="edit-day-actions"><button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button><button class="edit-day-btn save" id="editDaySave">שמור שינויים</button></div>
+    </div>
+  </div>
+
+  <!-- Fall questionnaire -->
+  <div class="modal-backdrop" id="fallQuizModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
+      <div class="modal-body">
+        <div class="fall-quiz-intro">סדר ההתמודדות: קודם המגינים (קו ההגנה הראשון), ואם לא הספיק — להתקשר לחבר, שהוא המוצא האחרון לפני נפילה.</div>
+        <div class="fall-quiz-q">1. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הראשון</span></div>
+        <div class="fall-quiz-options" data-q="method"><button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="method" data-val="no">לא</button></div>
+        <div class="fall-quiz-q">2. האם התקשרת לחבר? <span class="fall-quiz-step">המוצא האחרון לפני נפילה</span></div>
+        <div class="fall-quiz-options" data-q="friend"><button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button></div>
+        <div class="fall-quiz-sub" id="fallQuizFriendSub" style="display:none;">
+          <div class="fall-quiz-q">האם החבר ענה?</div>
+          <div class="fall-quiz-options" data-q="friendAnswered"><button class="fall-quiz-btn" data-q="friendAnswered" data-val="yes">ענה</button><button class="fall-quiz-btn" data-q="friendAnswered" data-val="no">לא ענה</button></div>
+        </div>
+        <div class="fall-quiz-note" id="fallQuizNote"></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="fallQuizSave">שמור תיעוד</button><button class="goal-form-btn cancel" id="fallQuizCancel">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
 <script>
 (function () {
   'use strict';
@@ -373,9 +467,110 @@
 
   function mitzvaItemPoints(m, item) { if (!item) return 0; let pts = 0; if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points*2 : m.points; if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; }); return pts; }
   function mitzvaMaxPoints(m) { let p = m.hasMinyan ? m.points*2 : m.points; if (m.extras) m.extras.forEach(ex => p += ex.points); return p; }
-  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); return t; }
+  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); t -= (todayState.penalty || 0); return t; }
   function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
   function isPerfectDay(items) { return MITZVOT.every(m => items[m.id] && items[m.id].done); }
+
+  function renderMitzvaCard(m, rawItem) {
+    const item = rawItem || { done:false, minyan:false, extras:{} };
+    const extras = item.extras || {};
+    const eff = mitzvaItemPoints(m, Object.assign({}, item, { done:true }));
+    const hasExtras = m.extras && m.extras.length;
+    const anyOn = hasExtras && m.extras.some(ex => extras[ex.id]);
+    const bonus = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') + (hasExtras ? m.extras.filter(ex=>extras[ex.id]).map(ex=>' +'+ex.points).join('') : '');
+    return '<div class="mitzva-card'+(item.done?' done':'')+(anyOn?' expanded':'')+'" data-id="'+m.id+'"><div class="mitzva-row">' +
+      (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+      '<div class="mitzva-icon">'+m.icon+'</div><div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div><div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
+      '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button></div>' +
+      (m.hasMinyan ? '<div class="minyan-toggle"><div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div><label class="switch"><input type="checkbox" data-action="minyan"'+(item.minyan?' checked':'')+'><span class="switch-slider"></span></label></div>' : '') +
+      (hasExtras ? '<div class="mitzva-extras">' + m.extras.map(ex => '<div class="minyan-toggle"><div class="minyan-toggle-label">'+ex.label+' <span class="bonus">+'+ex.points+' נקודות</span></div><label class="switch"><input type="checkbox" data-action="extra" data-extra="'+ex.id+'"'+(extras[ex.id]?' checked':'')+'><span class="switch-slider"></span></label></div>').join('') + '</div>' : '') +
+    '</div>';
+  }
+
+  // ===== Edit any day (date picker / history click) =====
+  let editingDayDate = null, editingDayItems = {};
+  function openEditDay(dateStr) {
+    editingDayDate = dateStr; const today = getTodayDate();
+    if (dateStr === today) editingDayItems = JSON.parse(JSON.stringify(todayState.items));
+    else { const e = loadHistory().find(h => h.date === dateStr); editingDayItems = (e && e.items) ? JSON.parse(JSON.stringify(e.items)) : {}; }
+    MITZVOT.forEach(m => { if (!editingDayItems[m.id]) editingDayItems[m.id] = { done:false, minyan:false, extras:{} }; });
+    document.getElementById('editDayDate').textContent = fmtDate(dateStr) + (dateStr===today?' · היום':'');
+    renderEditDayMitzvot(); document.getElementById('editDayModal').classList.add('active');
+  }
+  function calcEditScore() { let t=0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, editingDayItems[m.id])); return t; }
+  function renderEditDayMitzvot() {
+    const list = document.getElementById('editDayMitzvot');
+    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, editingDayItems[m.id])).join('');
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => { editingDayItems[id].done = !editingDayItems[id].done; renderEditDayMitzvot(); });
+      const mi = card.querySelector('[data-action="minyan"]'); if (mi) mi.addEventListener('change', () => { editingDayItems[id].minyan = mi.checked; renderEditDayMitzvot(); });
+      const ex = card.querySelector('[data-action="expand"]'); if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => inp.addEventListener('change', () => { if (!editingDayItems[id].extras) editingDayItems[id].extras = {}; editingDayItems[id].extras[inp.dataset.extra] = inp.checked; renderEditDayMitzvot(); }));
+    });
+    document.getElementById('editDayScore').textContent = calcEditScore();
+  }
+  function saveEditDay() {
+    if (!editingDayDate) return; const score = calcEditScore(); const today = getTodayDate();
+    if (editingDayDate === today) { todayState.items = JSON.parse(JSON.stringify(editingDayItems)); saveToday(); }
+    else { const h = loadHistory().filter(x => x.date !== editingDayDate); if (score > 0) h.push({ date: editingDayDate, score: score, items: JSON.parse(JSON.stringify(editingDayItems)) }); h.sort((a,b) => a.date.localeCompare(b.date)); saveHistory(h.slice(-90)); pushUp(); }
+    document.getElementById('editDayModal').classList.remove('active'); render();
+  }
+  function deleteEditDay() {
+    if (!editingDayDate) return; if (!confirm('למחוק את כל הסימונים של יום זה?')) return; const today = getTodayDate();
+    if (editingDayDate === today) { MITZVOT.forEach(m => todayState.items[m.id] = { done:false, minyan:false, extras:{} }); saveToday(); }
+    else { saveHistory(loadHistory().filter(x => x.date !== editingDayDate)); pushUp(); }
+    document.getElementById('editDayModal').classList.remove('active'); render();
+  }
+
+  // ===== Brit log + fall questionnaire =====
+  const BRIT_LOG_KEY = 'yosef_brit_log_v1';
+  function loadBritLog() { try { const r = localStorage.getItem(BRIT_LOG_KEY); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; } catch(e) { return []; } }
+  function saveBritLog(a) { try { localStorage.setItem(BRIT_LOG_KEY, JSON.stringify(a)); } catch(e) {} pushUp(); }
+  function tsToDate(ts) { const d = new Date(ts); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function fmtBritTime(ts) { try { return fmtDate(tsToDate(ts)) + ' · ' + String(new Date(ts).getHours()).padStart(2,'0')+':'+String(new Date(ts).getMinutes()).padStart(2,'0'); } catch(e) { return ''; } }
+  function renderBritLog() {
+    const list = document.getElementById('britLogList'); if (!list) return;
+    const entries = loadBritLog().slice().sort((a,b) => b.ts - a.ts);
+    if (!entries.length) { list.innerHTML = '<div class="brit-log-empty">אין תיעודים. בעזרת ה׳ שלא יהיו.</div>'; return; }
+    list.innerHTML = entries.map(e => {
+      const tags = [];
+      if (e.usedMethod) tags.push('🛡️ מגינים');
+      if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
+      const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
+      return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div><div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>'+th+'</div><button class="brit-log-entry-del" data-ts="'+e.ts+'">×</button></div>';
+    }).join('');
+    list.querySelectorAll('.brit-log-entry-del').forEach(b => b.addEventListener('click', () => deleteBritLogEntry(parseInt(b.dataset.ts,10))));
+  }
+  function addBritLogEntry() { const inp = document.getElementById('britLogInput'); if (!inp) return; if (!(inp.value||'').trim()) return; openFallQuiz(inp.value.trim()); }
+  function deleteBritLogEntry(ts) {
+    const all = loadBritLog(); const entry = all.find(e => e.ts === ts);
+    saveBritLog(all.filter(e => e.ts !== ts));
+    if (entry && entry.penalty && tsToDate(entry.ts) === (todayState.date || getTodayDate())) { todayState.penalty = Math.max(0, (todayState.penalty||0) - entry.penalty); saveToday(); }
+    render();
+  }
+  let fallQuizText = '', fallQuizAnswers = { method:null, friend:null, friendAnswered:null };
+  function openFallQuiz(text) { fallQuizText = text; fallQuizAnswers = { method:null, friend:null, friendAnswered:null }; document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected')); const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none'; const note = document.getElementById('fallQuizNote'); if (note) note.textContent = ''; document.getElementById('fallQuizModal').classList.add('active'); }
+  function closeFallQuiz() { document.getElementById('fallQuizModal').classList.remove('active'); }
+  function updateFallQuizNote() { const note = document.getElementById('fallQuizNote'); if (!note) return; const a = fallQuizAnswers; if (a.method==='no' && a.friend==='no') note.textContent = 'לא עברת דרך כלי ההתמודדות — יירדו 40 נקודות. בפעם הבאה: קודם המגינים, ואם לא עזר — להתקשר לחבר.'; else if (a.method && a.friend) { if (a.friend==='yes' && a.friendAnswered==='no') note.textContent = 'כל הכבוד שניסית להתמודד וגם להתקשר, גם אם החבר לא ענה. חזק! — לא יירדו נקודות.'; else note.textContent = 'כל הכבוד שהשתמשת בכלי ההתמודדות — לא יירדו נקודות. חזק!'; } else note.textContent = ''; }
+  function selectFallAnswer(q, val, btn) { fallQuizAnswers[q] = val; btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); if (q === 'friend') { const sub = document.getElementById('fallQuizFriendSub'); if (val === 'yes') { if (sub) sub.style.display = 'block'; } else { if (sub) sub.style.display = 'none'; fallQuizAnswers.friendAnswered = null; document.querySelectorAll('#fallQuizFriendSub .fall-quiz-btn').forEach(b => b.classList.remove('selected')); } } updateFallQuizNote(); }
+  function saveFallQuiz() {
+    const a = fallQuizAnswers; const note = document.getElementById('fallQuizNote');
+    if (!a.method || !a.friend) { if (note) note.textContent = 'אנא ענה על שתי השאלות.'; return; }
+    if (a.friend === 'yes' && !a.friendAnswered) { if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
+    const bothNo = a.method === 'no' && a.friend === 'no';
+    const arr = loadBritLog();
+    arr.push({ ts: Date.now(), text: fallQuizText, usedMethod: a.method==='yes', calledFriend: a.friend==='yes', friendAnswered: a.friend==='yes' ? (a.friendAnswered==='yes') : null, penalty: bothNo ? 40 : 0 });
+    saveBritLog(arr);
+    if (bothNo) { todayState.penalty = (todayState.penalty||0) + 40; saveToday(); }
+    const inp = document.getElementById('britLogInput'); if (inp) inp.value = '';
+    closeFallQuiz(); render();
+  }
+
+  // ===== Private reflection (local only) =====
+  const REFLECT_KEY = 'yosef_reflection_v1';
+  function loadReflections() { try { return JSON.parse(localStorage.getItem(REFLECT_KEY) || '{}') || {}; } catch(e) { return {}; } }
+  function renderReflection() { const ta = document.getElementById('reflectionTextarea'); if (!ta) return; const date = getTodayDate(); const dl = document.getElementById('reflectionDate'); if (dl) dl.textContent = fmtDate(date); ta.value = loadReflections()[date] || ''; const c = document.getElementById('reflectionCounter'); if (c) c.textContent = ta.value.length; }
 
   function render() {
     document.getElementById('dateValue').textContent = fmtDate(todayState.date);
@@ -404,7 +599,7 @@
       card.querySelectorAll('[data-action="extra"]').forEach(inp => { inp.addEventListener('change', () => { if (!todayState.items[id].extras) todayState.items[id].extras = {}; todayState.items[id].extras[inp.dataset.extra] = inp.checked; saveToday(); render(); }); });
     });
     document.getElementById('scoreToday').textContent = calcToday();
-    renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal();
+    renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal(); renderBritLog(); renderReflection();
   }
 
   function renderSummary() {
@@ -428,7 +623,8 @@
     const c = document.getElementById('scoreHistory');
     if (!sorted.length) { c.innerHTML = '<div class="history-empty">עוד אין היסטוריה. סיים את היום הראשון!</div>'; return; }
     const max = calcMax();
-    c.innerHTML = sorted.map(h => { const pct = Math.min(100,(h.score/max)*100); const it = h.date===today; return '<div class="history-row"><div class="history-date">'+fmtDate(h.date)+(it?' · היום':'')+'</div><div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div><div class="history-score">'+h.score+'</div></div>'; }).join('');
+    c.innerHTML = sorted.map(h => { const pct = Math.min(100,(h.score/max)*100); const it = h.date===today; return '<div class="history-row" data-date="'+h.date+'" style="cursor:pointer"><div class="history-date">'+fmtDate(h.date)+(it?' · היום':'')+'</div><div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div><div class="history-score">'+h.score+'</div></div>'; }).join('');
+    c.querySelectorAll('.history-row').forEach(row => row.addEventListener('click', () => openEditDay(row.dataset.date)));
   }
 
   // ===== Goals =====
@@ -551,7 +747,7 @@
   let pushTimer = null;
   function pushUp() { clearTimeout(pushTimer); pushTimer = setTimeout(doPush, 800); }
   async function doPush() {
-    try { const url = await dbUrl(); const payload = { name:'יוסף ביתן', score_today: todayState, score_history: loadHistory(), goals: goalsState, notes: loadNotes(), updatedAt: Date.now() }; const r = await fetch(url, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)'); } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
+    try { const url = await dbUrl(); const payload = { name:'יוסף ביתן', score_today: todayState, score_history: loadHistory(), goals: goalsState, notes: loadNotes(), brit_log: loadBritLog(), updatedAt: Date.now() }; const r = await fetch(url, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)'); } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
   }
   async function pullDown() {
     try {
@@ -561,6 +757,7 @@
         const localH = loadHistory(); const map = {}; localH.forEach(e => map[e.date] = e); (remote.score_history||[]).forEach(e => { if (map[e.date] == null) map[e.date] = e; }); saveHistory(Object.keys(map).map(d => map[d]));
         if (remote.notes && typeof remote.notes === 'object') { const ln = loadNotes(); let ch = false; Object.keys(remote.notes).forEach(d => { if (!ln[d]) { ln[d] = remote.notes[d]; ch = true; } }); if (ch) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(ln)); } catch(e) {} } }
         if (Array.isArray(remote.goals) && remote.goals.length && !localStorage.getItem(GOALS_KEY)) { goalsState = remote.goals; saveGoals(); }
+        if (Array.isArray(remote.brit_log)) { const lb = loadBritLog(); const seen = {}; lb.forEach(e => seen[e.ts]=true); let bch=false; remote.brit_log.forEach(e => { if (!seen[e.ts]) { lb.push(e); bch=true; } }); if (bch) { try { localStorage.setItem(BRIT_LOG_KEY, JSON.stringify(lb)); } catch(x){} } }
         if (remote.score_today && remote.score_today.date === getTodayDate()) { const empty = !Object.values(todayState.items||{}).some(it => it.done); if (empty) { todayState = remote.score_today; ensureItems(); saveTodayLocal(); } }
       }
       setSync('מסונכרן ✓');
@@ -586,6 +783,23 @@
   document.querySelectorAll('.chart-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); chartRange = parseInt(tab.dataset.range,10); renderChart(); }));
   document.querySelectorAll('.journal-filter-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.journal-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); journalFilter = btn.dataset.filter; journalSearchDate = ''; const di = document.getElementById('journalDateSearch'); if (di) di.value = ''; document.getElementById('journalClearSearch').classList.remove('active'); renderJournal(); }));
   (function(){ const input = document.getElementById('journalDateSearch'), clr = document.getElementById('journalClearSearch'); if (input) { input.max = getTodayDate(); input.addEventListener('change', () => { journalSearchDate = input.value || ''; clr.classList.toggle('active', !!journalSearchDate); renderJournal(); }); } if (clr) clr.addEventListener('click', () => { input.value=''; journalSearchDate=''; clr.classList.remove('active'); renderJournal(); }); })();
+
+  // Brit log
+  document.getElementById('britLogAddBtn').addEventListener('click', addBritLogEntry);
+  document.getElementById('britLogInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addBritLogEntry(); } });
+  // Fall quiz
+  document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(btn => btn.addEventListener('click', () => selectFallAnswer(btn.dataset.q, btn.dataset.val, btn)));
+  document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
+  document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
+  document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
+  // Edit day
+  document.getElementById('editDayClose').addEventListener('click', () => closeModal('editDayModal'));
+  document.getElementById('editDaySave').addEventListener('click', saveEditDay);
+  document.getElementById('editDayDelete').addEventListener('click', deleteEditDay);
+  // Date picker → edit any day
+  (function(){ const p = document.getElementById('scoreDatePicker'); if (p) { const prime = () => { p.value = getTodayDate(); p.max = getTodayDate(); }; p.addEventListener('focus', prime); p.addEventListener('click', prime); p.addEventListener('change', () => { if (p.value) openEditDay(p.value); }); } })();
+  // Private reflection autosave (local only)
+  (function(){ const ta = document.getElementById('reflectionTextarea'); if (!ta) return; let t = null; ta.addEventListener('input', () => { const c = document.getElementById('reflectionCounter'); if (c) c.textContent = ta.value.length; clearTimeout(t); t = setTimeout(() => { const map = loadReflections(); const d = getTodayDate(); const v = ta.value.trim(); if (v) map[d] = v; else delete map[d]; try { localStorage.setItem(REFLECT_KEY, JSON.stringify(map)); } catch(e) {} const s = document.getElementById('reflectionSaved'); if (s) { s.classList.add('show'); setTimeout(() => s.classList.remove('show'), 1500); } }, 600); }); })();
 
   // ===== Init =====
   loadToday(); loadGoals(); render(); pullDown();

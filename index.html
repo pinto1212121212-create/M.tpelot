@@ -10276,11 +10276,23 @@ const TOTAL_OSHER = TEFILOT.length;
       const st = data.score_today;
       if (st && st.date === getTodayDate() && st.items) {
         MITZVOT_PINTO.forEach(m => { score += mitzvaItemPoints(m, st.items[m.id]); });
+        score -= (st.penalty || 0);
       }
       if (scoreEl) scoreEl.textContent = score;
       if (updEl) updEl.textContent = data.updatedAt ? new Date(data.updatedAt).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
       const hist = (data.score_history || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1)).slice(0, 7);
-      if (histEl) histEl.innerHTML = hist.length ? hist.map(e => formatHebrewDate(e.date) + ' — <b>' + e.score + '</b> נק׳').join('<br>') : 'אין ימים שמורים עדיין.';
+      let html = hist.length ? hist.map(e => formatHebrewDate(e.date) + ' — <b>' + e.score + '</b> נק׳').join('<br>') : 'אין ימים שמורים עדיין.';
+      const falls = (data.brit_log || []).slice().sort((a,b) => b.ts - a.ts).slice(0, 5);
+      if (falls.length) {
+        html += '<div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--gold);"><b>תיעוד שמירת הברית:</b><br>' + falls.map(e => {
+          const d = new Date(e.ts);
+          const tags = [];
+          if (e.usedMethod) tags.push('🛡️ מגינים');
+          if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
+          return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + ' · ' + escapeHtml(e.text || '') + (tags.length ? ' <span style="color:var(--gold-dark)">(' + tags.join(', ') + ')</span>' : '');
+        }).join('<br>') + '</div>';
+      }
+      if (histEl) histEl.innerHTML = html;
     } catch(e) {
       const scoreEl = document.getElementById('yosefScore'); if (scoreEl) scoreEl.textContent = '—';
     }
