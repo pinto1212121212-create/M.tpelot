@@ -11623,6 +11623,61 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function isSyncActive() { return !!getSyncUrl(); }
 
+  // ----- Firebase anonymous authentication for the Realtime Database -----
+  // Until FIREBASE_API_KEY is set the app sends no token and behaves exactly as
+  // before (works with open rules). Once the key is set AND anonymous sign-in is
+  // enabled in the Firebase console, every sync request carries an auth token, so
+  // the database rules can require `auth != null`. Any auth failure falls back to
+  // an unauthenticated request, so sync never hard-crashes.
+  const FIREBASE_API_KEY = ''; // ← הדבק כאן את ה-Web API Key מ-Firebase (Project settings)
+  const FB_TOK_KEY = '_fb_id_token_v1';
+  const FB_REF_KEY = '_fb_refresh_token_v1';
+  const FB_EXP_KEY = '_fb_token_exp_v1';
+  function fbSaveToken(idToken, refreshToken, expiresIn) {
+    try {
+      localStorage.setItem(FB_TOK_KEY, idToken);
+      if (refreshToken) localStorage.setItem(FB_REF_KEY, refreshToken);
+      const ms = (parseInt(expiresIn, 10) || 3600) * 1000;
+      localStorage.setItem(FB_EXP_KEY, String(Date.now() + ms - 60000));
+    } catch(e) {}
+  }
+  async function fbSignInAnon() {
+    const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + FIREBASE_API_KEY, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ returnSecureToken: true })
+    });
+    if (!r.ok) throw new Error('anon sign-in failed');
+    const d = await r.json();
+    fbSaveToken(d.idToken, d.refreshToken, d.expiresIn);
+    return d.idToken;
+  }
+  async function fbRefresh(refreshToken) {
+    const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + FIREBASE_API_KEY, {
+      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(refreshToken)
+    });
+    if (!r.ok) throw new Error('token refresh failed');
+    const d = await r.json();
+    fbSaveToken(d.id_token, d.refresh_token, d.expires_in);
+    return d.id_token;
+  }
+  async function fbToken() {
+    if (!FIREBASE_API_KEY) return null; // not configured → no auth (backward compatible)
+    try {
+      const tok = localStorage.getItem(FB_TOK_KEY);
+      const exp = parseInt(localStorage.getItem(FB_EXP_KEY) || '0', 10);
+      if (tok && Date.now() < exp) return tok;
+      const ref = localStorage.getItem(FB_REF_KEY);
+      if (ref) { try { return await fbRefresh(ref); } catch(e) {} }
+      return await fbSignInAnon();
+    } catch(e) { return null; }
+  }
+  async function authedStateUrl() {
+    const base = getSyncUrl() + '/state.json';
+    const t = await fbToken();
+    return t ? (base + '?auth=' + encodeURIComponent(t)) : base;
+  }
+
   let syncUpTimer = null;
   let lastSyncUpAt = 0;
   let lastSyncDownAt = 0;
@@ -11718,7 +11773,8 @@ const TOTAL_OSHER = TEFILOT.length;
     try {
       const payload = pullState();
       // Fetch remote, merge, then PUT back so we don't overwrite the partner's recent changes
-      const resp = await fetch(url + '/state.json', { cache: 'no-store' });
+      const su = await authedStateUrl();
+      const resp = await fetch(su, { cache: 'no-store' });
       let remote = null;
       try { remote = await resp.json(); } catch(e) {}
       const merged = { shared: {}, profiles: { pinto: {}, tal: {} } };
@@ -11762,7 +11818,7 @@ const TOTAL_OSHER = TEFILOT.length;
         }
       }
 
-      await fetch(url + '/state.json', {
+      await fetch(su, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(merged)
@@ -11787,7 +11843,8 @@ const TOTAL_OSHER = TEFILOT.length;
     const url = getSyncUrl();
     if (!url) return;
     try {
-      const resp = await fetch(url + '/state.json', { cache: 'no-store' });
+      const su = await authedStateUrl();
+      const resp = await fetch(su, { cache: 'no-store' });
       let remote = null;
       try { remote = await resp.json(); } catch(e) {}
       const changed = mergeRemoteIntoLocal(remote);
