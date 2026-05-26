@@ -27,29 +27,16 @@
   h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 30px; color: var(--brown-deep); font-weight: 900; margin-top: 4px; }
   .who { font-size: 15px; color: var(--wine); font-weight: 700; margin-top: 2px; }
 
-  .score-date-header {
-    text-align: center; margin-bottom: 18px; padding: 14px;
-    background: linear-gradient(135deg, var(--brown-deep), var(--brown));
-    border-radius: 8px; color: var(--gold-light); box-shadow: 0 2px 8px rgba(60,30,10,0.2);
-  }
+  .score-date-header { text-align: center; margin-bottom: 18px; padding: 14px; background: linear-gradient(135deg, var(--brown-deep), var(--brown)); border-radius: 8px; color: var(--gold-light); box-shadow: 0 2px 8px rgba(60,30,10,0.2); }
   .score-date-header .date-label { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
   .score-date-header .date-value { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; font-weight: 700; color: var(--gold); }
 
-  .score-today-total {
-    text-align: center; margin-bottom: 22px; padding: 20px;
-    background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px;
-    box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold);
-  }
+  .score-today-total { text-align: center; margin-bottom: 22px; padding: 20px; background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold); }
   .score-today-total .label { font-family: 'Frank Ruhl Libre', serif; color: var(--brown); font-size: 14px; margin-bottom: 6px; }
   .score-today-total .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 48px; color: var(--wine); line-height: 1; }
   .score-today-total .max { font-family: 'Frank Ruhl Libre', serif; color: var(--brown-light); font-size: 16px; margin-top: 4px; }
 
-  .mitzva-card {
-    background: var(--parchment-light); border: 1.5px solid var(--brown); border-radius: 8px;
-    padding: 16px 18px; margin-bottom: 12px;
-    box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold), 0 2px 6px rgba(60,30,10,0.08);
-    transition: all 0.25s;
-  }
+  .mitzva-card { background: var(--parchment-light); border: 1.5px solid var(--brown); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold), 0 2px 6px rgba(60,30,10,0.08); transition: all 0.25s; }
   .mitzva-card.done { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.1)); border-color: var(--gold-dark); }
   .mitzva-row { display: flex; align-items: center; gap: 14px; }
   .mitzva-icon { font-size: 28px; width: 44px; text-align: center; flex-shrink: 0; }
@@ -57,12 +44,7 @@
   .mitzva-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); line-height: 1.2; }
   .mitzva-points { font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown-light); margin-top: 3px; }
   .mitzva-points strong { color: var(--wine); font-weight: 700; }
-  .mitzva-check {
-    width: 44px; height: 44px; min-width: 44px; border-radius: 50%;
-    background: var(--parchment); border: 2px solid var(--brown-light); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.25s cubic-bezier(0.22,1,0.36,1); padding: 0; flex-shrink: 0;
-  }
+  .mitzva-check { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: var(--parchment); border: 2px solid var(--brown-light); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); padding: 0; flex-shrink: 0; }
   .mitzva-check svg { width: 22px; height: 22px; fill: none; stroke: var(--brown-light); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.2s; }
   .mitzva-card.done .mitzva-check { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); box-shadow: 0 3px 10px rgba(201,169,97,0.4); }
   .mitzva-card.done .mitzva-check svg { stroke: var(--brown-deep); opacity: 1; animation: checkPop 0.4s cubic-bezier(0.22,1,0.36,1); }
@@ -82,20 +64,62 @@
   .switch input:checked + .switch-slider { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); }
   .switch input:checked + .switch-slider::before { right: calc(100% - 23px); background: var(--brown-deep); }
 
-  .score-end-day {
-    margin: 24px 0 18px; padding: 16px;
-    background: linear-gradient(135deg, var(--wine), #6b1d2a); color: var(--gold-light);
-    border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600;
-    font-size: 16px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(122,40,55,0.3);
-  }
+  .score-end-day { margin: 24px 0 14px; padding: 16px; background: linear-gradient(135deg, var(--wine), #6b1d2a); color: var(--gold-light); border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 16px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(122,40,55,0.3); }
   .score-end-day:active { transform: translateY(1px); }
+  .score-export-excel { margin: 0 0 18px; padding: 14px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(160,133,64,0.3); }
 
   .score-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
   .score-summary-card { background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 8px; padding: 14px 8px; text-align: center; }
   .score-summary-card .label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 4px; }
   .score-summary-card .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 24px; color: var(--wine); line-height: 1; }
 
-  .score-history { margin-top: 20px; }
+  /* Goals */
+  .goals-section { margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--gold); }
+  .goals-section-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); margin-bottom: 6px; text-align: center; }
+  .goals-section-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .goals-next { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08)); border: 2px solid var(--gold); border-radius: 10px; padding: 16px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(201,169,97,0.2); }
+  .goals-next-label { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown); margin-bottom: 6px; text-align: center; }
+  .goals-next-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .goals-next-progress { height: 14px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 7px; overflow: hidden; margin-bottom: 6px; }
+  .goals-next-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 7px; transition: width 0.5s cubic-bezier(0.22,1,0.36,1); }
+  .goals-next-stats { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); }
+  .goal-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; margin-bottom: 10px; transition: all 0.25s; }
+  .goal-card.unlocked { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08)); border-color: var(--gold-dark); box-shadow: 0 2px 6px rgba(201,169,97,0.25); }
+  .goal-card.claimed { opacity: 0.6; background: var(--parchment); }
+  .goal-icon { font-size: 28px; width: 40px; text-align: center; flex-shrink: 0; }
+  .goal-info { flex: 1; min-width: 0; }
+  .goal-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); word-break: break-word; }
+  .goal-points { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); margin-top: 3px; }
+  .goal-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .goal-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--brown-light); background: var(--parchment); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; padding: 0; }
+  .goal-btn.claim { border-color: var(--gold-dark); background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); font-weight: 700; }
+  .goal-btn.delete { color: var(--wine); }
+  .add-goal-btn { width: 100%; padding: 14px; background: var(--parchment); border: 2px dashed var(--gold); border-radius: 8px; color: var(--brown-deep); font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+
+  /* Chart */
+  .score-chart-section { margin-top: 24px; padding: 18px 14px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 10px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold); }
+  .score-chart-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: var(--brown-deep); margin-bottom: 4px; text-align: center; }
+  .score-chart-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .chart-tabs { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center; }
+  .chart-tab { padding: 6px 14px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 20px; font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown); cursor: pointer; transition: all 0.2s; }
+  .chart-tab.active { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); color: var(--brown-deep); font-weight: 700; }
+  .chart-container { position: relative; width: 100%; overflow: hidden; }
+  .chart-svg { width: 100%; height: 180px; display: block; }
+  .chart-grid-line { stroke: var(--brown-light); stroke-width: 0.5; stroke-dasharray: 2,3; opacity: 0.4; }
+  .chart-axis-label { font-family: 'Heebo', sans-serif; font-size: 9px; fill: var(--brown-light); }
+  .chart-area { fill: url(#chartGradient); opacity: 0.6; }
+  .chart-line { fill: none; stroke: var(--gold-dark); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-point { fill: var(--wine); stroke: var(--parchment-light); stroke-width: 2; cursor: pointer; }
+  .chart-point.today { fill: var(--gold-dark); stroke: var(--wine); stroke-width: 2.5; }
+  .chart-tooltip { position: absolute; background: var(--brown-deep); color: var(--gold-light); padding: 6px 10px; border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 12px; pointer-events: none; opacity: 0; transform: translate(-50%, -100%); transition: opacity 0.15s; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .chart-tooltip.active { opacity: 1; }
+  .chart-stats { display: flex; justify-content: space-around; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--gold); }
+  .chart-stat { text-align: center; }
+  .chart-stat-label { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); }
+  .chart-stat-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--wine); line-height: 1.2; }
+  .chart-empty { text-align: center; padding: 40px 20px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; }
+
+  .score-history { margin-top: 24px; }
   .score-history-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: var(--brown-deep); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1.5px solid var(--gold); }
   .history-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--parchment-light); border: 1px solid var(--brown-light); border-radius: 6px; margin-bottom: 6px; font-family: 'Frank Ruhl Libre', serif; }
   .history-date { flex: 1; color: var(--brown); font-size: 14px; }
@@ -104,8 +128,76 @@
   .history-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 3px; }
   .history-empty { text-align: center; padding: 20px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; }
 
+  /* Journal */
+  .journal-section { margin-top: 26px; padding-top: 20px; border-top: 2px solid var(--gold); }
+  .journal-section-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); margin-bottom: 6px; text-align: center; }
+  .journal-section-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .journal-stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; padding: 12px 8px; background: linear-gradient(135deg, rgba(201,169,97,0.12), rgba(212,182,121,0.05)); border: 1.5px solid var(--gold); border-radius: 10px; }
+  .journal-stat { text-align: center; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-stat-value { font-weight: 700; font-size: 20px; color: var(--wine); line-height: 1; }
+  .journal-stat-label { font-size: 11px; color: var(--brown); margin-top: 4px; line-height: 1.2; }
+  .journal-controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .journal-filter-btn { padding: 6px 12px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 16px; font-family: 'Heebo', sans-serif; font-size: 12px; color: var(--brown); cursor: pointer; }
+  .journal-filter-btn.active { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); color: var(--brown-deep); font-weight: 700; }
+  .journal-tools { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .journal-search { flex: 1; min-width: 150px; position: relative; display: flex; align-items: center; }
+  .journal-search input { width: 100%; padding: 8px 32px 8px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); }
+  .journal-clear-search { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--brown-light); font-size: 20px; cursor: pointer; padding: 2px 8px; line-height: 1; display: none; }
+  .journal-clear-search.active { display: inline-block; }
+  .journal-export-btn { padding: 8px 14px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; white-space: nowrap; }
+  .journal-list { }
+  .journal-entry { background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-entry.today { border-color: var(--gold); background: linear-gradient(135deg, rgba(201,169,97,0.10), rgba(212,182,121,0.05)); }
+  .journal-entry.perfect { border-color: var(--gold-dark); background: linear-gradient(135deg, rgba(201,169,97,0.16), rgba(212,182,121,0.08)); }
+  .journal-entry-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--gold); gap: 8px; }
+  .journal-entry-date { font-weight: 700; font-size: 15px; color: var(--brown-deep); flex: 1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .journal-entry-today-badge { display: inline-block; padding: 2px 8px; background: var(--gold); color: var(--brown-deep); border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .journal-perfect-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; background: linear-gradient(135deg, #c9a961, #d4b679); color: var(--brown-deep); border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .journal-entry-score { font-weight: 700; font-size: 16px; color: var(--wine); white-space: nowrap; }
+  .journal-mitzvot-list { display: flex; flex-direction: column; gap: 4px; }
+  .journal-mitzva-item { display: flex; align-items: center; gap: 10px; padding: 5px 8px; font-size: 14px; color: var(--brown); background: rgba(255,250,240,0.5); border-radius: 5px; }
+  .journal-mitzva-item.skipped { background: rgba(120,80,60,0.04); opacity: 0.6; }
+  .journal-mitzva-item-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+  .journal-mitzva-item-name { flex: 1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .journal-mitzva-item-name .minyan-mark { font-size: 11px; color: var(--gold-dark); font-weight: 600; background: rgba(201,169,97,0.15); padding: 1px 6px; border-radius: 8px; }
+  .journal-mitzva-item-points { color: var(--wine); font-weight: 700; font-size: 13px; white-space: nowrap; }
+  .journal-mitzva-status { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .journal-mitzva-status.done { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); }
+  .journal-mitzva-status.skipped { background: var(--parchment-dark); color: var(--brown-light); border: 1px solid var(--brown-light); }
+  .journal-note-section { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--gold); display: flex; align-items: flex-start; gap: 8px; }
+  .journal-note-icon { font-size: 14px; color: var(--brown); margin-top: 2px; flex-shrink: 0; }
+  .journal-note-text { flex: 1; font-size: 13px; color: var(--brown-deep); font-style: italic; line-height: 1.5; word-break: break-word; }
+  .journal-note-empty { flex: 1; font-size: 12px; color: var(--brown-light); font-style: italic; }
+  .journal-note-edit { background: transparent; border: 1px solid var(--brown-light); color: var(--brown); cursor: pointer; padding: 3px 8px; font-size: 12px; border-radius: 4px; flex-shrink: 0; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-empty { text-align: center; padding: 24px 12px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; background: var(--parchment-light); border: 1px dashed var(--brown-light); border-radius: 8px; }
+
+  /* Modals */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(60,30,10,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 14px; }
+  .modal-backdrop.active { display: flex; }
+  .modal { background: var(--parchment-light); border: 3px solid var(--brown-deep); box-shadow: inset 0 0 0 4px var(--parchment-light), inset 0 0 0 5px var(--gold), 0 20px 60px rgba(0,0,0,0.5); border-radius: 4px; max-width: 540px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; }
+  .modal-header { padding: 18px 22px 14px; border-bottom: 1.5px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-family: 'Frank Ruhl Libre', serif; font-size: 24px; font-weight: 900; color: var(--wine); }
+  .modal-close { background: var(--wine); color: var(--parchment-light); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; }
+  .modal-body { padding: 16px 22px 22px; overflow-y: auto; flex: 1; }
+  .goal-form-row { margin-bottom: 14px; }
+  .goal-form-label { display: block; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); margin-bottom: 6px; }
+  .goal-form-input { width: 100%; padding: 10px 12px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: var(--brown-deep); }
+  .goal-icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .goal-icon-option { aspect-ratio: 1; border: 1.5px solid var(--brown-light); background: var(--parchment); border-radius: 6px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+  .goal-icon-option.selected { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); transform: scale(1.05); }
+  .goal-form-buttons { display: flex; gap: 10px; margin-top: 16px; }
+  .goal-form-btn { flex: 1; padding: 12px; border-radius: 6px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; border: 1.5px solid; }
+  .goal-form-btn.save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); }
+  .goal-form-btn.cancel { background: transparent; color: var(--brown); border-color: var(--brown-light); }
+  .goal-celebration-icon { font-size: 80px; text-align: center; margin-bottom: 14px; }
+  .goal-celebration-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 24px; color: var(--wine); text-align: center; margin-bottom: 8px; }
+  .goal-celebration-points { font-family: 'Frank Ruhl Libre', serif; font-size: 18px; color: var(--gold-dark); text-align: center; margin-bottom: 14px; font-weight: 700; }
+  .goal-celebration-text { font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: var(--brown-deep); text-align: center; margin-bottom: 20px; line-height: 1.5; }
+  .note-editor-date { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); margin-bottom: 10px; text-align: center; font-weight: 600; }
+  .note-editor-textarea { width: 100%; min-height: 130px; padding: 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown-deep); resize: vertical; line-height: 1.5; }
+
   .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
-  .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 50; }
+  .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1100; }
   .toast.show { opacity: 1; }
 </style>
 </head>
@@ -116,10 +208,7 @@
     <div class="who">יוסף ביתן</div>
   </header>
 
-  <div class="score-date-header">
-    <div class="date-label">תאריך</div>
-    <div class="date-value" id="dateValue">—</div>
-  </div>
+  <div class="score-date-header"><div class="date-label">תאריך</div><div class="date-value" id="dateValue">—</div></div>
 
   <div class="score-today-total">
     <div class="label">סך הניקוד היום</div>
@@ -130,6 +219,7 @@
   <div id="mitzvotList"></div>
 
   <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
+  <button class="score-export-excel" id="exportBtn">⤓ ייצוא היומן</button>
 
   <div class="score-summary-grid">
     <div class="score-summary-card"><div class="label">השבוע</div><div class="value" id="scoreWeek">0</div></div>
@@ -137,13 +227,94 @@
     <div class="score-summary-card"><div class="label">סה״כ</div><div class="value" id="scoreTotal">0</div></div>
   </div>
 
+  <div class="goals-section">
+    <div class="goals-section-title">🎁 יעדים ופרסים</div>
+    <div class="goals-section-subtitle">תן לעצמך משהו לחכות לו</div>
+    <div id="goalsNext"></div>
+    <div id="goalsList"></div>
+    <button class="add-goal-btn" id="addGoalBtn">+ הוסף יעד חדש</button>
+  </div>
+
+  <div class="score-chart-section">
+    <div class="score-chart-title">📈 גרף התקדמות</div>
+    <div class="score-chart-subtitle">צבירת נקודות לאורך זמן</div>
+    <div class="chart-tabs">
+      <button class="chart-tab" data-range="7">7 ימים</button>
+      <button class="chart-tab active" data-range="14">14 ימים</button>
+      <button class="chart-tab" data-range="30">30 ימים</button>
+    </div>
+    <div class="chart-container"><div id="chartContent"></div><div class="chart-tooltip" id="chartTooltip"></div></div>
+    <div class="chart-stats" id="chartStats"></div>
+  </div>
+
   <div class="score-history">
     <div class="score-history-title">היסטוריה</div>
     <div id="scoreHistory"></div>
   </div>
 
+  <div class="journal-section">
+    <div class="journal-section-title">📖 יומן מפורט</div>
+    <div class="journal-section-subtitle">היסטוריה מלאה — סנן, חפש, הוסף הערות לכל יום.</div>
+    <div class="journal-stats-bar" id="journalStatsBar"></div>
+    <div class="journal-controls">
+      <button class="journal-filter-btn active" data-filter="all">הכל</button>
+      <button class="journal-filter-btn" data-filter="week">שבוע</button>
+      <button class="journal-filter-btn" data-filter="month">חודש</button>
+      <button class="journal-filter-btn" data-filter="active">פעיל</button>
+      <button class="journal-filter-btn" data-filter="perfect">⭐ מושלם</button>
+      <button class="journal-filter-btn" data-filter="notes">📝 עם הערות</button>
+    </div>
+    <div class="journal-tools">
+      <div class="journal-search">
+        <input type="date" id="journalDateSearch" aria-label="חיפוש לפי תאריך" />
+        <button class="journal-clear-search" id="journalClearSearch" type="button">×</button>
+      </div>
+      <button class="journal-export-btn" id="journalExportBtn" type="button">⤓ ייצוא</button>
+    </div>
+    <div class="journal-list" id="journalList"></div>
+  </div>
+
   <div class="sync-status" id="syncStatus">מסתנכרן…</div>
   <div class="toast" id="toast"></div>
+
+  <!-- Goal edit modal -->
+  <div class="modal-backdrop" id="goalEditModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="goalEditTitle">עריכת יעד</div><button class="modal-close" id="goalEditClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-form-row"><label class="goal-form-label">שם הפרס</label><input type="text" class="goal-form-input" id="goalNameInput" placeholder="למשל: פרס קטן, ספר חדש..."></div>
+        <div class="goal-form-row"><label class="goal-form-label">כמות נקודות</label><input type="number" class="goal-form-input" id="goalPointsInput" min="50" max="100000" step="50"></div>
+        <div class="goal-form-row"><label class="goal-form-label">בחר אייקון</label><div class="goal-icon-grid" id="goalIconGrid"></div></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="goalSaveBtn">שמור</button><button class="goal-form-btn cancel" id="goalCancelBtn">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal celebration modal -->
+  <div class="modal-backdrop" id="goalCelebrationModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">🎉 הגעת ליעד!</div><button class="modal-close" id="goalCelebClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-celebration-icon" id="celebIcon">🥉</div>
+        <div class="goal-celebration-title" id="celebTitle">פרס</div>
+        <div class="goal-celebration-points" id="celebPoints">500 נקודות</div>
+        <div class="goal-celebration-text">הגעת ליעד שלך! עכשיו הזמן לממש את הפרס שעבדת עליו.</div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="celebClaimBtn">✓ מימשתי את הפרס</button><button class="goal-form-btn cancel" id="celebLaterBtn">אחר כך</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note editor modal -->
+  <div class="modal-backdrop" id="noteEditorModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">📝 הערה</div><button class="modal-close" id="noteEditorClose">×</button></div>
+      <div class="modal-body">
+        <div class="note-editor-date" id="noteEditorDate">—</div>
+        <textarea class="note-editor-textarea" id="noteEditorTextarea" placeholder="מה היה ביום הזה? מחשבות, הספדים, מה הלך טוב..."></textarea>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="noteEditorSave">שמור</button><button class="goal-form-btn cancel" id="noteEditorCancel">ביטול</button></div>
+      </div>
+    </div>
+  </div>
 
 <script>
 (function () {
@@ -153,85 +324,58 @@
   const DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
   const API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
   const FB_TOK = '_yfb_id_token_v1', FB_REF = '_yfb_refresh_token_v1', FB_EXP = '_yfb_token_exp_v1';
-  function fbSave(id, ref, exp) {
-    try {
-      localStorage.setItem(FB_TOK, id);
-      if (ref) localStorage.setItem(FB_REF, ref);
-      localStorage.setItem(FB_EXP, String(Date.now() + ((parseInt(exp,10)||3600)*1000) - 60000));
-    } catch(e) {}
-  }
-  async function fbSignIn() {
-    const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + API_KEY, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnSecureToken: true }) });
-    if (!r.ok) throw new Error('signin');
-    const d = await r.json(); fbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken;
-  }
-  async function fbRefresh(ref) {
-    const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + API_KEY, {
-      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) });
-    if (!r.ok) throw new Error('refresh');
-    const d = await r.json(); fbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token;
-  }
-  async function fbToken() {
-    try {
-      const t = localStorage.getItem(FB_TOK), e = parseInt(localStorage.getItem(FB_EXP)||'0',10);
-      if (t && Date.now() < e) return t;
-      const ref = localStorage.getItem(FB_REF);
-      if (ref) { try { return await fbRefresh(ref); } catch(x) {} }
-      return await fbSignIn();
-    } catch(x) { return null; }
-  }
+  function fbSave(id, ref, exp) { try { localStorage.setItem(FB_TOK, id); if (ref) localStorage.setItem(FB_REF, ref); localStorage.setItem(FB_EXP, String(Date.now() + ((parseInt(exp,10)||3600)*1000) - 60000)); } catch(e) {} }
+  async function fbSignIn() { const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + API_KEY, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ returnSecureToken: true }) }); if (!r.ok) throw new Error('signin'); const d = await r.json(); fbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken; }
+  async function fbRefresh(ref) { const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + API_KEY, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) }); if (!r.ok) throw new Error('refresh'); const d = await r.json(); fbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token; }
+  async function fbToken() { try { const t = localStorage.getItem(FB_TOK), e = parseInt(localStorage.getItem(FB_EXP)||'0',10); if (t && Date.now() < e) return t; const ref = localStorage.getItem(FB_REF); if (ref) { try { return await fbRefresh(ref); } catch(x) {} } return await fbSignIn(); } catch(x) { return null; } }
   async function dbUrl() { const t = await fbToken(); return DB_URL + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''); }
 
   // ===== Mitzvot (same list as the app) =====
   const MITZVOT = [
-    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true,
-      extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
+    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true, extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
     { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
     { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
-    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false,
-      extras: [{ id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 }] },
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false, extras: [{ id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 }] },
     { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false },
     { id: 'kosher', name: 'כושר (2 פעמים בשבוע)', icon: '💪', points: 25, hasMinyan: false }
   ];
 
-  const TODAY_KEY = 'yosef_score_today_v1';
-  const HISTORY_KEY = 'yosef_score_history_v1';
+  const TODAY_KEY = 'yosef_score_today_v1', HISTORY_KEY = 'yosef_score_history_v1';
+  const GOALS_KEY = 'yosef_goals_v1', NOTES_KEY = 'yosef_journal_notes_v1';
+  const GOAL_ICONS = ['🍦','📖','🍽️','🚗','🤝','⭐','🏆','🎁','🍕','☕','🎮','🎵','📚','💎','👑','🎨','🌟','🎯'];
+  const DEFAULT_GOALS = [
+    { id:'g1', points:500, name:'פרס קטן / קינוח', icon:'🍦', claimed:false },
+    { id:'g2', points:1000, name:'ספר / קפה', icon:'📖', claimed:false },
+    { id:'g3', points:2000, name:'ארוחה בחוץ', icon:'🍽️', claimed:false },
+    { id:'g4', points:3000, name:'טיול', icon:'🚗', claimed:false },
+    { id:'g5', points:5000, name:'תרומה', icon:'🤝', claimed:false },
+    { id:'g6', points:7500, name:'אבן דרך מיוחדת', icon:'⭐', claimed:false },
+    { id:'g7', points:10000, name:'הישג גדול', icon:'🏆', claimed:false }
+  ];
 
-  function getTodayDate() {
-    const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-  }
-  function fmtDate(s) {
-    if (!s) return '';
-    const p = s.split('-'); if (p.length !== 3) return s;
-    const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-    const d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
-    return 'יום ' + days[d.getDay()] + ' · ' + p[2] + '.' + p[1] + '.' + p[0];
-  }
+  function getTodayDate() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  function fmtDate(s) { if (!s) return ''; const p = s.split('-'); if (p.length !== 3) return s; const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת']; const d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2])); return 'יום ' + days[d.getDay()] + ' · ' + p[2] + '.' + p[1] + '.' + p[0]; }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  let todayState = {};
-  function loadToday() {
-    try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } } } catch(e) {}
-    todayState = { date: getTodayDate(), items: {} }; ensureItems();
-  }
+  let todayState = {}, goalsState = [], editingGoalId = null, selectedIcon = '🎁', lastCelebId = null;
+  let journalFilter = 'all', journalSearchDate = '', chartRange = 14, editingNoteDate = null;
+
+  function loadToday() { try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } } } catch(e) {} todayState = { date: getTodayDate(), items: {} }; ensureItems(); }
   function ensureItems() { if (!todayState.items) todayState.items = {}; MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done:false, minyan:false, extras:{} }; }); }
   function saveToday() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} pushUp(); }
   function saveTodayLocal() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }
   function loadHistory() { try { const r = localStorage.getItem(HISTORY_KEY); if (r) return JSON.parse(r) || []; } catch(e) {} return []; }
   function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e) {} }
+  function loadGoals() { try { const r = localStorage.getItem(GOALS_KEY); if (r) { const p = JSON.parse(r); if (Array.isArray(p) && p.length) { goalsState = p; return; } } } catch(e) {} goalsState = JSON.parse(JSON.stringify(DEFAULT_GOALS)); saveGoals(); }
+  function saveGoals() { try { localStorage.setItem(GOALS_KEY, JSON.stringify(goalsState)); } catch(e) {} pushUp(); }
+  function loadNotes() { try { const r = localStorage.getItem(NOTES_KEY); return r ? JSON.parse(r) : {}; } catch(e) { return {}; } }
+  function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch(e) {} pushUp(); }
 
-  function mitzvaItemPoints(m, item) {
-    if (!item) return 0;
-    let pts = 0;
-    if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
-    if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; });
-    return pts;
-  }
+  function mitzvaItemPoints(m, item) { if (!item) return 0; let pts = 0; if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points*2 : m.points; if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; }); return pts; }
   function mitzvaMaxPoints(m) { let p = m.hasMinyan ? m.points*2 : m.points; if (m.extras) m.extras.forEach(ex => p += ex.points); return p; }
   function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); return t; }
   function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
+  function isPerfectDay(items) { return MITZVOT.every(m => items[m.id] && items[m.id].done); }
 
   function render() {
     document.getElementById('dateValue').textContent = fmtDate(todayState.date);
@@ -244,77 +388,160 @@
       const hasExtras = m.extras && m.extras.length;
       const anyOn = hasExtras && m.extras.some(ex => extras[ex.id]);
       const bonus = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') + (hasExtras ? m.extras.filter(ex=>extras[ex.id]).map(ex=>' +'+ex.points).join('') : '');
-      return '<div class="mitzva-card' + (item.done?' done':'') + (anyOn?' expanded':'') + '" data-id="'+m.id+'">' +
-        '<div class="mitzva-row">' +
-          (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
-          '<div class="mitzva-icon">'+m.icon+'</div>' +
-          '<div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div>' +
-          '<div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
-          '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button>' +
-        '</div>' +
+      return '<div class="mitzva-card' + (item.done?' done':'') + (anyOn?' expanded':'') + '" data-id="'+m.id+'"><div class="mitzva-row">' +
+        (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+        '<div class="mitzva-icon">'+m.icon+'</div><div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div><div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
+        '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button></div>' +
         (m.hasMinyan ? '<div class="minyan-toggle"><div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div><label class="switch"><input type="checkbox" data-action="minyan"'+(item.minyan?' checked':'')+'><span class="switch-slider"></span></label></div>' : '') +
         (hasExtras ? '<div class="mitzva-extras">' + m.extras.map(ex => '<div class="minyan-toggle"><div class="minyan-toggle-label">'+ex.label+' <span class="bonus">+'+ex.points+' נקודות</span></div><label class="switch"><input type="checkbox" data-action="extra" data-extra="'+ex.id+'"'+(extras[ex.id]?' checked':'')+'><span class="switch-slider"></span></label></div>').join('') + '</div>' : '') +
       '</div>';
     }).join('');
-
     list.querySelectorAll('.mitzva-card').forEach(card => {
       const id = card.dataset.id;
       card.querySelector('[data-action="check"]').addEventListener('click', () => { todayState.items[id].done = !todayState.items[id].done; saveToday(); render(); });
-      const mi = card.querySelector('[data-action="minyan"]');
-      if (mi) mi.addEventListener('change', () => { todayState.items[id].minyan = mi.checked; saveToday(); render(); });
-      const ex = card.querySelector('[data-action="expand"]');
-      if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
-      card.querySelectorAll('[data-action="extra"]').forEach(inp => {
-        inp.addEventListener('change', () => { if (!todayState.items[id].extras) todayState.items[id].extras = {}; todayState.items[id].extras[inp.dataset.extra] = inp.checked; saveToday(); render(); });
-      });
+      const mi = card.querySelector('[data-action="minyan"]'); if (mi) mi.addEventListener('change', () => { todayState.items[id].minyan = mi.checked; saveToday(); render(); });
+      const ex = card.querySelector('[data-action="expand"]'); if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => { inp.addEventListener('change', () => { if (!todayState.items[id].extras) todayState.items[id].extras = {}; todayState.items[id].extras[inp.dataset.extra] = inp.checked; saveToday(); render(); }); });
     });
-
     document.getElementById('scoreToday').textContent = calcToday();
-    renderSummary();
-    renderHistory();
+    renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal();
   }
 
   function renderSummary() {
-    const history = loadHistory();
-    const today = getTodayDate();
-    const todayScore = calcToday();
-    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 6); const weekAgoStr = weekAgo.toISOString().slice(0,10);
-    let weekScore = todayScore; history.forEach(h => { if (h.date >= weekAgoStr && h.date < today) weekScore += h.score; });
-    const monthAgo = new Date(); monthAgo.setDate(monthAgo.getDate() - 29); const monthAgoStr = monthAgo.toISOString().slice(0,10);
-    let monthScore = todayScore; history.forEach(h => { if (h.date >= monthAgoStr && h.date < today) monthScore += h.score; });
-    let totalScore = todayScore; history.forEach(h => { if (h.date !== today) totalScore += h.score; });
-    document.getElementById('scoreWeek').textContent = weekScore;
-    document.getElementById('scoreMonth').textContent = monthScore;
-    document.getElementById('scoreTotal').textContent = totalScore;
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const wa = new Date(); wa.setDate(wa.getDate()-6); const was = wa.toISOString().slice(0,10);
+    let week = ts; history.forEach(h => { if (h.date >= was && h.date < today) week += h.score; });
+    const ma = new Date(); ma.setDate(ma.getDate()-29); const mas = ma.toISOString().slice(0,10);
+    let month = ts; history.forEach(h => { if (h.date >= mas && h.date < today) month += h.score; });
+    let total = ts; history.forEach(h => { if (h.date !== today) total += h.score; });
+    document.getElementById('scoreWeek').textContent = week;
+    document.getElementById('scoreMonth').textContent = month;
+    document.getElementById('scoreTotal').textContent = total;
   }
 
   function renderHistory() {
-    const history = loadHistory();
-    const today = getTodayDate();
-    const todayScore = calcToday();
-    let allDays = history.slice();
-    if (todayScore > 0 && !history.find(h => h.date === today)) allDays.push({ date: today, score: todayScore });
-    else if (todayScore > 0) allDays = allDays.map(h => h.date === today ? Object.assign({}, h, { score: todayScore }) : h);
-    const sorted = allDays.sort((a,b) => b.date.localeCompare(a.date)).slice(0, 14);
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    let all = history.slice();
+    if (ts > 0 && !history.find(h => h.date === today)) all.push({ date: today, score: ts });
+    else if (ts > 0) all = all.map(h => h.date === today ? Object.assign({}, h, { score: ts }) : h);
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date)).slice(0, 14);
     const c = document.getElementById('scoreHistory');
     if (!sorted.length) { c.innerHTML = '<div class="history-empty">עוד אין היסטוריה. סיים את היום הראשון!</div>'; return; }
     const max = calcMax();
-    c.innerHTML = sorted.map(h => {
-      const pct = Math.min(100, (h.score / max) * 100);
-      const isToday = h.date === today;
-      return '<div class="history-row"><div class="history-date">'+fmtDate(h.date)+(isToday?' · היום':'')+'</div>' +
-        '<div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div>' +
-        '<div class="history-score">'+h.score+'</div></div>';
-    }).join('');
+    c.innerHTML = sorted.map(h => { const pct = Math.min(100,(h.score/max)*100); const it = h.date===today; return '<div class="history-row"><div class="history-date">'+fmtDate(h.date)+(it?' · היום':'')+'</div><div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div><div class="history-score">'+h.score+'</div></div>'; }).join('');
   }
 
-  function endDay() {
-    const score = calcToday();
-    const date = todayState.date || getTodayDate();
-    const h = loadHistory();
-    const idx = h.findIndex(e => e.date === date);
-    if (idx >= 0) h[idx] = { date: date, score: score }; else h.push({ date: date, score: score });
-    saveHistory(h); pushUp(); toast('נשמר! ' + score + ' נקודות'); render();
+  // ===== Goals =====
+  function getTotalLifetimePoints() { const history = loadHistory(), today = getTodayDate(); let t = calcToday(); history.forEach(h => { if (h.date !== today) t += h.score; }); return t; }
+  function renderGoals() {
+    goalsState.sort((a,b) => a.points - b.points);
+    const total = getTotalLifetimePoints();
+    const next = goalsState.find(g => !g.claimed && total < g.points);
+    const nextEl = document.getElementById('goalsNext');
+    if (next) {
+      const remaining = next.points - total;
+      const prev = goalsState.filter(g => g.points < next.points).reduce((m,g) => Math.max(m,g.points), 0);
+      const pct = Math.max(0, Math.min(100, ((total-prev)/(next.points-prev))*100));
+      nextEl.innerHTML = '<div class="goals-next"><div class="goals-next-label">היעד הבא</div><div class="goals-next-name"><span style="font-size:26px">'+next.icon+'</span><span>'+next.name+'</span></div><div class="goals-next-progress"><div class="goals-next-progress-fill" style="width:'+pct+'%"></div></div><div class="goals-next-stats">עוד '+remaining+' נקודות ('+total+' / '+next.points+')</div></div>';
+    } else nextEl.innerHTML = '';
+    const listEl = document.getElementById('goalsList');
+    listEl.innerHTML = goalsState.map(g => { const unlocked = total >= g.points && !g.claimed; const cls = g.claimed ? 'claimed' : (unlocked ? 'unlocked' : ''); return '<div class="goal-card '+cls+'" data-id="'+g.id+'"><div class="goal-icon">'+g.icon+'</div><div class="goal-info"><div class="goal-name">'+g.name+'</div><div class="goal-points">'+g.points+' נקודות'+(g.claimed?' · מומש ✓':(unlocked?' · זמין!':''))+'</div></div><div class="goal-actions">'+(unlocked?'<button class="goal-btn claim" data-action="claim">✓</button>':'')+'<button class="goal-btn" data-action="edit">✏️</button><button class="goal-btn delete" data-action="delete">×</button></div></div>'; }).join('');
+    listEl.querySelectorAll('.goal-card').forEach(card => { const id = card.dataset.id; const cb = card.querySelector('[data-action="claim"]'); if (cb) cb.addEventListener('click', () => claimGoal(id)); card.querySelector('[data-action="edit"]').addEventListener('click', () => openGoalEdit(id)); card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteGoal(id)); });
+    checkCeleb(total);
+  }
+  function checkCeleb(total) {
+    const unlocked = goalsState.filter(g => total >= g.points && !g.claimed);
+    if (!unlocked.length) { lastCelebId = null; return; }
+    unlocked.sort((a,b) => b.points - a.points); const top = unlocked[0];
+    if (top.id !== lastCelebId) { const sk = 'yosef_goal_seen_' + top.id; if (!localStorage.getItem(sk)) { try { localStorage.setItem(sk,'1'); } catch(e) {} showCeleb(top); } lastCelebId = top.id; }
+  }
+  function showCeleb(goal) {
+    document.getElementById('celebIcon').textContent = goal.icon;
+    document.getElementById('celebTitle').textContent = goal.name;
+    document.getElementById('celebPoints').textContent = goal.points + ' נקודות';
+    document.getElementById('celebClaimBtn').onclick = () => { claimGoal(goal.id); document.getElementById('goalCelebrationModal').classList.remove('active'); };
+    document.getElementById('goalCelebrationModal').classList.add('active');
+  }
+  function claimGoal(id) { const g = goalsState.find(x => x.id === id); if (g) { g.claimed = true; saveGoals(); renderGoals(); } }
+  function deleteGoal(id) { const g = goalsState.find(x => x.id === id); if (!g) return; if (!confirm('למחוק את היעד "'+g.name+'"?')) return; goalsState = goalsState.filter(x => x.id !== id); saveGoals(); renderGoals(); }
+  function openGoalEdit(id) { editingGoalId = id; const g = id ? goalsState.find(x => x.id === id) : null; document.getElementById('goalEditTitle').textContent = g ? 'ערוך יעד' : 'יעד חדש'; document.getElementById('goalNameInput').value = g ? g.name : ''; document.getElementById('goalPointsInput').value = g ? g.points : ''; selectedIcon = g ? g.icon : '🎁'; renderIconGrid(); document.getElementById('goalEditModal').classList.add('active'); }
+  function renderIconGrid() { const grid = document.getElementById('goalIconGrid'); grid.innerHTML = GOAL_ICONS.map(ic => '<button class="goal-icon-option'+(ic===selectedIcon?' selected':'')+'" data-icon="'+ic+'">'+ic+'</button>').join(''); grid.querySelectorAll('.goal-icon-option').forEach(b => b.addEventListener('click', () => { selectedIcon = b.dataset.icon; renderIconGrid(); })); }
+  function saveGoalEdit() { const name = document.getElementById('goalNameInput').value.trim(); const pts = parseInt(document.getElementById('goalPointsInput').value, 10); if (!name) { alert('נא להזין שם לפרס'); return; } if (!pts || pts < 1) { alert('נא להזין מספר נקודות תקין'); return; } if (editingGoalId) { const g = goalsState.find(x => x.id === editingGoalId); if (g) { g.name = name; g.points = pts; g.icon = selectedIcon; } } else { goalsState.push({ id:'g'+Date.now(), points:pts, name:name, icon:selectedIcon, claimed:false }); } saveGoals(); document.getElementById('goalEditModal').classList.remove('active'); renderGoals(); }
+
+  // ===== Journal =====
+  function getDayNote(date) { return loadNotes()[date] || ''; }
+  function getAllJournalDays() {
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const hasItems = todayState.items && Object.values(todayState.items).some(it => it && it.done);
+    const notes = loadNotes();
+    const all = history.filter(h => h.date !== today).map(h => ({ date: h.date, score: h.score||0, items: h.items||{}, note: notes[h.date]||'' }));
+    if (ts > 0 || hasItems) all.push({ date: today, score: ts, items: todayState.items||{}, note: notes[today]||'' });
+    else if (notes[today]) all.push({ date: today, score: 0, items: {}, note: notes[today] });
+    return all;
+  }
+  function renderJournalStats() {
+    const all = getAllJournalDays();
+    const totalDays = all.length, totalPoints = all.reduce((s,d) => s+(d.score||0), 0), perfect = all.filter(d => isPerfectDay(d.items)).length;
+    let best = 0, cur = 0, prev = null;
+    all.filter(d => d.score > 0).map(d => d.date).sort().forEach(date => { if (prev) { const pd = new Date(prev); pd.setDate(pd.getDate()+1); cur = (pd.toISOString().slice(0,10) === date) ? cur+1 : 1; } else cur = 1; if (cur > best) best = cur; prev = date; });
+    document.getElementById('journalStatsBar').innerHTML = '<div class="journal-stat"><div class="journal-stat-value">'+totalDays+'</div><div class="journal-stat-label">ימים</div></div><div class="journal-stat"><div class="journal-stat-value">'+perfect+'</div><div class="journal-stat-label">⭐ מושלמים</div></div><div class="journal-stat"><div class="journal-stat-value">'+best+'</div><div class="journal-stat-label">רצף שיא</div></div><div class="journal-stat"><div class="journal-stat-value">'+totalPoints+'</div><div class="journal-stat-label">סה״כ נק׳</div></div>';
+  }
+  function renderJournal() {
+    renderJournalStats();
+    const container = document.getElementById('journalList'), today = getTodayDate();
+    let all = getAllJournalDays();
+    if (journalSearchDate) all = all.filter(d => d.date === journalSearchDate);
+    else if (journalFilter === 'week' || journalFilter === 'month') { const days = journalFilter === 'week' ? 6 : 29; const co = new Date(); co.setDate(co.getDate()-days); const cos = co.toISOString().slice(0,10); all = all.filter(d => d.date >= cos); }
+    else if (journalFilter === 'active') all = all.filter(d => d.score > 0);
+    else if (journalFilter === 'perfect') all = all.filter(d => isPerfectDay(d.items));
+    else if (journalFilter === 'notes') all = all.filter(d => d.note && d.note.length > 0);
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date));
+    if (!sorted.length) { container.innerHTML = '<div class="journal-empty">'+(journalSearchDate?'לא נמצא רישום לתאריך זה.':(journalFilter==='all'?'עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.':'אין רישומים תואמים לפילטר זה.'))+'</div>'; return; }
+    container.innerHTML = sorted.map(h => {
+      const it = h.date === today, items = h.items || {}, perfect = isPerfectDay(items);
+      const mh = MITZVOT.map(m => { const item = items[m.id] || { done:false, minyan:false }; const done = !!item.done; const wm = done && m.hasMinyan && item.minyan; const pts = mitzvaItemPoints(m, item); const extraMarks = (done && m.extras && item.extras) ? m.extras.filter(ex => item.extras[ex.id]).map(ex => '<span class="minyan-mark">'+ex.label+'</span>').join('') : ''; const mark = (wm?'<span class="minyan-mark">×2 במניין</span>':'')+extraMarks; const status = done ? '<span class="journal-mitzva-status done">✓</span>' : '<span class="journal-mitzva-status skipped">○</span>'; return '<div class="journal-mitzva-item'+(done?'':' skipped')+'">'+status+'<div class="journal-mitzva-item-icon">'+m.icon+'</div><div class="journal-mitzva-item-name">'+m.name+mark+'</div><div class="journal-mitzva-item-points">'+(done?'+'+pts:'—')+'</div></div>'; }).join('');
+      const badges = (it?'<span class="journal-entry-today-badge">היום</span>':'') + (perfect?'<span class="journal-perfect-badge">⭐ מושלם</span>':'');
+      const noteHtml = h.note ? '<div class="journal-note-text">'+escapeHtml(h.note)+'</div>' : '<div class="journal-note-empty">אין הערה ליום זה</div>';
+      return '<div class="journal-entry'+(it?' today':'')+(perfect?' perfect':'')+'"><div class="journal-entry-header"><div class="journal-entry-date">'+fmtDate(h.date)+badges+'</div><div class="journal-entry-score">'+h.score+' נק׳</div></div><div class="journal-mitzvot-list">'+mh+'</div><div class="journal-note-section"><div class="journal-note-icon">📝</div>'+noteHtml+'<button class="journal-note-edit" data-note-edit="'+h.date+'">'+(h.note?'ערוך':'+ הוסף')+'</button></div></div>';
+    }).join('');
+    container.querySelectorAll('[data-note-edit]').forEach(b => b.addEventListener('click', () => openNoteEditor(b.dataset.noteEdit)));
+  }
+  function openNoteEditor(date) { editingNoteDate = date; document.getElementById('noteEditorDate').textContent = fmtDate(date); document.getElementById('noteEditorTextarea').value = getDayNote(date); document.getElementById('noteEditorModal').classList.add('active'); }
+  function saveNoteEditor() { if (!editingNoteDate) return; const notes = loadNotes(); const txt = (document.getElementById('noteEditorTextarea').value || '').trim(); if (txt) notes[editingNoteDate] = txt; else delete notes[editingNoteDate]; saveNotes(notes); document.getElementById('noteEditorModal').classList.remove('active'); renderJournal(); }
+
+  // ===== Chart =====
+  function renderChart() {
+    const content = document.getElementById('chartContent'), statsEl = document.getElementById('chartStats'), tooltip = document.getElementById('chartTooltip');
+    if (!content) return;
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const days = [];
+    for (let i = chartRange - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate()-i); const ds = d.toISOString().slice(0,10); let score = 0; if (ds === today) score = ts; else { const e = history.find(h => h.date === ds); if (e) score = e.score; } days.push({ date: ds, score, isToday: ds === today }); }
+    if (!days.some(d => d.score > 0)) { content.innerHTML = '<div class="chart-empty">עוד אין מספיק נתונים.<br>סיים יום אחד לפחות כדי לראות את הגרף.</div>'; statsEl.innerHTML = ''; return; }
+    const W=320,H=180,pT=16,pB=28,pL=30,pR=10,cW=W-pL-pR,cH=H-pT-pB;
+    const max = calcMax(); const yMax = Math.max(max, ...days.map(d=>d.score)); const yStep = Math.ceil(yMax/4/25)*25; const yCeil = yStep*4 || 100;
+    const stepX = cW / Math.max(1, days.length-1);
+    const points = days.map((d,i) => ({ x: pL+i*stepX, y: pT+cH-(d.score/yCeil)*cH, score: d.score, date: d.date, isToday: d.isToday }));
+    const linePath = points.map((p,i) => (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const areaPath = linePath + ' L'+points[points.length-1].x.toFixed(1)+','+(pT+cH)+' L'+points[0].x.toFixed(1)+','+(pT+cH)+' Z';
+    let grid = ''; for (let i=0;i<=4;i++) { const y=pT+(cH*i/4); const label=yCeil-(yCeil*i/4); grid += '<line class="chart-grid-line" x1="'+pL+'" y1="'+y+'" x2="'+(W-pR)+'" y2="'+y+'"/><text class="chart-axis-label" x="'+(pL-4)+'" y="'+(y+3)+'" text-anchor="end">'+Math.round(label)+'</text>'; }
+    const every = chartRange<=7?1:(chartRange<=14?2:5); let xl='';
+    points.forEach((p,i) => { if (i%every===0 || i===points.length-1) { const d=new Date(p.date); xl += '<text class="chart-axis-label" x="'+p.x+'" y="'+(H-12)+'" text-anchor="middle">'+d.getDate()+'/'+(d.getMonth()+1)+'</text>'; } });
+    let circles=''; points.forEach((p,i) => circles += '<circle class="chart-point'+(p.isToday?' today':'')+'" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" data-idx="'+i+'"/>');
+    content.innerHTML = '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c9a961" stop-opacity="0.5"/><stop offset="100%" stop-color="#c9a961" stop-opacity="0"/></linearGradient></defs>'+grid+xl+'<path class="chart-area" d="'+areaPath+'"/><path class="chart-line" d="'+linePath+'"/>'+circles+'</svg>';
+    content.querySelectorAll('.chart-point').forEach(circle => { circle.addEventListener('click', (e) => { e.stopPropagation(); const p = points[parseInt(circle.dataset.idx,10)]; const d = new Date(p.date); const dn = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת']; tooltip.textContent = dn[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1)+' · '+p.score+' נק׳'; const sr = content.querySelector('svg').getBoundingClientRect(); const cr = content.parentElement.getBoundingClientRect(); tooltip.style.left = (sr.left-cr.left+p.x*(sr.width/W))+'px'; tooltip.style.top = (sr.top-cr.top+p.y*(sr.height/H)-8)+'px'; tooltip.classList.add('active'); setTimeout(() => tooltip.classList.remove('active'), 2000); }); });
+    const totalR = days.reduce((s,d)=>s+d.score,0); const dws = days.filter(d=>d.score>0).length; const avg = dws>0?Math.round(totalR/dws):0; const best = Math.max(...days.map(d=>d.score));
+    let streak = 0; for (let i=days.length-1;i>=0;i--) { if (days[i].score>0) streak++; else if (i!==days.length-1) break; else continue; }
+    statsEl.innerHTML = '<div class="chart-stat"><div class="chart-stat-value">'+avg+'</div><div class="chart-stat-label">ממוצע יומי</div></div><div class="chart-stat"><div class="chart-stat-value">'+best+'</div><div class="chart-stat-label">שיא</div></div><div class="chart-stat"><div class="chart-stat-value">'+streak+'</div><div class="chart-stat-label">רצף ימים</div></div><div class="chart-stat"><div class="chart-stat-value">'+totalR+'</div><div class="chart-stat-label">סה״כ</div></div>';
+  }
+
+  function endDay() { const score = calcToday(), date = todayState.date || getTodayDate(); const h = loadHistory(); const idx = h.findIndex(e => e.date === date); if (idx>=0) h[idx] = { date, score, items: todayState.items }; else h.push({ date, score, items: todayState.items }); saveHistory(h); pushUp(); toast('נשמר! '+score+' נקודות'); render(); }
+
+  function exportJournal() {
+    const all = getAllJournalDays(); if (!all.length) { alert('אין עדיין רישומים לייצא.'); return; }
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date));
+    const lines = ['יומן ניקוד יומי — יוסף ביתן','═══════════════════════════','יוצא בתאריך: '+fmtDate(getTodayDate()),'סך ימים: '+all.length,'סך נקודות: '+all.reduce((s,d)=>s+d.score,0),''];
+    sorted.forEach(h => { lines.push('───────────────────────────'); lines.push(fmtDate(h.date)+' · '+h.score+' נקודות'+(isPerfectDay(h.items)?' ⭐ מושלם':'')); MITZVOT.forEach(m => { const item = h.items[m.id]||{done:false,minyan:false}; lines.push('  '+(item.done?'✓':'✗')+' '+m.name+(item.done&&m.hasMinyan&&item.minyan?' (במניין ×2)':'')); }); if (h.note) lines.push('  📝 '+h.note); });
+    try { const blob = new Blob([lines.join('\n')], { type:'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'יומן-ניקוד-יוסף-'+getTodayDate()+'.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch(e) { alert(lines.join('\n')); }
   }
 
   function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
@@ -324,38 +551,44 @@
   let pushTimer = null;
   function pushUp() { clearTimeout(pushTimer); pushTimer = setTimeout(doPush, 800); }
   async function doPush() {
-    try {
-      const url = await dbUrl();
-      const payload = { name: 'יוסף ביתן', score_today: todayState, score_history: loadHistory(), updatedAt: Date.now() };
-      const r = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)');
-    } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
+    try { const url = await dbUrl(); const payload = { name:'יוסף ביתן', score_today: todayState, score_history: loadHistory(), goals: goalsState, notes: loadNotes(), updatedAt: Date.now() }; const r = await fetch(url, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)'); } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
   }
   async function pullDown() {
     try {
-      const url = await dbUrl();
-      const r = await fetch(url, { cache: 'no-store' });
-      if (!r.ok) { setSync('עובד במצב מקומי'); return; }
+      const url = await dbUrl(); const r = await fetch(url, { cache:'no-store' }); if (!r.ok) { setSync('עובד במצב מקומי'); return; }
       const remote = await r.json();
       if (remote) {
-        const localH = loadHistory(); const map = {};
-        localH.forEach(e => map[e.date] = e.score);
-        (remote.score_history || []).forEach(e => { if (map[e.date] == null) map[e.date] = e.score; });
-        saveHistory(Object.keys(map).map(d => ({ date: d, score: map[d] })));
-        if (remote.score_today && remote.score_today.date === getTodayDate()) {
-          const localEmpty = !Object.values(todayState.items || {}).some(it => it.done);
-          if (localEmpty) { todayState = remote.score_today; ensureItems(); saveTodayLocal(); }
-        }
+        const localH = loadHistory(); const map = {}; localH.forEach(e => map[e.date] = e); (remote.score_history||[]).forEach(e => { if (map[e.date] == null) map[e.date] = e; }); saveHistory(Object.keys(map).map(d => map[d]));
+        if (remote.notes && typeof remote.notes === 'object') { const ln = loadNotes(); let ch = false; Object.keys(remote.notes).forEach(d => { if (!ln[d]) { ln[d] = remote.notes[d]; ch = true; } }); if (ch) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(ln)); } catch(e) {} } }
+        if (Array.isArray(remote.goals) && remote.goals.length && !localStorage.getItem(GOALS_KEY)) { goalsState = remote.goals; saveGoals(); }
+        if (remote.score_today && remote.score_today.date === getTodayDate()) { const empty = !Object.values(todayState.items||{}).some(it => it.done); if (empty) { todayState = remote.score_today; ensureItems(); saveTodayLocal(); } }
       }
       setSync('מסונכרן ✓');
     } catch(e) { setSync('עובד במצב מקומי'); }
     render();
   }
 
+  // ===== Wiring =====
+  function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('active'); }
   document.getElementById('endDayBtn').addEventListener('click', endDay);
-  loadToday();
-  render();
-  pullDown();
+  document.getElementById('exportBtn').addEventListener('click', exportJournal);
+  document.getElementById('journalExportBtn').addEventListener('click', exportJournal);
+  document.getElementById('addGoalBtn').addEventListener('click', () => openGoalEdit(null));
+  document.getElementById('goalSaveBtn').addEventListener('click', saveGoalEdit);
+  document.getElementById('goalCancelBtn').addEventListener('click', () => closeModal('goalEditModal'));
+  document.getElementById('goalEditClose').addEventListener('click', () => closeModal('goalEditModal'));
+  document.getElementById('goalCelebClose').addEventListener('click', () => closeModal('goalCelebrationModal'));
+  document.getElementById('celebLaterBtn').addEventListener('click', () => closeModal('goalCelebrationModal'));
+  document.getElementById('noteEditorSave').addEventListener('click', saveNoteEditor);
+  document.getElementById('noteEditorCancel').addEventListener('click', () => closeModal('noteEditorModal'));
+  document.getElementById('noteEditorClose').addEventListener('click', () => closeModal('noteEditorModal'));
+  document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', (e) => { if (e.target === b) b.classList.remove('active'); }));
+  document.querySelectorAll('.chart-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); chartRange = parseInt(tab.dataset.range,10); renderChart(); }));
+  document.querySelectorAll('.journal-filter-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.journal-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); journalFilter = btn.dataset.filter; journalSearchDate = ''; const di = document.getElementById('journalDateSearch'); if (di) di.value = ''; document.getElementById('journalClearSearch').classList.remove('active'); renderJournal(); }));
+  (function(){ const input = document.getElementById('journalDateSearch'), clr = document.getElementById('journalClearSearch'); if (input) { input.max = getTodayDate(); input.addEventListener('change', () => { journalSearchDate = input.value || ''; clr.classList.toggle('active', !!journalSearchDate); renderJournal(); }); } if (clr) clr.addEventListener('click', () => { input.value=''; journalSearchDate=''; clr.classList.remove('active'); renderJournal(); }); })();
+
+  // ===== Init =====
+  loadToday(); loadGoals(); render(); pullDown();
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
 })();
 </script>
