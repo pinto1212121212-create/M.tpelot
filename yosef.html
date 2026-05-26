@@ -122,10 +122,11 @@
 (function () {
   'use strict';
 
-  // ===== Firebase (anonymous auth + dedicated /yosef path) =====
-  const DB_URL = 'https://tpilot-60f17-default-rtdb.firebaseio.com';
-  const API_KEY = 'AIzaSyCC7uYLPX-eIaYIPPlG0SUivjrC7qKAIKY';
-  const FB_TOK = '_fb_id_token_v1', FB_REF = '_fb_refresh_token_v1', FB_EXP = '_fb_token_exp_v1';
+  // ===== Firebase — יוסף's OWN isolated project (yosef-niku). This page has NO
+  // reference whatsoever to Uriel's database, so F12 here cannot reach it. =====
+  const DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
+  const API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
+  const FB_TOK = '_yfb_id_token_v1', FB_REF = '_yfb_refresh_token_v1', FB_EXP = '_yfb_token_exp_v1';
   function fbSave(id, ref, exp) {
     try {
       localStorage.setItem(FB_TOK, id);

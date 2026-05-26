@@ -10224,18 +10224,49 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) {}
   }
 
-  // Viewer for Yosef Bitan's daily score (אוריאל only). Reads the dedicated
-  // /yosef.json path that the standalone yosef.html page writes to.
+  // ----- Yosef's ISOLATED project (yosef-niku) — Uriel reads it to view Yosef's
+  // score. Separate API key, DB URL and token cache from the main (tpilot) sync,
+  // so Yosef's data lives in a completely separate database. -----
+  const YOSEF_DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
+  const YOSEF_API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
+  const YFB_TOK = '_yfb_id_token_v1', YFB_REF = '_yfb_refresh_token_v1', YFB_EXP = '_yfb_token_exp_v1';
+  function yfbSave(id, ref, exp) {
+    try {
+      localStorage.setItem(YFB_TOK, id);
+      if (ref) localStorage.setItem(YFB_REF, ref);
+      localStorage.setItem(YFB_EXP, String(Date.now() + ((parseInt(exp,10)||3600)*1000) - 60000));
+    } catch(e) {}
+  }
+  async function yosefFbToken() {
+    try {
+      const t = localStorage.getItem(YFB_TOK), e = parseInt(localStorage.getItem(YFB_EXP)||'0',10);
+      if (t && Date.now() < e) return t;
+      const ref = localStorage.getItem(YFB_REF);
+      if (ref) {
+        try {
+          const rr = await fetch('https://securetoken.googleapis.com/v1/token?key=' + YOSEF_API_KEY, {
+            method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) });
+          if (rr.ok) { const d = await rr.json(); yfbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token; }
+        } catch(x) {}
+      }
+      const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + YOSEF_API_KEY, {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ returnSecureToken: true }) });
+      if (!r.ok) return null;
+      const d = await r.json(); yfbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken;
+    } catch(x) { return null; }
+  }
+
+  // Viewer for Yosef Bitan's daily score (אוריאל only). Reads /yosef.json from
+  // Yosef's own isolated project (yosef-niku).
   async function renderYosefView() {
     const view = document.getElementById('yosefView');
     if (!view) return;
     if (currentProfile !== 'pinto') { view.style.display = 'none'; return; }
     view.style.display = 'block';
-    const url = getSyncUrl();
-    if (!url) return;
     try {
-      const t = (typeof fbToken === 'function') ? await fbToken() : null;
-      const resp = await fetch(url + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''), { cache: 'no-store' });
+      const t = await yosefFbToken();
+      const resp = await fetch(YOSEF_DB_URL + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''), { cache: 'no-store' });
       const data = resp.ok ? await resp.json() : null;
       const scoreEl = document.getElementById('yosefScore');
       const updEl = document.getElementById('yosefUpdated');
