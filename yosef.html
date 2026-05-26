@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>ניקוד יומי — יוסף ביתן</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f4e9d0; --parchment-light: #faf3e0; --parchment-dark: #e8d9b5;
+    --brown-deep: #3d2410; --brown: #5c3a1e; --brown-light: #7a5230;
+    --gold: #c9a961; --gold-light: #e0c585; --gold-dark: #a08540;
+    --wine: #6b1f2d; --wine-light: #8a2e3f; --ink: #2c1810; --ink-soft: #4a3525;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--parchment); color: var(--ink); font-family: 'Heebo', sans-serif; min-height: 100vh; }
+  body {
+    background-image:
+      radial-gradient(ellipse at top, rgba(201,169,97,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(107,31,45,0.06) 0%, transparent 60%);
+    padding: 16px 14px 60px;
+    max-width: 560px; margin: 0 auto;
+  }
+  header { text-align: center; padding: 14px 0 8px; }
+  .crown { color: var(--gold-dark); letter-spacing: 6px; font-size: 14px; }
+  h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 30px; color: var(--brown-deep); font-weight: 900; margin-top: 4px; }
+  .who { font-size: 16px; color: var(--wine); font-weight: 700; margin-top: 2px; }
+  .date { font-size: 14px; color: var(--brown-light); margin-top: 4px; }
+
+  .total-card {
+    background: linear-gradient(135deg, var(--wine), var(--wine-light));
+    color: var(--parchment-light); border-radius: 16px; padding: 18px; text-align: center;
+    margin: 16px 0; box-shadow: 0 6px 20px rgba(107,31,45,0.3);
+  }
+  .total-card .num { font-family: 'Frank Ruhl Libre', serif; font-size: 46px; font-weight: 900; line-height: 1; }
+  .total-card .of { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+  .total-card .label { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+
+  .mitzva-card {
+    background: var(--parchment-light); border: 1.5px solid var(--parchment-dark);
+    border-radius: 12px; margin-bottom: 10px; padding: 12px 14px; transition: all 0.2s;
+  }
+  .mitzva-card.done { border-color: var(--gold); background: linear-gradient(135deg, #fbf5e6, #f6ecd2); }
+  .mitzva-row { display: flex; align-items: center; gap: 12px; }
+  .mitzva-icon { font-size: 26px; }
+  .mitzva-info { flex: 1; min-width: 0; }
+  .mitzva-name { font-weight: 700; font-size: 16px; color: var(--brown-deep); }
+  .mitzva-points { font-size: 13px; color: var(--brown-light); margin-top: 2px; }
+  .mitzva-points strong { color: var(--wine); }
+  .mitzva-check {
+    width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%;
+    border: 2px solid var(--gold); background: var(--parchment); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .mitzva-check svg { width: 20px; height: 20px; fill: none; stroke: var(--gold-dark); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0.25; }
+  .mitzva-card.done .mitzva-check { background: var(--gold); border-color: var(--gold-dark); }
+  .mitzva-card.done .mitzva-check svg { stroke: #fff; opacity: 1; }
+  .mitzva-expand { background: none; border: none; cursor: pointer; padding: 4px; }
+  .mitzva-expand svg { width: 18px; height: 18px; fill: none; stroke: var(--brown-light); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s; }
+  .mitzva-card.expanded .mitzva-expand svg { transform: rotate(180deg); }
+  .minyan-toggle, .mitzva-extras .minyan-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--parchment-dark);
+  }
+  .minyan-toggle-label { font-size: 14px; color: var(--brown); }
+  .minyan-toggle-label .bonus { color: var(--gold-dark); font-weight: 700; font-size: 12px; }
+  .mitzva-extras { display: none; }
+  .mitzva-card.expanded .mitzva-extras { display: block; }
+  .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch-slider { position: absolute; inset: 0; background: var(--parchment-dark); border-radius: 26px; transition: 0.2s; }
+  .switch-slider:before { content: ''; position: absolute; height: 20px; width: 20px; right: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+  .switch input:checked + .switch-slider { background: var(--gold); }
+  .switch input:checked + .switch-slider:before { transform: translateX(-20px); }
+
+  .btn {
+    width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
+    font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 16px; margin-top: 14px;
+  }
+  .btn-save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); }
+  .btn-save:active { transform: scale(0.99); }
+
+  .section-title { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; color: var(--brown-deep); font-weight: 700; margin: 26px 0 10px; }
+  .hist-entry { background: var(--parchment-light); border: 1px solid var(--parchment-dark); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .hist-date { font-size: 14px; color: var(--brown); }
+  .hist-score { font-weight: 700; color: var(--wine); font-size: 16px; }
+  .hist-empty { color: var(--brown-light); font-size: 14px; text-align: center; padding: 16px; }
+
+  .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
+  .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 50; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="crown">✦ ✦ ✦</div>
+    <h1>ניקוד יומי</h1>
+    <div class="who">יוסף ביתן</div>
+    <div class="date" id="dateLabel">—</div>
+  </header>
+
+  <div class="total-card">
+    <div class="num" id="totalNum">0</div>
+    <div class="of">מתוך <span id="totalMax">0</span> נקודות אפשריות</div>
+    <div class="label">הניקוד שלך היום</div>
+  </div>
+
+  <div id="mitzvotList"></div>
+
+  <button class="btn btn-save" id="saveDayBtn">סיים את היום ושמור</button>
+
+  <div class="section-title">היסטוריית ימים</div>
+  <div id="historyList"></div>
+
+  <div class="sync-status" id="syncStatus">מסתנכרן…</div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== Firebase (anonymous auth + dedicated /yosef path) =====
+  const DB_URL = 'https://tpilot-60f17-default-rtdb.firebaseio.com';
+  const API_KEY = 'AIzaSyCC7uYLPX-eIaYIPPlG0SUivjrC7qKAIKY';
+  const FB_TOK = '_fb_id_token_v1', FB_REF = '_fb_refresh_token_v1', FB_EXP = '_fb_token_exp_v1';
+  function fbSave(id, ref, exp) {
+    try {
+      localStorage.setItem(FB_TOK, id);
+      if (ref) localStorage.setItem(FB_REF, ref);
+      localStorage.setItem(FB_EXP, String(Date.now() + ((parseInt(exp,10)||3600)*1000) - 60000));
+    } catch(e) {}
+  }
+  async function fbSignIn() {
+    const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + API_KEY, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnSecureToken: true })
+    });
+    if (!r.ok) throw new Error('signin');
+    const d = await r.json(); fbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken;
+  }
+  async function fbRefresh(ref) {
+    const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + API_KEY, {
+      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref)
+    });
+    if (!r.ok) throw new Error('refresh');
+    const d = await r.json(); fbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token;
+  }
+  async function fbToken() {
+    try {
+      const t = localStorage.getItem(FB_TOK), e = parseInt(localStorage.getItem(FB_EXP)||'0',10);
+      if (t && Date.now() < e) return t;
+      const ref = localStorage.getItem(FB_REF);
+      if (ref) { try { return await fbRefresh(ref); } catch(x) {} }
+      return await fbSignIn();
+    } catch(x) { return null; }
+  }
+  async function yosefUrl() {
+    const t = await fbToken();
+    return DB_URL + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : '');
+  }
+
+  // ===== Mitzvot (same list as the app) =====
+  const MITZVOT = [
+    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 20, hasMinyan: true,
+      extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
+    { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
+    { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 15, hasMinyan: false,
+      extras: [{ id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 }] },
+    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 30, hasMinyan: false },
+    { id: 'kosher', name: 'כושר (2 פעמים בשבוע)', icon: '💪', points: 25, hasMinyan: false }
+  ];
+
+  const TODAY_KEY = 'yosef_score_today_v1';
+  const HISTORY_KEY = 'yosef_score_history_v1';
+  const META_KEY = 'yosef_meta_v1';
+
+  function getTodayDate() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function fmtDate(s) {
+    if (!s) return '';
+    const p = s.split('-'); if (p.length !== 3) return s;
+    const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+    const d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+    return 'יום ' + days[d.getDay()] + ' · ' + p[2] + '.' + p[1] + '.' + p[0];
+  }
+
+  let todayState = {};
+
+  function loadToday() {
+    try {
+      const raw = localStorage.getItem(TODAY_KEY);
+      if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } }
+    } catch(e) {}
+    todayState = { date: getTodayDate(), items: {} };
+    ensureItems();
+  }
+  function ensureItems() {
+    if (!todayState.items) todayState.items = {};
+    MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false, extras: {} }; });
+  }
+  function saveToday() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} pushUp(); }
+
+  function loadHistory() { try { const r = localStorage.getItem(HISTORY_KEY); if (r) return JSON.parse(r) || []; } catch(e) {} return []; }
+  function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e) {} }
+
+  function mitzvaItemPoints(m, item) {
+    if (!item) return 0;
+    let pts = 0;
+    if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points * 2 : m.points;
+    if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; });
+    return pts;
+  }
+  function mitzvaMaxPoints(m) { let p = m.hasMinyan ? m.points*2 : m.points; if (m.extras) m.extras.forEach(ex => p += ex.points); return p; }
+  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); return t; }
+  function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
+
+  function render() {
+    document.getElementById('dateLabel').textContent = fmtDate(todayState.date);
+    document.getElementById('totalMax').textContent = calcMax();
+    const list = document.getElementById('mitzvotList');
+    list.innerHTML = MITZVOT.map(m => {
+      const item = todayState.items[m.id] || { done:false, minyan:false, extras:{} };
+      const extras = item.extras || {};
+      const eff = mitzvaItemPoints(m, Object.assign({}, item, { done:true }));
+      const hasExtras = m.extras && m.extras.length;
+      const anyOn = hasExtras && m.extras.some(ex => extras[ex.id]);
+      const bonus = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') + (hasExtras ? m.extras.filter(ex=>extras[ex.id]).map(ex=>' +'+ex.points).join('') : '');
+      return '<div class="mitzva-card' + (item.done?' done':'') + (anyOn?' expanded':'') + '" data-id="'+m.id+'">' +
+        '<div class="mitzva-row">' +
+          (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+          '<div class="mitzva-icon">'+m.icon+'</div>' +
+          '<div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div>' +
+          '<div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
+          '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button>' +
+        '</div>' +
+        (m.hasMinyan ? '<div class="minyan-toggle"><div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div><label class="switch"><input type="checkbox" data-action="minyan"'+(item.minyan?' checked':'')+'><span class="switch-slider"></span></label></div>' : '') +
+        (hasExtras ? '<div class="mitzva-extras">' + m.extras.map(ex => '<div class="minyan-toggle"><div class="minyan-toggle-label">'+ex.label+' <span class="bonus">+'+ex.points+' נקודות</span></div><label class="switch"><input type="checkbox" data-action="extra" data-extra="'+ex.id+'"'+(extras[ex.id]?' checked':'')+'><span class="switch-slider"></span></label></div>').join('') + '</div>' : '') +
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => { toggle(id); });
+      const mi = card.querySelector('[data-action="minyan"]');
+      if (mi) mi.addEventListener('change', () => { todayState.items[id].minyan = mi.checked; saveToday(); render(); });
+      const ex = card.querySelector('[data-action="expand"]');
+      if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => {
+        inp.addEventListener('change', () => { if (!todayState.items[id].extras) todayState.items[id].extras = {}; todayState.items[id].extras[inp.dataset.extra] = inp.checked; saveToday(); render(); });
+      });
+    });
+
+    document.getElementById('totalNum').textContent = calcToday();
+    renderHistory();
+  }
+  function toggle(id) { const it = todayState.items[id]; it.done = !it.done; saveToday(); render(); }
+
+  function renderHistory() {
+    const h = loadHistory().slice().sort((a,b) => (a.date < b.date ? 1 : -1));
+    const el = document.getElementById('historyList');
+    if (!h.length) { el.innerHTML = '<div class="hist-empty">עדיין אין ימים שמורים. סמן מצוות ולחץ "סיים את היום ושמור".</div>'; return; }
+    el.innerHTML = h.slice(0, 30).map(e => '<div class="hist-entry"><span class="hist-date">'+fmtDate(e.date)+'</span><span class="hist-score">'+e.score+' נק׳</span></div>').join('');
+  }
+
+  function endDay() {
+    const score = calcToday();
+    const date = todayState.date || getTodayDate();
+    const h = loadHistory();
+    const idx = h.findIndex(e => e.date === date);
+    const entry = { date: date, score: score };
+    if (idx >= 0) h[idx] = entry; else h.push(entry);
+    saveHistory(h);
+    pushUp();
+    toast('נשמר! ' + score + ' נקודות');
+    render();
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function setSync(s) { const el = document.getElementById('syncStatus'); if (el) el.textContent = s; }
+
+  // ===== Sync (this page owns /yosef.json) =====
+  let pushTimer = null;
+  function pushUp() { clearTimeout(pushTimer); pushTimer = setTimeout(doPush, 800); }
+  async function doPush() {
+    try {
+      const url = await yosefUrl();
+      const payload = {
+        name: 'יוסף ביתן',
+        score_today: todayState,
+        score_history: loadHistory(),
+        updatedAt: Date.now()
+      };
+      const r = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      setSync(r.ok ? ('מסונכרן · ' + new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (יישמר מקומית)');
+    } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
+  }
+  async function pullDown() {
+    try {
+      const url = await yosefUrl();
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) { setSync('עובד במצב מקומי'); return; }
+      const remote = await r.json();
+      if (remote) {
+        // history: union by date, keep higher score per date
+        const localH = loadHistory();
+        const map = {};
+        localH.forEach(e => map[e.date] = e.score);
+        (remote.score_history || []).forEach(e => { if (map[e.date] == null) map[e.date] = e.score; });
+        const merged = Object.keys(map).map(d => ({ date: d, score: map[d] }));
+        saveHistory(merged);
+        // today: adopt remote today only if it's today's date and we have no local progress yet
+        if (remote.score_today && remote.score_today.date === getTodayDate()) {
+          const localEmpty = !Object.values(todayState.items || {}).some(it => it.done);
+          if (localEmpty) { todayState = remote.score_today; ensureItems(); saveTodayLocalOnly(); }
+        }
+      }
+      setSync('מסונכרן');
+    } catch(e) { setSync('עובד במצב מקומי'); }
+    render();
+  }
+  function saveTodayLocalOnly() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }
+
+  // ===== init =====
+  document.getElementById('saveDayBtn').addEventListener('click', endDay);
+  loadToday();
+  render();
+  pullDown();
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
+})();
+</script>
+</body>
+</html>

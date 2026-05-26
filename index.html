@@ -3197,6 +3197,22 @@
 
     </div>
 
+    <div class="partner-view" id="yosefView" style="display:none;">
+      <div class="partner-view-title">📋 הניקוד של יוסף ביתן <button id="yosefRefresh" style="float:left;background:none;border:none;color:var(--gold-dark);cursor:pointer;font-size:18px;" aria-label="רענן">⟳</button></div>
+      <div class="partner-view-stats">
+        <div class="partner-stat">
+          <div class="partner-stat-label">ניקוד היום</div>
+          <div class="partner-stat-value" id="yosefScore">—</div>
+        </div>
+        <div class="partner-stat">
+          <div class="partner-stat-label">עודכן</div>
+          <div class="partner-stat-value" id="yosefUpdated" style="font-size:14px;">—</div>
+        </div>
+      </div>
+      <div class="partner-prayers-title" style="margin-top:10px;">היסטוריית ימים אחרונים</div>
+      <div id="yosefHistory" style="font-size:13px;color:var(--brown);"></div>
+    </div>
+
     <div class="sync-panel" id="syncPanel">
       <div class="sync-panel-header">
         <span class="sync-panel-title">☁️ סנכרון בין מכשירים</span>
@@ -10208,6 +10224,37 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) {}
   }
 
+  // Viewer for Yosef Bitan's daily score (אוריאל only). Reads the dedicated
+  // /yosef.json path that the standalone yosef.html page writes to.
+  async function renderYosefView() {
+    const view = document.getElementById('yosefView');
+    if (!view) return;
+    if (currentProfile !== 'pinto') { view.style.display = 'none'; return; }
+    view.style.display = 'block';
+    const url = getSyncUrl();
+    if (!url) return;
+    try {
+      const t = (typeof fbToken === 'function') ? await fbToken() : null;
+      const resp = await fetch(url + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''), { cache: 'no-store' });
+      const data = resp.ok ? await resp.json() : null;
+      const scoreEl = document.getElementById('yosefScore');
+      const updEl = document.getElementById('yosefUpdated');
+      const histEl = document.getElementById('yosefHistory');
+      if (!data) { if (scoreEl) scoreEl.textContent = '0'; if (histEl) histEl.innerHTML = 'אין נתונים עדיין.'; if (updEl) updEl.textContent = '—'; return; }
+      let score = 0;
+      const st = data.score_today;
+      if (st && st.date === getTodayDate() && st.items) {
+        MITZVOT_PINTO.forEach(m => { score += mitzvaItemPoints(m, st.items[m.id]); });
+      }
+      if (scoreEl) scoreEl.textContent = score;
+      if (updEl) updEl.textContent = data.updatedAt ? new Date(data.updatedAt).toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
+      const hist = (data.score_history || []).slice().sort((a,b) => (a.date < b.date ? 1 : -1)).slice(0, 7);
+      if (histEl) histEl.innerHTML = hist.length ? hist.map(e => formatHebrewDate(e.date) + ' — <b>' + e.score + '</b> נק׳').join('<br>') : 'אין ימים שמורים עדיין.';
+    } catch(e) {
+      const scoreEl = document.getElementById('yosefScore'); if (scoreEl) scoreEl.textContent = '—';
+    }
+  }
+
   function renderScoreView() {
     if (!todayState.date) loadTodayState();
     // Check if date changed (passed midnight)
@@ -10218,6 +10265,7 @@ const TOTAL_OSHER = TEFILOT.length;
     document.getElementById('scoreDateValue').textContent = formatHebrewDate(todayState.date);
     document.getElementById('scoreTodayMax').textContent = calculateMaxScore();
     try { updatePartnerView(); } catch(e) {}
+    try { renderYosefView(); } catch(e) {}
 
     const list = document.getElementById('mitzvotList');
     // The brit mitzvah card is shown only when brit is unlocked on this device (the
@@ -11451,6 +11499,7 @@ const TOTAL_OSHER = TEFILOT.length;
   on('prayerEditSave', 'click', savePrayerEdit);
   on('prayerEditReset', 'click', resetPrayerEdit);
   onBackdrop('prayerEditModal');
+  on('yosefRefresh', 'click', function () { try { renderYosefView(); } catch(e) {} });
   on('fallQuizClose', 'click', closeFallQuiz);
   on('fallQuizCancel', 'click', closeFallQuiz);
   on('fallQuizSave', 'click', saveFallQuiz);
