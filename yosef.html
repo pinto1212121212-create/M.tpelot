@@ -20,73 +20,89 @@
     background-image:
       radial-gradient(ellipse at top, rgba(201,169,97,0.10) 0%, transparent 60%),
       radial-gradient(ellipse at bottom, rgba(107,31,45,0.06) 0%, transparent 60%);
-    padding: 16px 14px 60px;
-    max-width: 560px; margin: 0 auto;
+    padding: 16px 14px 60px; max-width: 560px; margin: 0 auto;
   }
-  header { text-align: center; padding: 14px 0 8px; }
+  header { text-align: center; padding: 12px 0 18px; }
   .crown { color: var(--gold-dark); letter-spacing: 6px; font-size: 14px; }
   h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 30px; color: var(--brown-deep); font-weight: 900; margin-top: 4px; }
-  .who { font-size: 16px; color: var(--wine); font-weight: 700; margin-top: 2px; }
-  .date { font-size: 14px; color: var(--brown-light); margin-top: 4px; }
+  .who { font-size: 15px; color: var(--wine); font-weight: 700; margin-top: 2px; }
 
-  .total-card {
-    background: linear-gradient(135deg, var(--wine), var(--wine-light));
-    color: var(--parchment-light); border-radius: 16px; padding: 18px; text-align: center;
-    margin: 16px 0; box-shadow: 0 6px 20px rgba(107,31,45,0.3);
+  .score-date-header {
+    text-align: center; margin-bottom: 18px; padding: 14px;
+    background: linear-gradient(135deg, var(--brown-deep), var(--brown));
+    border-radius: 8px; color: var(--gold-light); box-shadow: 0 2px 8px rgba(60,30,10,0.2);
   }
-  .total-card .num { font-family: 'Frank Ruhl Libre', serif; font-size: 46px; font-weight: 900; line-height: 1; }
-  .total-card .of { font-size: 14px; opacity: 0.85; margin-top: 6px; }
-  .total-card .label { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+  .score-date-header .date-label { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+  .score-date-header .date-value { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; font-weight: 700; color: var(--gold); }
+
+  .score-today-total {
+    text-align: center; margin-bottom: 22px; padding: 20px;
+    background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px;
+    box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold);
+  }
+  .score-today-total .label { font-family: 'Frank Ruhl Libre', serif; color: var(--brown); font-size: 14px; margin-bottom: 6px; }
+  .score-today-total .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 48px; color: var(--wine); line-height: 1; }
+  .score-today-total .max { font-family: 'Frank Ruhl Libre', serif; color: var(--brown-light); font-size: 16px; margin-top: 4px; }
 
   .mitzva-card {
-    background: var(--parchment-light); border: 1.5px solid var(--parchment-dark);
-    border-radius: 12px; margin-bottom: 10px; padding: 12px 14px; transition: all 0.2s;
+    background: var(--parchment-light); border: 1.5px solid var(--brown); border-radius: 8px;
+    padding: 16px 18px; margin-bottom: 12px;
+    box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold), 0 2px 6px rgba(60,30,10,0.08);
+    transition: all 0.25s;
   }
-  .mitzva-card.done { border-color: var(--gold); background: linear-gradient(135deg, #fbf5e6, #f6ecd2); }
-  .mitzva-row { display: flex; align-items: center; gap: 12px; }
-  .mitzva-icon { font-size: 26px; }
-  .mitzva-info { flex: 1; min-width: 0; }
-  .mitzva-name { font-weight: 700; font-size: 16px; color: var(--brown-deep); }
-  .mitzva-points { font-size: 13px; color: var(--brown-light); margin-top: 2px; }
-  .mitzva-points strong { color: var(--wine); }
+  .mitzva-card.done { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.1)); border-color: var(--gold-dark); }
+  .mitzva-row { display: flex; align-items: center; gap: 14px; }
+  .mitzva-icon { font-size: 28px; width: 44px; text-align: center; flex-shrink: 0; }
+  .mitzva-info { flex: 1; }
+  .mitzva-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); line-height: 1.2; }
+  .mitzva-points { font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown-light); margin-top: 3px; }
+  .mitzva-points strong { color: var(--wine); font-weight: 700; }
   .mitzva-check {
-    width: 40px; height: 40px; flex: 0 0 40px; border-radius: 50%;
-    border: 2px solid var(--gold); background: var(--parchment); cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    width: 44px; height: 44px; min-width: 44px; border-radius: 50%;
+    background: var(--parchment); border: 2px solid var(--brown-light); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s cubic-bezier(0.22,1,0.36,1); padding: 0; flex-shrink: 0;
   }
-  .mitzva-check svg { width: 20px; height: 20px; fill: none; stroke: var(--gold-dark); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0.25; }
-  .mitzva-card.done .mitzva-check { background: var(--gold); border-color: var(--gold-dark); }
-  .mitzva-card.done .mitzva-check svg { stroke: #fff; opacity: 1; }
-  .mitzva-expand { background: none; border: none; cursor: pointer; padding: 4px; }
-  .mitzva-expand svg { width: 18px; height: 18px; fill: none; stroke: var(--brown-light); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.2s; }
+  .mitzva-check svg { width: 22px; height: 22px; fill: none; stroke: var(--brown-light); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.2s; }
+  .mitzva-card.done .mitzva-check { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); box-shadow: 0 3px 10px rgba(201,169,97,0.4); }
+  .mitzva-card.done .mitzva-check svg { stroke: var(--brown-deep); opacity: 1; animation: checkPop 0.4s cubic-bezier(0.22,1,0.36,1); }
+  @keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  .mitzva-expand { width: 34px; height: 34px; min-width: 34px; border-radius: 50%; background: var(--parchment); border: 1.5px solid var(--gold); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+  .mitzva-expand svg { width: 18px; height: 18px; fill: none; stroke: var(--brown); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s; }
   .mitzva-card.expanded .mitzva-expand svg { transform: rotate(180deg); }
-  .minyan-toggle, .mitzva-extras .minyan-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--parchment-dark);
-  }
-  .minyan-toggle-label { font-size: 14px; color: var(--brown); }
-  .minyan-toggle-label .bonus { color: var(--gold-dark); font-weight: 700; font-size: 12px; }
   .mitzva-extras { display: none; }
   .mitzva-card.expanded .mitzva-extras { display: block; }
-  .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .switch-slider { position: absolute; inset: 0; background: var(--parchment-dark); border-radius: 26px; transition: 0.2s; }
-  .switch-slider:before { content: ''; position: absolute; height: 20px; width: 20px; right: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
-  .switch input:checked + .switch-slider { background: var(--gold); }
-  .switch input:checked + .switch-slider:before { transform: translateX(-20px); }
+  .minyan-toggle { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--gold); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .minyan-toggle-label { font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown); display: flex; align-items: center; gap: 6px; }
+  .minyan-toggle-label .bonus { font-size: 12px; color: var(--wine); font-weight: 700; }
+  .switch { position: relative; width: 52px; height: 28px; flex-shrink: 0; }
+  .switch input { display: none; }
+  .switch-slider { position: absolute; inset: 0; background: var(--parchment-dark); border: 1.5px solid var(--brown-light); border-radius: 28px; cursor: pointer; transition: 0.3s; }
+  .switch-slider::before { content: ''; position: absolute; width: 20px; height: 20px; right: 3px; top: 50%; transform: translateY(-50%); background: var(--parchment-light); border-radius: 50%; transition: 0.3s cubic-bezier(0.22,1,0.36,1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .switch input:checked + .switch-slider { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); }
+  .switch input:checked + .switch-slider::before { right: calc(100% - 23px); background: var(--brown-deep); }
 
-  .btn {
-    width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
-    font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 16px; margin-top: 14px;
+  .score-end-day {
+    margin: 24px 0 18px; padding: 16px;
+    background: linear-gradient(135deg, var(--wine), #6b1d2a); color: var(--gold-light);
+    border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600;
+    font-size: 16px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(122,40,55,0.3);
   }
-  .btn-save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); }
-  .btn-save:active { transform: scale(0.99); }
+  .score-end-day:active { transform: translateY(1px); }
 
-  .section-title { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; color: var(--brown-deep); font-weight: 700; margin: 26px 0 10px; }
-  .hist-entry { background: var(--parchment-light); border: 1px solid var(--parchment-dark); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-  .hist-date { font-size: 14px; color: var(--brown); }
-  .hist-score { font-weight: 700; color: var(--wine); font-size: 16px; }
-  .hist-empty { color: var(--brown-light); font-size: 14px; text-align: center; padding: 16px; }
+  .score-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .score-summary-card { background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 8px; padding: 14px 8px; text-align: center; }
+  .score-summary-card .label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 4px; }
+  .score-summary-card .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 24px; color: var(--wine); line-height: 1; }
+
+  .score-history { margin-top: 20px; }
+  .score-history-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: var(--brown-deep); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1.5px solid var(--gold); }
+  .history-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--parchment-light); border: 1px solid var(--brown-light); border-radius: 6px; margin-bottom: 6px; font-family: 'Frank Ruhl Libre', serif; }
+  .history-date { flex: 1; color: var(--brown); font-size: 14px; }
+  .history-score { color: var(--wine); font-weight: 700; font-size: 17px; }
+  .history-bar { width: 60px; height: 6px; background: var(--parchment-dark); border-radius: 3px; overflow: hidden; }
+  .history-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 3px; }
+  .history-empty { text-align: center; padding: 20px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; }
 
   .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
   .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 50; }
@@ -98,32 +114,42 @@
     <div class="crown">✦ ✦ ✦</div>
     <h1>ניקוד יומי</h1>
     <div class="who">יוסף ביתן</div>
-    <div class="date" id="dateLabel">—</div>
   </header>
 
-  <div class="total-card">
-    <div class="num" id="totalNum">0</div>
-    <div class="of">מתוך <span id="totalMax">0</span> נקודות אפשריות</div>
-    <div class="label">הניקוד שלך היום</div>
+  <div class="score-date-header">
+    <div class="date-label">תאריך</div>
+    <div class="date-value" id="dateValue">—</div>
+  </div>
+
+  <div class="score-today-total">
+    <div class="label">סך הניקוד היום</div>
+    <div class="value"><span id="scoreToday">0</span></div>
+    <div class="max">מתוך <span id="scoreTodayMax">0</span></div>
   </div>
 
   <div id="mitzvotList"></div>
 
-  <button class="btn btn-save" id="saveDayBtn">סיים את היום ושמור</button>
+  <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
 
-  <div class="section-title">היסטוריית ימים</div>
-  <div id="historyList"></div>
+  <div class="score-summary-grid">
+    <div class="score-summary-card"><div class="label">השבוע</div><div class="value" id="scoreWeek">0</div></div>
+    <div class="score-summary-card"><div class="label">החודש</div><div class="value" id="scoreMonth">0</div></div>
+    <div class="score-summary-card"><div class="label">סה״כ</div><div class="value" id="scoreTotal">0</div></div>
+  </div>
+
+  <div class="score-history">
+    <div class="score-history-title">היסטוריה</div>
+    <div id="scoreHistory"></div>
+  </div>
 
   <div class="sync-status" id="syncStatus">מסתנכרן…</div>
-
   <div class="toast" id="toast"></div>
 
 <script>
 (function () {
   'use strict';
 
-  // ===== Firebase — יוסף's OWN isolated project (yosef-niku). This page has NO
-  // reference whatsoever to Uriel's database, so F12 here cannot reach it. =====
+  // ===== Firebase — יוסף's OWN isolated project (yosef-niku). No reference to Uriel's DB. =====
   const DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
   const API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
   const FB_TOK = '_yfb_id_token_v1', FB_REF = '_yfb_refresh_token_v1', FB_EXP = '_yfb_token_exp_v1';
@@ -136,16 +162,14 @@
   }
   async function fbSignIn() {
     const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + API_KEY, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnSecureToken: true })
-    });
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnSecureToken: true }) });
     if (!r.ok) throw new Error('signin');
     const d = await r.json(); fbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken;
   }
   async function fbRefresh(ref) {
     const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + API_KEY, {
       method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref)
-    });
+      body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) });
     if (!r.ok) throw new Error('refresh');
     const d = await r.json(); fbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token;
   }
@@ -158,10 +182,7 @@
       return await fbSignIn();
     } catch(x) { return null; }
   }
-  async function yosefUrl() {
-    const t = await fbToken();
-    return DB_URL + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : '');
-  }
+  async function dbUrl() { const t = await fbToken(); return DB_URL + '/yosef.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''); }
 
   // ===== Mitzvot (same list as the app) =====
   const MITZVOT = [
@@ -177,7 +198,6 @@
 
   const TODAY_KEY = 'yosef_score_today_v1';
   const HISTORY_KEY = 'yosef_score_history_v1';
-  const META_KEY = 'yosef_meta_v1';
 
   function getTodayDate() {
     const d = new Date();
@@ -192,21 +212,13 @@
   }
 
   let todayState = {};
-
   function loadToday() {
-    try {
-      const raw = localStorage.getItem(TODAY_KEY);
-      if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } }
-    } catch(e) {}
-    todayState = { date: getTodayDate(), items: {} };
-    ensureItems();
+    try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } } } catch(e) {}
+    todayState = { date: getTodayDate(), items: {} }; ensureItems();
   }
-  function ensureItems() {
-    if (!todayState.items) todayState.items = {};
-    MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false, extras: {} }; });
-  }
+  function ensureItems() { if (!todayState.items) todayState.items = {}; MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done:false, minyan:false, extras:{} }; }); }
   function saveToday() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} pushUp(); }
-
+  function saveTodayLocal() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }
   function loadHistory() { try { const r = localStorage.getItem(HISTORY_KEY); if (r) return JSON.parse(r) || []; } catch(e) {} return []; }
   function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e) {} }
 
@@ -222,8 +234,8 @@
   function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
 
   function render() {
-    document.getElementById('dateLabel').textContent = fmtDate(todayState.date);
-    document.getElementById('totalMax').textContent = calcMax();
+    document.getElementById('dateValue').textContent = fmtDate(todayState.date);
+    document.getElementById('scoreTodayMax').textContent = calcMax();
     const list = document.getElementById('mitzvotList');
     list.innerHTML = MITZVOT.map(m => {
       const item = todayState.items[m.id] || { done:false, minyan:false, extras:{} };
@@ -247,7 +259,7 @@
 
     list.querySelectorAll('.mitzva-card').forEach(card => {
       const id = card.dataset.id;
-      card.querySelector('[data-action="check"]').addEventListener('click', () => { toggle(id); });
+      card.querySelector('[data-action="check"]').addEventListener('click', () => { todayState.items[id].done = !todayState.items[id].done; saveToday(); render(); });
       const mi = card.querySelector('[data-action="minyan"]');
       if (mi) mi.addEventListener('change', () => { todayState.items[id].minyan = mi.checked; saveToday(); render(); });
       const ex = card.querySelector('[data-action="expand"]');
@@ -257,16 +269,43 @@
       });
     });
 
-    document.getElementById('totalNum').textContent = calcToday();
+    document.getElementById('scoreToday').textContent = calcToday();
+    renderSummary();
     renderHistory();
   }
-  function toggle(id) { const it = todayState.items[id]; it.done = !it.done; saveToday(); render(); }
+
+  function renderSummary() {
+    const history = loadHistory();
+    const today = getTodayDate();
+    const todayScore = calcToday();
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 6); const weekAgoStr = weekAgo.toISOString().slice(0,10);
+    let weekScore = todayScore; history.forEach(h => { if (h.date >= weekAgoStr && h.date < today) weekScore += h.score; });
+    const monthAgo = new Date(); monthAgo.setDate(monthAgo.getDate() - 29); const monthAgoStr = monthAgo.toISOString().slice(0,10);
+    let monthScore = todayScore; history.forEach(h => { if (h.date >= monthAgoStr && h.date < today) monthScore += h.score; });
+    let totalScore = todayScore; history.forEach(h => { if (h.date !== today) totalScore += h.score; });
+    document.getElementById('scoreWeek').textContent = weekScore;
+    document.getElementById('scoreMonth').textContent = monthScore;
+    document.getElementById('scoreTotal').textContent = totalScore;
+  }
 
   function renderHistory() {
-    const h = loadHistory().slice().sort((a,b) => (a.date < b.date ? 1 : -1));
-    const el = document.getElementById('historyList');
-    if (!h.length) { el.innerHTML = '<div class="hist-empty">עדיין אין ימים שמורים. סמן מצוות ולחץ "סיים את היום ושמור".</div>'; return; }
-    el.innerHTML = h.slice(0, 30).map(e => '<div class="hist-entry"><span class="hist-date">'+fmtDate(e.date)+'</span><span class="hist-score">'+e.score+' נק׳</span></div>').join('');
+    const history = loadHistory();
+    const today = getTodayDate();
+    const todayScore = calcToday();
+    let allDays = history.slice();
+    if (todayScore > 0 && !history.find(h => h.date === today)) allDays.push({ date: today, score: todayScore });
+    else if (todayScore > 0) allDays = allDays.map(h => h.date === today ? Object.assign({}, h, { score: todayScore }) : h);
+    const sorted = allDays.sort((a,b) => b.date.localeCompare(a.date)).slice(0, 14);
+    const c = document.getElementById('scoreHistory');
+    if (!sorted.length) { c.innerHTML = '<div class="history-empty">עוד אין היסטוריה. סיים את היום הראשון!</div>'; return; }
+    const max = calcMax();
+    c.innerHTML = sorted.map(h => {
+      const pct = Math.min(100, (h.score / max) * 100);
+      const isToday = h.date === today;
+      return '<div class="history-row"><div class="history-date">'+fmtDate(h.date)+(isToday?' · היום':'')+'</div>' +
+        '<div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div>' +
+        '<div class="history-score">'+h.score+'</div></div>';
+    }).join('');
   }
 
   function endDay() {
@@ -274,65 +313,46 @@
     const date = todayState.date || getTodayDate();
     const h = loadHistory();
     const idx = h.findIndex(e => e.date === date);
-    const entry = { date: date, score: score };
-    if (idx >= 0) h[idx] = entry; else h.push(entry);
-    saveHistory(h);
-    pushUp();
-    toast('נשמר! ' + score + ' נקודות');
-    render();
+    if (idx >= 0) h[idx] = { date: date, score: score }; else h.push({ date: date, score: score });
+    saveHistory(h); pushUp(); toast('נשמר! ' + score + ' נקודות'); render();
   }
 
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
-  }
+  function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
   function setSync(s) { const el = document.getElementById('syncStatus'); if (el) el.textContent = s; }
 
-  // ===== Sync (this page owns /yosef.json) =====
+  // ===== Sync (owns /yosef.json in yosef-niku) =====
   let pushTimer = null;
   function pushUp() { clearTimeout(pushTimer); pushTimer = setTimeout(doPush, 800); }
   async function doPush() {
     try {
-      const url = await yosefUrl();
-      const payload = {
-        name: 'יוסף ביתן',
-        score_today: todayState,
-        score_history: loadHistory(),
-        updatedAt: Date.now()
-      };
+      const url = await dbUrl();
+      const payload = { name: 'יוסף ביתן', score_today: todayState, score_history: loadHistory(), updatedAt: Date.now() };
       const r = await fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-      setSync(r.ok ? ('מסונכרן · ' + new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (יישמר מקומית)');
+      setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)');
     } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
   }
   async function pullDown() {
     try {
-      const url = await yosefUrl();
+      const url = await dbUrl();
       const r = await fetch(url, { cache: 'no-store' });
       if (!r.ok) { setSync('עובד במצב מקומי'); return; }
       const remote = await r.json();
       if (remote) {
-        // history: union by date, keep higher score per date
-        const localH = loadHistory();
-        const map = {};
+        const localH = loadHistory(); const map = {};
         localH.forEach(e => map[e.date] = e.score);
         (remote.score_history || []).forEach(e => { if (map[e.date] == null) map[e.date] = e.score; });
-        const merged = Object.keys(map).map(d => ({ date: d, score: map[d] }));
-        saveHistory(merged);
-        // today: adopt remote today only if it's today's date and we have no local progress yet
+        saveHistory(Object.keys(map).map(d => ({ date: d, score: map[d] })));
         if (remote.score_today && remote.score_today.date === getTodayDate()) {
           const localEmpty = !Object.values(todayState.items || {}).some(it => it.done);
-          if (localEmpty) { todayState = remote.score_today; ensureItems(); saveTodayLocalOnly(); }
+          if (localEmpty) { todayState = remote.score_today; ensureItems(); saveTodayLocal(); }
         }
       }
-      setSync('מסונכרן');
+      setSync('מסונכרן ✓');
     } catch(e) { setSync('עובד במצב מקומי'); }
     render();
   }
-  function saveTodayLocalOnly() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }
 
-  // ===== init =====
-  document.getElementById('saveDayBtn').addEventListener('click', endDay);
+  document.getElementById('endDayBtn').addEventListener('click', endDay);
   loadToday();
   render();
   pullDown();
