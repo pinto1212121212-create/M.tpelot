@@ -3048,18 +3048,33 @@
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   .score-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-family: 'Heebo', sans-serif; font-weight: 700; z-index: 99999; box-shadow: 0 6px 20px rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.3s; }
   .score-toast.show { opacity: 1; }
-  .building-section { margin: 18px 0; padding: 16px 12px; background: linear-gradient(180deg, rgba(201,169,97,0.12), rgba(107,31,45,0.05)); border: 1.5px solid var(--gold); border-radius: 12px; text-align: center; }
-  .building-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--brown-deep); }
-  .building-subtitle { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); font-style:italic; margin-bottom:8px; }
-  .building-art svg { width:100%; max-width:340px; height:auto; display:block; margin:0 auto; }
-  .building-caption { font-family:'Frank Ruhl Libre',serif; font-size:15px; color:var(--wine); font-weight:700; margin-top:8px; }
-  .building-stage { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown); margin-top:2px; }
-  @keyframes bldRise { from { opacity:0; } to { opacity:1; } }
-  .bld-stone-lit { animation: bldRise 0.5s ease both; }
-  @keyframes bldGlow { 0%,100%{ opacity:0.45; } 50%{ opacity:1; } }
-  .bld-glow { animation: bldGlow 2.6s ease-in-out infinite; }
-  @keyframes bldStar { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.18); } }
-  .bld-star { animation: bldStar 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .building-section { margin: 18px 0; padding: 14px 10px 12px; background: radial-gradient(ellipse at top, #2b3566, #141a33); border: 2px solid var(--gold-dark); border-radius: 14px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 6px 22px rgba(0,0,0,0.3); overflow: hidden; }
+  .building-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--gold-light); text-shadow:0 1px 4px rgba(0,0,0,0.6); }
+  .building-subtitle { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:#e8d9b5; opacity:0.85; font-style:italic; margin-bottom:8px; }
+  .building-art { border-radius:10px; overflow:hidden; }
+  .building-art svg { width:100%; max-width:360px; height:auto; display:block; margin:0 auto; }
+  .building-caption { font-family:'Frank Ruhl Libre',serif; font-size:15px; color:var(--gold-light); font-weight:700; margin-top:8px; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
+  .building-stage { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:#e8d9b5; opacity:0.9; margin-top:2px; }
+  @keyframes bldRise { from{opacity:0;} to{opacity:1;} }
+  .bld-stone-lit { animation: bldRise 0.55s ease both; }
+  @keyframes bldTwinkle { 0%{opacity:0.15;} 100%{opacity:1;} }
+  .bld-star-tw { animation: bldTwinkle 2.5s ease-in-out infinite alternate; }
+  @keyframes bldRot { to { transform: rotate(360deg); } }
+  .bld-rays { transform-box: view-box; transform-origin: 160px 150px; animation: bldRot 80s linear infinite; }
+  @keyframes bldGlow { 0%,100%{opacity:0.35;} 50%{opacity:0.8;} }
+  .bld-glow { animation: bldGlow 4s ease-in-out infinite; }
+  @keyframes bldStarPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.22);} }
+  .bld-star2 { animation: bldStarPulse 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes bldDoor { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
+  .bld-doorpulse { animation: bldDoor 3s ease-in-out infinite; }
+  @keyframes bldFloat { 0%{opacity:0; transform:translateY(0);} 12%{opacity:0.9;} 100%{opacity:0; transform:translateY(-155px);} }
+  .bld-spark { transform-box: fill-box; animation: bldFloat 5s linear infinite; }
+  @keyframes bldDrift1 { from{transform:translateX(-50px);} to{transform:translateX(360px);} }
+  @keyframes bldDrift2 { from{transform:translateX(360px);} to{transform:translateX(-50px);} }
+  .bld-cloud1 { transform-box: view-box; animation: bldDrift1 52s linear infinite; }
+  .bld-cloud2 { transform-box: view-box; animation: bldDrift2 68s linear infinite; }
+  @keyframes bldShim { 0%{opacity:0; transform:translateX(-60px);} 6%{opacity:0.55;} 18%{opacity:0; transform:translateX(360px);} 100%{opacity:0; transform:translateX(360px);} }
+  .bld-shimmer { transform-box: fill-box; animation: bldShim 7s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -10409,33 +10424,39 @@ const TOTAL_OSHER = TEFILOT.length;
     return '✦ הבניין שלם — וממשיך לזהור! ✦';
   }
   function buildingSVG(days) {
-    const COLS=8, ROWS=6, SW=30, GAP=3, SH=16, VG=3, startX=30, groundY=210, slots=COLS*ROWS;
-    const lit = Math.min(days, slots);
-    let stones='';
-    for (let i=0;i<slots;i++){
-      const r=Math.floor(i/COLS), c=i%COLS, x=startX+c*(SW+GAP), y=(groundY-2)-SH-r*(SH+VG);
-      if (i<lit){
-        const dl=Math.min(i*0.035,1.4).toFixed(2);
-        stones += '<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:'+dl+'s"/>'
-               +  '<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="4" rx="2" fill="#f0dca0" opacity="0.6" style="animation-delay:'+dl+'s"/>';
-      } else {
-        stones += '<rect x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2" fill="none" stroke="#b9a36a" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.35"/>';
-      }
-    }
+    const COLS=8, ROWS=6, SW=30, GAP=3, SH=16, VG=3, startX=30, groundY=205, slots=COLS*ROWS;
+    const lit=Math.min(days,slots);
+    let stars=''; for(let i=0;i<16;i++){ const sx=(i*53%300)+8, sy=8+(i*29%64), rr=(i%3===0?1.5:0.9), d=(i*0.37%3).toFixed(2); stars+='<circle class="bld-star-tw" cx="'+sx+'" cy="'+sy+'" r="'+rr+'" fill="#fff7e0" style="animation-delay:'+d+'s"/>'; }
+    let rays=''; for(let a=0;a<14;a++){ rays+='<polygon points="160,150 155,30 165,30" fill="#f4d98a" opacity="0.09" transform="rotate('+(a*360/14)+' 160 150)"/>'; }
+    let stones=''; for(let i=0;i<slots;i++){ const r=Math.floor(i/COLS),c=i%COLS,x=startX+c*(SW+GAP),y=(groundY-2)-SH-r*(SH+VG); if(i<lit){ const dl=Math.min(i*0.04,1.6).toFixed(2); stones+='<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:'+dl+'s"/><rect class="bld-stone-lit" x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(SW-3)+'" height="3.4" rx="1.5" fill="#fce9b0" opacity="0.7" style="animation-delay:'+dl+'s"/>'; } else { stones+='<rect x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="none" stroke="#caa85f" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.28"/>'; } }
     const wallTop=(groundY-2)-SH-(ROWS-1)*(SH+VG);
     let deco='';
-    if (days>=8){ deco += '<rect class="bld-stone-lit" x="12" y="'+wallTop+'" width="14" height="'+(groundY-wallTop)+'" rx="3" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:1.2s"/>'
-                       +  '<rect class="bld-stone-lit" x="294" y="'+wallTop+'" width="14" height="'+(groundY-wallTop)+'" rx="3" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:1.25s"/>'; }
-    if (days>=20){ const ry=wallTop-4; deco += '<polygon class="bld-stone-lit" points="6,'+ry+' 314,'+ry+' 160,'+(ry-46)+'" fill="url(#bldRoof)" stroke="#8a6e2f" stroke-width="0.6" style="animation-delay:1.3s"/>'; }
-    if (days>=40){ const ry=wallTop-50; deco += '<path class="bld-stone-lit" d="M138 '+ry+' Q160 '+(ry-28)+' 182 '+ry+' Z" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.6" style="animation-delay:1.4s"/>'; }
-    if (days>=48){ const sy=wallTop-60; deco += '<circle class="bld-glow" cx="160" cy="'+sy+'" r="28" fill="url(#bldGlowGrad)"/><text class="bld-star" x="160" y="'+(sy+10)+'" text-anchor="middle" font-size="32" fill="#e9c96a">✦</text>'; }
+    if(days>=8){ [16,290].forEach(function(x,idx){ deco+='<rect x="'+(x-3)+'" y="'+(groundY-2)+'" width="20" height="7" rx="1" fill="url(#stoneG)"/><rect class="bld-stone-lit" x="'+x+'" y="'+(wallTop-2)+'" width="14" height="'+(groundY-wallTop)+'" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.5" style="animation-delay:'+(1.3+idx*0.1)+'s"/><rect x="'+(x-3)+'" y="'+(wallTop-7)+'" width="20" height="7" rx="1" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.4"/>'; }); }
+    if(days>=20){ const ry=wallTop-8; deco+='<polygon class="bld-stone-lit" points="2,'+ry+' 318,'+ry+' 160,'+(ry-52)+'" fill="url(#roofG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:1.5s"/><circle class="bld-doorpulse" cx="160" cy="'+(ry-20)+'" r="7.5" fill="#fce9b0"/>'; }
+    if(days>=40){ const ry=wallTop-60; deco+='<path class="bld-stone-lit" d="M134 '+ry+' Q160 '+(ry-32)+' 186 '+ry+' Z" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:1.6s"/>'; }
+    if(days>=48){ const sy=wallTop-70; deco+='<circle class="bld-glow" cx="160" cy="'+sy+'" r="32" fill="url(#glowG)"/><text class="bld-star2" x="160" y="'+(sy+12)+'" text-anchor="middle" font-size="36" fill="#ffe9a8">✦</text>'; }
+    const door = days>=4 ? '<rect class="bld-doorpulse" x="146" y="'+(groundY-24)+'" width="28" height="24" rx="13" fill="url(#doorG)"/>' : '';
+    let parts=''; for(let i=0;i<16;i++){ const px=36+(i*37%248), pd=(i*0.5%5).toFixed(2), pr=(i%2?1.7:1.1); parts+='<circle class="bld-spark" cx="'+px+'" cy="205" r="'+pr+'" fill="#ffe9a8" style="animation-delay:'+pd+'s"/>'; }
+    const clouds='<g class="bld-cloud1" opacity="0.45"><ellipse cx="40" cy="50" rx="24" ry="8" fill="#fbe6c8"/><ellipse cx="60" cy="46" rx="16" ry="7" fill="#fbe6c8"/></g><g class="bld-cloud2" opacity="0.35"><ellipse cx="250" cy="34" rx="20" ry="7" fill="#fbe6c8"/><ellipse cx="234" cy="38" rx="13" ry="6" fill="#fbe6c8"/></g>';
+    const shimmer='<rect class="bld-shimmer" x="0" y="40" width="46" height="180" fill="url(#shineG)"/>';
     return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet">'
-      + '<defs><linearGradient id="bldStone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e6c878"/><stop offset="100%" stop-color="#b9912f"/></linearGradient>'
-      + '<linearGradient id="bldRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7a2330"/><stop offset="100%" stop-color="#5a1722"/></linearGradient>'
-      + '<radialGradient id="bldGlowGrad"><stop offset="0%" stop-color="#f5e3a8" stop-opacity="0.9"/><stop offset="100%" stop-color="#f5e3a8" stop-opacity="0"/></radialGradient></defs>'
-      + '<rect x="14" y="'+(groundY+8)+'" width="292" height="10" rx="3" fill="url(#bldStone)" opacity="0.85"/>'
-      + '<rect x="26" y="'+(groundY-2)+'" width="268" height="10" rx="2" fill="url(#bldStone)" opacity="0.7"/>'
-      + stones + deco + '</svg>';
+     +'<defs>'
+     +'<linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2b3566"/><stop offset="55%" stop-color="#7a4450"/><stop offset="100%" stop-color="#e7b074"/></linearGradient>'
+     +'<radialGradient id="sunG"><stop offset="0%" stop-color="#ffe6a0" stop-opacity="0.85"/><stop offset="100%" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient>'
+     +'<linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d98e"/><stop offset="100%" stop-color="#c39a34"/></linearGradient>'
+     +'<linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a2734"/><stop offset="100%" stop-color="#561620"/></linearGradient>'
+     +'<radialGradient id="glowG"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.95"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
+     +'<linearGradient id="doorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff0bf"/><stop offset="100%" stop-color="#d8a84a"/></linearGradient>'
+     +'<linearGradient id="shineG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+     +'</defs>'
+     +'<rect x="0" y="0" width="320" height="250" fill="url(#skyG)"/>'
+     +stars+clouds
+     +'<g class="bld-rays">'+rays+'</g>'
+     +'<circle class="bld-glow" cx="160" cy="150" r="92" fill="url(#sunG)"/>'
+     +'<rect x="6" y="'+(groundY+5)+'" width="308" height="14" rx="3" fill="url(#stoneG)" opacity="0.9"/>'
+     +'<rect x="22" y="'+(groundY-2)+'" width="276" height="9" rx="2" fill="url(#stoneG)" opacity="0.8"/>'
+     +stones+deco+door+parts+shimmer
+     +'</svg>';
   }
   let buildingLastDays = -1;
   function renderBuilding() {
