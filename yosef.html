@@ -255,6 +255,14 @@
   .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
+  .kupah-section { margin:18px 0; padding:16px; background:linear-gradient(135deg, rgba(74,168,90,0.16), rgba(201,169,97,0.08)); border:1.5px solid var(--gold); border-radius:12px; text-align:center; }
+  .kupah-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--brown-deep); }
+  .kupah-amount { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:40px; color:#2f8a3f; line-height:1; margin:6px 0; }
+  .kupah-sub { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); margin-bottom:12px; }
+  .kupah-btns { display:flex; gap:8px; }
+  .kupah-pay { flex:2; padding:13px; border:none; border-radius:8px; background:linear-gradient(135deg,#3a9a4a,#2f7a3a); color:#fff; font-family:'Heebo',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
+  .kupah-reset { flex:1; padding:13px; border:1.5px solid var(--brown-light); border-radius:8px; background:var(--parchment-light); color:var(--brown-deep); font-family:'Heebo',sans-serif; font-weight:600; font-size:13px; cursor:pointer; }
+  .kupah-cfg { margin-top:8px; background:none; border:none; color:var(--gold-dark); font-size:12.5px; cursor:pointer; text-decoration:underline; font-family:'Frank Ruhl Libre',serif; }
   .building-section { margin: 18px 0; padding: 14px 10px 12px; background: radial-gradient(ellipse at top, #2b3566, #141a33); border: 2px solid var(--gold-dark); border-radius: 14px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 6px 22px rgba(0,0,0,0.3); overflow: hidden; }
   .building-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--gold-light); text-shadow:0 1px 4px rgba(0,0,0,0.6); }
   .building-subtitle { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:#e8d9b5; opacity:0.85; font-style:italic; margin-bottom:8px; }
@@ -392,7 +400,15 @@
     <div class="private-reflection-footer"><span><span id="reflectionCounter">0</span> תווים</span><span class="private-reflection-saved" id="reflectionSaved">נשמר ✓</span></div>
   </div>
 
-  <div class="goals-section">
+  <div class="kupah-section">
+      <div class="kupah-title">🪙 קופת החיסכון שלי</div>
+      <div class="kupah-amount" id="kupahAmount">₪0</div>
+      <div class="kupah-sub" id="kupahSub">כל 10 נקודות = ₪2</div>
+      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">💳 שלם / תרום</button><button class="kupah-reset" id="kupahReset">✓ שילמתי</button></div>
+      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור תשלום ויחס</button>
+    </div>
+
+    <div class="goals-section">
     <div class="goals-section-title">📋 שאלונים ומעקבים משלי</div>
     <div class="goals-section-subtitle">צור שאלונים משלך, בדיוק כמו תיעוד שמירת הברית</div>
     <div id="trackersList"></div>
@@ -880,6 +896,14 @@
     wire();
   })();
 
+  function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem('yosef_kupah_v1')||'{}'); return Object.assign({rateP:10,rateS:2,paid:0,link:''}, (o&&typeof o==='object')?o:{}); }catch(e){ return {rateP:10,rateS:2,paid:0,link:''}; } }
+  function saveKupah(k){ try{ localStorage.setItem('yosef_kupah_v1', JSON.stringify(k)); }catch(e){} }
+  function kupahAccrued(k){ let pts=0; try{ pts=getTotalLifetimePoints(); }catch(e){} return Math.floor(pts/(k.rateP||10))*(k.rateS||2); }
+  function kupahPay(){ const k=loadKupah(); if(!k.link){ alert('עדיין לא הגדרת קישור תשלום. לחץ "הגדר קישור".'); kupahCfg(); return; } window.open(k.link,'_blank'); }
+  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן ש-₪'+bal+' שולמו, ולאפס את הקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
+  function kupahCfg(){ const k=loadKupah(); const link=prompt('הדבק קישור תשלום (Bit / PayBox / נדרים פלוס):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות לחסוך?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
+  function renderKupah(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); const a=document.getElementById('kupahAmount'); if(a) a.textContent='₪'+bal; const s=document.getElementById('kupahSub'); if(s) s.textContent='כל '+k.rateP+' נקודות = ₪'+k.rateS+(k.link?'':' · (טרם הוגדר קישור תשלום)'); const p=document.getElementById('kupahPay'); if(p) p.onclick=kupahPay; const r=document.getElementById('kupahReset'); if(r) r.onclick=kupahReset; const c=document.getElementById('kupahCfg'); if(c) c.onclick=kupahCfg; }
+
   function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(appReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ toast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
   // ===== Mitzvot manager (build your own + preset library) =====
@@ -1020,7 +1044,7 @@
     });
     document.getElementById('scoreToday').textContent = calcToday();
     renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal(); renderBritLog(); renderReflection(); renderTrackers();
-    renderHizuk(); renderStreakTarget(); renderBuilding(); checkCelebrations();
+    renderHizuk(); renderStreakTarget(); renderBuilding(); renderKupah(); checkCelebrations();
   }
 
   function renderSummary() {
