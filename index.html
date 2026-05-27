@@ -3048,6 +3048,18 @@
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   .score-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-family: 'Heebo', sans-serif; font-weight: 700; z-index: 99999; box-shadow: 0 6px 20px rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.3s; }
   .score-toast.show { opacity: 1; }
+  .building-section { margin: 18px 0; padding: 16px 12px; background: linear-gradient(180deg, rgba(201,169,97,0.12), rgba(107,31,45,0.05)); border: 1.5px solid var(--gold); border-radius: 12px; text-align: center; }
+  .building-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--brown-deep); }
+  .building-subtitle { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); font-style:italic; margin-bottom:8px; }
+  .building-art svg { width:100%; max-width:340px; height:auto; display:block; margin:0 auto; }
+  .building-caption { font-family:'Frank Ruhl Libre',serif; font-size:15px; color:var(--wine); font-weight:700; margin-top:8px; }
+  .building-stage { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown); margin-top:2px; }
+  @keyframes bldRise { from { opacity:0; } to { opacity:1; } }
+  .bld-stone-lit { animation: bldRise 0.5s ease both; }
+  @keyframes bldGlow { 0%,100%{ opacity:0.45; } 50%{ opacity:1; } }
+  .bld-glow { animation: bldGlow 2.6s ease-in-out infinite; }
+  @keyframes bldStar { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.18); } }
+  .bld-star { animation: bldStar 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 </style>
 </head>
 <body>
@@ -3201,6 +3213,14 @@
     <div class="st-row">
       <div class="st-card"><div class="st-label">🔥 רצף ימים</div><div class="st-value" id="streakVal">0</div><div class="st-sub">שיא: <span id="streakBest">0</span></div></div>
       <div class="st-card" id="targetCard"><div class="st-label">🎯 יעד יומי</div><div class="st-value" id="targetState">0/0</div><div class="st-target-bar"><div class="st-target-fill" id="targetFill"></div></div><button class="st-target-edit" id="targetEdit">שנה יעד</button></div>
+    </div>
+
+    <div class="building-section">
+      <div class="building-title">🏛️ הבניין שלך</div>
+      <div class="building-subtitle">כל יום שאתה צובר — אבן נוספת בבניין הגדול שלך</div>
+      <div class="building-art" id="buildingArt"></div>
+      <div class="building-caption" id="buildingCaption">—</div>
+      <div class="building-stage" id="buildingStage"></div>
     </div>
 
     <div class="partner-view" id="partnerView">
@@ -10379,6 +10399,58 @@ const TOTAL_OSHER = TEFILOT.length;
     reader.readAsText(file);
   }
 
+  // ===== "Your building" — a temple that grows one golden stone per active day =====
+  function bldStageName(days) {
+    if (days <= 0) return 'המגרש מוכן — התחל לבנות!';
+    if (days < 8) return 'יסודות';
+    if (days < 20) return 'הקירות עולים';
+    if (days < 40) return 'עמודים וגג';
+    if (days < 48) return 'בונים את הכיפה';
+    return '✦ הבניין שלם — וממשיך לזהור! ✦';
+  }
+  function buildingSVG(days) {
+    const COLS=8, ROWS=6, SW=30, GAP=3, SH=16, VG=3, startX=30, groundY=210, slots=COLS*ROWS;
+    const lit = Math.min(days, slots);
+    let stones='';
+    for (let i=0;i<slots;i++){
+      const r=Math.floor(i/COLS), c=i%COLS, x=startX+c*(SW+GAP), y=(groundY-2)-SH-r*(SH+VG);
+      if (i<lit){
+        const dl=Math.min(i*0.035,1.4).toFixed(2);
+        stones += '<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:'+dl+'s"/>'
+               +  '<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="4" rx="2" fill="#f0dca0" opacity="0.6" style="animation-delay:'+dl+'s"/>';
+      } else {
+        stones += '<rect x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2" fill="none" stroke="#b9a36a" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.35"/>';
+      }
+    }
+    const wallTop=(groundY-2)-SH-(ROWS-1)*(SH+VG);
+    let deco='';
+    if (days>=8){ deco += '<rect class="bld-stone-lit" x="12" y="'+wallTop+'" width="14" height="'+(groundY-wallTop)+'" rx="3" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:1.2s"/>'
+                       +  '<rect class="bld-stone-lit" x="294" y="'+wallTop+'" width="14" height="'+(groundY-wallTop)+'" rx="3" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.5" style="animation-delay:1.25s"/>'; }
+    if (days>=20){ const ry=wallTop-4; deco += '<polygon class="bld-stone-lit" points="6,'+ry+' 314,'+ry+' 160,'+(ry-46)+'" fill="url(#bldRoof)" stroke="#8a6e2f" stroke-width="0.6" style="animation-delay:1.3s"/>'; }
+    if (days>=40){ const ry=wallTop-50; deco += '<path class="bld-stone-lit" d="M138 '+ry+' Q160 '+(ry-28)+' 182 '+ry+' Z" fill="url(#bldStone)" stroke="#8a6e2f" stroke-width="0.6" style="animation-delay:1.4s"/>'; }
+    if (days>=48){ const sy=wallTop-60; deco += '<circle class="bld-glow" cx="160" cy="'+sy+'" r="28" fill="url(#bldGlowGrad)"/><text class="bld-star" x="160" y="'+(sy+10)+'" text-anchor="middle" font-size="32" fill="#e9c96a">✦</text>'; }
+    return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet">'
+      + '<defs><linearGradient id="bldStone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e6c878"/><stop offset="100%" stop-color="#b9912f"/></linearGradient>'
+      + '<linearGradient id="bldRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7a2330"/><stop offset="100%" stop-color="#5a1722"/></linearGradient>'
+      + '<radialGradient id="bldGlowGrad"><stop offset="0%" stop-color="#f5e3a8" stop-opacity="0.9"/><stop offset="100%" stop-color="#f5e3a8" stop-opacity="0"/></radialGradient></defs>'
+      + '<rect x="14" y="'+(groundY+8)+'" width="292" height="10" rx="3" fill="url(#bldStone)" opacity="0.85"/>'
+      + '<rect x="26" y="'+(groundY-2)+'" width="268" height="10" rx="2" fill="url(#bldStone)" opacity="0.7"/>'
+      + stones + deco + '</svg>';
+  }
+  let buildingLastDays = -1;
+  function renderBuilding() {
+    const art = document.getElementById('buildingArt'); if (!art) return;
+    const history = loadHistory(), today = getTodayDate();
+    const set = new Set(history.filter(h => h.score > 0).map(h => h.date));
+    if (calculateTodayScore() > 0) set.add(today);
+    const days = set.size;
+    const cap = document.getElementById('buildingCaption'); if (cap) cap.textContent = days > 0 ? ('נבנה ב-' + days + ' ימים') : 'עדיין לא התחלת לבנות';
+    const stg = document.getElementById('buildingStage'); if (stg) stg.textContent = bldStageName(days);
+    if (days === buildingLastDays && art.firstChild) return;
+    buildingLastDays = days;
+    art.innerHTML = buildingSVG(days);
+  }
+
   function renderScoreView() {
     if (!todayState.date) loadTodayState();
     // Check if date changed (passed midnight)
@@ -10422,7 +10494,7 @@ const TOTAL_OSHER = TEFILOT.length;
     renderGoals();
     renderPrivateReflection();
     renderBritLog();
-    try { renderHizuk(); renderStreakTarget(); checkScoreCelebrations(); } catch(e) {}
+    try { renderHizuk(); renderStreakTarget(); renderBuilding(); checkScoreCelebrations(); } catch(e) {}
   }
 
   // ============= PRIVATE REFLECTION (חשבון נפש) =============
