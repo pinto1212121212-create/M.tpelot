@@ -300,15 +300,15 @@
   .bc-need.ok { opacity:1; font-weight:700; background:rgba(201,169,97,0.15); }
   .bc-bar { height:6px; background:var(--parchment-dark); border-radius:3px; overflow:hidden; }
   .bc-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
-  .build-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:12px; }
-  .build-cell { background:var(--parchment-light); border:1.5px solid var(--brown-light); border-radius:10px; padding:6px 6px 7px; cursor:pointer; text-align:center; transition:all 0.15s; }
+  .build-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .build-cell { background:radial-gradient(ellipse at 50% 26%, #7a5d22 0%, #3a2c12 80%); border:2px solid #d9b24a; border-radius:14px; padding:8px 8px 9px; cursor:pointer; text-align:center; transition:all 0.18s; box-shadow:inset 0 1px 0 rgba(255,243,200,0.35), inset 0 0 22px rgba(0,0,0,0.5), 0 5px 16px rgba(0,0,0,0.42); }
   .build-cell:active { transform:scale(0.97); }
-  .build-cell.done { border-color:var(--gold-dark); box-shadow:0 0 12px rgba(201,169,97,0.55); background:linear-gradient(135deg,rgba(201,169,97,0.28),rgba(212,182,121,0.12)); }
+  .build-cell.done { border-color:#ffe9a8; box-shadow:inset 0 1px 0 rgba(255,243,200,0.5), inset 0 0 26px rgba(255,220,140,0.35), 0 0 20px rgba(201,169,97,0.75), 0 5px 16px rgba(0,0,0,0.42); }
   .build-cell svg { width:100%; height:auto; display:block; }
-  .build-cell .bc-nm { font-family:'Frank Ruhl Libre',serif; font-size:11.5px; font-weight:700; color:var(--brown-deep); margin-top:3px; line-height:1.15; }
-  .build-cell .bc-pc { font-size:10px; color:var(--wine); font-weight:700; }
-  .bm-art { text-align:center; margin-bottom:6px; }
-  .bm-art svg { width:62%; max-width:210px; height:auto; }
+  .build-cell .bc-nm { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; font-weight:700; color:#ffeec2; text-shadow:0 1px 3px rgba(0,0,0,0.7); margin-top:4px; line-height:1.15; }
+  .build-cell .bc-pc { font-size:11px; color:#ffd86a; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,0.6); }
+  .bm-art { text-align:center; margin-bottom:8px; background:radial-gradient(ellipse at 50% 28%, #7a5d22 0%, #2c2110 82%); border:2.5px solid #d9b24a; border-radius:16px; padding:12px 10px; box-shadow:inset 0 1px 0 rgba(255,243,200,0.4), inset 0 0 30px rgba(0,0,0,0.55); }
+  .bm-art svg { width:74%; max-width:240px; height:auto; }
   .bm-status { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:700; color:var(--wine); margin:6px 0 10px; font-size:15px; }
   .bm-row { display:flex; align-items:center; gap:8px; padding:8px 2px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; }
   .bm-ric { font-size:19px; width:24px; text-align:center; }
@@ -826,18 +826,24 @@
     let cy=y2, bands='';
     RESOURCES.forEach(function(r){ if(!b.cost[r.id])return; const v=Math.min(inv[r.id]||0,b.cost[r.id]); const h=total? v/total*box[3] : 0; if(h>0.3){ bands+='<rect x="'+box[0]+'" y="'+(cy-h).toFixed(1)+'" width="'+box[2]+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
     const st=loadInvest(); const done=buildingComplete(b,st);
-    const aura = done ? '<circle class="v-aura" cx="60" cy="62" r="56" fill="url(#glowG_'+id+')"/>' : '';
+    const aura = done ? '<circle class="v-aura" cx="60" cy="60" r="60" fill="url(#gl_'+id+')"/>' : '';
     const orn=(A.orn||'').replace(/@GG@/g,'url(#gg_'+id+')').replace(/@CG@/g,'url(#cg_'+id+')');
     const fx=(A.fx||'').replace(/@FG@/g,'url(#fg_'+id+')').replace(/@GG@/g,'url(#gg_'+id+')');
     return '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet"><defs>'
       +'<clipPath id="clip_'+id+'">'+A.silh+'</clipPath>'
-      +'<linearGradient id="gg_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f8e7a8"/><stop offset="48%" stop-color="#dcb650"/><stop offset="100%" stop-color="#a9802a"/></linearGradient>'
-      +'<linearGradient id="cg_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#eaa878"/><stop offset="100%" stop-color="#94552c"/></linearGradient>'
+      +'<linearGradient id="gg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#fff7da"/><stop offset="22%" stop-color="#f0d488"/><stop offset="45%" stop-color="#c89a34"/><stop offset="58%" stop-color="#f6e3a4"/><stop offset="74%" stop-color="#b07f24"/><stop offset="100%" stop-color="#6e4f18"/></linearGradient>'
+      +'<linearGradient id="cg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#f8caa0"/><stop offset="40%" stop-color="#c47a48"/><stop offset="60%" stop-color="#eaae80"/><stop offset="100%" stop-color="#764626"/></linearGradient>'
       +'<radialGradient id="fg_'+id+'"><stop offset="0%" stop-color="#fff3b0"/><stop offset="55%" stop-color="#ff9a3c"/><stop offset="100%" stop-color="#e2521a"/></radialGradient>'
-      +'<radialGradient id="glowG_'+id+'"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.9"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
-      +'</defs>'+aura
-      +'<g clip-path="url(#clip_'+id+')"><rect x="0" y="0" width="120" height="120" fill="#241d33" opacity="0.25"/>'+bands+'</g>'
-      +orn+fx+'</svg>';
+      +'<radialGradient id="gl_'+id+'"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.9"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
+      +'<linearGradient id="spec_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.5"/><stop offset="38%" stop-color="#fff" stop-opacity="0.07"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+      +'<linearGradient id="shd_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a1606" stop-opacity="0.55"/></linearGradient>'
+      +'<filter id="sh_'+id+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-color="#160c03" flood-opacity="0.55"/></filter>'
+      +'<filter id="bl_'+id+'"><feGaussianBlur stdDeviation="2.4"/></filter>'
+      +'</defs>'
+      +'<ellipse cx="60" cy="112" rx="38" ry="5" fill="#160c03" opacity="0.45" filter="url(#bl_'+id+')"/>'
+      +aura
+      +'<g clip-path="url(#clip_'+id+')"><rect x="0" y="0" width="120" height="120" fill="#2a2238"/>'+bands+'<rect x="0" y="0" width="120" height="120" fill="url(#shd_'+id+')"/><rect x="0" y="0" width="120" height="66" fill="url(#spec_'+id+')"/></g>'
+      +'<g filter="url(#sh_'+id+')">'+orn+'</g>'+fx+'</svg>';
   }
   function renderBank(avail){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(avail[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
   function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=BUILDINGS.map(function(b){ const inv=st[b.id]||{}; let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(inv[k]||0,b.cost[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
