@@ -3075,6 +3075,24 @@
   .bld-cloud2 { transform-box: view-box; animation: bldDrift2 68s linear infinite; }
   @keyframes bldShim { 0%{opacity:0; transform:translateX(-60px);} 6%{opacity:0.55;} 18%{opacity:0; transform:translateX(360px);} 100%{opacity:0; transform:translateX(360px);} }
   .bld-shimmer { transform-box: fill-box; animation: bldShim 7s ease-in-out infinite; }
+  .res-strip { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:12px; }
+  .res-chip { display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); border:1.5px solid; border-radius:14px; padding:3px 9px; }
+  .res-chip .res-ic { font-size:15px; }
+  .res-chip .res-ct { font-weight:900; font-family:'Frank Ruhl Libre',serif; font-size:15px; }
+  .res-chip .res-nm { font-size:10.5px; color:#e8d9b5; opacity:0.85; }
+  .buildpoints { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:15px; color:var(--gold-light); margin-top:12px; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
+  .build-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .build-card { background:var(--parchment-light); border:1.5px solid var(--brown-light); border-radius:10px; padding:9px; text-align:right; }
+  .build-card.done { border-color:var(--gold-dark); background:linear-gradient(135deg, rgba(201,169,97,0.30), rgba(212,182,121,0.12)); box-shadow:0 0 12px rgba(201,169,97,0.45); }
+  .bc-top { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .bc-icon { font-size:18px; }
+  .bc-name { flex:1; font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:13px; color:var(--brown-deep); }
+  .bc-pts { font-size:11px; font-weight:700; color:var(--wine); white-space:nowrap; }
+  .bc-cost { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
+  .bc-need { font-size:10.5px; border:1px solid; border-radius:8px; padding:1px 5px; color:var(--brown); opacity:0.6; }
+  .bc-need.ok { opacity:1; font-weight:700; background:rgba(201,169,97,0.15); }
+  .bc-bar { height:6px; background:var(--parchment-dark); border-radius:3px; overflow:hidden; }
+  .bc-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
 </style>
 </head>
 <body>
@@ -3232,10 +3250,13 @@
 
     <div class="building-section">
       <div class="building-title">🏛️ הבניין שלך</div>
-      <div class="building-subtitle">כל יום שאתה צובר — אבן נוספת בבניין הגדול שלך</div>
+      <div class="building-subtitle">אסוף משאבים מהמצוות ובנֵה את בית המקדש וקדשי ישראל</div>
       <div class="building-art" id="buildingArt"></div>
       <div class="building-caption" id="buildingCaption">—</div>
       <div class="building-stage" id="buildingStage"></div>
+    <div class="res-strip" id="resStrip"></div>
+    <div class="buildpoints" id="buildPoints"></div>
+    <div class="build-cards" id="buildCards"></div>
     </div>
 
     <div class="partner-view" id="partnerView">
@@ -9944,6 +9965,7 @@ const TOTAL_OSHER = TEFILOT.length;
     history.forEach(h => {
       if (h.date !== today) total += h.score;
     });
+    try { total += getBuildPoints(); } catch(e) {}
     return total;
   }
 
@@ -10423,53 +10445,79 @@ const TOTAL_OSHER = TEFILOT.length;
     if (days < 48) return 'בונים את הכיפה';
     return '✦ הבניין שלם — וממשיך לזהור! ✦';
   }
-  function buildingSVG(days) {
+  function buildingSVG(f) {
     const COLS=8, ROWS=6, SW=30, GAP=3, SH=16, VG=3, startX=30, groundY=205, slots=COLS*ROWS;
-    const lit=Math.min(days,slots);
+    const lit=Math.min(f.wall||0,slots);
     let stars=''; for(let i=0;i<16;i++){ const sx=(i*53%300)+8, sy=8+(i*29%64), rr=(i%3===0?1.5:0.9), d=(i*0.37%3).toFixed(2); stars+='<circle class="bld-star-tw" cx="'+sx+'" cy="'+sy+'" r="'+rr+'" fill="#fff7e0" style="animation-delay:'+d+'s"/>'; }
     let rays=''; for(let a=0;a<14;a++){ rays+='<polygon points="160,150 155,30 165,30" fill="#f4d98a" opacity="0.09" transform="rotate('+(a*360/14)+' 160 150)"/>'; }
     let stones=''; for(let i=0;i<slots;i++){ const r=Math.floor(i/COLS),c=i%COLS,x=startX+c*(SW+GAP),y=(groundY-2)-SH-r*(SH+VG); if(i<lit){ const dl=Math.min(i*0.04,1.6).toFixed(2); stones+='<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:'+dl+'s"/><rect class="bld-stone-lit" x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(SW-3)+'" height="3.4" rx="1.5" fill="#fce9b0" opacity="0.7" style="animation-delay:'+dl+'s"/>'; } else { stones+='<rect x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="none" stroke="#caa85f" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.28"/>'; } }
     const wallTop=(groundY-2)-SH-(ROWS-1)*(SH+VG);
     let deco='';
-    if(days>=8){ [16,290].forEach(function(x,idx){ deco+='<rect x="'+(x-3)+'" y="'+(groundY-2)+'" width="20" height="7" rx="1" fill="url(#stoneG)"/><rect class="bld-stone-lit" x="'+x+'" y="'+(wallTop-2)+'" width="14" height="'+(groundY-wallTop)+'" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.5" style="animation-delay:'+(1.3+idx*0.1)+'s"/><rect x="'+(x-3)+'" y="'+(wallTop-7)+'" width="20" height="7" rx="1" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.4"/>'; }); }
-    if(days>=20){ const ry=wallTop-8; deco+='<polygon class="bld-stone-lit" points="2,'+ry+' 318,'+ry+' 160,'+(ry-52)+'" fill="url(#roofG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:1.5s"/><circle class="bld-doorpulse" cx="160" cy="'+(ry-20)+'" r="7.5" fill="#fce9b0"/>'; }
-    if(days>=40){ const ry=wallTop-60; deco+='<path class="bld-stone-lit" d="M134 '+ry+' Q160 '+(ry-32)+' 186 '+ry+' Z" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:1.6s"/>'; }
-    if(days>=48){ const sy=wallTop-70; deco+='<circle class="bld-glow" cx="160" cy="'+sy+'" r="32" fill="url(#glowG)"/><text class="bld-star2" x="160" y="'+(sy+12)+'" text-anchor="middle" font-size="36" fill="#ffe9a8">✦</text>'; }
-    const door = days>=4 ? '<rect class="bld-doorpulse" x="146" y="'+(groundY-24)+'" width="28" height="24" rx="13" fill="url(#doorG)"/>' : '';
+    if(f.columns){ [16,290].forEach(function(x,idx){ deco+='<rect x="'+(x-3)+'" y="'+(groundY-2)+'" width="20" height="7" rx="1" fill="url(#stoneG)"/><rect class="bld-stone-lit" x="'+x+'" y="'+(wallTop-2)+'" width="14" height="'+(groundY-wallTop)+'" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.5" style="animation-delay:'+(0.2+idx*0.1)+'s"/><rect x="'+(x-3)+'" y="'+(wallTop-7)+'" width="20" height="7" rx="1" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.4"/>'; }); }
+    if(f.roof){ const ry=wallTop-8; deco+='<polygon class="bld-stone-lit" points="2,'+ry+' 318,'+ry+' 160,'+(ry-52)+'" fill="url(#roofG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:0.3s"/><circle class="bld-doorpulse" cx="160" cy="'+(ry-20)+'" r="7.5" fill="#fce9b0"/>'; }
+    if(f.dome){ const ry=wallTop-60; deco+='<path class="bld-stone-lit" d="M134 '+ry+' Q160 '+(ry-32)+' 186 '+ry+' Z" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:0.4s"/>'; }
+    if(f.star){ const sy=wallTop-70; deco+='<circle class="bld-glow" cx="160" cy="'+sy+'" r="32" fill="url(#glowG)"/><text class="bld-star2" x="160" y="'+(sy+12)+'" text-anchor="middle" font-size="36" fill="#ffe9a8">✦</text>'; }
+    const door = lit>=4 ? '<rect class="bld-doorpulse" x="146" y="'+(groundY-24)+'" width="28" height="24" rx="13" fill="url(#doorG)"/>' : '';
     let parts=''; for(let i=0;i<16;i++){ const px=36+(i*37%248), pd=(i*0.5%5).toFixed(2), pr=(i%2?1.7:1.1); parts+='<circle class="bld-spark" cx="'+px+'" cy="205" r="'+pr+'" fill="#ffe9a8" style="animation-delay:'+pd+'s"/>'; }
     const clouds='<g class="bld-cloud1" opacity="0.45"><ellipse cx="40" cy="50" rx="24" ry="8" fill="#fbe6c8"/><ellipse cx="60" cy="46" rx="16" ry="7" fill="#fbe6c8"/></g><g class="bld-cloud2" opacity="0.35"><ellipse cx="250" cy="34" rx="20" ry="7" fill="#fbe6c8"/><ellipse cx="234" cy="38" rx="13" ry="6" fill="#fbe6c8"/></g>';
     const shimmer='<rect class="bld-shimmer" x="0" y="40" width="46" height="180" fill="url(#shineG)"/>';
-    return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet">'
-     +'<defs>'
-     +'<linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2b3566"/><stop offset="55%" stop-color="#7a4450"/><stop offset="100%" stop-color="#e7b074"/></linearGradient>'
-     +'<radialGradient id="sunG"><stop offset="0%" stop-color="#ffe6a0" stop-opacity="0.85"/><stop offset="100%" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient>'
-     +'<linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d98e"/><stop offset="100%" stop-color="#c39a34"/></linearGradient>'
-     +'<linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a2734"/><stop offset="100%" stop-color="#561620"/></linearGradient>'
-     +'<radialGradient id="glowG"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.95"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
-     +'<linearGradient id="doorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff0bf"/><stop offset="100%" stop-color="#d8a84a"/></linearGradient>'
-     +'<linearGradient id="shineG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'
-     +'</defs>'
-     +'<rect x="0" y="0" width="320" height="250" fill="url(#skyG)"/>'
-     +stars+clouds
-     +'<g class="bld-rays">'+rays+'</g>'
-     +'<circle class="bld-glow" cx="160" cy="150" r="92" fill="url(#sunG)"/>'
-     +'<rect x="6" y="'+(groundY+5)+'" width="308" height="14" rx="3" fill="url(#stoneG)" opacity="0.9"/>'
-     +'<rect x="22" y="'+(groundY-2)+'" width="276" height="9" rx="2" fill="url(#stoneG)" opacity="0.8"/>'
-     +stones+deco+door+parts+shimmer
-     +'</svg>';
+    return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2b3566"/><stop offset="55%" stop-color="#7a4450"/><stop offset="100%" stop-color="#e7b074"/></linearGradient><radialGradient id="sunG"><stop offset="0%" stop-color="#ffe6a0" stop-opacity="0.85"/><stop offset="100%" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient><linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d98e"/><stop offset="100%" stop-color="#c39a34"/></linearGradient><linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a2734"/><stop offset="100%" stop-color="#561620"/></linearGradient><radialGradient id="glowG"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.95"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient><linearGradient id="doorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff0bf"/><stop offset="100%" stop-color="#d8a84a"/></linearGradient><linearGradient id="shineG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="0" y="0" width="320" height="250" fill="url(#skyG)"/>'+stars+clouds+'<g class="bld-rays">'+rays+'</g><circle class="bld-glow" cx="160" cy="150" r="92" fill="url(#sunG)"/><rect x="6" y="'+(groundY+5)+'" width="308" height="14" rx="3" fill="url(#stoneG)" opacity="0.9"/><rect x="22" y="'+(groundY-2)+'" width="276" height="9" rx="2" fill="url(#stoneG)" opacity="0.8"/>'+stones+deco+door+parts+shimmer+'</svg>';
   }
-  let buildingLastDays = -1;
-  function renderBuilding() {
-    const art = document.getElementById('buildingArt'); if (!art) return;
-    const history = loadHistory(), today = getTodayDate();
-    const set = new Set(history.filter(h => h.score > 0).map(h => h.date));
-    if (calculateTodayScore() > 0) set.add(today);
-    const days = set.size;
-    const cap = document.getElementById('buildingCaption'); if (cap) cap.textContent = days > 0 ? ('נבנה ב-' + days + ' ימים') : 'עדיין לא התחלת לבנות';
-    const stg = document.getElementById('buildingStage'); if (stg) stg.textContent = bldStageName(days);
-    if (days === buildingLastDays && art.firstChild) return;
-    buildingLastDays = days;
-    art.innerHTML = buildingSVG(days);
+  let _bgLastSig='', _bgLastBP=-1;
+  const RESOURCES=[
+    {id:'boker',name:'שחרית',icon:'☀️',color:'#e0a72a'},
+    {id:'tzohoraim',name:'מנחה',icon:'🌤️',color:'#d9772a'},
+    {id:'erev',name:'ערבית',icon:'🌙',color:'#7a6ad0'},
+    {id:'torah',name:'תורה',icon:'📖',color:'#caa85f'},
+    {id:'kedusha',name:'קדושה',icon:'🛡️',color:'#3ab0aa'},
+    {id:'koach',name:'כוח',icon:'💪',color:'#4aa85a'}
+  ];
+  const RES_BY_ID={shacharit:'boker',mincha:'tzohoraim',arvit:'erev',brit:'kedusha',shiur:'torah',kosher:'koach',tal_tefila:'boker',tal_seder:'torah',tal_kosher:'koach'};
+  function resForMitzva(m){ if(RES_BY_ID[m.id])return RES_BY_ID[m.id]; const n=m.name||''; if(/שחרית|שחר/.test(n))return 'boker'; if(/מנחה|צהר/.test(n))return 'tzohoraim'; if(/ערבית|ערב|לילה|שמע/.test(n))return 'erev'; if(/תורה|לימוד|שיעור|דף|משני|הלכה|תהיל|מוסר|חסידות/.test(n))return 'torah'; if(/ברית|נקי|עיני|לשון|כעס|מידות|קדוש|צניע/.test(n))return 'kedusha'; if(/כושר|ספורט|בריא|מים|שינ|אכיל|סדר/.test(n))return 'koach'; if(/תפיל|ברכ/.test(n))return 'boker'; return 'torah'; }
+  function earnedResources(){ const res={}; RESOURCES.forEach(function(r){res[r.id]=0;}); const mz=(typeof MITZVOT!=='undefined'&&MITZVOT)?MITZVOT:[]; function add(items){ if(!items)return; mz.forEach(function(m){ const it=items[m.id]; if(it&&it.done){ const rid=resForMitzva(m); res[rid]=(res[rid]||0)+1; } }); } let hist=[]; try{ hist=loadHistory(); }catch(e){} hist.forEach(function(h){ add(h.items); }); const today=getTodayDate(); if(!hist.some(function(h){return h.date===today;})){ try{ add(todayState.items); }catch(e){} } return res; }
+  const BUILDINGS=[
+    {id:'menora',name:'מנורת הזהב',icon:'🕎',cost:{boker:3,torah:3},points:50},
+    {id:'shulchan',name:'שולחן לחם הפנים',icon:'🍞',cost:{tzohoraim:4,torah:3},points:60},
+    {id:'mizbeach',name:'המזבח',icon:'🔥',cost:{boker:5,tzohoraim:4,erev:4},points:90},
+    {id:'aron',name:'ארון הקודש',icon:'📜',cost:{kedusha:5,torah:5},points:90},
+    {id:'sukkah',name:'הסוכה',icon:'🌿',cost:{torah:5,koach:4},points:70},
+    {id:'sefer',name:'ספר תורה',icon:'✍️',cost:{torah:12},points:120},
+    {id:'knesset',name:'בית הכנסת',icon:'🏠',cost:{boker:8,tzohoraim:8,erev:8},points:160},
+    {id:'choma',name:'חומת ירושלים',icon:'🧱',cost:{koach:10,kedusha:8},points:160},
+    {id:'mikdash',name:'בית המקדש',icon:'🏛️',cost:{boker:14,tzohoraim:12,erev:12,torah:14,kedusha:12,koach:10},points:600}
+  ];
+  function buildingDone(b,res){ return Object.keys(b.cost).every(function(k){ return (res[k]||0)>=b.cost[k]; }); }
+  function getBuildPoints(){ const res=earnedResources(); let p=0; BUILDINGS.forEach(function(b){ if(buildingDone(b,res)) p+=b.points; }); return p; }
+  function renderResStrip(res){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(res[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
+  function renderBuildCards(res){
+    const el=document.getElementById('buildCards'); if(!el)return;
+    const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp;
+    if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 השלמת מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} }
+    _bgLastBP=bp;
+    el.innerHTML=BUILDINGS.map(function(b){
+      const done=buildingDone(b,res);
+      const cost=Object.keys(b.cost).map(function(k){ const r=RESOURCES.find(function(x){return x.id===k;}); const have=res[k]||0, need=b.cost[k], ok=have>=need; return '<span class="bc-need'+(ok?' ok':'')+'" style="border-color:'+r.color+'">'+r.icon+' '+Math.min(have,need)+'/'+need+'</span>'; }).join('');
+      let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(res[k]||0,b.cost[k]); });
+      const pct=sn?Math.round(sh/sn*100):0;
+      return '<div class="build-card'+(done?' done':'')+'"><div class="bc-top"><span class="bc-icon">'+b.icon+'</span><span class="bc-name">'+b.name+'</span><span class="bc-pts">'+(done?'✓ +'+b.points:b.points+' נק׳')+'</span></div><div class="bc-cost">'+cost+'</div><div class="bc-bar"><div class="bc-fill" style="width:'+pct+'%"></div></div></div>';
+    }).join('');
+  }
+  function renderBuilding(){
+    const art=document.getElementById('buildingArt'); if(!art)return;
+    const res=earnedResources();
+    const tefilot=(res.boker||0)+(res.tzohoraim||0)+(res.erev||0);
+    const flags={ wall:Math.min(tefilot,48), columns:(res.koach||0)>=6, roof:(res.torah||0)>=8, dome:(res.kedusha||0)>=10 };
+    flags.star = flags.wall>=48 && flags.columns && flags.roof && flags.dome;
+    const missing=[];
+    if(flags.wall<48) missing.push('עוד תפילות לקירות');
+    if(!flags.columns) missing.push('💪 כוח לעמודים');
+    if(!flags.roof) missing.push('📖 תורה לגג');
+    if(!flags.dome) missing.push('🛡️ קדושה לכיפה');
+    const cap=document.getElementById('buildingCaption'); if(cap) cap.textContent='קירות: '+flags.wall+'/48 אבני תפילה';
+    const stg=document.getElementById('buildingStage'); if(stg) stg.textContent = flags.star ? '✦ בית המקדש שלם — תפארת! ✦' : ('חסר: '+missing.slice(0,2).join('  ·  '));
+    const sig=JSON.stringify(flags);
+    if(sig!==_bgLastSig || !art.firstChild){ _bgLastSig=sig; art.innerHTML=buildingSVG(flags); }
+    renderResStrip(res); renderBuildCards(res);
   }
 
   function renderScoreView() {
