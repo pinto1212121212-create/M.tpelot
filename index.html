@@ -10274,8 +10274,13 @@ const TOTAL_OSHER = TEFILOT.length;
       if (!data) { if (scoreEl) scoreEl.textContent = '0'; if (histEl) histEl.innerHTML = 'אין נתונים עדיין.'; if (updEl) updEl.textContent = '—'; return; }
       let score = 0;
       const st = data.score_today;
-      if (st && st.date === getTodayDate() && st.items) {
-        MITZVOT_PINTO.forEach(m => { score += mitzvaItemPoints(m, st.items[m.id]); });
+      const stIsToday = st && st.date === getTodayDate();
+      if (typeof data.today_score === 'number' && stIsToday) {
+        // Yosef's page sends a precomputed score (handles his custom mitzvot).
+        score = data.today_score;
+      } else if (stIsToday && st.items) {
+        const defs = Array.isArray(data.mitzvot) ? data.mitzvot : MITZVOT_PINTO;
+        defs.forEach(m => { score += mitzvaItemPoints(m, st.items[m.id]); });
         score -= (st.penalty || 0);
       }
       if (scoreEl) scoreEl.textContent = score;
