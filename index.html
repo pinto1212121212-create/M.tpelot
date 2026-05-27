@@ -3414,7 +3414,7 @@
       <div class="kupah-title">🪙 קופת הפרסים שלי</div>
       <div class="kupah-amount" id="kupahAmount">₪0</div>
       <div class="kupah-sub" id="kupahSub">כל 10 נקודות = ₪2</div>
-      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">📲 פתח ביט והפקד</button><button class="kupah-reset" id="kupahReset">✓ קניתי פרס</button></div>
+      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">📲 פתח ביט והפקד</button><button class="kupah-reset" id="kupahReset">✓ הפקדתי</button></div>
       <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור קופה ויחס</button>
     </div>
 
@@ -10615,8 +10615,8 @@ const TOTAL_OSHER = TEFILOT.length;
   function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem(pk('tefilot_kupah_v1'))||'{}'); return Object.assign({rateP:10,rateS:2,paid:0,link:''}, (o&&typeof o==='object')?o:{}); }catch(e){ return {rateP:10,rateS:2,paid:0,link:''}; } }
   function saveKupah(k){ try{ localStorage.setItem(pk('tefilot_kupah_v1'), JSON.stringify(k)); }catch(e){} }
   function kupahAccrued(k){ let pts=0; try{ pts=getTotalLifetimePoints(); }catch(e){} return Math.floor(pts/(k.rateP||10))*(k.rateS||2); }
-  function kupahPay(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); try{ if(navigator.clipboard) navigator.clipboard.writeText(String(bal)); }catch(e){} alert('הפקד ₪'+bal+' לכיס "קופת הפרסים" בביט (כיס חיסכון יומיומי). הסכום הועתק.'); window.open(k.link || 'https://www.bitpay.co.il','_blank'); }
-  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן שקנית פרס ב-₪'+bal+', ולהפחית מהקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
+  function kupahPay(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); try{ if(navigator.clipboard) navigator.clipboard.writeText(String(bal)); }catch(e){} alert('הפקד ₪'+bal+' לכיס "קופת הפרסים" בביט (כיס חיסכון יומיומי). הסכום הועתק — הדבק אותו בביט.'); if(k.link){ window.open(k.link,'_blank'); return; } try{ window.location.href='intent://#Intent;package=com.bnhp.payments.paymentsapp;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bnhp.payments.paymentsapp;end'; }catch(e){ window.open('https://play.google.com/store/apps/details?id=com.bnhp.payments.paymentsapp','_blank'); } }
+  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן שהפקדת ₪'+bal+' לביט, ולאפס את הקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
   function kupahCfg(){ const k=loadKupah(); const link=prompt('הדבק קישור תשלום (Bit / PayBox / נדרים פלוס):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות לחסוך?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
   function renderKupah(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); const a=document.getElementById('kupahAmount'); if(a) a.textContent='₪'+bal; const s=document.getElementById('kupahSub'); if(s) s.textContent='למימוש הפרסים · כל '+k.rateP+' נק׳ = ₪'+k.rateS+(k.link?'':' · (הגדר קישור קופה)'); const p=document.getElementById('kupahPay'); if(p) p.onclick=kupahPay; const r=document.getElementById('kupahReset'); if(r) r.onclick=kupahReset; const c=document.getElementById('kupahCfg'); if(c) c.onclick=kupahCfg; }
 
