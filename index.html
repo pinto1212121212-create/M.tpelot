@@ -3093,6 +3093,23 @@
   .bc-need.ok { opacity:1; font-weight:700; background:rgba(201,169,97,0.15); }
   .bc-bar { height:6px; background:var(--parchment-dark); border-radius:3px; overflow:hidden; }
   .bc-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
+  .build-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:12px; }
+  .build-cell { background:var(--parchment-light); border:1.5px solid var(--brown-light); border-radius:10px; padding:6px 6px 7px; cursor:pointer; text-align:center; transition:all 0.15s; }
+  .build-cell:active { transform:scale(0.97); }
+  .build-cell.done { border-color:var(--gold-dark); box-shadow:0 0 12px rgba(201,169,97,0.55); background:linear-gradient(135deg,rgba(201,169,97,0.28),rgba(212,182,121,0.12)); }
+  .build-cell svg { width:100%; height:auto; display:block; }
+  .build-cell .bc-nm { font-family:'Frank Ruhl Libre',serif; font-size:11.5px; font-weight:700; color:var(--brown-deep); margin-top:3px; line-height:1.15; }
+  .build-cell .bc-pc { font-size:10px; color:var(--wine); font-weight:700; }
+  .bm-art { text-align:center; margin-bottom:6px; }
+  .bm-art svg { width:62%; max-width:210px; height:auto; }
+  .bm-status { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:700; color:var(--wine); margin:6px 0 10px; font-size:15px; }
+  .bm-row { display:flex; align-items:center; gap:8px; padding:8px 2px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; }
+  .bm-ric { font-size:19px; width:24px; text-align:center; }
+  .bm-rnm { flex:1; font-size:14px; color:var(--brown-deep); }
+  .bm-rct { font-weight:900; color:var(--wine); font-size:15px; min-width:42px; text-align:center; }
+  .bm-ravail { font-size:10.5px; color:var(--brown-light); min-width:64px; }
+  .bm-plus,.bm-minus { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--gold-dark); background:var(--parchment); font-size:18px; font-weight:700; cursor:pointer; color:var(--brown-deep); line-height:1; }
+  .bm-plus:disabled,.bm-minus:disabled { opacity:0.3; cursor:default; }
 </style>
 </head>
 <body>
@@ -3251,12 +3268,9 @@
     <div class="building-section">
       <div class="building-title">🏛️ הבניין שלך</div>
       <div class="building-subtitle">אסוף משאבים מהמצוות ובנֵה את בית המקדש וקדשי ישראל</div>
-      <div class="building-art" id="buildingArt"></div>
-      <div class="building-caption" id="buildingCaption">—</div>
-      <div class="building-stage" id="buildingStage"></div>
     <div class="res-strip" id="resStrip"></div>
     <div class="buildpoints" id="buildPoints"></div>
-    <div class="build-cards" id="buildCards"></div>
+    <div class="build-grid" id="buildGrid"></div>
     </div>
 
     <div class="partner-view" id="partnerView">
@@ -10463,7 +10477,7 @@ const TOTAL_OSHER = TEFILOT.length;
     const shimmer='<rect class="bld-shimmer" x="0" y="40" width="46" height="180" fill="url(#shineG)"/>';
     return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2b3566"/><stop offset="55%" stop-color="#7a4450"/><stop offset="100%" stop-color="#e7b074"/></linearGradient><radialGradient id="sunG"><stop offset="0%" stop-color="#ffe6a0" stop-opacity="0.85"/><stop offset="100%" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient><linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d98e"/><stop offset="100%" stop-color="#c39a34"/></linearGradient><linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a2734"/><stop offset="100%" stop-color="#561620"/></linearGradient><radialGradient id="glowG"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.95"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient><linearGradient id="doorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff0bf"/><stop offset="100%" stop-color="#d8a84a"/></linearGradient><linearGradient id="shineG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="0" y="0" width="320" height="250" fill="url(#skyG)"/>'+stars+clouds+'<g class="bld-rays">'+rays+'</g><circle class="bld-glow" cx="160" cy="150" r="92" fill="url(#sunG)"/><rect x="6" y="'+(groundY+5)+'" width="308" height="14" rx="3" fill="url(#stoneG)" opacity="0.9"/><rect x="22" y="'+(groundY-2)+'" width="276" height="9" rx="2" fill="url(#stoneG)" opacity="0.8"/>'+stones+deco+door+parts+shimmer+'</svg>';
   }
-  let _bgLastSig='', _bgLastBP=-1;
+  let _bgLastSig='', _bgLastBP=-1, currentBuildId=null;
   const RESOURCES=[
     {id:'boker',name:'שחרית',icon:'☀️',color:'#e0a72a'},
     {id:'tzohoraim',name:'מנחה',icon:'🌤️',color:'#d9772a'},
@@ -10476,49 +10490,47 @@ const TOTAL_OSHER = TEFILOT.length;
   function resForMitzva(m){ if(RES_BY_ID[m.id])return RES_BY_ID[m.id]; const n=m.name||''; if(/שחרית|שחר/.test(n))return 'boker'; if(/מנחה|צהר/.test(n))return 'tzohoraim'; if(/ערבית|ערב|לילה|שמע/.test(n))return 'erev'; if(/תורה|לימוד|שיעור|דף|משני|הלכה|תהיל|מוסר|חסידות/.test(n))return 'torah'; if(/ברית|נקי|עיני|לשון|כעס|מידות|קדוש|צניע/.test(n))return 'kedusha'; if(/כושר|ספורט|בריא|מים|שינ|אכיל|סדר/.test(n))return 'koach'; if(/תפיל|ברכ/.test(n))return 'boker'; return 'torah'; }
   function earnedResources(){ const res={}; RESOURCES.forEach(function(r){res[r.id]=0;}); const mz=(typeof MITZVOT!=='undefined'&&MITZVOT)?MITZVOT:[]; function add(items){ if(!items)return; mz.forEach(function(m){ const it=items[m.id]; if(it&&it.done){ const rid=resForMitzva(m); res[rid]=(res[rid]||0)+1; } }); } let hist=[]; try{ hist=loadHistory(); }catch(e){} hist.forEach(function(h){ add(h.items); }); const today=getTodayDate(); if(!hist.some(function(h){return h.date===today;})){ try{ add(todayState.items); }catch(e){} } return res; }
   const BUILDINGS=[
-    {id:'menora',name:'מנורת הזהב',icon:'🕎',cost:{boker:3,torah:3},points:50},
-    {id:'shulchan',name:'שולחן לחם הפנים',icon:'🍞',cost:{tzohoraim:4,torah:3},points:60},
-    {id:'mizbeach',name:'המזבח',icon:'🔥',cost:{boker:5,tzohoraim:4,erev:4},points:90},
-    {id:'aron',name:'ארון הקודש',icon:'📜',cost:{kedusha:5,torah:5},points:90},
-    {id:'sukkah',name:'הסוכה',icon:'🌿',cost:{torah:5,koach:4},points:70},
-    {id:'sefer',name:'ספר תורה',icon:'✍️',cost:{torah:12},points:120},
-    {id:'knesset',name:'בית הכנסת',icon:'🏠',cost:{boker:8,tzohoraim:8,erev:8},points:160},
-    {id:'choma',name:'חומת ירושלים',icon:'🧱',cost:{koach:10,kedusha:8},points:160},
-    {id:'mikdash',name:'בית המקדש',icon:'🏛️',cost:{boker:14,tzohoraim:12,erev:12,torah:14,kedusha:12,koach:10},points:600}
+    {id:'menora',name:'מנורת הזהב',cost:{boker:4,torah:4},points:60},
+    {id:'shulchan',name:'שולחן לחם הפנים',cost:{tzohoraim:5,torah:4},points:70},
+    {id:'mizbeach',name:'המזבח',cost:{boker:5,tzohoraim:4,erev:4},points:90},
+    {id:'aron',name:'ארון הקודש',cost:{kedusha:6,torah:6},points:110},
+    {id:'sukkah',name:'הסוכה',cost:{torah:5,koach:5},points:80},
+    {id:'sefer',name:'ספר תורה',cost:{torah:14},points:140},
+    {id:'knesset',name:'בית הכנסת',cost:{boker:8,tzohoraim:8,erev:8},points:170},
+    {id:'choma',name:'חומת ירושלים',cost:{koach:12,kedusha:8},points:170},
+    {id:'mikdash',name:'בית המקדש',cost:{boker:14,tzohoraim:12,erev:12,torah:14,kedusha:12,koach:10},points:600}
   ];
-  function buildingDone(b,res){ return Object.keys(b.cost).every(function(k){ return (res[k]||0)>=b.cost[k]; }); }
-  function getBuildPoints(){ const res=earnedResources(); let p=0; BUILDINGS.forEach(function(b){ if(buildingDone(b,res)) p+=b.points; }); return p; }
-  function renderResStrip(res){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(res[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
-  function renderBuildCards(res){
-    const el=document.getElementById('buildCards'); if(!el)return;
-    const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp;
-    if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 השלמת מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} }
-    _bgLastBP=bp;
-    el.innerHTML=BUILDINGS.map(function(b){
-      const done=buildingDone(b,res);
-      const cost=Object.keys(b.cost).map(function(k){ const r=RESOURCES.find(function(x){return x.id===k;}); const have=res[k]||0, need=b.cost[k], ok=have>=need; return '<span class="bc-need'+(ok?' ok':'')+'" style="border-color:'+r.color+'">'+r.icon+' '+Math.min(have,need)+'/'+need+'</span>'; }).join('');
-      let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(res[k]||0,b.cost[k]); });
-      const pct=sn?Math.round(sh/sn*100):0;
-      return '<div class="build-card'+(done?' done':'')+'"><div class="bc-top"><span class="bc-icon">'+b.icon+'</span><span class="bc-name">'+b.name+'</span><span class="bc-pts">'+(done?'✓ +'+b.points:b.points+' נק׳')+'</span></div><div class="bc-cost">'+cost+'</div><div class="bc-bar"><div class="bc-fill" style="width:'+pct+'%"></div></div></div>';
-    }).join('');
+  const BUILDING_ART={'menora':{silh:'<rect x="55" y="38" width="8" height="64" rx="2"/><rect x="44" y="100" width="32" height="7" rx="2"/><polygon points="48,100 72,100 65,92 55,92"/><path d="M24,62 Q60,22 96,62 L96,69 Q60,32 24,69 Z"/><path d="M38,60 Q60,30 82,60 L82,67 Q60,40 38,67 Z"/><rect x="20" y="30" width="8" height="12" rx="2"/><rect x="34" y="30" width="8" height="12" rx="2"/><rect x="48" y="30" width="8" height="12" rx="2"/><rect x="62" y="30" width="8" height="12" rx="2"/><rect x="76" y="30" width="8" height="12" rx="2"/><rect x="90" y="30" width="8" height="12" rx="2"/><rect x="55" y="28" width="8" height="14" rx="2"/>',detail:'<g fill="#ff9a3c"><circle cx="24" cy="26" r="3"/><circle cx="38" cy="26" r="3"/><circle cx="52" cy="26" r="3"/><circle cx="59" cy="24" r="3.2"/><circle cx="66" cy="26" r="3"/><circle cx="80" cy="26" r="3"/><circle cx="94" cy="26" r="3"/></g>'},'shulchan':{silh:'<rect x="26" y="64" width="68" height="10" rx="2"/><rect x="30" y="74" width="8" height="32"/><rect x="82" y="74" width="8" height="32"/><rect x="40" y="44" width="16" height="20" rx="2"/><rect x="64" y="44" width="16" height="20" rx="2"/>',detail:'<g stroke="#7d6328" stroke-width="1" opacity="0.5"><line x1="40" y1="51" x2="56" y2="51"/><line x1="40" y1="57" x2="56" y2="57"/><line x1="64" y1="51" x2="80" y2="51"/><line x1="64" y1="57" x2="80" y2="57"/></g>'},'mizbeach':{silh:'<rect x="28" y="84" width="64" height="22" rx="2"/><rect x="34" y="62" width="52" height="22" rx="2"/><polygon points="32,62 44,62 44,52 34,52"/><polygon points="76,62 88,62 86,52 76,52"/>',detail:'<path d="M55 52 Q60 40 65 52 Q70 46 60 36 Q50 46 55 52 Z" fill="#ff9a3c"/>'},'aron':{silh:'<rect x="36" y="58" width="48" height="48" rx="3"/><rect x="26" y="64" width="68" height="5" rx="2"/><rect x="26" y="96" width="68" height="5" rx="2"/><path d="M48,58 Q42,36 60,46 Q78,36 72,58 Z"/>',detail:'<g stroke="#7d6328" stroke-width="1" opacity="0.45" fill="none"><path d="M52 54 Q56 46 60 50"/><path d="M68 54 Q64 46 60 50"/></g>'},'sukkah':{silh:'<rect x="36" y="62" width="48" height="44"/><polygon points="26,62 94,62 80,48 40,48"/>',detail:'<g stroke="#5a7a3a" stroke-width="1.4" opacity="0.6"><line x1="40" y1="48" x2="34" y2="62"/><line x1="50" y1="48" x2="46" y2="62"/><line x1="60" y1="48" x2="60" y2="62"/><line x1="70" y1="48" x2="74" y2="62"/><line x1="80" y1="48" x2="86" y2="62"/></g><rect x="54" y="80" width="14" height="26" fill="none" stroke="#7d6328" stroke-width="1.2"/>'},'sefer':{silh:'<rect x="32" y="32" width="12" height="58" rx="6"/><rect x="76" y="32" width="12" height="58" rx="6"/><rect x="44" y="38" width="32" height="46"/><rect x="34" y="24" width="8" height="10" rx="3"/><rect x="78" y="24" width="8" height="10" rx="3"/><rect x="34" y="88" width="8" height="10" rx="3"/><rect x="78" y="88" width="8" height="10" rx="3"/>',detail:'<g stroke="#7d6328" stroke-width="1" opacity="0.5"><line x1="48" y1="46" x2="72" y2="46"/><line x1="48" y1="52" x2="72" y2="52"/><line x1="48" y1="58" x2="72" y2="58"/><line x1="48" y1="64" x2="72" y2="64"/><line x1="48" y1="70" x2="72" y2="70"/></g>'},'knesset':{silh:'<rect x="30" y="54" width="60" height="52"/><polygon points="26,54 94,54 60,34"/>',detail:'<g fill="none" stroke="#7d6328" stroke-width="1.3" opacity="0.55"><path d="M40 106 L40 78 Q40 70 48 70 Q56 70 56 78 L56 106"/><path d="M64 92 Q64 84 72 84 Q80 84 80 92 L80 106 L64 106 Z"/></g><rect x="55" y="38" width="10" height="12" fill="none" stroke="#7d6328" stroke-width="1"/>'},'choma':{silh:'<rect x="22" y="60" width="76" height="46"/><rect x="22" y="52" width="12" height="9"/><rect x="38" y="52" width="12" height="9"/><rect x="54" y="52" width="12" height="9"/><rect x="70" y="52" width="12" height="9"/><rect x="86" y="52" width="12" height="9"/>',detail:'<path d="M50 106 L50 84 Q60 74 70 84 L70 106 Z" fill="none" stroke="#7d6328" stroke-width="1.3" opacity="0.6"/><g stroke="#7d6328" stroke-width="0.8" opacity="0.4"><line x1="22" y1="72" x2="98" y2="72"/><line x1="22" y1="84" x2="98" y2="84"/><line x1="22" y1="96" x2="98" y2="96"/></g>'},'mikdash':{silh:'<rect x="16" y="98" width="88" height="9" rx="1"/><rect x="22" y="92" width="76" height="7"/><rect x="26" y="50" width="68" height="44"/><polygon points="18,50 102,50 60,26"/>',detail:'<g stroke="#7d6328" stroke-width="1.2" opacity="0.5"><line x1="36" y1="50" x2="36" y2="92"/><line x1="50" y1="50" x2="50" y2="92"/><line x1="70" y1="50" x2="70" y2="92"/><line x1="84" y1="50" x2="84" y2="92"/></g><path d="M54 92 L54 70 Q60 62 66 70 L66 92 Z" fill="none" stroke="#7d6328" stroke-width="1.2" opacity="0.6"/>'}};
+  const INV_KEY=pk('tefilot_bg_invest_v1');
+  function loadInvest(){ try{ const r=localStorage.getItem(INV_KEY); const o=r?JSON.parse(r):{}; return (o&&typeof o==='object')?o:{}; }catch(e){ return {}; } }
+  function saveInvest(st){ try{ localStorage.setItem(INV_KEY, JSON.stringify(st)); }catch(e){} }
+  function invObj(st,id){ if(!st[id]) st[id]={}; return st[id]; }
+  function availableRes(){ const earned=earnedResources(); const st=loadInvest(); const avail={}; RESOURCES.forEach(function(r){ avail[r.id]=earned[r.id]||0; }); Object.keys(st).forEach(function(bid){ Object.keys(st[bid]).forEach(function(k){ avail[k]=(avail[k]||0)-(st[bid][k]||0); }); }); RESOURCES.forEach(function(r){ if(avail[r.id]<0)avail[r.id]=0; }); return avail; }
+  function buildingComplete(b,st){ const inv=st[b.id]||{}; return Object.keys(b.cost).every(function(k){ return (inv[k]||0)>=b.cost[k]; }); }
+  function getBuildPoints(){ const st=loadInvest(); let p=0; BUILDINGS.forEach(function(b){ if(buildingComplete(b,st)) p+=b.points; }); return p; }
+  function buildingArtSVG(b, inv){
+    const box={x:14,y:16,w:92,h:92}, y2=box.y+box.h; let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
+    let cy=y2, bands='';
+    RESOURCES.forEach(function(r){ if(!b.cost[r.id])return; const v=Math.min(inv[r.id]||0,b.cost[r.id]); const h=total? v/total*box.h : 0; if(h>0.3){ bands+='<rect x="'+box.x+'" y="'+(cy-h).toFixed(1)+'" width="'+box.w+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
+    const art=BUILDING_ART[b.id]||{silh:'<rect x="30" y="30" width="60" height="76" rx="4"/>',detail:''};
+    return '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet"><defs><clipPath id="clip_'+b.id+'">'+art.silh+'</clipPath></defs>'
+      +'<g clip-path="url(#clip_'+b.id+')"><rect x="0" y="0" width="120" height="120" fill="#241d33" opacity="0.22"/>'+bands+'</g>'
+      +'<g fill="none" stroke="#caa85f" stroke-width="2.2" stroke-linejoin="round">'+art.silh+'</g>'+(art.detail||'')+'</svg>';
   }
-  function renderBuilding(){
-    const art=document.getElementById('buildingArt'); if(!art)return;
-    const res=earnedResources();
-    const tefilot=(res.boker||0)+(res.tzohoraim||0)+(res.erev||0);
-    const flags={ wall:Math.min(tefilot,48), columns:(res.koach||0)>=6, roof:(res.torah||0)>=8, dome:(res.kedusha||0)>=10 };
-    flags.star = flags.wall>=48 && flags.columns && flags.roof && flags.dome;
-    const missing=[];
-    if(flags.wall<48) missing.push('עוד תפילות לקירות');
-    if(!flags.columns) missing.push('💪 כוח לעמודים');
-    if(!flags.roof) missing.push('📖 תורה לגג');
-    if(!flags.dome) missing.push('🛡️ קדושה לכיפה');
-    const cap=document.getElementById('buildingCaption'); if(cap) cap.textContent='קירות: '+flags.wall+'/48 אבני תפילה';
-    const stg=document.getElementById('buildingStage'); if(stg) stg.textContent = flags.star ? '✦ בית המקדש שלם — תפארת! ✦' : ('חסר: '+missing.slice(0,2).join('  ·  '));
-    const sig=JSON.stringify(flags);
-    if(sig!==_bgLastSig || !art.firstChild){ _bgLastSig=sig; art.innerHTML=buildingSVG(flags); }
-    renderResStrip(res); renderBuildCards(res);
+  function renderBank(avail){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(avail[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
+  function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=BUILDINGS.map(function(b){ const inv=st[b.id]||{}; let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(inv[k]||0,b.cost[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
+  function openBuildModal(id){ currentBuildId=id; const m=document.getElementById('buildModal'); if(!m)return; m.classList.add('active'); m.onclick=function(e){ if(e.target===m) m.classList.remove('active'); }; const cl=document.getElementById('bmClose'); if(cl) cl.onclick=function(){ m.classList.remove('active'); }; const ia=document.getElementById('bmInvestAll'); if(ia) ia.onclick=function(){ investMax(id); }; const wd=document.getElementById('bmWithdraw'); if(wd) wd.onclick=function(){ withdrawAll(id); }; renderBuildModal(); }
+  function renderBuildModal(){ if(!currentBuildId)return; const b=BUILDINGS.find(function(x){return x.id===currentBuildId;}); if(!b)return; const st=loadInvest(); const inv=st[b.id]||{}; const avail=availableRes(); const done=buildingComplete(b,st);
+    const nm=document.getElementById('bmName'); if(nm) nm.textContent=b.name;
+    const art=document.getElementById('bmArt'); if(art) art.innerHTML=buildingArtSVG(b,inv);
+    const stt=document.getElementById('bmStatus'); if(stt) stt.textContent = done ? ('✓ הושלם! +'+b.points+' נקודות בנייה') : 'השקע משאבים כדי לבנות (' + b.points + ' נק׳)';
+    const rb=document.getElementById('bmRes'); if(rb){ rb.innerHTML=RESOURCES.filter(function(r){return b.cost[r.id];}).map(function(r){ const need=b.cost[r.id], iv=inv[r.id]||0, av=avail[r.id]||0; return '<div class="bm-row"><span class="bm-ric">'+r.icon+'</span><span class="bm-rnm">'+r.name+'</span><span class="bm-rct">'+iv+'/'+need+'</span><span class="bm-ravail">זמין: '+av+'</span><button class="bm-minus" data-r="'+r.id+'"'+(iv<=0?' disabled':'')+'>−</button><button class="bm-plus" data-r="'+r.id+'"'+((iv>=need||av<=0)?' disabled':'')+'>+</button></div>'; }).join(''); rb.querySelectorAll('.bm-plus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, 1); }); }); rb.querySelectorAll('.bm-minus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, -1); }); }); }
   }
+  function investOne(bid,res,delta){ const b=BUILDINGS.find(function(x){return x.id===bid;}); if(!b)return; const st=loadInvest(); const o=invObj(st,bid); const cur=o[res]||0; const avail=availableRes(); if(delta>0){ if(cur>=b.cost[res] || (avail[res]||0)<=0) return; o[res]=cur+1; } else { if(cur<=0) return; o[res]=cur-1; } saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function investMax(bid){ const b=BUILDINGS.find(function(x){return x.id===bid;}); if(!b)return; const st=loadInvest(); const o=invObj(st,bid); Object.keys(b.cost).forEach(function(res){ let avail=availableRes()[res]||0; while((o[res]||0)<b.cost[res] && avail>0){ o[res]=(o[res]||0)+1; avail--; } }); saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function withdrawAll(bid){ const st=loadInvest(); if(st[bid]){ delete st[bid]; saveInvest(st); afterBuildChange(); renderBuildModal(); } }
+  function afterBuildChange(){ renderGrid(); renderBank(availableRes()); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; }
+  function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
   function renderScoreView() {
     if (!todayState.date) loadTodayState();
@@ -12294,5 +12306,17 @@ const TOTAL_OSHER = TEFILOT.length;
   });
 </script>
 
+
+<div class="modal-backdrop" id="buildModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="bmName">מבנה</div><button class="modal-close" id="bmClose">×</button></div>
+    <div class="modal-body">
+      <div class="bm-art" id="bmArt"></div>
+      <div class="bm-status" id="bmStatus"></div>
+      <div id="bmRes"></div>
+      <div class="goal-form-buttons"><button class="goal-form-btn save" id="bmInvestAll">השקע מקסימום</button><button class="goal-form-btn cancel" id="bmWithdraw">משוך הכל</button></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
