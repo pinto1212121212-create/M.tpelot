@@ -401,11 +401,11 @@
   </div>
 
   <div class="kupah-section">
-      <div class="kupah-title">🪙 קופת החיסכון שלי</div>
+      <div class="kupah-title">🪙 קופת הפרסים שלי</div>
       <div class="kupah-amount" id="kupahAmount">₪0</div>
       <div class="kupah-sub" id="kupahSub">כל 10 נקודות = ₪2</div>
-      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">💳 שלם / תרום</button><button class="kupah-reset" id="kupahReset">✓ שילמתי</button></div>
-      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור תשלום ויחס</button>
+      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">💰 הפקד לקופה</button><button class="kupah-reset" id="kupahReset">✓ קניתי פרס</button></div>
+      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור קופה ויחס</button>
     </div>
 
     <div class="goals-section">
@@ -899,10 +899,10 @@
   function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem('yosef_kupah_v1')||'{}'); return Object.assign({rateP:10,rateS:2,paid:0,link:''}, (o&&typeof o==='object')?o:{}); }catch(e){ return {rateP:10,rateS:2,paid:0,link:''}; } }
   function saveKupah(k){ try{ localStorage.setItem('yosef_kupah_v1', JSON.stringify(k)); }catch(e){} }
   function kupahAccrued(k){ let pts=0; try{ pts=getTotalLifetimePoints(); }catch(e){} return Math.floor(pts/(k.rateP||10))*(k.rateS||2); }
-  function kupahPay(){ const k=loadKupah(); if(!k.link){ alert('עדיין לא הגדרת קישור תשלום. לחץ "הגדר קישור".'); kupahCfg(); return; } window.open(k.link,'_blank'); }
-  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן ש-₪'+bal+' שולמו, ולאפס את הקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
+  function kupahPay(){ const k=loadKupah(); if(!k.link){ alert('עדיין לא הגדרת קישור קופה. לחץ "הגדר קישור קופה".'); kupahCfg(); return; } window.open(k.link,'_blank'); }
+  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן שקנית פרס ב-₪'+bal+', ולהפחית מהקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
   function kupahCfg(){ const k=loadKupah(); const link=prompt('הדבק קישור תשלום (Bit / PayBox / נדרים פלוס):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות לחסוך?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
-  function renderKupah(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); const a=document.getElementById('kupahAmount'); if(a) a.textContent='₪'+bal; const s=document.getElementById('kupahSub'); if(s) s.textContent='כל '+k.rateP+' נקודות = ₪'+k.rateS+(k.link?'':' · (טרם הוגדר קישור תשלום)'); const p=document.getElementById('kupahPay'); if(p) p.onclick=kupahPay; const r=document.getElementById('kupahReset'); if(r) r.onclick=kupahReset; const c=document.getElementById('kupahCfg'); if(c) c.onclick=kupahCfg; }
+  function renderKupah(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); const a=document.getElementById('kupahAmount'); if(a) a.textContent='₪'+bal; const s=document.getElementById('kupahSub'); if(s) s.textContent='למימוש הפרסים · כל '+k.rateP+' נק׳ = ₪'+k.rateS+(k.link?'':' · (הגדר קישור קופה)'); const p=document.getElementById('kupahPay'); if(p) p.onclick=kupahPay; const r=document.getElementById('kupahReset'); if(r) r.onclick=kupahReset; const c=document.getElementById('kupahCfg'); if(c) c.onclick=kupahCfg; }
 
   function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(appReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ toast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
