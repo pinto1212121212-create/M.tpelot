@@ -661,7 +661,8 @@
   let todayState = {}, goalsState = [], editingGoalId = null, selectedIcon = '🎁', lastCelebId = null;
   let journalFilter = 'all', journalSearchDate = '', chartRange = 14, editingNoteDate = null;
 
-  function loadToday() { try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } } } catch(e) {} todayState = { date: getTodayDate(), items: {} }; ensureItems(); }
+  function autoCommitDay(prev) { if (!prev || !prev.date || !prev.items) return; let score=0; MITZVOT.forEach(function(m){ score += mitzvaItemPoints(m, prev.items[m.id]); }); score -= (prev.penalty||0); const anyDone=Object.values(prev.items).some(function(it){return it&&it.done;}); if (!anyDone && score<=0) return; const h=loadHistory(); const ex=h.find(function(x){return x.date===prev.date;}); if (ex){ if (score>(ex.score||0)){ ex.score=score; ex.items=prev.items; saveHistory(h); } return; } h.push({date:prev.date,score:score,items:prev.items}); h.sort(function(a,b){return a.date.localeCompare(b.date);}); saveHistory(h.slice(-90)); }
+  function loadToday() { try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } try { autoCommitDay(p); } catch(e) {} } } catch(e) {} todayState = { date: getTodayDate(), items: {} }; ensureItems(); }
   function ensureItems() { if (!todayState.items) todayState.items = {}; MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done:false, minyan:false, extras:{} }; }); }
   function saveToday() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} pushUp(); }
   function saveTodayLocal() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }

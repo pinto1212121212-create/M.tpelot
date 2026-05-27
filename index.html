@@ -10220,6 +10220,22 @@ const TOTAL_OSHER = TEFILOT.length;
     } catch(e) { return dateStr; }
   }
 
+  // Auto-save the previous day to history when the date rolls over, so a day is
+  // preserved even if "סיים את היום" was never pressed.
+  function autoCommitDay(prev) {
+    if (!prev || !prev.date || !prev.items) return;
+    let score = 0;
+    MITZVOT.forEach(m => { score += mitzvaItemPoints(m, prev.items[m.id]); });
+    score -= (prev.penalty || 0);
+    const anyDone = Object.values(prev.items).some(it => it && it.done);
+    if (!anyDone && score <= 0) return;
+    const hist = loadHistory();
+    const ex = hist.find(h => h.date === prev.date);
+    if (ex) { if (score > (ex.score || 0)) { ex.score = score; ex.items = prev.items; saveHistory(hist); } return; }
+    hist.push({ date: prev.date, score: score, items: prev.items });
+    hist.sort((a, b) => a.date.localeCompare(b.date));
+    saveHistory(hist.slice(-90));
+  }
   function loadTodayState() {
     try {
       const raw = localStorage.getItem(pk(SCORE_KEY_TODAY));
@@ -10232,6 +10248,7 @@ const TOTAL_OSHER = TEFILOT.length;
           });
           return;
         }
+        try { autoCommitDay(parsed); } catch(e) {}
       }
     } catch(e) {}
     todayState = { date: getTodayDate(), items: {} };
