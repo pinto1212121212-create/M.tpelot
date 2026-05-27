@@ -3054,6 +3054,17 @@
   .kupah-pay { flex:2; padding:13px; border:none; border-radius:8px; background:linear-gradient(135deg,#3a9a4a,#2f7a3a); color:#fff; font-family:'Heebo',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
   .kupah-reset { flex:1; padding:13px; border:1.5px solid var(--brown-light); border-radius:8px; background:var(--parchment-light); color:var(--brown-deep); font-family:'Heebo',sans-serif; font-weight:600; font-size:13px; cursor:pointer; }
   .kupah-cfg { margin-top:8px; background:none; border:none; color:var(--gold-dark); font-size:12.5px; cursor:pointer; text-decoration:underline; font-family:'Frank Ruhl Libre',serif; }
+  .kupah-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 12px; }
+  .kupah-cell { background:var(--parchment-light); border:1px solid var(--brown-light); border-radius:8px; padding:8px 6px; }
+  .kupah-lbl { font-family:'Frank Ruhl Libre',serif; font-size:11.5px; color:var(--brown); }
+  .kupah-v { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:20px; color:var(--brown-deep); margin-top:2px; }
+  .kupah-v.hot { color:#2f8a3f; }
+  .kupah-ledger { margin-top:12px; text-align:right; max-height:230px; overflow-y:auto; }
+  .kupah-tx { display:flex; align-items:center; gap:8px; padding:6px 8px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; font-size:13px; }
+  .kupah-tx-d { color:var(--brown-light); font-size:10.5px; min-width:98px; }
+  .kupah-tx-t { flex:1; color:var(--brown-deep); }
+  .kupah-tx-a { font-weight:700; white-space:nowrap; }
+  .kupah-empty { color:var(--brown-light); font-style:italic; font-size:12.5px; padding:10px; text-align:center; }
   .score-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-family: 'Heebo', sans-serif; font-weight: 700; z-index: 99999; box-shadow: 0 6px 20px rgba(0,0,0,0.35); opacity: 0; transition: opacity 0.3s; }
   .score-toast.show { opacity: 1; }
   .building-section { margin: 18px 0; padding: 14px 10px 12px; background: radial-gradient(ellipse at top, #2b3566, #141a33); border: 2px solid var(--gold-dark); border-radius: 14px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 6px 22px rgba(0,0,0,0.3); overflow: hidden; }
@@ -3412,10 +3423,16 @@
 
     <div class="kupah-section">
       <div class="kupah-title">🪙 קופת הפרסים שלי</div>
-      <div class="kupah-amount" id="kupahAmount">₪0</div>
-      <div class="kupah-sub" id="kupahSub">כל 10 נקודות = ₪2</div>
-      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">📲 פתח ביט והפקד</button><button class="kupah-reset" id="kupahReset">✓ הפקדתי</button></div>
-      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור קופה ויחס</button>
+      <div class="kupah-grid">
+        <div class="kupah-cell"><div class="kupah-lbl">נצבר מנקודות</div><div class="kupah-v" id="kupAccr">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">ממתין להפקדה</div><div class="kupah-v hot" id="kupPend">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">בקופת ביט</div><div class="kupah-v" id="kupInbit">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">הוצאת על פרסים</div><div class="kupah-v" id="kupSpent">₪0</div></div>
+      </div>
+      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">📲 פתח ביט והפקד</button><button class="kupah-reset" id="kupahDep">✓ הפקדתי</button></div>
+      <div class="kupah-btns" style="margin-top:8px"><button class="kupah-reset" id="kupahBuy">🎁 קניתי פרס</button><button class="kupah-reset" id="kupahExport">⤓ ייצוא לאקסל</button></div>
+      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור ויחס</button>
+      <div class="kupah-ledger" id="kupahLedger"></div>
     </div>
 
     <div class="goals-section">
@@ -10612,13 +10629,17 @@ const TOTAL_OSHER = TEFILOT.length;
     wire();
   })();
 
-  function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem(pk('tefilot_kupah_v1'))||'{}'); return Object.assign({rateP:10,rateS:2,paid:0,link:''}, (o&&typeof o==='object')?o:{}); }catch(e){ return {rateP:10,rateS:2,paid:0,link:''}; } }
+  function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem(pk('tefilot_kupah_v1'))||'{}'); const k=Object.assign({rateP:10,rateS:2,link:'',tx:[]}, (o&&typeof o==='object')?o:{}); if(!Array.isArray(k.tx)) k.tx=[]; return k; }catch(e){ return {rateP:10,rateS:2,link:'',tx:[]}; } }
   function saveKupah(k){ try{ localStorage.setItem(pk('tefilot_kupah_v1'), JSON.stringify(k)); }catch(e){} }
   function kupahAccrued(k){ let pts=0; try{ pts=getTotalLifetimePoints(); }catch(e){} return Math.floor(pts/(k.rateP||10))*(k.rateS||2); }
-  function kupahPay(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); try{ if(navigator.clipboard) navigator.clipboard.writeText(String(bal)); }catch(e){} alert('הפקד ₪'+bal+' לכיס "קופת הפרסים" בביט (כיס חיסכון יומיומי). הסכום הועתק — הדבק אותו בביט.'); if(k.link){ window.open(k.link,'_blank'); return; } try{ window.location.href='intent://#Intent;package=com.bnhp.payments.paymentsapp;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bnhp.payments.paymentsapp;end'; }catch(e){ window.open('https://play.google.com/store/apps/details?id=com.bnhp.payments.paymentsapp','_blank'); } }
-  function kupahReset(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); if(bal<=0){ alert('אין סכום בקופה לאיפוס.'); return; } if(!confirm('לסמן שהפקדת ₪'+bal+' לביט, ולאפס את הקופה?')) return; k.paid=(k.paid||0)+bal; saveKupah(k); renderKupah(); }
-  function kupahCfg(){ const k=loadKupah(); const link=prompt('הדבק קישור תשלום (Bit / PayBox / נדרים פלוס):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות לחסוך?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
-  function renderKupah(){ const k=loadKupah(); const bal=Math.max(0,kupahAccrued(k)-(k.paid||0)); const a=document.getElementById('kupahAmount'); if(a) a.textContent='₪'+bal; const s=document.getElementById('kupahSub'); if(s) s.textContent='למימוש הפרסים · כל '+k.rateP+' נק׳ = ₪'+k.rateS+(k.link?'':' · (הגדר קישור קופה)'); const p=document.getElementById('kupahPay'); if(p) p.onclick=kupahPay; const r=document.getElementById('kupahReset'); if(r) r.onclick=kupahReset; const c=document.getElementById('kupahCfg'); if(c) c.onclick=kupahCfg; }
+  function kupahSum(k,t){ return (k.tx||[]).reduce(function(s,x){ return s + (x.type===t ? (+x.amount||0) : 0); },0); }
+  function kupahFmtTs(ts){ const d=new Date(ts); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+  function kupahPay(){ const k=loadKupah(); const pend=Math.max(0,kupahAccrued(k)-kupahSum(k,'deposit')); try{ if(navigator.clipboard) navigator.clipboard.writeText(String(pend)); }catch(e){} alert('הפקד ₪'+pend+' לכיס "קופת הפרסים" בביט (כיס חיסכון יומיומי). הסכום הועתק — הדבק אותו בביט.'); if(k.link){ window.open(k.link,'_blank'); return; } try{ window.location.href='intent://#Intent;package=com.bnhp.payments.paymentsapp;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bnhp.payments.paymentsapp;end'; }catch(e){ window.open('https://play.google.com/store/apps/details?id=com.bnhp.payments.paymentsapp','_blank'); } }
+  function kupahDep(){ const k=loadKupah(); const pend=Math.max(0,kupahAccrued(k)-kupahSum(k,'deposit')); if(pend<=0){ alert('אין סכום שממתין להפקדה.'); return; } if(!confirm('לרשום הפקדה של ₪'+pend+' לקופת ביט?')) return; k.tx.push({ts:Date.now(),type:'deposit',amount:pend,note:''}); saveKupah(k); renderKupah(); }
+  function kupahBuy(){ const k=loadKupah(); const name=prompt('איזה פרס קנית?',''); if(name===null) return; const amtS=prompt('כמה עלה הפרס? (₪)',''); if(amtS===null) return; const amt=parseFloat(amtS); if(!amt||amt<=0){ alert('סכום לא תקין.'); return; } k.tx.push({ts:Date.now(),type:'prize',amount:amt,note:(name||'').trim()}); saveKupah(k); renderKupah(); }
+  function kupahExport(){ const k=loadKupah(); const tx=(k.tx||[]).slice().sort(function(a,b){return a.ts-b.ts;}); const accr=kupahAccrued(k), dep=kupahSum(k,'deposit'), spent=kupahSum(k,'prize'); const rows=[['קופת הפרסים — דוח'],['נצבר מנקודות','₪'+accr],['סך הפקדות','₪'+dep],['הוצאת על פרסים','₪'+spent],['יתרה בקופת ביט','₪'+(dep-spent)],[''],['תאריך','סוג','סכום בשקלים','פירוט']]; tx.forEach(function(x){ rows.push([kupahFmtTs(x.ts), x.type==='deposit'?'הפקדה':'קניית פרס', x.amount, x.note||'']); }); const csv='﻿'+rows.map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(','); }).join('\n'); try{ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='kupat-prasim-'+getTodayDate()+'.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){URL.revokeObjectURL(url);},1000); }catch(e){ alert('שגיאה בייצוא'); } }
+  function kupahCfg(){ const k=loadKupah(); const link=prompt('קישור תשלום מותאם (ריק = פתיחת אפליקציית ביט):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
+  function renderKupah(){ const k=loadKupah(); const accr=kupahAccrued(k), dep=kupahSum(k,'deposit'), spent=kupahSum(k,'prize'); const pend=Math.max(0,accr-dep), inbit=Math.max(0,dep-spent); const set=function(id,v){ const el=document.getElementById(id); if(el) el.textContent='₪'+v; }; set('kupAccr',accr); set('kupPend',pend); set('kupInbit',inbit); set('kupSpent',spent); const led=document.getElementById('kupahLedger'); if(led){ const tx=(k.tx||[]).slice().sort(function(a,b){return b.ts-a.ts;}).slice(0,15); led.innerHTML = tx.length ? tx.map(function(x){ const isDep=x.type==='deposit'; return '<div class="kupah-tx"><span class="kupah-tx-d">'+kupahFmtTs(x.ts)+'</span><span class="kupah-tx-t">'+(isDep?'הפקדה לביט':('🎁 '+(x.note||'פרס')))+'</span><span class="kupah-tx-a" style="color:'+(isDep?'#2f8a3f':'#a32a2a')+'">'+(isDep?'+':'−')+'₪'+x.amount+'</span></div>'; }).join('') : '<div class="kupah-empty">אין עדיין תנועות. צבור נקודות, הפקד, וקנה פרסים.</div>'; } const w=function(id,fn){ const el=document.getElementById(id); if(el) el.onclick=fn; }; w('kupahPay',kupahPay); w('kupahDep',kupahDep); w('kupahBuy',kupahBuy); w('kupahExport',kupahExport); w('kupahCfg',kupahCfg); }
 
   function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
