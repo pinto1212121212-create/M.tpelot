@@ -3102,6 +3102,14 @@
   .build-cell .bc-pc { font-size:11px; color:#ffd86a; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,0.6); }
   .bm-art { text-align:center; margin-bottom:8px; background:radial-gradient(ellipse at 50% 28%, #7a5d22 0%, #2c2110 82%); border:2.5px solid #d9b24a; border-radius:16px; padding:12px 10px; box-shadow:inset 0 1px 0 rgba(255,243,200,0.4), inset 0 0 30px rgba(0,0,0,0.55); }
   .bm-art svg { width:74%; max-width:240px; height:auto; }
+  .bm-art { perspective: 820px; }
+  .art3d { width:78%; max-width:250px; margin:0 auto; position:relative; transform-style:preserve-3d; will-change:transform; touch-action:none; cursor:grab; }
+  .art3d:active { cursor:grabbing; }
+  .art3d-inner { transform-style:preserve-3d; animation: art3dSway 7s ease-in-out infinite; }
+  .art3d-inner svg { display:block; width:100%; height:auto; }
+  .art3d-glare { position:absolute; inset:0; border-radius:14px; pointer-events:none; background:radial-gradient(circle at var(--gx,30%) var(--gy,22%), rgba(255,255,255,0.4), rgba(255,255,255,0) 46%); mix-blend-mode:screen; transform:translateZ(24px); }
+  .art3d-hint { font-family:'Frank Ruhl Libre',serif; font-size:11px; color:#e8d9b5; opacity:0.7; text-align:center; margin-top:4px; }
+  @keyframes art3dSway { 0%,100%{ transform: rotateY(-9deg); } 50%{ transform: rotateY(9deg); } }
   .bm-status { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:700; color:var(--wine); margin:6px 0 10px; font-size:15px; }
   .bm-row { display:flex; align-items:center; gap:8px; padding:8px 2px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; }
   .bm-ric { font-size:19px; width:24px; text-align:center; }
@@ -10558,6 +10566,19 @@ const TOTAL_OSHER = TEFILOT.length;
   function investMax(bid){ const b=BUILDINGS.find(function(x){return x.id===bid;}); if(!b)return; const st=loadInvest(); const o=invObj(st,bid); Object.keys(b.cost).forEach(function(res){ let avail=availableRes()[res]||0; while((o[res]||0)<b.cost[res] && avail>0){ o[res]=(o[res]||0)+1; avail--; } }); saveInvest(st); afterBuildChange(); renderBuildModal(); }
   function withdrawAll(bid){ const st=loadInvest(); if(st[bid]){ delete st[bid]; saveInvest(st); afterBuildChange(); renderBuildModal(); } }
   function afterBuildChange(){ renderGrid(); renderBank(availableRes()); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; }
+  (function(){
+    function wire(){
+      const stage=document.getElementById('art3d'); if(!stage){ setTimeout(wire,600); return; }
+      let dragging=false, sx=0, sy=0, ry=0, rx=0;
+      function apply(){ stage.style.transform='rotateX('+rx.toFixed(1)+'deg) rotateY('+ry.toFixed(1)+'deg)'; const g=document.getElementById('art3dGlare'); if(g){ g.style.setProperty('--gx',(30 - ry*0.8)+'%'); g.style.setProperty('--gy',(22 + rx*0.8)+'%'); } }
+      stage.addEventListener('pointerdown',function(e){ dragging=true; sx=e.clientX; sy=e.clientY; stage.style.transition='none'; try{ stage.setPointerCapture(e.pointerId); }catch(x){} });
+      stage.addEventListener('pointermove',function(e){ if(!dragging)return; ry=Math.max(-45,Math.min(45,(e.clientX-sx)*0.7)); rx=Math.max(-30,Math.min(30,-(e.clientY-sy)*0.55)); apply(); });
+      function end(){ if(!dragging)return; dragging=false; stage.style.transition='transform 0.7s cubic-bezier(.22,1,.36,1)'; ry=0; rx=0; apply(); const g=document.getElementById('art3dGlare'); if(g){ g.style.setProperty('--gx','30%'); g.style.setProperty('--gy','22%'); } }
+      stage.addEventListener('pointerup',end); stage.addEventListener('pointercancel',end);
+    }
+    wire();
+  })();
+
   function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
   function renderScoreView() {
@@ -12339,7 +12360,8 @@ const TOTAL_OSHER = TEFILOT.length;
   <div class="modal">
     <div class="modal-header"><div class="modal-title" id="bmName">מבנה</div><button class="modal-close" id="bmClose">×</button></div>
     <div class="modal-body">
-      <div class="bm-art" id="bmArt"></div>
+      <div class="bm-art"><div class="art3d" id="art3d"><div class="art3d-inner" id="bmArt"></div><div class="art3d-glare" id="art3dGlare"></div></div></div>
+      <div class="art3d-hint">סובב עם האצבע ↔</div>
       <div class="bm-status" id="bmStatus"></div>
       <div id="bmRes"></div>
       <div class="goal-form-buttons"><button class="goal-form-btn save" id="bmInvestAll">השקע מקסימום</button><button class="goal-form-btn cancel" id="bmWithdraw">משוך הכל</button></div>
