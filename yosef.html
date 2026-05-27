@@ -242,6 +242,19 @@
   .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
   .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1100; }
   .toast.show { opacity: 1; }
+  .hizuk-banner { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; font-style: italic; color: var(--brown-deep); background: linear-gradient(135deg, rgba(201,169,97,0.16), rgba(212,182,121,0.06)); border: 1.5px solid var(--gold); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; line-height: 1.5; }
+  .hizuk-banner b { color: var(--wine); }
+  .st-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .st-card { background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px; padding: 12px; text-align: center; }
+  .st-card .st-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 4px; }
+  .st-card .st-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 26px; color: var(--wine); line-height: 1; }
+  .st-card .st-sub { font-size: 11px; color: var(--brown-light); margin-top: 4px; }
+  .st-target-bar { height: 10px; background: var(--parchment); border: 1px solid var(--brown-light); border-radius: 6px; overflow: hidden; margin: 8px 0 4px; }
+  .st-target-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 6px; transition: width 0.4s; }
+  .st-target-edit { background: none; border: none; color: var(--gold-dark); font-size: 12px; cursor: pointer; text-decoration: underline; font-family: 'Frank Ruhl Libre', serif; }
+  .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
+  .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
+  .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -251,12 +264,19 @@
     <div class="who">יוסף ביתן</div>
   </header>
 
+  <div class="hizuk-banner" id="hizukBanner"></div>
+
   <div class="score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
 
   <div class="score-today-total">
     <div class="label">סך הניקוד היום</div>
     <div class="value"><span id="scoreToday">0</span></div>
     <div class="max">מתוך <span id="scoreTodayMax">0</span></div>
+  </div>
+
+  <div class="st-row">
+    <div class="st-card"><div class="st-label">🔥 רצף ימים</div><div class="st-value" id="streakVal">0</div><div class="st-sub">שיא: <span id="streakBest">0</span></div></div>
+    <div class="st-card" id="targetCard"><div class="st-label">🎯 יעד יומי</div><div class="st-value" id="targetState">0/0</div><div class="st-target-bar"><div class="st-target-fill" id="targetFill"></div></div><button class="st-target-edit" id="targetEdit">שנה יעד</button></div>
   </div>
 
   <div id="mitzvotList"></div>
@@ -341,6 +361,12 @@
       <button class="journal-export-btn" id="journalExportBtn" type="button">⤓ ייצוא</button>
     </div>
     <div class="journal-list" id="journalList"></div>
+  </div>
+
+  <div class="backup-section">
+    <button class="backup-btn" id="backupBtn">⤓ גיבוי כל הנתונים</button>
+    <button class="backup-btn" id="restoreBtn">⤒ שחזור מגיבוי</button>
+    <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" />
   </div>
 
   <div class="sync-status" id="syncStatus">מסתנכרן…</div>
@@ -730,6 +756,47 @@
     saveTrackers(all); document.getElementById('trackerEntryModal').classList.remove('active'); renderTrackers();
   }
 
+  // ===== Daily חיזוק, streak, target, celebrations, backup =====
+  const HIZUK = [
+    'כל יום הוא הזדמנות חדשה להתחיל מחדש.','מעט מעט — ככה בונים הרגלים גדולים.','הקב״ה אוהב אותך ושמח בכל צעד קטן שלך.','איזהו גיבור? הכובש את יצרו.','גם נפילה היא חלק מהדרך — מה שחשוב זה לקום.','כל מצווה קטנה היא אבן יקרה בכתר שלך.','היום אתה יכול להיות טוב יותר מאתמול.','השתדלות שלך ועזרת ה׳ יחד — מביאות להצלחה.','אל תזלזל בצעד קטן, הוא מצטרף לדרך גדולה.','יראת ה׳ היא ראשית החכמה.','שמחה היא המפתח לעבודת ה׳.','כל התחלה קשה — אבל אתה כבר התחלת.','מי שמתמיד — מנצח.','הקב״ה לא מבקש שתהיה מושלם, רק שתתקדם.','הניצחון הגדול ביותר הוא על עצמך.','תן לעצמך קרדיט על כל מה שכבר עשית.','רצף קטן הופך להרגל, והרגל הופך לאופי.','בכל רגע אתה בוחר מחדש מי אתה רוצה להיות.','התפילה שלך עולה ופועלת, גם כשאינך רואה.','אחרי החושך תמיד בא האור.','גם זו לטובה — הכל מכוון מלמעלה לטובתך.','כוחך גדול ממה שאתה חושב.','עוד יום, עוד הזדמנות לזכות.','הדרך אל הקודש עוברת בצעדים קטנים וקבועים.','מי שזורע בדמעה — יקצור ברינה.','אל תשווה את עצמך לאחרים, רק לעצמך של אתמול.','כל יום נקי הוא ניצחון אמיתי.','ההתמדה חשובה יותר מההישג החד-פעמי.','אתה בדרך הנכונה — תמשיך.','קום, התנער, והתחל מחדש היום.','ה׳ עמך, גיבור החיל.'
+  ];
+  function renderHizuk() { const el = document.getElementById('hizukBanner'); if (!el) return; const d = new Date(); const doy = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000); el.innerHTML = '✦ ' + HIZUK[doy % HIZUK.length] + ' ✦'; }
+  function computeStreak() {
+    const history = loadHistory(), today = getTodayDate(); const by = {}; history.forEach(h => by[h.date] = h.score); by[today] = calcToday();
+    let current = 0; const d = new Date(); if ((by[today]||0) <= 0) d.setDate(d.getDate()-1);
+    while (true) { const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); if ((by[ds]||0) > 0) { current++; d.setDate(d.getDate()-1); } else break; }
+    const dates = Object.keys(by).filter(k => by[k] > 0).sort(); let best=0, cur=0, prev=null;
+    dates.forEach(ds => { if (prev) { const pd=new Date(prev); pd.setDate(pd.getDate()+1); cur = (pd.toISOString().slice(0,10)===ds)?cur+1:1; } else cur=1; if (cur>best) best=cur; prev=ds; });
+    return { current, best };
+  }
+  const TARGET_KEY = 'yosef_daily_target_v1';
+  function loadTarget() { const v = parseInt(localStorage.getItem(TARGET_KEY)||'',10); return (v && v>0) ? v : 80; }
+  function saveTarget(v) { try { localStorage.setItem(TARGET_KEY, String(v)); } catch(e) {} }
+  function renderStreakTarget() {
+    const s = computeStreak();
+    const sv = document.getElementById('streakVal'); if (sv) sv.textContent = s.current;
+    const sb = document.getElementById('streakBest'); if (sb) sb.textContent = s.best;
+    const target = loadTarget(), score = calcToday(); const pct = Math.max(0, Math.min(100, target>0?(score/target*100):0));
+    const ts = document.getElementById('targetState'); if (ts) ts.textContent = score + '/' + target;
+    const tf = document.getElementById('targetFill'); if (tf) tf.style.width = pct + '%';
+    const tc = document.getElementById('targetCard'); if (tc) tc.classList.toggle('reached', target>0 && score >= target);
+  }
+  let appReady = false;
+  function checkCelebrations() {
+    if (!appReady) return; const date = getTodayDate(), score = calcToday(), target = loadTarget();
+    if (target>0 && score>=target && !localStorage.getItem('yosef_celeb_target_'+date)) { try{localStorage.setItem('yosef_celeb_target_'+date,'1');}catch(e){} toast('🎉 הגעת ליעד היומי! '+score+' נק׳'); }
+    if (isPerfectDay(todayState.items) && !localStorage.getItem('yosef_celeb_perfect_'+date)) { try{localStorage.setItem('yosef_celeb_perfect_'+date,'1');}catch(e){} toast('⭐ יום מושלם! כל הכבוד!'); }
+  }
+  function exportBackup() {
+    const data = {}; for (let i=0;i<localStorage.length;i++) { const k = localStorage.key(i); if (k && k.indexOf('yosef_')===0) data[k] = localStorage.getItem(k); }
+    try { const blob = new Blob([JSON.stringify({ _app:'yosef-nikud', _date:getTodayDate(), data }, null, 2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'gibuy-yosef-'+getTodayDate()+'.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url),1000); toast('הגיבוי הורד'); } catch(e) { alert('שגיאה בגיבוי'); }
+  }
+  function importBackup(file) {
+    const reader = new FileReader();
+    reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('yosef_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot(); loadToday(); loadGoals(); render(); pushUp(); toast('שוחזר בהצלחה'); } catch(e) { alert('קובץ גיבוי לא תקין'); } };
+    reader.readAsText(file);
+  }
+
   function render() {
     document.getElementById('dateValue').textContent = fmtDate(todayState.date);
     document.getElementById('scoreTodayMax').textContent = calcMax();
@@ -758,6 +825,7 @@
     });
     document.getElementById('scoreToday').textContent = calcToday();
     renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal(); renderBritLog(); renderReflection(); renderTrackers();
+    renderHizuk(); renderStreakTarget(); checkCelebrations();
   }
 
   function renderSummary() {
@@ -980,9 +1048,16 @@
   document.getElementById('trackerEntryCancel').addEventListener('click', () => closeModal('trackerEntryModal'));
   document.getElementById('trackerEntryClose').addEventListener('click', () => closeModal('trackerEntryModal'));
 
+  // Daily target + backup
+  document.getElementById('targetEdit').addEventListener('click', () => { const cur = loadTarget(); const v = prompt('היעד היומי שלך (נקודות):', cur); if (v === null) return; const n = parseInt(v, 10); if (n && n > 0) { saveTarget(n); renderStreakTarget(); } });
+  document.getElementById('backupBtn').addEventListener('click', exportBackup);
+  document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('restoreFile').click());
+  document.getElementById('restoreFile').addEventListener('change', (e) => { if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]); e.target.value = ''; });
+
   // ===== Init =====
   MITZVOT = loadMitzvot();
   loadToday(); loadGoals(); render(); pullDown();
+  setTimeout(() => { appReady = true; }, 1200);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
 })();
 </script>
