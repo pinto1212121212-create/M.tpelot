@@ -255,6 +255,13 @@
   .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
+  .defense-card { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(201,169,97,0.18), rgba(107,31,45,0.08)); border: 2px solid var(--gold-dark); border-radius: 10px; }
+  .defense-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 17px; color: var(--brown-deep); margin-bottom: 8px; text-align: center; }
+  .defense-tagline { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 13.5px; color: var(--wine); text-align: center; margin: 6px 0; }
+  .defense-steps { font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown-deep); margin: 10px 0 4px; font-weight: 600; }
+  .defense-list { padding-right: 22px; margin: 6px 0; }
+  .defense-list li { font-family: 'Heebo', sans-serif; font-size: 13.5px; color: var(--brown-deep); margin: 4px 0; line-height: 1.5; }
+  .defense-list li strong { color: var(--wine); }
   .fines-section { margin: 18px 0; padding: 16px; background: linear-gradient(135deg, rgba(163,42,42,0.10), rgba(201,169,97,0.06)); border: 1.5px solid #a32a2a; border-radius: 12px; text-align: center; }
   .fines-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: #a32a2a; margin-bottom: 10px; }
   .fines-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -380,6 +387,21 @@
 
   <div id="mitzvotList"></div>
   <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
+
+  <div class="defense-card">
+    <div class="defense-title">🏃 דרך יוסף הצדיק — חומת האש שלך</div>
+    <div class="defense-body">
+      <div class="defense-tagline">״ויעזוב בגדו אצלה וינס ויצא החוצה״ — בריחה היא ניצחון.</div>
+      <div class="defense-steps">תוך <strong>3 שניות</strong> מהרגע שאתה מזהה פיתוי:</div>
+      <ol class="defense-list">
+        <li>קום מיד — אל תהסס, אל תחשוב</li>
+        <li>עזוב את החדר / הסיטואציה הפיזית</li>
+        <li>אמור בקול: ״אני בורח כיוסף הצדיק״</li>
+        <li>עשה משהו פיזי חזק — הליכה, מים קרים על הפנים, 20 שכיבות סמיכה</li>
+      </ol>
+      <div class="defense-tagline">המוח לא יכול להישאר בפיתוי כשהגוף משנה תנוחה דרמטית. זה עובד.</div>
+    </div>
+  </div>
 
   <div class="brit-log-section" id="britLogSection">
     <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
@@ -538,10 +560,10 @@
     <div class="modal">
       <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
       <div class="modal-body">
-        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: קודם המגינים (קו ההגנה הראשון), ואם לא הספיק — חבר אחריות (המוצא האחרון לפני נפילה). כל ניסיון שעשית — נחשב.</div>
+        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: דרך יוסף — לקום ולעזוב את הסיטואציה תוך 3 שניות (קו ההגנה הראשון), ואם לא הספיק — חבר אחריות (המוצא האחרון לפני נפילה). כל ניסיון שעשית — נחשב.</div>
         <div class="fall-quiz-q">1. סוג הנפילה <span class="fall-quiz-step">לבחור אחד</span></div>
         <div class="fall-quiz-options" data-q="kind"><button class="fall-quiz-btn" data-q="kind" data-val="video">📹 סרט</button><button class="fall-quiz-btn" data-q="kind" data-val="brit">🛡️ ברית</button><button class="fall-quiz-btn" data-q="kind" data-val="both">⚠️ שניהם</button></div>
-        <div class="fall-quiz-q">2. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הראשון</span></div>
+        <div class="fall-quiz-q">2. האם ברחת מיד מהסיטואציה (דרך יוסף הצדיק)? <span class="fall-quiz-step">קו ההגנה הראשון — 3 שניות</span></div>
         <div class="fall-quiz-options" data-q="method"><button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="method" data-val="no">לא</button></div>
         <div class="fall-quiz-q">3. האם התקשרת לחבר אחריות? <span class="fall-quiz-step">המוצא האחרון</span></div>
         <div class="fall-quiz-options" data-q="friend"><button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button></div>
@@ -638,7 +660,7 @@
       { id: 'phone_away', label: 'הטלפון לא היה איתי במיטה', points: 5 }
     ] },
     { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 25, hasMinyan: false, extras: [
-      { id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 },
+      { id: 'escape', label: 'ברחתי מיד מהסיטואציה (כיוסף הצדיק)', points: 5 },
       { id: 'friend_check', label: 'יצרתי קשר עם חבר אחריות', points: 5 }
     ] }
   ];
@@ -766,7 +788,7 @@
       if (e.kind === 'video') tags.push('📹 סרט');
       else if (e.kind === 'brit') tags.push('🛡️ ברית');
       else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
-      if (e.usedMethod) tags.push('🛡️ מגינים');
+      if (e.usedMethod) tags.push('🏃 ברחתי כיוסף');
       if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
       const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
       return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div><div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>'+th+'</div><button class="brit-log-entry-del" data-ts="'+e.ts+'">×</button></div>';
@@ -788,10 +810,10 @@
     const a = fallQuizAnswers;
     if (!a.kind || !a.method || !a.friend) { note.textContent = ''; return; }
     const triedSomething = (a.method==='yes') || (a.friend==='yes');
-    if (!triedSomething) { note.textContent = 'לא עברת דרך אף כלי התמודדות — יירדו 40 נקודות. בפעם הבאה: קודם המגינים, ואם לא עזר — להתקשר לחבר. כל ניסיון נחשב.'; return; }
+    if (!triedSomething) { note.textContent = 'לא עברת דרך אף כלי התמודדות — יירדו 40 נקודות. בפעם הבאה: קודם בריחה (דרך יוסף הצדיק), ואם לא עזר — להתקשר לחבר. כל ניסיון נחשב.'; return; }
     if (a.friend==='yes' && !a.friendAnswered) { note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
     let msg = 'כל הכבוד שניסית להתמודד — לא יירדו נקודות. ';
-    if (a.method==='yes') msg += 'המגינים עזרו לך. ';
+    if (a.method==='yes') msg += 'הבריחה הצילה אותך — כיוסף הצדיק. ';
     if (a.friend==='yes' && a.friendAnswered==='yes') msg += 'החבר ענה — זו זכות גדולה. ';
     if (a.friend==='yes' && a.friendAnswered==='no') msg += 'גם אם החבר לא ענה — עצם הניסיון להתקשר זה ניצחון. ';
     msg += 'חזק!';
@@ -1075,16 +1097,21 @@
   function importBackup(file) {
     const reader = new FileReader();
     reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('neria_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot();
-  // === Migration: strip the deprecated filter_on extra from saved mitzvot ===
-  (function migrateFilterOn(){
+  // === Migration: strip filter_on + rename ifs→escape in saved mitzvot ===
+  (function migrateMitzvot(){
     try {
       let changed = false;
       MITZVOT.forEach(function(m){
-        if (m && Array.isArray(m.extras)) {
-          const before = m.extras.length;
-          m.extras = m.extras.filter(function(ex){ return ex && ex.id !== 'filter_on'; });
-          if (m.extras.length !== before) changed = true;
-        }
+        if (!m || !Array.isArray(m.extras)) return;
+        const before = JSON.stringify(m.extras);
+        m.extras = m.extras.filter(function(ex){ return ex && ex.id !== 'filter_on'; });
+        m.extras.forEach(function(ex){
+          if (ex && ex.id === 'ifs') {
+            ex.id = 'escape';
+            ex.label = 'ברחתי מיד מהסיטואציה (כיוסף הצדיק)';
+          }
+        });
+        if (JSON.stringify(m.extras) !== before) changed = true;
       });
       if (changed) saveMitzvot();
     } catch(e) {}
