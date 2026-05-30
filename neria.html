@@ -427,7 +427,7 @@
       <div class="fines-cell"><div class="fines-lbl">קנס היום</div><div class="fines-v" id="fineToday">₪0</div></div>
       <div class="fines-cell"><div class="fines-lbl">קנס מצטבר</div><div class="fines-v" id="fineTotal">₪0</div></div>
     </div>
-    <div class="fines-info">50 ש״ח על כל מצווה (עיניים / ברית) שלא נעשתה השתדלות + 50 ש״ח נוספים על כל נפילה בסרט לא טוב.</div>
+    <div class="fines-info">חוב נצבר אך ורק אם תועדה נפילה בפועל: 50 ש״ח על כל נפילה בסרט לא טוב. סתם לא לסמן את המצוות — לא יוצר חוב.</div>
   </div>
 
 
@@ -988,22 +988,8 @@
     wire();
   })();
 
-  function calcDailyFine(items){
-    let f = 0;
-    if (!items || !items.eyes || !items.eyes.done) f += 50;
-    if (!items || !items.brit || !items.brit.done) f += 50;
-    return f;
-  }
-  function calcTotalFine(){
-    let total = 0;
-    try {
-      const hist = loadHistory();
-      hist.forEach(function(h){ total += calcDailyFine(h.items); });
-      const today = getTodayDate();
-      if (!hist.some(function(h){ return h.date === today; })) total += calcDailyFine(todayState.items);
-    } catch(e) {}
-    return total;
-  }
+  // Fines are only generated from actual logged falls (brit log entries with moneyFine).
+  // We no longer auto-fine on every day where the mitzva wasn't marked.
   function _tsToDateStr(ts){ const d = new Date(ts); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
   function calcMovieFineToday(){
     let f = 0;
@@ -1021,14 +1007,10 @@
     return f;
   }
   function renderFines(){
-    const todayDaily = calcDailyFine(todayState.items);
-    const todayMovie = calcMovieFineToday();
-    const totalDaily = calcTotalFine();
-    const totalMovie = calcMovieFineTotal();
     const t = document.getElementById('fineToday');
-    if (t) t.textContent = '₪' + (todayDaily + todayMovie);
+    if (t) t.textContent = '₪' + calcMovieFineToday();
     const tt = document.getElementById('fineTotal');
-    if (tt) tt.textContent = '₪' + (totalDaily + totalMovie);
+    if (tt) tt.textContent = '₪' + calcMovieFineTotal();
   }
 
   function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(appReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ toast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
