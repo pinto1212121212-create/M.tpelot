@@ -256,6 +256,7 @@
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   /* Emergency mode — nighttime firewall */
+  .fall-quiz-night-banner { background: linear-gradient(135deg, rgba(42,90,122,0.18), rgba(60,30,10,0.05)); border: 1.5px solid #2a5a7a; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px; font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: var(--brown-deep); text-align: center; }
   .em-btn-wrap { margin: 14px 0; }
   .em-btn { display:block; width:100%; padding:18px 14px; background:linear-gradient(135deg,#a32a2a,#7a1f1f); color:#fff; border:none; border-radius:12px; font-family:'Heebo',sans-serif; font-weight:900; font-size:17px; letter-spacing:0.3px; cursor:pointer; box-shadow:0 6px 18px rgba(163,42,42,0.45); animation:emPulse 2.4s ease-in-out infinite; }
   .em-btn:active { transform: scale(0.98); }
@@ -650,9 +651,12 @@
         <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: דרך יוסף — לקום ולעזוב את הסיטואציה תוך 3 שניות (קו ההגנה הראשון), ואם לא הספיק — חבר אחריות (המוצא האחרון לפני נפילה). כל ניסיון שעשית — נחשב.</div>
         <div class="fall-quiz-q">1. סוג הנפילה <span class="fall-quiz-step">לבחור אחד</span></div>
         <div class="fall-quiz-options" data-q="kind"><button class="fall-quiz-btn" data-q="kind" data-val="video">📹 סרט לא טוב</button><button class="fall-quiz-btn" data-q="kind" data-val="brit">🛡️ ברית</button><button class="fall-quiz-btn" data-q="kind" data-val="both">⚠️ שניהם</button></div>
+        <div class="fall-quiz-night-banner" id="fallQuizNightBanner" style="display:none;">🌙 לילה — בשעות האלה כפתור החירום הוא ההגנה הראשונה. החבר נשאר כמוצא אחרון אם אפשר.</div>
         <div class="fall-quiz-q">2. האם ברחת מיד מהסיטואציה (דרך יוסף הצדיק)? <span class="fall-quiz-step">קו ההגנה הראשון — 3 שניות</span></div>
         <div class="fall-quiz-options" data-q="method"><button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="method" data-val="no">לא</button></div>
-        <div class="fall-quiz-q">3. האם התקשרת לחבר אחריות? <span class="fall-quiz-step">המוצא האחרון</span></div>
+        <div class="fall-quiz-q" id="fallQuizQEmergency">3. האם השתמשת בכפתור החירום (5 דקות)? <span class="fall-quiz-step" id="fallQuizQEmergencyStep">קו ההגנה הלילי</span></div>
+        <div class="fall-quiz-options" data-q="emergency"><button class="fall-quiz-btn" data-q="emergency" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="emergency" data-val="no">לא</button></div>
+        <div class="fall-quiz-q" id="fallQuizQFriend">4. האם התקשרת לחבר אחריות? <span class="fall-quiz-step" id="fallQuizQFriendStep">המוצא האחרון</span></div>
         <div class="fall-quiz-options" data-q="friend"><button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button></div>
         <div class="fall-quiz-sub" id="fallQuizFriendSub" style="display:none;">
           <div class="fall-quiz-q">האם החבר ענה?</div>
@@ -879,6 +883,7 @@
       if (e.moneyFine) tags.push('💸 ' + e.moneyFine + ' ש״ח');
       if (e.bonus) tags.push('🌟 +' + e.bonus + ' נק׳');
       if (e.usedMethod) tags.push('🏃 ברחתי כיוסף');
+      if (e.usedEmergency) tags.push('🚨 כפתור חירום');
       if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
       const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
       return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div><div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>'+th+'</div><button class="brit-log-entry-del" data-ts="'+e.ts+'">×</button></div>';
@@ -983,6 +988,7 @@
   }
   function emergencyLose(){
     closeEmergency();
+    _preFillEmergencyYes = true;
     openFallQuiz('');
   }
 
@@ -1014,14 +1020,35 @@
     if (entry && entry.penalty && tsToDate(entry.ts) === (todayState.date || getTodayDate())) { todayState.penalty = Math.max(0, (todayState.penalty||0) - entry.penalty); saveToday(); }
     render();
   }
-  let fallQuizText = '', fallQuizAnswers = { kind:null, method:null, friend:null, friendAnswered:null };
-  function openFallQuiz(text) { fallQuizText = text; fallQuizAnswers = { kind:null, method:null, friend:null, friendAnswered:null }; document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected')); const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none'; const note = document.getElementById('fallQuizNote'); if (note) note.textContent = ''; document.getElementById('fallQuizModal').classList.add('active'); }
+  let fallQuizText = '', fallQuizAnswers = { kind:null, method:null, emergency:null, friend:null, friendAnswered:null };
+  function isNightNow() { const h = new Date().getHours(); return (h >= 22 || h < 6); }
+  let _preFillEmergencyYes = false;
+  function openFallQuiz(text) {
+    fallQuizText = text;
+    fallQuizAnswers = { kind:null, method:null, emergency:null, friend:null, friendAnswered:null };
+    if (_preFillEmergencyYes) { fallQuizAnswers.emergency = 'yes'; _preFillEmergencyYes = false; }
+    document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected'));
+    // Reflect pre-fill on the UI
+    if (fallQuizAnswers.emergency === 'yes') {
+      const btn = document.querySelector('#fallQuizModal .fall-quiz-btn[data-q="emergency"][data-val="yes"]');
+      if (btn) btn.classList.add('selected');
+    }
+    const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none';
+    const note = document.getElementById('fallQuizNote'); if (note) note.textContent = '';
+    // Day vs night labeling
+    const night = isNightNow();
+    const banner = document.getElementById('fallQuizNightBanner'); if (banner) banner.style.display = night ? 'block' : 'none';
+    const emStep = document.getElementById('fallQuizQEmergencyStep'); if (emStep) emStep.textContent = night ? '🌙 קו ההגנה הראשון בלילה' : 'קו ההגנה הלילי';
+    const frStep = document.getElementById('fallQuizQFriendStep'); if (frStep) frStep.textContent = night ? 'מוצא אחרון — אם אפשר להתקשר' : 'המוצא האחרון';
+    document.getElementById('fallQuizModal').classList.add('active');
+    updateFallQuizNote();
+  }
   function closeFallQuiz() { document.getElementById('fallQuizModal').classList.remove('active'); }
   function updateFallQuizNote() {
     const note = document.getElementById('fallQuizNote'); if (!note) return;
     const a = fallQuizAnswers;
-    if (!a.kind || !a.method || !a.friend) { note.textContent = ''; return; }
-    const triedSomething = (a.method==='yes') || (a.friend==='yes');
+    if (!a.kind || !a.method || !a.emergency || !a.friend) { note.textContent = ''; return; }
+    const triedSomething = (a.method==='yes') || (a.emergency==='yes') || (a.friend==='yes');
     const isVideo = (a.kind === 'video' || a.kind === 'both');
     const isBrit  = (a.kind === 'brit'  || a.kind === 'both');
     if (a.friend==='yes' && !a.friendAnswered) { note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
@@ -1030,6 +1057,7 @@
     if (isBrit && !triedSomething) parts.push('⚠️ נפילת ברית בלי השתדלות — יירדו 40 נקודות.');
     if (!isVideo && isBrit && triedSomething) parts.push('כל הכבוד שניסית להתמודד — לא יירדו נקודות.');
     if (a.method==='yes') parts.push('הבריחה הצילה אותך — כיוסף הצדיק.');
+    if (a.emergency==='yes') parts.push('כפתור החירום עבד — זה חומת אש אמיתית.');
     if (a.friend==='yes' && a.friendAnswered==='yes') parts.push('החבר ענה — זו זכות גדולה.');
     if (a.friend==='yes' && a.friendAnswered==='no') parts.push('גם אם החבר לא ענה — עצם הניסיון זה ניצחון.');
     parts.push('חזק!');
@@ -1038,13 +1066,13 @@
   function selectFallAnswer(q, val, btn) { fallQuizAnswers[q] = val; btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); if (q === 'friend') { const sub = document.getElementById('fallQuizFriendSub'); if (val === 'yes') { if (sub) sub.style.display = 'block'; } else { if (sub) sub.style.display = 'none'; fallQuizAnswers.friendAnswered = null; document.querySelectorAll('#fallQuizFriendSub .fall-quiz-btn').forEach(b => b.classList.remove('selected')); } } updateFallQuizNote(); }
   function saveFallQuiz() {
     const a = fallQuizAnswers; const note = document.getElementById('fallQuizNote');
-    if (!a.kind || !a.method || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
+    if (!a.kind || !a.method || !a.emergency || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
     if (a.friend === 'yes' && !a.friendAnswered) { if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
-    const triedSomething = (a.method==='yes') || (a.friend==='yes');
+    const triedSomething = (a.method==='yes') || (a.emergency==='yes') || (a.friend==='yes');
     const isVideoFall = (a.kind === 'video' || a.kind === 'both');
     const isBritFall  = (a.kind === 'brit'  || a.kind === 'both');
-    // Video falls now cost 50 ש"ח to the fines instead of a 40-point deduction.
-    // Brit-only falls without effort still cost 40 points (same as before).
+    // Video falls cost 50 ש"ח to the fines instead of a 40-point deduction.
+    // Brit-only falls without effort still cost 40 points.
     const moneyFine = isVideoFall ? 50 : 0;
     const penalty   = (!isVideoFall && isBritFall && !triedSomething) ? 40 : 0;
     const arr = loadBritLog();
@@ -1053,6 +1081,7 @@
       text: fallQuizText,
       kind: a.kind,                                  // 'video' | 'brit' | 'both'
       usedMethod: a.method==='yes',
+      usedEmergency: a.emergency==='yes',
       calledFriend: a.friend==='yes',
       friendAnswered: a.friend==='yes' ? (a.friendAnswered==='yes') : null,
       penalty: penalty,
