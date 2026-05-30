@@ -257,11 +257,31 @@
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   /* Emergency mode — nighttime firewall */
   .fall-quiz-night-banner { background: linear-gradient(135deg, rgba(42,90,122,0.18), rgba(60,30,10,0.05)); border: 1.5px solid #2a5a7a; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px; font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: var(--brown-deep); text-align: center; }
-  .em-btn-wrap { margin: 14px 0; }
-  .em-btn { display:block; width:100%; padding:18px 14px; background:linear-gradient(135deg,#a32a2a,#7a1f1f); color:#fff; border:none; border-radius:12px; font-family:'Heebo',sans-serif; font-weight:900; font-size:17px; letter-spacing:0.3px; cursor:pointer; box-shadow:0 6px 18px rgba(163,42,42,0.45); animation:emPulse 2.4s ease-in-out infinite; }
+  /* Rescue button — hero card on the page */
+  .em-btn-wrap { margin: 20px 0; padding: 20px 18px; background: linear-gradient(135deg, rgba(60,36,16,0.06), rgba(201,169,97,0.12)); border: 2px solid var(--gold-dark); border-radius: 14px; position: relative; transition: all 0.5s ease; }
+  .em-btn-wrap.night { background: linear-gradient(135deg, rgba(20,30,55,0.18), rgba(60,90,130,0.10)); border-color: #5a7aa0; }
+  .em-hero-shield { font-size: 38px; text-align: center; margin-bottom: 6px; filter: drop-shadow(0 3px 8px rgba(201,169,97,0.55)); transition: filter 0.5s; }
+  .em-btn-wrap.night .em-hero-shield { filter: drop-shadow(0 3px 12px rgba(130,170,220,0.6)); }
+  .em-hero-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 20px; color: var(--brown-deep); text-align: center; margin-bottom: 6px; letter-spacing: 0.3px; }
+  .em-btn-wrap.night .em-hero-title { color: #2c4670; }
+  .em-hero-desc { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); text-align: center; margin-bottom: 16px; line-height: 1.6; }
+  .em-btn { display: block; width: 100%; padding: 18px 14px; background: linear-gradient(135deg, #7a2030, #5e1622); color: #fff; border: none; border-radius: 12px; font-family: 'Heebo', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 0.4px; cursor: pointer; box-shadow: 0 6px 18px rgba(122,32,48,0.40); transition: transform 0.2s, box-shadow 0.4s; animation: emBreathe 4s ease-in-out infinite; }
+  .em-btn-wrap.night .em-btn { background: linear-gradient(135deg, #2c4670, #1e3050); box-shadow: 0 6px 18px rgba(44,70,112,0.55); animation: emBreatheNight 3s ease-in-out infinite; }
+  .em-btn:hover { transform: scale(1.015); }
   .em-btn:active { transform: scale(0.98); }
-  @keyframes emPulse { 0%,100% { box-shadow:0 6px 18px rgba(163,42,42,0.45); } 50% { box-shadow:0 6px 28px rgba(163,42,42,0.75); } }
-  .em-btn-sub { margin-top:6px; font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); text-align:center; font-style:italic; }
+  @keyframes emBreathe { 0%, 100% { box-shadow: 0 6px 18px rgba(122,32,48,0.40); } 50% { box-shadow: 0 8px 28px rgba(122,32,48,0.65); } }
+  @keyframes emBreatheNight { 0%, 100% { box-shadow: 0 6px 18px rgba(44,70,112,0.55); } 50% { box-shadow: 0 10px 36px rgba(80,130,200,0.85); } }
+  .em-btn-sub { margin-top: 10px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); text-align: center; font-style: italic; }
+  .em-btn-wrap.night .em-btn-sub { color: #4a6b96; }
+  /* Floating Action Button — always accessible */
+  .em-fab { position: fixed; bottom: 22px; left: 22px; width: 62px; height: 62px; border-radius: 50%; background: linear-gradient(135deg, #7a2030, #5e1622); color: #fff; border: 2px solid rgba(255,247,224,0.6); cursor: pointer; font-size: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 22px rgba(122,32,48,0.55); z-index: 998; animation: emFabBreathe 3.5s ease-in-out infinite; transition: transform 0.25s, box-shadow 0.4s; }
+  .em-fab:hover { transform: scale(1.10); box-shadow: 0 10px 28px rgba(122,32,48,0.75); }
+  .em-fab:active { transform: scale(0.95); }
+  .em-fab.night { background: linear-gradient(135deg, #2c4670, #1e3050); box-shadow: 0 8px 22px rgba(44,70,112,0.65); border-color: rgba(160,200,240,0.5); animation: emFabBreatheNight 2.8s ease-in-out infinite; }
+  @keyframes emFabBreathe { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(122,32,48,0.55); } 50% { transform: scale(1.05); box-shadow: 0 10px 30px rgba(122,32,48,0.8); } }
+  @keyframes emFabBreatheNight { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(44,70,112,0.65); } 50% { transform: scale(1.08); box-shadow: 0 12px 38px rgba(80,130,200,0.9); } }
+  .em-fab-label { position: absolute; right: 70px; top: 50%; transform: translateY(-50%); background: rgba(60,36,16,0.92); color: #fff7e0; font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; padding: 5px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .em-fab:hover .em-fab-label { opacity: 1; }
   .em-modal { max-width: 480px; }
   .em-header { text-align:center; margin-bottom:12px; }
   .em-header h2 { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:22px; color:var(--wine); margin:0; }
@@ -454,10 +474,16 @@
     </div>
   </div>
 
-  <div class="em-btn-wrap">
-    <button class="em-btn" id="emergencyBtn">🚨 התקף יצר עכשיו — לחץ כאן</button>
-    <div class="em-btn-sub">5 דקות של בריחה מודרכת. אחרי זה — תרגיש אחרת.</div>
+  <div class="em-btn-wrap" id="emBtnWrap">
+    <div class="em-hero-shield" id="emHeroShield">🛡️</div>
+    <div class="em-hero-title">כפתור החילוץ</div>
+    <div class="em-hero-desc">אם אתה במצוקה — לחץ עכשיו.<br>5 דקות של בריחה מודרכת — ותרגיש אחרת.</div>
+    <button class="em-btn" id="emergencyBtn"><span id="emBtnLabel">🆘 הצל אותי עכשיו</span></button>
+    <div class="em-btn-sub" id="emBtnSub">בלילה — ההגנה הראשונה שלך.</div>
   </div>
+
+  <!-- Floating Action Button — always visible -->
+  <button class="em-fab" id="emFab" aria-label="כפתור החילוץ">🛡️<span class="em-fab-label" id="emFabLabel">כפתור החילוץ</span></button>
 
   <div class="brit-log-section" id="britLogSection">
     <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
@@ -993,9 +1019,30 @@
   }
 
   // Wire up emergency button + modal controls (deferred until DOM is ready)
+  function updateEmergencyTheme(){
+    const night = isNightNow();
+    const wrap = document.getElementById('emBtnWrap');
+    if (wrap) wrap.classList.toggle('night', night);
+    const fab = document.getElementById('emFab');
+    if (fab) {
+      fab.classList.toggle('night', night);
+      // Keep the shield icon but add a moon tag at night
+      fab.firstChild.nodeValue = night ? '🌙' : '🛡️';
+    }
+    const shield = document.getElementById('emHeroShield');
+    if (shield) shield.textContent = night ? '🌙' : '🛡️';
+    const label = document.getElementById('emBtnLabel');
+    if (label) label.textContent = night ? '🌙 הצל אותי — לילה' : '🆘 הצל אותי עכשיו';
+    const sub = document.getElementById('emBtnSub');
+    if (sub) sub.textContent = night ? 'לילה — זאת ההגנה הראשונה שלך עכשיו.' : 'בלילה הופך לחומת אש הראשונה.';
+    const fabLabel = document.getElementById('emFabLabel');
+    if (fabLabel) fabLabel.textContent = night ? '🌙 חילוץ לילי' : '🛡️ כפתור חילוץ';
+  }
   function _wireEmergency(){
     const btn = document.getElementById('emergencyBtn');
     if (btn) btn.addEventListener('click', openEmergency);
+    const fab = document.getElementById('emFab');
+    if (fab) fab.addEventListener('click', openEmergency);
     const cls = document.getElementById('emergencyClose');
     if (cls) cls.addEventListener('click', function(){
       if (!confirm('עוד לא עברו 5 דקות. אם תסגור עכשיו לא תיחשב הצלחה. האם להמשיך?')) return;
@@ -1011,6 +1058,9 @@
       if (!confirm('עוד לא עברו 5 דקות. אם תסגור עכשיו לא תיחשב הצלחה. האם להמשיך?')) return;
       closeEmergency();
     });
+    // Apply theme now + refresh every minute
+    try { updateEmergencyTheme(); } catch(e) {}
+    setInterval(function(){ try { updateEmergencyTheme(); } catch(e) {} }, 60000);
   }
 
   function addBritLogEntry() { const inp = document.getElementById('britLogInput'); if (!inp) return; if (!(inp.value||'').trim()) return; openFallQuiz(inp.value.trim()); }
