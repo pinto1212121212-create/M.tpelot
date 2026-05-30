@@ -481,6 +481,30 @@
   .aftercare-body li { margin: 5px 0; }
   .aftercare-body li strong { color: var(--wine); }
 
+
+  .hero-identity-line { margin-top: 12px; padding: 10px 12px; background: linear-gradient(135deg, rgba(122,32,48,0.10), rgba(201,169,97,0.08)); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 14.5px; color: var(--wine); text-align: center; position: relative; z-index: 2; }
+
+  /* === "Why I'm here" personal mission card on home === */
+  .why-card { margin: 16px 0; padding: 16px; background: linear-gradient(160deg, #fef7e0, #fae8b8); border: 2px solid #c89a34; border-radius: 12px; box-shadow: 0 4px 14px rgba(200,154,52,0.18); cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; }
+  .why-card:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(200,154,52,0.30); }
+  .why-card-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 16px; color: #6b4a1a; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .why-card-text { font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: #4a3210; line-height: 1.6; font-style: italic; min-height: 28px; padding: 6px 0; }
+  .why-card-text.empty { color: #8a7240; font-weight: 600; font-style: normal; }
+  .why-card-hint { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: #8a7240; margin-top: 6px; }
+
+  /* === Daily intention === */
+  .intention-card { margin: 14px 0 16px; padding: 14px 16px; background: linear-gradient(160deg, rgba(58,154,74,0.08), rgba(201,169,97,0.06)); border: 1.5px solid #3a9a4a; border-radius: 12px; }
+  .intention-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 800; font-size: 15px; color: #1f5a32; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .intention-display { font-family: 'Frank Ruhl Libre', serif; font-size: 14.5px; color: var(--brown-deep); line-height: 1.5; font-style: italic; min-height: 22px; padding: 6px 8px; background: rgba(255,255,255,0.5); border-radius: 8px; border-right: 3px solid #3a9a4a; }
+  .intention-display.empty { color: var(--brown-light); font-weight: 500; font-style: normal; cursor: pointer; }
+  .intention-input-row { display: flex; gap: 6px; margin-top: 6px; }
+  .intention-input { flex: 1; padding: 8px 10px; border: 1px solid var(--gold); border-radius: 6px; font-family: 'Heebo', sans-serif; font-size: 13.5px; background: #fff; color: var(--brown-deep); }
+  .intention-save-btn { padding: 8px 14px; background: linear-gradient(135deg, #3a9a4a, #2f7a3a); color: #fff; border: none; border-radius: 6px; font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+  /* === Mitzva check confetti animation === */
+  @keyframes mzvSparkle { 0% { opacity: 0; transform: translate(0,0) scale(0.5); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx,0), var(--dy,-30px)) scale(1.2) rotate(180deg); } }
+  .mzv-spark { position: absolute; pointer-events: none; font-size: 16px; animation: mzvSparkle 0.9s ease-out forwards; }
+
   /* === Hero greeting card (top of home tab) — calm, personal === */
   .hero-greet { margin: 12px 0 18px; padding: 22px 20px; background: linear-gradient(160deg, #fff7e0 0%, #f5e6c4 100%); border: 1.5px solid var(--gold); border-radius: 16px; box-shadow: 0 6px 22px rgba(60,30,10,0.10), inset 0 0 0 1px rgba(255,255,255,0.5); position: relative; overflow: hidden; }
   .hero-greet::before { content: ''; position: absolute; top: -40px; left: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(201,169,97,0.3) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
@@ -581,10 +605,27 @@
       <div class="hero-stat"><div class="hero-stat-label">🔥 רצף נקי</div><div class="hero-stat-value" id="heroStreak">0</div><div class="hero-stat-sub">ימים</div></div>
       <div class="hero-stat"><div class="hero-stat-label">🧱 לבנים</div><div class="hero-stat-value" id="heroBricks">0</div><div class="hero-stat-sub">מתוך 40</div></div>
     </div>
+    <div class="hero-identity-line" id="heroIdentityLine">לוחם של אמת. כל יום שאתה כאן — ניצחון.</div>
     <div class="hero-status-line" id="heroStatusLine">״טוב לחסות בה׳״</div>
   </div>
 
   
+  
+  <div class="tabbed tab-home why-card" id="whyCard">
+    <div class="why-card-title">💎 למה אני כאן</div>
+    <div class="why-card-text empty" id="whyCardText">לחץ כדי לכתוב את ה״למה״ שלך — המשפט שיזכיר לך כל בוקר את הסיבה האמיתית למסע הזה.</div>
+    <div class="why-card-hint" id="whyCardHint">💛 משפט אחד שיופיע כאן ובכל רגע מצוקה</div>
+  </div>
+
+  <div class="tabbed tab-home intention-card" id="intentionCard">
+    <div class="intention-title">🎯 השאיפה שלי להיום</div>
+    <div class="intention-display empty" id="intentionDisplay">עוד לא כתבת שאיפה להיום. כתוב משפט אחד — מה אעשה היום שיזכה אותי. (לחץ כאן)</div>
+    <div class="intention-input-row" id="intentionInputRow" style="display:none;">
+      <input type="text" class="intention-input" id="intentionInput" placeholder="היום אני אזכה ב..." maxlength="120">
+      <button class="intention-save-btn" id="intentionSaveBtn">שמור</button>
+    </div>
+  </div>
+
   <div class="tabbed tab-home home-mini-row">
     <div class="home-mini-card" style="position:relative;cursor:pointer"><div class="home-mini-label">📅 לחץ לעריכת יום אחר</div><div class="home-mini-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" style="position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer" /></div>
     <div class="home-mini-card"><div class="home-mini-label">סך הניקוד היום</div><div class="home-mini-value"><span id="scoreToday">0</span></div><div class="home-mini-sub">מתוך <span id="scoreTodayMax">0</span></div></div>
@@ -688,10 +729,10 @@
   <div class="tabbed tab-journal tab-header-sub">תיעוד, חשבון נפש, יעדים, היסטוריה.</div>
 
   <div class="tabbed tab-journal  brit-log-section" id="britLogSection">
-    <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
-    <div class="brit-log-subtitle">לא שיפוט — רק תיעוד. כל נפילה (סרט / ברית / שניהם) — משפט אחד, והשאלון יחושב מי הכלים שעזרו.</div>
+    <div class="brit-log-title">📔 המסע שלי</div>
+    <div class="brit-log-subtitle">המקום שבו אני לומד את עצמי — ניצחונות ונפילות, מה עזר ומה צריך לחזק. בלי שיפוט, רק הבנה.</div>
     <div class="brit-log-input-row">
-      <input type="text" id="britLogInput" class="brit-log-input" placeholder="מה הוביל לזה — שעמום, בדידות, לחץ, לילה..." maxlength="200" />
+      <input type="text" id="britLogInput" class="brit-log-input" placeholder="מה קרה עכשיו? משפט אחד..." maxlength="200" />
       <button id="britLogAddBtn" class="brit-log-add-btn">תעד</button>
     </div>
     <div id="britLogList" class="brit-log-list"></div>
@@ -922,9 +963,9 @@
 
   <div class="modal-backdrop" id="fallQuizModal">
     <div class="modal">
-      <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
+      <div class="modal-header"><div class="modal-title">רגע אחד — שלוש שאלות</div><button class="modal-close" id="fallQuizClose">×</button></div>
       <div class="modal-body">
-        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: דרך יוסף — לקום ולעזוב את הסיטואציה תוך 3 שניות (קו ההגנה הראשון), ואם לא הספיק — חבר אחריות (המוצא האחרון לפני נפילה). כל ניסיון שעשית — נחשב.</div>
+        <div class="fall-quiz-intro">לא לשפוט את עצמך — רק להבין. שלוש שאלות קצרות שיעזרו לך לראות מה עבד ומה לחזק.</div>
         <div class="fall-quiz-q">1. סוג הנפילה <span class="fall-quiz-step">לבחור אחד</span></div>
         <div class="fall-quiz-options" data-q="kind"><button class="fall-quiz-btn" data-q="kind" data-val="video">📹 סרט לא טוב</button><button class="fall-quiz-btn" data-q="kind" data-val="brit">🛡️ ברית</button><button class="fall-quiz-btn" data-q="kind" data-val="both">⚠️ שניהם</button></div>
         <div class="fall-quiz-night-banner" id="fallQuizNightBanner" style="display:none;">🌙 לילה — בשעות האלה כפתור החירום הוא ההגנה הראשונה. החבר נשאר כמוצא אחרון אם אפשר.</div>
@@ -1600,6 +1641,97 @@
   }
 
 
+
+  // ===== "Why I'm here" card (echoes the personal note from defense tab) =====
+  function renderWhy(){
+    const txt = (typeof loadPnote === 'function') ? loadPnote() : '';
+    const el = document.getElementById('whyCardText');
+    if (!el) return;
+    if (txt && txt.trim()) {
+      el.classList.remove('empty');
+      el.textContent = '״' + txt.trim() + '״';
+    } else {
+      el.classList.add('empty');
+      el.textContent = 'לחץ כדי לכתוב את ה״למה״ שלך — המשפט שיזכיר לך כל בוקר את הסיבה האמיתית למסע הזה.';
+    }
+  }
+  function _wireWhy(){
+    const card = document.getElementById('whyCard');
+    if (card) card.addEventListener('click', function(){ if (typeof openPnoteEditor === 'function') openPnoteEditor(); });
+  }
+
+  // ===== "Today's intention" card =====
+  function _intentionKey(){ return 'neria_intention_' + getTodayDate(); }
+  function loadIntention(){ try { return localStorage.getItem(_intentionKey()) || ''; } catch(e) { return ''; } }
+  function saveIntention(t){ try { localStorage.setItem(_intentionKey(), t); } catch(e) {} pushUp(); }
+  function renderIntention(){
+    const txt = loadIntention();
+    const disp = document.getElementById('intentionDisplay');
+    const row  = document.getElementById('intentionInputRow');
+    if (!disp || !row) return;
+    if (txt && txt.trim()) {
+      disp.classList.remove('empty');
+      disp.textContent = '״' + txt.trim() + '״';
+      row.style.display = 'none';
+    } else {
+      disp.classList.add('empty');
+      disp.textContent = 'עוד לא כתבת שאיפה להיום. כתוב משפט אחד — מה אעשה היום שיזכה אותי. (לחץ כאן)';
+    }
+  }
+  function _wireIntention(){
+    const disp = document.getElementById('intentionDisplay');
+    const row  = document.getElementById('intentionInputRow');
+    const inp  = document.getElementById('intentionInput');
+    const btn  = document.getElementById('intentionSaveBtn');
+    if (disp) disp.addEventListener('click', function(){
+      if (!row) return;
+      row.style.display = 'flex';
+      disp.style.display = 'none';
+      if (inp) { inp.value = loadIntention(); inp.focus(); }
+    });
+    if (btn) btn.addEventListener('click', function(){
+      const v = (inp.value || '').trim();
+      saveIntention(v);
+      renderIntention();
+      const dd = document.getElementById('intentionDisplay'); if (dd) dd.style.display = 'block';
+      try { toast('🎯 שאיפה ליום נשמרה.'); } catch(e) {}
+    });
+    if (inp) inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') btn.click(); });
+  }
+
+  // ===== Subtle confetti when checking a mitzva =====
+  function _spawnSparkles(targetEl){
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const cx = rect.left + rect.width/2 + window.scrollX;
+    const cy = rect.top  + rect.height/2 + window.scrollY;
+    const sparks = ['✨','⭐','💫','🌟','🧱'];
+    for (let i = 0; i < 6; i++) {
+      const el = document.createElement('div');
+      el.className = 'mzv-spark';
+      el.textContent = sparks[Math.floor(Math.random() * sparks.length)];
+      el.style.left = cx + 'px';
+      el.style.top  = cy + 'px';
+      const angle = (Math.PI * 2) * (i / 6) + Math.random() * 0.5;
+      const dist  = 40 + Math.random() * 30;
+      el.style.setProperty('--dx', (Math.cos(angle) * dist).toFixed(0) + 'px');
+      el.style.setProperty('--dy', (-Math.abs(Math.sin(angle) * dist) - 10).toFixed(0) + 'px');
+      el.style.animationDelay = (i * 60) + 'ms';
+      document.body.appendChild(el);
+      setTimeout(function(){ try { el.remove(); } catch(e) {} }, 1100);
+    }
+  }
+  // Hook into mitzva check: listen for clicks on mitzva-check elements
+  document.addEventListener('click', function(e){
+    const check = e.target && e.target.closest && e.target.closest('.mitzva-check');
+    if (!check) return;
+    // After a brief delay, if the card became .done, sparkle
+    setTimeout(function(){
+      const card = check.closest('.mitzva-card');
+      if (card && card.classList.contains('done')) _spawnSparkles(check);
+    }, 80);
+  });
+
   // ===== Personal note (shown in defense tab + read at every emergency) =====
   const PNOTE_KEY = 'neria_pnote_v1';
   function loadPnote(){ try { return localStorage.getItem(PNOTE_KEY) || ''; } catch(e) { return ''; } }
@@ -1628,6 +1760,7 @@
     savePnote(t);
     closePnoteEditor();
     renderPnote();
+    try { renderWhy(); } catch(e) {}
     try { toast('💛 הפתק נשמר.'); } catch(e) {}
   }
 
@@ -2054,7 +2187,7 @@
     if (!trackers.length) { wrap.innerHTML = '<div class="brit-log-empty">עוד אין שאלונים. צור אחד משלך — למשל "מעקב לימוד" או "מעקב כעס".</div>'; return; }
     wrap.innerHTML = trackers.map(t => {
       const entries = (t.entries || []).slice().sort((a,b) => b.ts - a.ts).slice(0, 6);
-      const entriesHtml = entries.length ? entries.map(e => { const tags = (t.questions||[]).map(q => (e.answers && e.answers[q.id]) ? '<span class="brit-log-tag">✓ '+escapeHtml(q.text)+'</span>' : '').filter(Boolean).join(''); return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div>'+(e.text?'<div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>':'')+(tags?'<div class="brit-log-entry-tags">'+tags+'</div>':'')+'</div><button class="brit-log-entry-del" data-tid="'+t.id+'" data-ts="'+e.ts+'">×</button></div>'; }).join('') : '<div class="brit-log-empty">אין עדיין רישומים.</div>';
+      const entriesHtml = entries.length ? entries.map(e => { const tags = (t.questions||[]).map(q => (e.answers && e.answers[q.id]) ? '<span class="brit-log-tag">✓ '+escapeHtml(q.text)+'</span>' : '').filter(Boolean).join(''); return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div>'+(e.text?'<div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>':'')+(tags?'<div class="brit-log-entry-tags">'+tags+'</div>':'')+'</div><button class="brit-log-entry-del" data-tid="'+t.id+'" data-ts="'+e.ts+'">×</button></div>'; }).join('') : '<div class="brit-log-empty">עוד אין רישומים. כל ניצחון או נפילה נכתב כאן — בלי שיפוט, רק להבנה.</div>';
       return '<div class="brit-log-section"><div class="brit-log-title">'+escapeHtml(t.title)+' <button class="goal-btn" data-tedit="'+t.id+'" style="float:left;width:30px;height:30px;font-size:13px">✏️</button><button class="goal-btn delete" data-tdel="'+t.id+'" style="float:left;width:30px;height:30px;margin-left:4px">×</button></div>'+(t.subtitle?'<div class="brit-log-subtitle">'+escapeHtml(t.subtitle)+'</div>':'')+'<div class="brit-log-input-row"><input type="text" class="brit-log-input" id="tinp_'+t.id+'" placeholder="הערה (לא חובה)" maxlength="200"><button class="brit-log-add-btn" data-tdoc="'+t.id+'">תעד</button></div><div class="brit-log-list">'+entriesHtml+'</div></div>';
     }).join('');
     wrap.querySelectorAll('[data-tdoc]').forEach(b => b.addEventListener('click', () => openTrackerEntry(b.dataset.tdoc)));
@@ -2284,7 +2417,7 @@
     else if (journalFilter === 'perfect') all = all.filter(d => isPerfectDay(d.items));
     else if (journalFilter === 'notes') all = all.filter(d => d.note && d.note.length > 0);
     const sorted = all.sort((a,b) => b.date.localeCompare(a.date));
-    if (!sorted.length) { container.innerHTML = '<div class="journal-empty">'+(journalSearchDate?'לא נמצא רישום לתאריך זה.':(journalFilter==='all'?'עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.':'אין רישומים תואמים לפילטר זה.'))+'</div>'; return; }
+    if (!sorted.length) { container.innerHTML = '<div class="journal-empty">'+(journalSearchDate?'לא נמצא רישום לתאריך זה.':(journalFilter==='all'?'המסע שלך מתחיל היום. כל מצווה שתסמן תופיע כאן — אתה גיבור פשוט בעצם זה שאתה מנסה.':'אין רישומים תואמים לפילטר זה.'))+'</div>'; return; }
     container.innerHTML = sorted.map(h => {
       const it = h.date === today, items = h.items || {}, perfect = isPerfectDay(items);
       const mh = MITZVOT.map(m => { const item = items[m.id] || { done:false, minyan:false }; const done = !!item.done; const wm = done && m.hasMinyan && item.minyan; const pts = mitzvaItemPoints(m, item); const extraMarks = (done && m.extras && item.extras) ? m.extras.filter(ex => item.extras[ex.id]).map(ex => '<span class="minyan-mark">'+ex.label+'</span>').join('') : ''; const mark = (wm?'<span class="minyan-mark">×2 במניין</span>':'')+extraMarks; const status = done ? '<span class="journal-mitzva-status done">✓</span>' : '<span class="journal-mitzva-status skipped">○</span>'; return '<div class="journal-mitzva-item'+(done?'':' skipped')+'">'+status+'<div class="journal-mitzva-item-icon">'+m.icon+'</div><div class="journal-mitzva-item-name">'+m.name+mark+'</div><div class="journal-mitzva-item-points">'+(done?'+'+pts:'—')+'</div></div>'; }).join('');
@@ -2387,7 +2520,10 @@
   _wireEmergency();
   _wireWall3();
   _wireExtras();
+  _wireWhy();
+  _wireIntention();
   try { renderHero(); setInterval(renderHero, 60000); } catch(e) {}
+  try { renderWhy(); renderIntention(); } catch(e) {}
   try { renderBuildingExtras(); } catch(e) {}
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
@@ -2446,6 +2582,7 @@
       if (tab === 'home') {
         render();
         try { renderHero(); } catch(e) {}
+        try { renderWhy(); renderIntention(); } catch(e) {}
       }
       if (tab === 'defense') {
         try { renderPnote(); } catch(e) {}
