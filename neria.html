@@ -282,30 +282,37 @@
   @keyframes emFabBreatheNight { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(44,70,112,0.65); } 50% { transform: scale(1.08); box-shadow: 0 12px 38px rgba(80,130,200,0.9); } }
   .em-fab-label { position: absolute; right: 70px; top: 50%; transform: translateY(-50%); background: rgba(60,36,16,0.92); color: #fff7e0; font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; padding: 5px 10px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
   .em-fab:hover .em-fab-label { opacity: 1; }
-  .em-modal { max-width: 480px; }
-  .em-header { text-align:center; margin-bottom:12px; }
-  .em-header h2 { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:22px; color:var(--wine); margin:0; }
-  .em-header p { font-family:'Frank Ruhl Libre',serif; font-size:14px; color:var(--brown-deep); margin:6px 0 0; }
-  .em-timer { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:56px; color:var(--gold-dark); line-height:1; margin:12px 0; }
-  .em-steps { background:var(--parchment-light); border:1px solid var(--gold); border-radius:10px; padding:12px; margin:14px 0; }
-  .em-step { display:flex; gap:12px; padding:10px 8px; border-bottom:1px dashed var(--gold); opacity:0.35; transition:opacity 0.35s; }
-  .em-step:last-child { border-bottom:none; }
-  .em-step.active { opacity:1; }
-  .em-step.done { opacity:0.65; }
-  .em-step.done .em-text::before { content:"✓ "; color:#2f8a3f; font-weight:700; }
-  .em-num { width:32px; height:32px; flex-shrink:0; border-radius:50%; background:var(--gold-dark); color:#fff; font-family:'Heebo',sans-serif; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; }
-  .em-step.done .em-num { background:#2f8a3f; }
-  .em-text { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:15px; color:var(--brown-deep); line-height:1.4; align-self:center; }
-  .em-tehilim { background:linear-gradient(160deg, rgba(201,169,97,0.16), rgba(107,31,45,0.06)); border:1.5px solid var(--gold); border-radius:10px; padding:14px; margin:14px 0; text-align:center; min-height:90px; display:flex; align-items:center; justify-content:center; }
-  .em-tehilim-text { font-family:'Frank Ruhl Libre',serif; font-size:17px; font-weight:700; color:var(--brown-deep); line-height:1.6; font-style:italic; }
-  .em-tehilim-ref { font-family:'Frank Ruhl Libre',serif; font-size:12px; color:var(--brown-light); margin-top:6px; font-style:normal; }
-  .em-actions { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-  .em-win { padding:14px; background:linear-gradient(135deg,#3a9a4a,#2f7a3a); color:#fff; border:none; border-radius:10px; font-family:'Heebo',sans-serif; font-weight:900; font-size:16px; cursor:pointer; opacity:0.4; transition:opacity 0.4s; }
-  .em-win:not([disabled]) { opacity:1; box-shadow:0 4px 12px rgba(58,154,74,0.45); }
-  .em-win[disabled] { cursor:not-allowed; }
-  .em-lose { padding:12px; background:transparent; color:var(--brown); border:1.5px solid var(--brown-light); border-radius:10px; font-family:'Heebo',sans-serif; font-weight:600; font-size:14px; cursor:pointer; }
-  .em-lose:hover { background:var(--parchment-light); }
-  .em-tip { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); text-align:center; margin-top:8px; font-style:italic; }
+  .em-modal { max-width: 500px; }
+  .em-session-row { display: flex; justify-content: space-between; align-items: center; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); margin-bottom: 8px; }
+  .em-session-num { font-weight: 700; color: var(--brown); }
+  .em-session-theme { background: var(--gold); color: var(--brown-deep); padding: 3px 12px; border-radius: 12px; font-weight: 700; font-size: 12.5px; box-shadow: 0 2px 6px rgba(201,169,97,0.4); }
+  .em-hero-quote { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-weight: 700; font-size: 16px; color: var(--brown-deep); text-align: center; padding: 14px 12px; margin: 6px 0 14px; background: linear-gradient(135deg, rgba(201,169,97,0.18), rgba(60,30,10,0.05)); border-right: 4px solid var(--gold-dark); border-left: 4px solid var(--gold-dark); border-radius: 8px; line-height: 1.5; }
+  .em-timer { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 48px; color: var(--gold-dark); line-height: 1; margin: 8px 0 14px; letter-spacing: 1px; }
+  .em-station { background: var(--parchment-light); border: 2px solid var(--gold); border-radius: 12px; padding: 16px; margin: 0 0 14px; box-shadow: 0 4px 14px rgba(60,30,10,0.10); animation: emStationIn 0.4s ease-out; }
+  @keyframes emStationIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+  .em-station-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .em-station-step { font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 12px; color: var(--brown-light); background: rgba(60,30,10,0.06); padding: 3px 10px; border-radius: 10px; }
+  .em-station-icon { font-size: 32px; filter: drop-shadow(0 2px 6px rgba(201,169,97,0.45)); }
+  .em-station-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 19px; color: var(--brown-deep); margin-bottom: 8px; text-align: center; }
+  .em-station-text { font-family: 'Frank Ruhl Libre', serif; font-size: 15.5px; color: var(--brown-deep); line-height: 1.65; text-align: center; min-height: 60px; padding: 6px; }
+  .em-station-text .em-ref { display: block; font-size: 12.5px; color: var(--brown-light); font-style: italic; margin-top: 8px; font-weight: 400; }
+  .em-station-text .em-source { display: block; font-size: 12px; color: var(--gold-dark); font-weight: 700; margin-top: 6px; }
+  .em-station-input { margin: 12px 0 4px; }
+  .em-station-input input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--gold); border-radius: 8px; font-family: 'Heebo', sans-serif; font-size: 14px; background: #fff; color: var(--brown-deep); }
+  .em-done-btn { display: block; width: 100%; margin-top: 12px; padding: 11px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border: none; border-radius: 8px; color: var(--brown-deep); font-family: 'Heebo', sans-serif; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 3px 10px rgba(201,169,97,0.4); }
+  .em-done-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(201,169,97,0.55); }
+  .em-done-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .em-progress { display: flex; justify-content: center; gap: 8px; margin: 14px 0; }
+  .em-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(60,30,10,0.15); transition: all 0.3s; }
+  .em-dot.active { background: var(--gold-dark); transform: scale(1.3); box-shadow: 0 0 0 3px rgba(201,169,97,0.25); }
+  .em-dot.done { background: #2f8a3f; }
+  .em-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .em-win { padding: 14px; background: linear-gradient(135deg,#3a9a4a,#2f7a3a); color: #fff; border: none; border-radius: 10px; font-family: 'Heebo', sans-serif; font-weight: 900; font-size: 16px; cursor: pointer; opacity: 0.4; transition: opacity 0.4s; }
+  .em-win:not([disabled]) { opacity: 1; box-shadow: 0 4px 12px rgba(58,154,74,0.45); }
+  .em-win[disabled] { cursor: not-allowed; }
+  .em-lose { padding: 12px; background: transparent; color: var(--brown); border: 1.5px solid var(--brown-light); border-radius: 10px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; }
+  .em-lose:hover { background: var(--parchment-light); }
+  .em-tip { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); text-align: center; margin-top: 10px; font-style: italic; }
   .defense-card { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(201,169,97,0.18), rgba(107,31,45,0.08)); border: 2px solid var(--gold-dark); border-radius: 10px; }
   .defense-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 17px; color: var(--brown-deep); margin-bottom: 8px; text-align: center; }
   .defense-tagline { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 13.5px; color: var(--wine); text-align: center; margin: 6px 0; }
@@ -638,34 +645,27 @@
   </div>
 
   <!-- Fall questionnaire -->
-  <!-- Emergency mode modal -->
+  <!-- Emergency mode modal (randomized 5-station journey) -->
   <div class="modal-backdrop" id="emergencyModal">
-    <div class="modal em-modal">
-      <div class="modal-header"><div class="modal-title">🛡️ מצב חירום — בריחה</div><button class="modal-close" id="emergencyClose">×</button></div>
+    <div class="modal em-modal" id="emModal">
+      <div class="modal-header"><div class="modal-title" id="emTitle">🛡️ מצב חילוץ</div><button class="modal-close" id="emergencyClose">×</button></div>
       <div class="modal-body">
-        <div class="em-header">
-          <h2>אתה בורח עכשיו.</h2>
-          <p>בעוד <span id="emRemainText">5</span> דקות תרגיש אחרת. תחזיק מעמד.</p>
-        </div>
+        <div class="em-session-row"><span class="em-session-num">סשן <span id="emSessionNum">1</span></span><span class="em-session-theme" id="emSessionTheme">דרך יוסף</span></div>
+        <div class="em-hero-quote" id="emHeroQuote">״ויעזוב בגדו אצלה וינס ויצא החוצה״</div>
         <div class="em-timer" id="emTimer">5:00</div>
-        <div class="em-steps">
-          <div class="em-step active" data-min="0"><div class="em-num">1</div><div class="em-text">קום מהמיטה <strong>עכשיו</strong>. לך למטבח או לשירותים.</div></div>
-          <div class="em-step" data-min="1"><div class="em-num">2</div><div class="em-text">שטוף את הפנים שלך במים <strong>קרים</strong> — לפחות 10 שניות.</div></div>
-          <div class="em-step" data-min="2"><div class="em-num">3</div><div class="em-text">שתה כוס מים קרים. נשום עמוק 5 פעמים.</div></div>
-          <div class="em-step" data-min="3"><div class="em-num">4</div><div class="em-text">אמור בקול: ״אני בורח כיוסף הצדיק. אני שולט בעצמי״.</div></div>
-          <div class="em-step" data-min="4"><div class="em-num">5</div><div class="em-text">המשך לעמוד או ללכת. הפיתוי שוכך — אתה כבר ניצחת.</div></div>
+        <div class="em-station" id="emStation">
+          <div class="em-station-head"><span class="em-station-step" id="emStationStep">תחנה 1 / 5</span><span class="em-station-icon" id="emStationIcon">🏃</span></div>
+          <div class="em-station-title" id="emStationTitle">פעולה ראשונה</div>
+          <div class="em-station-text" id="emStationText">...</div>
+          <div class="em-station-input" id="emStationInput" style="display:none;"><input type="text" id="emCommitInput" placeholder="כתוב כאן..." maxlength="120"></div>
+          <button class="em-done-btn" id="emDoneBtn">✓ עשיתי — לתחנה הבאה</button>
         </div>
-        <div class="em-tehilim">
-          <div>
-            <div class="em-tehilim-text" id="emTehilimText">לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.</div>
-            <div class="em-tehilim-ref" id="emTehilimRef">תהילים נ״א, י״ב</div>
-          </div>
-        </div>
+        <div class="em-progress" id="emProgress"></div>
         <div class="em-actions">
           <button class="em-win" id="emWin" disabled>✅ ניצחתי — תרשום הצלחה (+50 נק׳)</button>
           <button class="em-lose" id="emLose">💔 לא הצלחתי — לתעד נפילה</button>
         </div>
-        <div class="em-tip">המסך הזה צריך להישאר פתוח 5 דקות מלאות לפני שתוכל לסיים. אל תסגור אותו לפני הסוף.</div>
+        <div class="em-tip">המסך הזה צריך להישאר פתוח עד הסוף. כל תחנה היא דקה.</div>
       </div>
     </div>
   </div>
@@ -916,88 +916,259 @@
     }).join('');
     list.querySelectorAll('.brit-log-entry-del').forEach(b => b.addEventListener('click', () => deleteBritLogEntry(parseInt(b.dataset.ts,10))));
   }
-  // ============= Emergency mode (nighttime firewall) =============
-  let _emTimerId = null, _emEndTs = 0, _emTehilimIdx = 0;
-  const _EM_DURATION_MS = 5 * 60 * 1000;
-  const _EM_TEHILIM = [
-    {t:'לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.', r:'תהילים נ״א, י״ב'},
-    {t:'אל תשליכני מלפניך, ורוח קדשך אל תקח ממני.', r:'תהילים נ״א, י״ג'},
-    {t:'השיבה לי ששון ישעך, ורוח נדיבה תסמכני.', r:'תהילים נ״א, י״ד'},
-    {t:'ה׳ לי לא אירא — מה יעשה לי אדם.', r:'תהילים קי״ח, ו׳'},
-    {t:'יושב בסתר עליון — בצל שדי יתלונן.', r:'תהילים צ״א, א׳'},
-    {t:'ה׳ צבאות עמנו, משגב לנו אלוקי יעקב סלה.', r:'תהילים מ״ו, ח׳'},
-    {t:'אורך וישעי — ה׳, ממי אירא?', r:'תהילים כ״ז, א׳'},
-    {t:'בכל לבי דרשתיך, אל תשגני ממצוותיך.', r:'תהילים קי״ט, י׳'},
-    {t:'ויאמר יוסף — איך אעשה הרעה הגדולה הזאת, וחטאתי לאלוקים?', r:'בראשית ל״ט, ט׳'},
-    {t:'הוסף נא — חיים טובים, חיים של ענווה ויראת חטא.', r:'מתפילת ראש חודש'}
+  // ============= Emergency mode — randomized 5-station journey =============
+  // Each session pulls one item from each pool, so no two sessions feel the same.
+  // Session lasts 5 minutes total — 1 minute per station, auto-advances at the
+  // 1/2/3/4 minute mark, and the user can advance early with "✓ עשיתי".
+
+  // ---- Theme pool: each session gets one theme (color tint + hero quote) ----
+  const _EM_THEMES = [
+    { name: 'דרך יוסף הצדיק', color: '#5a3a1a', quote: '״ויעזוב בגדו אצלה וינס ויצא החוצה״' },
+    { name: 'גבורת דוד',      color: '#2a4670', quote: '״ה׳ לי לא אירא — מה יעשה לי אדם״' },
+    { name: 'אור התורה',      color: '#8a6a1f', quote: '״ה׳ אורי וישעי — ממי אירא״' },
+    { name: 'אהבת אבא',       color: '#7a3a3a', quote: '״כרחם אב על בנים — רחם ה׳ על יראיו״' },
+    { name: 'בן מלך',          color: '#5a3a7a', quote: '״אני אמרתי אלוקים אתם — ובני עליון כולכם״' },
+    { name: 'כוח המשיח',      color: '#1f5a4a', quote: '״ובחרת בחיים, למען תחיה אתה וזרעך״' },
+    { name: 'טהרת הלב',        color: '#5e1622', quote: '״לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי״' },
   ];
 
+  // ---- Stations 1–5: pools of content randomly combined ----
+  // Station 1: physical action (must DO, not just think)
+  const _EM_ACTIONS = [
+    { i: '🚿', t: 'מים קרים על הפנים',  d: 'לך לכיור עכשיו. הרטב את הפנים שלך במים קרים — 10 שניות לפחות. הקור משבר את הגל.' },
+    { i: '💪', t: '20 שכיבות סמיכה',     d: 'תרד לרצפה. 20 שכיבות סמיכה — עכשיו. בגוף מותש אין מקום ליצר.' },
+    { i: '🏃', t: 'עזוב את החדר',         d: 'קום ועזוב את הסיטואציה הפיזית. לך לחדר אחר. אל תחזור עד שתהיה רגוע.' },
+    { i: '🌬️', t: 'נשימת 4-7-8',           d: 'שאף 4 שניות דרך האף. עצור 7 שניות. נשוף 8 שניות דרך הפה. חזור 4 פעמים. זה משחרר פיזיולוגית.' },
+    { i: '🦘', t: '30 קפיצות במקום',      d: 'קום וקפוץ במקום 30 פעם. הדם זורם — המוח משתנה. עכשיו.' },
+    { i: '💧', t: 'שתה כוס מים קרים',     d: 'קום. לך למטבח. שתה כוס מים קרים בלגימה אחת. שב למקום אחר.' },
+    { i: '🪟', t: 'פתח חלון',             d: 'פתח חלון בסלון או בכיוון אחר. תן לאוויר קר להיכנס. עמוד מולו 60 שניות.' },
+    { i: '🚪', t: 'צא החוצה',             d: 'נעל את הטלפון בחדר אחר. צא החוצה — לחצר, למדרגות, לרחוב — לדקה.' },
+    { i: '🔢', t: 'ספור אחורה מ-100',     d: 'ספור בקול אחורה: 100, 93, 86, 79... עד 2. זה משתלט על המוח הקדמי.' },
+    { i: '🧱', t: 'עמוד עם הגב לקיר',     d: 'מצא קיר. הצמד את הגב אליו. עמוד 60 שניות בלי לזוז. הגוף לומד שאתה בשליטה.' },
+    { i: '👁️', t: '5 דברים שאני רואה',   d: 'הסתכל סביב. אמור בקול 5 דברים שאתה רואה. אז 4 דברים שאתה שומע. אז 3 דברים שאתה מרגיש.' },
+    { i: '🧊', t: 'קרח על העורף',          d: 'קח קוביית קרח (או רחץ פנים במים קרים מאוד). הצמד לעורף 20 שניות. מערכת העצבים מתאפסת.' },
+  ];
+
+  // Station 2: a verse to read aloud (varies the Tanach reference)
+  const _EM_VERSES = [
+    { ref: 'בראשית ל״ט, ט׳',     t: 'איך אעשה הרעה הגדולה הזאת, וחטאתי לאלוקים?' },
+    { ref: 'תהילים נ״א, י״ב',    t: 'לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.' },
+    { ref: 'תהילים נ״א, י״ג',    t: 'אל תשליכני מלפניך, ורוח קודשך אל תיקח ממני.' },
+    { ref: 'תהילים נ״א, י״ד',    t: 'השיבה לי ששון ישעך, ורוח נדיבה תסמכני.' },
+    { ref: 'תהילים קי״ח, ו׳',   t: 'ה׳ לי, לא אירא — מה יעשה לי אדם.' },
+    { ref: 'תהילים צ״א, א׳',    t: 'יושב בסתר עליון, בצל שדי יתלונן.' },
+    { ref: 'תהילים מ״ו, ח׳',    t: 'ה׳ צבאות עמנו, משגב לנו אלוקי יעקב סלה.' },
+    { ref: 'תהילים כ״ז, א׳',    t: 'ה׳ אורי וישעי — ממי אירא? ה׳ מעוז חיי — ממי אפחד?' },
+    { ref: 'תהילים קי״ט, י׳',   t: 'בכל לבי דרשתיך, אל תשגני ממצוותיך.' },
+    { ref: 'תהילים ק״ג, י״ג',   t: 'כרחם אב על בנים, רחם ה׳ על יראיו.' },
+    { ref: 'תהילים י״ז, ח׳',    t: 'שמרני כאישון בת עין, בצל כנפיך תסתירני.' },
+    { ref: 'ישעיהו מ״א, י׳',   t: 'אל תירא כי עמך אני, אל תשתע כי אני אלוקיך — אמצתיך אף עזרתיך, אף תמכתיך בימין צדקי.' },
+    { ref: 'דברים ל׳, י״ט',     t: 'ובחרת בחיים, למען תחיה אתה וזרעך.' },
+    { ref: 'משלי כ״ד, ט״ז',     t: 'כי שבע ייפול צדיק וקם, ורשעים ייכשלו ברעה.' },
+    { ref: 'תהילים פ״ב, ו׳',   t: 'אני אמרתי אלוקים אתם, ובני עליון כולכם.' },
+    { ref: 'תהילים ק״ג, י״ב',   t: 'כרחוק מזרח ממערב — הרחיק ממנו את פשעינו.' },
+    { ref: 'שיר השירים ו׳, ג׳', t: 'אני לדודי ודודי לי, הרועה בשושנים.' },
+    { ref: 'בראשית ל״ט, כ״א',   t: 'ויהי ה׳ את יוסף, וייט אליו חסד.' },
+  ];
+
+  // Station 3: insight / chazal that shifts perspective
+  const _EM_INSIGHTS = [
+    { src: 'הגר״א',                t: 'רגע אחד של ניצחון על היצר הרע — שווה את כל העולם הזה ואת כל העולם הבא.' },
+    { src: 'תנא דבי אליהו',        t: 'כל הגדול מחבירו — יצרו גדול ממנו. עצם הניסיון הזה הוא סימן לגדולה שלך.' },
+    { src: 'יומא ל״ח:',            t: 'בא לטהר — מסייעין אותו. ברגע שאתה בוחר בטוב, השמיים נחלצים לעזרתך מיד.' },
+    { src: 'משנה אבות ד״, א׳',    t: 'איזהו גיבור? הכובש את יצרו. אתה גיבור אמיתי כשאתה נלחם בעצמך — לא במישהו אחר.' },
+    { src: 'חז״ל',                  t: 'מחשבה טובה — הקב״ה מצרפה למעשה. עצם הרצון שלך עכשיו לנצח — נחשב כאילו ניצחת.' },
+    { src: 'תניא',                  t: 'הבינוני — נלחם עם יצרו בכל יום. עצם המלחמה היא הדרגה, לא הניצחון. אתה במקום הנכון.' },
+    { src: 'חובות הלבבות',         t: 'הביטחון בה׳ — הוא הנשק שמפיל את היצר ברגע אחד. תאמין שהוא איתך עכשיו.' },
+    { src: 'אגרת הרמב״ן',          t: 'כל הניצחונות הקטנים שלך — שמורים אצל ה׳ לעולם. אף לא אחד נשכח.' },
+    { src: 'חז״ל',                  t: 'הקב״ה משתעשע בצדיקים שמנצחים את יצרם. אתה גורם עכשיו נחת רוח לאבא שבשמיים.' },
+    { src: 'מסילת ישרים י״א',     t: 'הקדושה מתחילה בהשתדלות שלך — ונגמרת במתנה מן השמיים. תעשה את החצי שלך — והוא יעשה את השאר.' },
+    { src: 'קידושין ל׳:',          t: 'בראתי יצר הרע — בראתי לו תורה תבלין. דבר תורה אחד עכשיו — מנטרל הכל.' },
+    { src: 'חז״ל',                  t: 'אם פגע בך מנוול זה — משכהו לבית המדרש. הסט את המחשבה לדבר תורה אחד.' },
+    { src: 'הבן איש חי',            t: 'יצר הרע גובר עליך — סימן שאתה במלחמה גדולה. רק בעיר נצורה מציבים שומרים.' },
+    { src: 'חז״ל',                  t: 'במקום שבעלי תשובה עומדים — צדיקים גמורים אינם יכולים לעמוד. הניצחון שלך גבוה מן הצדיק הגמור.' },
+    { src: 'ר׳ נחמן מברסלב',       t: 'אסור להתייאש לעולם. גם אם נפלת אלף פעם — הקימה שלך עכשיו היא מה שנחשב.' },
+  ];
+
+  // Station 4: personal commitment — type something concrete
+  const _EM_COMMITS = [
+    { prompt: 'כתוב את שם האבא או הסבא שלך — תקרא אותו בקול ותחשוב מה הוא היה אומר עכשיו.',  ph: 'שם...' },
+    { prompt: 'כתוב את שם הילד שאתה רוצה להיות לו אבא בעוד 5 שנים. דמיין אותו מסתכל עליך.', ph: 'שם הילד שלך לעתיד...' },
+    { prompt: 'כתוב מה תעשה מחר בבוקר אם תנצח הלילה.', ph: 'מחר בבוקר אני...' },
+    { prompt: 'כתוב את חתימתך בעוד 10 שנים — על מה תהיה הכי גאה?', ph: 'בעוד 10 שנים אהיה גאה ש...' },
+    { prompt: 'כתוב 3 דברים שאתה מודה עליהם עכשיו — גם אם זה קשה.', ph: 'מודה ל-ה׳ על...' },
+    { prompt: 'כתוב מה היית רוצה להגיד למשיח כשהוא יבוא.', ph: 'משיח, אני...' },
+    { prompt: 'כתוב את שם החבר הכי טוב שלך. תדמיין שהוא מתפלל עליך עכשיו.', ph: 'שם החבר...' },
+    { prompt: 'כתוב את שם הרב או הצדיק שאתה מכיר. תדמיין שהוא מתפלל עליך עכשיו.', ph: 'שם הצדיק...' },
+    { prompt: 'כתוב הבטחה לעצמך — מה תרגיש בעוד שעה אם תנצח עכשיו?', ph: 'בעוד שעה ארגיש...' },
+    { prompt: 'כתוב משפט אחד שאתה רוצה להגיד לעצמך מחר בבוקר.', ph: 'בוקר טוב לי. אני...' },
+    { prompt: 'כתוב על מי או על מה אתה מתפלל ביום־יום. עכשיו ביקש לעצמך — לכוח להתגבר.', ph: 'אני מתפלל על...' },
+    { prompt: 'כתוב מה היית רוצה שיגידו עליך אנשים שמכירים אותך באמת.', ph: 'אני רוצה שיגידו עליי...' },
+  ];
+
+  // Station 5 — closing celebration (one of these per session)
+  const _EM_CLOSING = [
+    { t: 'ניצחת', d: 'אתה כבר ניצחת ברגע שלחצת על הכפתור הזה. כל מה שעבר עליך עכשיו — נכתב בשמיים. רגע אחד של ניצחון — שווה כל העולם.' },
+    { t: 'גיבור', d: 'איזהו גיבור? הכובש את יצרו. אתה גיבור. תכניס את הניצחון הזה לתוך הלב — הוא נשאר לתמיד.' },
+    { t: 'בא לטהר', d: 'אתה בחרת לטהר את עצמך — והשמיים סייעו לך. אל תפסיק להאמין שאתה יכול. הכוח הזה איתך תמיד.' },
+    { t: 'נחת רוח', d: 'נגרמה עכשיו נחת רוח גדולה לאבא שבשמיים. הרגע הזה יישמר אצלו לזיכרון של אהבה.' },
+    { t: 'אור', d: 'הוספת עכשיו אור גדול בעולם. כל ניצחון של אדם — מאיר על כל הסביבה. אתה לא עשית את זה רק בשבילך.' },
+  ];
+
+  // ---- State ----
+  let _emTimerId = null, _emStationTimerId = null, _emEndTs = 0;
+  let _emCurStation = 0, _emSession = null;
+  const _EM_DURATION_MS = 5 * 60 * 1000;
+  const _EM_STATION_MS = 60 * 1000;
+
+  function _emPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function _emFmt(ms){
     ms = Math.max(0, ms);
     const m = Math.floor(ms/60000);
     const s = Math.floor((ms%60000)/1000);
     return m + ':' + String(s).padStart(2,'0');
   }
-  function _emActivateStep(elapsedMs){
-    const mins = Math.floor(elapsedMs / 60000);
-    document.querySelectorAll('#emergencyModal .em-step').forEach(function(el){
-      const m = parseInt(el.getAttribute('data-min'),10);
-      el.classList.toggle('active', m <= mins);
-      el.classList.toggle('done',   m <  mins);
-    });
+  function _emSessionCount(){
+    try { return parseInt(localStorage.getItem('neria_em_sessions_v1')||'0',10); } catch(e) { return 0; }
   }
-  function _emRotateTehilim(){
-    const t = _EM_TEHILIM[_emTehilimIdx % _EM_TEHILIM.length];
-    const te = document.getElementById('emTehilimText');
-    const re = document.getElementById('emTehilimRef');
-    if (te) te.textContent = t.t;
-    if (re) re.textContent = t.r;
-    _emTehilimIdx++;
+  function _emIncSessions(){
+    try { const n = _emSessionCount() + 1; localStorage.setItem('neria_em_sessions_v1', String(n)); return n; } catch(e) { return 1; }
   }
+
+  function _emBuildSession(){
+    const theme = _emPick(_EM_THEMES);
+    return {
+      theme: theme,
+      stations: [
+        // 1) Hero quote framing (already shown), action
+        { kind:'action',  icon: _emPick(_EM_ACTIONS).i, title: 'פעולה ראשונה — עכשיו', text: null, pick: _emPick(_EM_ACTIONS) },
+        // 2) Verse to read aloud
+        { kind:'verse',   icon: '📖', title: 'פסוק לקרוא בקול — 3 פעמים', pick: _emPick(_EM_VERSES) },
+        // 3) Insight to internalize
+        { kind:'insight', icon: '💡', title: 'תובנה להפנים', pick: _emPick(_EM_INSIGHTS) },
+        // 4) Personal commitment (type something)
+        { kind:'commit',  icon: '✍️', title: 'מחויבות אישית — כתוב כאן', pick: _emPick(_EM_COMMITS) },
+        // 5) Closing celebration
+        { kind:'close',   icon: '🏆', title: 'סיום — הניצחון שלך', pick: _emPick(_EM_CLOSING) },
+      ]
+    };
+  }
+
+  function _emRenderStation(idx){
+    if (!_emSession) return;
+    const st = _emSession.stations[idx];
+    if (!st) return;
+    document.getElementById('emStationStep').textContent = 'תחנה ' + (idx+1) + ' / 5';
+    document.getElementById('emStationIcon').textContent = st.icon;
+    document.getElementById('emStationTitle').textContent = st.title;
+    const textEl = document.getElementById('emStationText');
+    const inputEl = document.getElementById('emStationInput');
+    inputEl.style.display = 'none';
+    let html = '';
+    if (st.kind === 'action') {
+      html = '<strong style="font-size:17px">' + st.pick.t + '</strong><br>' + st.pick.d;
+    } else if (st.kind === 'verse') {
+      html = '״' + st.pick.t + '״<span class="em-ref">' + st.pick.ref + '</span>';
+    } else if (st.kind === 'insight') {
+      html = st.pick.t + '<span class="em-source">— ' + st.pick.src + '</span>';
+    } else if (st.kind === 'commit') {
+      html = st.pick.prompt;
+      inputEl.style.display = 'block';
+      const inp = document.getElementById('emCommitInput');
+      if (inp) { inp.placeholder = st.pick.ph; inp.value = ''; }
+    } else if (st.kind === 'close') {
+      html = '<strong style="font-size:18px;color:#2f8a3f">' + st.pick.t + '</strong><br>' + st.pick.d;
+    }
+    textEl.innerHTML = html;
+    // Update progress dots
+    const prog = document.getElementById('emProgress');
+    if (prog) {
+      let dots = '';
+      for (let i = 0; i < 5; i++) {
+        const cls = (i < idx) ? 'em-dot done' : (i === idx ? 'em-dot active' : 'em-dot');
+        dots += '<span class="' + cls + '"></span>';
+      }
+      prog.innerHTML = dots;
+    }
+  }
+
+  function _emAdvanceStation(){
+    if (!_emSession) return;
+    if (_emCurStation >= 4) {
+      // Already on final station — unlock win
+      const winBtn = document.getElementById('emWin');
+      if (winBtn) winBtn.removeAttribute('disabled');
+      return;
+    }
+    _emCurStation++;
+    _emRenderStation(_emCurStation);
+    if (_emCurStation === 4) {
+      const winBtn = document.getElementById('emWin');
+      if (winBtn) winBtn.removeAttribute('disabled');
+    }
+  }
+
   function _emTick(){
     const now = Date.now();
     const remain = _emEndTs - now;
     const tEl = document.getElementById('emTimer');
-    const rt  = document.getElementById('emRemainText');
     if (tEl) tEl.textContent = _emFmt(remain);
-    if (rt)  rt.textContent  = Math.max(1, Math.ceil(remain/60000));
-    _emActivateStep(_EM_DURATION_MS - remain);
+    // Auto-advance based on elapsed time, only if user hasn't already advanced
+    const elapsed = _EM_DURATION_MS - remain;
+    const expectedStation = Math.min(4, Math.floor(elapsed / _EM_STATION_MS));
+    if (expectedStation > _emCurStation) {
+      _emCurStation = expectedStation;
+      _emRenderStation(_emCurStation);
+      if (_emCurStation === 4) {
+        const winBtn = document.getElementById('emWin');
+        if (winBtn) winBtn.removeAttribute('disabled');
+      }
+    }
     if (remain <= 0) {
       clearInterval(_emTimerId); _emTimerId = null;
       const winBtn = document.getElementById('emWin');
       if (winBtn) winBtn.removeAttribute('disabled');
       if (tEl) tEl.textContent = '0:00 ✓';
-      try { toast('הזמן עבר — אתה כבר ניצחת. לחץ "ניצחתי" כדי לתעד.'); } catch(e) {}
+      try { toast('הזמן עבר — אתה ניצחת. לחץ "ניצחתי" כדי לתעד.'); } catch(e) {}
     }
   }
+
   function openEmergency(){
     const m = document.getElementById('emergencyModal'); if (!m) return;
+    _emSession = _emBuildSession();
+    _emCurStation = 0;
     _emEndTs = Date.now() + _EM_DURATION_MS;
-    _emTehilimIdx = 0;
-    _emRotateTehilim();
-    const winBtn = document.getElementById('emWin');
-    if (winBtn) winBtn.setAttribute('disabled','disabled');
+    // Apply theme
+    const t = _emSession.theme;
+    const titleEl = document.getElementById('emSessionTheme'); if (titleEl) { titleEl.textContent = t.name; titleEl.style.background = t.color; titleEl.style.color = '#fff7e0'; }
+    const heroEl = document.getElementById('emHeroQuote'); if (heroEl) { heroEl.textContent = t.quote; heroEl.style.borderRightColor = t.color; heroEl.style.borderLeftColor = t.color; }
+    const numEl = document.getElementById('emSessionNum'); if (numEl) numEl.textContent = _emIncSessions();
+    const winBtn = document.getElementById('emWin'); if (winBtn) winBtn.setAttribute('disabled','disabled');
+    _emRenderStation(0);
     m.classList.add('active');
     _emTick();
     if (_emTimerId) clearInterval(_emTimerId);
-    _emTimerId = setInterval(function(){
-      _emTick();
-      // rotate verses every ~12 seconds
-      if (Math.floor((Date.now() - (_emEndTs - _EM_DURATION_MS))/12000) > (_emTehilimIdx - 1)) _emRotateTehilim();
-    }, 1000);
+    _emTimerId = setInterval(_emTick, 1000);
   }
+
   function closeEmergency(){
     const m = document.getElementById('emergencyModal'); if (m) m.classList.remove('active');
     if (_emTimerId) { clearInterval(_emTimerId); _emTimerId = null; }
   }
+
   function emergencyWin(){
-    // Award +50 points by logging a positive entry in the brit log
+    // Build a positive log entry that captures what they wrote in the commit station
+    let commitText = '';
+    try { const inp = document.getElementById('emCommitInput'); if (inp) commitText = (inp.value||'').trim(); } catch(e) {}
+    const themeName = (_emSession && _emSession.theme) ? _emSession.theme.name : '';
+    const text = '🏆 ניצחתי את היצר באמצעות פרוטוקול הלילה' + (themeName ? ' (' + themeName + ')' : '') + (commitText ? ' — "' + commitText + '"' : '');
     const arr = loadBritLog();
     arr.push({
       ts: Date.now(),
-      text: '🏆 ניצחתי את היצר באמצעות פרוטוקול הלילה',
+      text: text,
       kind: 'victory',
       usedMethod: true,
+      usedEmergency: true,
       calledFriend: false,
       friendAnswered: null,
       penalty: 0,
@@ -1005,13 +1176,13 @@
       bonus: 50
     });
     saveBritLog(arr);
-    // Add bonus points to today
     todayState.bonus = (todayState.bonus || 0) + 50;
     saveToday();
     closeEmergency();
     try { toast('🏆 ניצחת! +50 נקודות בונוס נרשמו ביומן.'); } catch(e) {}
     render();
   }
+
   function emergencyLose(){
     closeEmergency();
     _preFillEmergencyYes = true;
@@ -1039,6 +1210,8 @@
     if (fabLabel) fabLabel.textContent = night ? '🌙 חילוץ לילי' : '🛡️ כפתור חילוץ';
   }
   function _wireEmergency(){
+    const done = document.getElementById('emDoneBtn');
+    if (done) done.addEventListener('click', _emAdvanceStation);
     const btn = document.getElementById('emergencyBtn');
     if (btn) btn.addEventListener('click', openEmergency);
     const fab = document.getElementById('emFab');
