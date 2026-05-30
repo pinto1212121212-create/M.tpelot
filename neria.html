@@ -255,6 +255,36 @@
   .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
+  /* Emergency mode — nighttime firewall */
+  .em-btn-wrap { margin: 14px 0; }
+  .em-btn { display:block; width:100%; padding:18px 14px; background:linear-gradient(135deg,#a32a2a,#7a1f1f); color:#fff; border:none; border-radius:12px; font-family:'Heebo',sans-serif; font-weight:900; font-size:17px; letter-spacing:0.3px; cursor:pointer; box-shadow:0 6px 18px rgba(163,42,42,0.45); animation:emPulse 2.4s ease-in-out infinite; }
+  .em-btn:active { transform: scale(0.98); }
+  @keyframes emPulse { 0%,100% { box-shadow:0 6px 18px rgba(163,42,42,0.45); } 50% { box-shadow:0 6px 28px rgba(163,42,42,0.75); } }
+  .em-btn-sub { margin-top:6px; font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); text-align:center; font-style:italic; }
+  .em-modal { max-width: 480px; }
+  .em-header { text-align:center; margin-bottom:12px; }
+  .em-header h2 { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:22px; color:var(--wine); margin:0; }
+  .em-header p { font-family:'Frank Ruhl Libre',serif; font-size:14px; color:var(--brown-deep); margin:6px 0 0; }
+  .em-timer { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:56px; color:var(--gold-dark); line-height:1; margin:12px 0; }
+  .em-steps { background:var(--parchment-light); border:1px solid var(--gold); border-radius:10px; padding:12px; margin:14px 0; }
+  .em-step { display:flex; gap:12px; padding:10px 8px; border-bottom:1px dashed var(--gold); opacity:0.35; transition:opacity 0.35s; }
+  .em-step:last-child { border-bottom:none; }
+  .em-step.active { opacity:1; }
+  .em-step.done { opacity:0.65; }
+  .em-step.done .em-text::before { content:"✓ "; color:#2f8a3f; font-weight:700; }
+  .em-num { width:32px; height:32px; flex-shrink:0; border-radius:50%; background:var(--gold-dark); color:#fff; font-family:'Heebo',sans-serif; font-weight:900; font-size:16px; display:flex; align-items:center; justify-content:center; }
+  .em-step.done .em-num { background:#2f8a3f; }
+  .em-text { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:15px; color:var(--brown-deep); line-height:1.4; align-self:center; }
+  .em-tehilim { background:linear-gradient(160deg, rgba(201,169,97,0.16), rgba(107,31,45,0.06)); border:1.5px solid var(--gold); border-radius:10px; padding:14px; margin:14px 0; text-align:center; min-height:90px; display:flex; align-items:center; justify-content:center; }
+  .em-tehilim-text { font-family:'Frank Ruhl Libre',serif; font-size:17px; font-weight:700; color:var(--brown-deep); line-height:1.6; font-style:italic; }
+  .em-tehilim-ref { font-family:'Frank Ruhl Libre',serif; font-size:12px; color:var(--brown-light); margin-top:6px; font-style:normal; }
+  .em-actions { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .em-win { padding:14px; background:linear-gradient(135deg,#3a9a4a,#2f7a3a); color:#fff; border:none; border-radius:10px; font-family:'Heebo',sans-serif; font-weight:900; font-size:16px; cursor:pointer; opacity:0.4; transition:opacity 0.4s; }
+  .em-win:not([disabled]) { opacity:1; box-shadow:0 4px 12px rgba(58,154,74,0.45); }
+  .em-win[disabled] { cursor:not-allowed; }
+  .em-lose { padding:12px; background:transparent; color:var(--brown); border:1.5px solid var(--brown-light); border-radius:10px; font-family:'Heebo',sans-serif; font-weight:600; font-size:14px; cursor:pointer; }
+  .em-lose:hover { background:var(--parchment-light); }
+  .em-tip { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); text-align:center; margin-top:8px; font-style:italic; }
   .defense-card { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(201,169,97,0.18), rgba(107,31,45,0.08)); border: 2px solid var(--gold-dark); border-radius: 10px; }
   .defense-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 17px; color: var(--brown-deep); margin-bottom: 8px; text-align: center; }
   .defense-tagline { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 13.5px; color: var(--wine); text-align: center; margin: 6px 0; }
@@ -389,7 +419,7 @@
   <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
 
   <div class="defense-card">
-    <div class="defense-title">🏃 דרך יוסף הצדיק — חומת האש שלך</div>
+    <div class="defense-title">🏃 דרך יוסף הצדיק — חומת האש הראשונה</div>
     <div class="defense-body">
       <div class="defense-tagline">״ויעזוב בגדו אצלה וינס ויצא החוצה״ — בריחה היא ניצחון.</div>
       <div class="defense-steps">תוך <strong>3 שניות</strong> מהרגע שאתה מזהה פיתוי:</div>
@@ -399,8 +429,33 @@
         <li>אמור בקול: ״אני בורח כיוסף הצדיק״</li>
         <li>עשה משהו פיזי חזק — הליכה, מים קרים על הפנים, 20 שכיבות סמיכה</li>
       </ol>
-      <div class="defense-tagline">המוח לא יכול להישאר בפיתוי כשהגוף משנה תנוחה דרמטית. זה עובד.</div>
     </div>
+  </div>
+
+  <div class="defense-card" style="border-color:#2a5a7a; background:linear-gradient(160deg, rgba(42,90,122,0.16), rgba(60,30,10,0.05));">
+    <div class="defense-title">🌙 פרוטוקול לילה — חומת אש שנייה</div>
+    <div class="defense-body">
+      <div class="defense-tagline">הלילה הוא הזמן הקשה. הכן את ההגנה <strong>לפני</strong> שתהיה זקוק לה.</div>
+      <div class="defense-steps"><strong>לפני השינה:</strong></div>
+      <ol class="defense-list">
+        <li>הטלפון במטען <strong>מחוץ לחדר השינה</strong> — בסלון, במטבח</li>
+        <li>אם חייב טלפון ליד — מצב טיסה + לא להוציא מהשמיכה</li>
+        <li>לא להישאר עם המסך בלילה — לכבות אורות, ספר על השידה</li>
+      </ol>
+      <div class="defense-steps" style="margin-top:10px"><strong>אם הותקפת באמצע הלילה:</strong></div>
+      <ol class="defense-list">
+        <li>לקום מהמיטה <strong>תוך 5 שניות</strong> — בלי לחשוב</li>
+        <li>למטבח או לשירותים — לשטוף פנים במים <strong>קרים</strong></li>
+        <li>לשתות כוס מים. לעמוד או ללכת לפחות 5 דקות</li>
+        <li>לחזור למיטה רק אחרי שהפיתוי שכך</li>
+      </ol>
+      <div class="defense-tagline" style="margin-top:10px">או — לחץ על כפתור החירום למטה והפעל את הפרוטוקול האוטומטי.</div>
+    </div>
+  </div>
+
+  <div class="em-btn-wrap">
+    <button class="em-btn" id="emergencyBtn">🚨 התקף יצר עכשיו — לחץ כאן</button>
+    <div class="em-btn-sub">5 דקות של בריחה מודרכת. אחרי זה — תרגיש אחרת.</div>
   </div>
 
   <div class="brit-log-section" id="britLogSection">
@@ -556,6 +611,38 @@
   </div>
 
   <!-- Fall questionnaire -->
+  <!-- Emergency mode modal -->
+  <div class="modal-backdrop" id="emergencyModal">
+    <div class="modal em-modal">
+      <div class="modal-header"><div class="modal-title">🛡️ מצב חירום — בריחה</div><button class="modal-close" id="emergencyClose">×</button></div>
+      <div class="modal-body">
+        <div class="em-header">
+          <h2>אתה בורח עכשיו.</h2>
+          <p>בעוד <span id="emRemainText">5</span> דקות תרגיש אחרת. תחזיק מעמד.</p>
+        </div>
+        <div class="em-timer" id="emTimer">5:00</div>
+        <div class="em-steps">
+          <div class="em-step active" data-min="0"><div class="em-num">1</div><div class="em-text">קום מהמיטה <strong>עכשיו</strong>. לך למטבח או לשירותים.</div></div>
+          <div class="em-step" data-min="1"><div class="em-num">2</div><div class="em-text">שטוף את הפנים שלך במים <strong>קרים</strong> — לפחות 10 שניות.</div></div>
+          <div class="em-step" data-min="2"><div class="em-num">3</div><div class="em-text">שתה כוס מים קרים. נשום עמוק 5 פעמים.</div></div>
+          <div class="em-step" data-min="3"><div class="em-num">4</div><div class="em-text">אמור בקול: ״אני בורח כיוסף הצדיק. אני שולט בעצמי״.</div></div>
+          <div class="em-step" data-min="4"><div class="em-num">5</div><div class="em-text">המשך לעמוד או ללכת. הפיתוי שוכך — אתה כבר ניצחת.</div></div>
+        </div>
+        <div class="em-tehilim">
+          <div>
+            <div class="em-tehilim-text" id="emTehilimText">לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.</div>
+            <div class="em-tehilim-ref" id="emTehilimRef">תהילים נ״א, י״ב</div>
+          </div>
+        </div>
+        <div class="em-actions">
+          <button class="em-win" id="emWin" disabled>✅ ניצחתי — תרשום הצלחה (+50 נק׳)</button>
+          <button class="em-lose" id="emLose">💔 לא הצלחתי — לתעד נפילה</button>
+        </div>
+        <div class="em-tip">המסך הזה צריך להישאר פתוח 5 דקות מלאות לפני שתוכל לסיים. אל תסגור אותו לפני הסוף.</div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-backdrop" id="fallQuizModal">
     <div class="modal">
       <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
@@ -717,7 +804,7 @@
 
   function mitzvaItemPoints(m, item) { if (!item) return 0; let pts = 0; if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points*2 : m.points; if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; }); return pts; }
   function mitzvaMaxPoints(m) { let p = m.hasMinyan ? m.points*2 : m.points; if (m.extras) m.extras.forEach(ex => p += ex.points); return p; }
-  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); t -= (todayState.penalty || 0); return t; }
+  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); t -= (todayState.penalty || 0); return t + (todayState.bonus||0); }
   function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
   function isPerfectDay(items) { return MITZVOT.every(m => items[m.id] && items[m.id].done); }
 
@@ -785,10 +872,12 @@
     if (!entries.length) { list.innerHTML = '<div class="brit-log-empty">אין תיעודים. בעזרת ה׳ שלא יהיו.</div>'; return; }
     list.innerHTML = entries.map(e => {
       const tags = [];
-      if (e.kind === 'video') tags.push('📹 סרט לא טוב');
+      if (e.kind === 'victory') tags.push('🏆 ניצחת!');
+      else if (e.kind === 'video') tags.push('📹 סרט לא טוב');
       else if (e.kind === 'brit') tags.push('🛡️ ברית');
       else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
       if (e.moneyFine) tags.push('💸 ' + e.moneyFine + ' ש״ח');
+      if (e.bonus) tags.push('🌟 +' + e.bonus + ' נק׳');
       if (e.usedMethod) tags.push('🏃 ברחתי כיוסף');
       if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
       const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
@@ -796,6 +885,128 @@
     }).join('');
     list.querySelectorAll('.brit-log-entry-del').forEach(b => b.addEventListener('click', () => deleteBritLogEntry(parseInt(b.dataset.ts,10))));
   }
+  // ============= Emergency mode (nighttime firewall) =============
+  let _emTimerId = null, _emEndTs = 0, _emTehilimIdx = 0;
+  const _EM_DURATION_MS = 5 * 60 * 1000;
+  const _EM_TEHILIM = [
+    {t:'לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.', r:'תהילים נ״א, י״ב'},
+    {t:'אל תשליכני מלפניך, ורוח קדשך אל תקח ממני.', r:'תהילים נ״א, י״ג'},
+    {t:'השיבה לי ששון ישעך, ורוח נדיבה תסמכני.', r:'תהילים נ״א, י״ד'},
+    {t:'ה׳ לי לא אירא — מה יעשה לי אדם.', r:'תהילים קי״ח, ו׳'},
+    {t:'יושב בסתר עליון — בצל שדי יתלונן.', r:'תהילים צ״א, א׳'},
+    {t:'ה׳ צבאות עמנו, משגב לנו אלוקי יעקב סלה.', r:'תהילים מ״ו, ח׳'},
+    {t:'אורך וישעי — ה׳, ממי אירא?', r:'תהילים כ״ז, א׳'},
+    {t:'בכל לבי דרשתיך, אל תשגני ממצוותיך.', r:'תהילים קי״ט, י׳'},
+    {t:'ויאמר יוסף — איך אעשה הרעה הגדולה הזאת, וחטאתי לאלוקים?', r:'בראשית ל״ט, ט׳'},
+    {t:'הוסף נא — חיים טובים, חיים של ענווה ויראת חטא.', r:'מתפילת ראש חודש'}
+  ];
+
+  function _emFmt(ms){
+    ms = Math.max(0, ms);
+    const m = Math.floor(ms/60000);
+    const s = Math.floor((ms%60000)/1000);
+    return m + ':' + String(s).padStart(2,'0');
+  }
+  function _emActivateStep(elapsedMs){
+    const mins = Math.floor(elapsedMs / 60000);
+    document.querySelectorAll('#emergencyModal .em-step').forEach(function(el){
+      const m = parseInt(el.getAttribute('data-min'),10);
+      el.classList.toggle('active', m <= mins);
+      el.classList.toggle('done',   m <  mins);
+    });
+  }
+  function _emRotateTehilim(){
+    const t = _EM_TEHILIM[_emTehilimIdx % _EM_TEHILIM.length];
+    const te = document.getElementById('emTehilimText');
+    const re = document.getElementById('emTehilimRef');
+    if (te) te.textContent = t.t;
+    if (re) re.textContent = t.r;
+    _emTehilimIdx++;
+  }
+  function _emTick(){
+    const now = Date.now();
+    const remain = _emEndTs - now;
+    const tEl = document.getElementById('emTimer');
+    const rt  = document.getElementById('emRemainText');
+    if (tEl) tEl.textContent = _emFmt(remain);
+    if (rt)  rt.textContent  = Math.max(1, Math.ceil(remain/60000));
+    _emActivateStep(_EM_DURATION_MS - remain);
+    if (remain <= 0) {
+      clearInterval(_emTimerId); _emTimerId = null;
+      const winBtn = document.getElementById('emWin');
+      if (winBtn) winBtn.removeAttribute('disabled');
+      if (tEl) tEl.textContent = '0:00 ✓';
+      try { toast('הזמן עבר — אתה כבר ניצחת. לחץ "ניצחתי" כדי לתעד.'); } catch(e) {}
+    }
+  }
+  function openEmergency(){
+    const m = document.getElementById('emergencyModal'); if (!m) return;
+    _emEndTs = Date.now() + _EM_DURATION_MS;
+    _emTehilimIdx = 0;
+    _emRotateTehilim();
+    const winBtn = document.getElementById('emWin');
+    if (winBtn) winBtn.setAttribute('disabled','disabled');
+    m.classList.add('active');
+    _emTick();
+    if (_emTimerId) clearInterval(_emTimerId);
+    _emTimerId = setInterval(function(){
+      _emTick();
+      // rotate verses every ~12 seconds
+      if (Math.floor((Date.now() - (_emEndTs - _EM_DURATION_MS))/12000) > (_emTehilimIdx - 1)) _emRotateTehilim();
+    }, 1000);
+  }
+  function closeEmergency(){
+    const m = document.getElementById('emergencyModal'); if (m) m.classList.remove('active');
+    if (_emTimerId) { clearInterval(_emTimerId); _emTimerId = null; }
+  }
+  function emergencyWin(){
+    // Award +50 points by logging a positive entry in the brit log
+    const arr = loadBritLog();
+    arr.push({
+      ts: Date.now(),
+      text: '🏆 ניצחתי את היצר באמצעות פרוטוקול הלילה',
+      kind: 'victory',
+      usedMethod: true,
+      calledFriend: false,
+      friendAnswered: null,
+      penalty: 0,
+      moneyFine: 0,
+      bonus: 50
+    });
+    saveBritLog(arr);
+    // Add bonus points to today
+    todayState.bonus = (todayState.bonus || 0) + 50;
+    saveToday();
+    closeEmergency();
+    try { toast('🏆 ניצחת! +50 נקודות בונוס נרשמו ביומן.'); } catch(e) {}
+    render();
+  }
+  function emergencyLose(){
+    closeEmergency();
+    openFallQuiz('');
+  }
+
+  // Wire up emergency button + modal controls (deferred until DOM is ready)
+  function _wireEmergency(){
+    const btn = document.getElementById('emergencyBtn');
+    if (btn) btn.addEventListener('click', openEmergency);
+    const cls = document.getElementById('emergencyClose');
+    if (cls) cls.addEventListener('click', function(){
+      if (!confirm('עוד לא עברו 5 דקות. אם תסגור עכשיו לא תיחשב הצלחה. האם להמשיך?')) return;
+      closeEmergency();
+    });
+    const w = document.getElementById('emWin');
+    if (w) w.addEventListener('click', function(){ if (!w.hasAttribute('disabled')) emergencyWin(); });
+    const l = document.getElementById('emLose');
+    if (l) l.addEventListener('click', emergencyLose);
+    const m = document.getElementById('emergencyModal');
+    if (m) m.addEventListener('click', function(e){
+      if (e.target !== m) return;
+      if (!confirm('עוד לא עברו 5 דקות. אם תסגור עכשיו לא תיחשב הצלחה. האם להמשיך?')) return;
+      closeEmergency();
+    });
+  }
+
   function addBritLogEntry() { const inp = document.getElementById('britLogInput'); if (!inp) return; if (!(inp.value||'').trim()) return; openFallQuiz(inp.value.trim()); }
   function deleteBritLogEntry(ts) {
     const all = loadBritLog(); const entry = all.find(e => e.ts === ts);
@@ -1371,6 +1582,7 @@
   // Fall quiz
   document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(btn => btn.addEventListener('click', () => selectFallAnswer(btn.dataset.q, btn.dataset.val, btn)));
   document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
+  _wireEmergency();
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
   // Edit day
