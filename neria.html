@@ -437,6 +437,49 @@
   .v-rays { transform-box:view-box; transform-origin:60px 64px; animation:vRot2 90s linear infinite; }
 
 
+
+  /* RED distress override for the hero button — overrides the earlier gold theme */
+  .em-btn-wrap { background: linear-gradient(135deg, rgba(201,58,58,0.10) 0%, rgba(122,32,48,0.05) 100%) !important; border-color: #c93a3a !important; }
+  .em-btn-wrap.night { background: linear-gradient(135deg, rgba(201,58,58,0.10) 0%, rgba(122,32,48,0.05) 100%) !important; border-color: #c93a3a !important; }
+  .em-hero-shield { filter: drop-shadow(0 3px 8px rgba(201,58,58,0.55)) !important; }
+  .em-btn-wrap.night .em-hero-shield { filter: drop-shadow(0 3px 8px rgba(201,58,58,0.55)) !important; }
+  .em-hero-title { color: #8a1f1f !important; }
+  .em-btn-wrap.night .em-hero-title { color: #8a1f1f !important; }
+  .em-btn { background: linear-gradient(135deg, #c93a3a, #8a1f1f) !important; box-shadow: 0 6px 18px rgba(201,58,58,0.50) !important; animation: emBreatheRed 2.8s ease-in-out infinite !important; font-size: 19px !important; }
+  .em-btn-wrap.night .em-btn { background: linear-gradient(135deg, #c93a3a, #8a1f1f) !important; box-shadow: 0 6px 18px rgba(201,58,58,0.50) !important; animation: emBreatheRed 2.8s ease-in-out infinite !important; }
+  @keyframes emBreatheRed { 0%, 100% { box-shadow: 0 6px 18px rgba(201,58,58,0.50); } 50% { box-shadow: 0 8px 30px rgba(220,80,80,0.85); } }
+  .em-btn-sub { color: #8a1f1f !important; font-weight: 700 !important; }
+  .em-btn-wrap.night .em-btn-sub { color: #8a1f1f !important; }
+
+  /* === Personal note card === */
+  .pnote-card { margin: 16px 0; padding: 16px; background: linear-gradient(160deg, #fef3d6, #fde4a4); border: 2px solid #d4a849; border-radius: 12px; box-shadow: 0 4px 14px rgba(212,168,73,0.25); }
+  .pnote-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 16px; color: #6b4a1a; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .pnote-text { font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: #4a3210; line-height: 1.6; font-style: italic; min-height: 50px; padding: 8px 10px; background: rgba(255,255,255,0.55); border-radius: 8px; border-right: 3px solid #d4a849; }
+  .pnote-text.empty { color: #8a7240; font-style: italic; }
+  .pnote-edit-btn { margin-top: 10px; padding: 8px 16px; background: #d4a849; color: #fff; border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .pnote-edit-btn:hover { background: #b8923f; }
+
+  /* === Victories counter card === */
+  .victories-card { margin: 16px 0; padding: 16px; background: linear-gradient(160deg, #d4f5d8, #a8e8b0); border: 2px solid #3a9a4a; border-radius: 12px; text-align: center; box-shadow: 0 4px 14px rgba(58,154,74,0.25); }
+  .victories-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 16px; color: #1f5a32; margin-bottom: 4px; }
+  .victories-count { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 42px; color: #1f5a32; line-height: 1; margin: 4px 0; }
+  .victories-msg { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: #2f7a3a; font-style: italic; margin-top: 6px; }
+
+  /* === Tehilim chapter overlay === */
+  .tehilim-modal-body { max-height: 70vh; overflow-y: auto; padding: 16px; font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: var(--brown-deep); line-height: 1.9; text-align: justify; background: var(--parchment-light); border-radius: 10px; }
+  .tehilim-verse { margin-bottom: 8px; }
+  .tehilim-vnum { color: var(--gold-dark); font-weight: 900; font-size: 13px; margin-left: 6px; }
+  .em-tehilim-btn { display: inline-block; margin: 10px auto 0; padding: 10px 18px; background: linear-gradient(135deg, #5a3a7a, #3a2a5a); color: #fff; border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 3px 10px rgba(90,58,122,0.4); }
+  .em-tehilim-btn:hover { transform: translateY(-1px); }
+
+  /* === Aftercare card === */
+  .aftercare-card { margin: 16px 0; padding: 16px; background: linear-gradient(160deg, rgba(122,32,48,0.06), rgba(60,30,10,0.04)); border: 1.5px solid var(--wine); border-radius: 12px; }
+  .aftercare-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 16px; color: var(--wine); margin-bottom: 8px; }
+  .aftercare-body { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); line-height: 1.6; }
+  .aftercare-body ol { padding-right: 22px; margin: 8px 0; }
+  .aftercare-body li { margin: 5px 0; }
+  .aftercare-body li strong { color: var(--wine); }
+
   /* === Hero greeting card (top of home tab) — calm, personal === */
   .hero-greet { margin: 12px 0 18px; padding: 22px 20px; background: linear-gradient(160deg, #fff7e0 0%, #f5e6c4 100%); border: 1.5px solid var(--gold); border-radius: 16px; box-shadow: 0 6px 22px rgba(60,30,10,0.10), inset 0 0 0 1px rgba(255,255,255,0.5); position: relative; overflow: hidden; }
   .hero-greet::before { content: ''; position: absolute; top: -40px; left: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(201,169,97,0.3) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
@@ -459,11 +502,11 @@
   .home-mini-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 24px; color: var(--brown-deep); line-height: 1; }
   .home-mini-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); margin-top: 3px; }
 
-  /* === Softer FAB — warm gold, not red === */
-  .em-fab { background: linear-gradient(135deg, #d4a574 0%, #b88748 100%) !important; box-shadow: 0 8px 22px rgba(184,135,72,0.45) !important; border-color: rgba(255,247,224,0.7) !important; animation: emFabBreatheSoft 4s ease-in-out infinite !important; }
-  .em-fab:hover { box-shadow: 0 10px 30px rgba(184,135,72,0.65) !important; }
-  .em-fab.night { background: linear-gradient(135deg, #5a7aa0 0%, #3a5a80 100%) !important; box-shadow: 0 8px 22px rgba(58,90,128,0.55) !important; }
-  @keyframes emFabBreatheSoft { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(184,135,72,0.45); } 50% { transform: scale(1.05); box-shadow: 0 12px 32px rgba(212,165,116,0.7); } }
+  /* === FAB — always RED distress, no day/night themes === */
+  .em-fab { background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%) !important; box-shadow: 0 8px 22px rgba(201,58,58,0.55) !important; border-color: rgba(255,247,224,0.85) !important; animation: emFabBreatheRed 2.6s ease-in-out infinite !important; }
+  .em-fab:hover { box-shadow: 0 10px 30px rgba(201,58,58,0.8) !important; transform: scale(1.1) !important; }
+  .em-fab.night { background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%) !important; box-shadow: 0 8px 22px rgba(201,58,58,0.55) !important; }
+  @keyframes emFabBreatheRed { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(201,58,58,0.55); } 50% { transform: scale(1.1); box-shadow: 0 12px 36px rgba(220,80,80,0.85); } }
 
   /* === Stat row a touch cleaner === */
   .st-row { margin-bottom: 18px; }
@@ -473,6 +516,26 @@
   .mitzva-card { border-radius: 12px !important; margin-bottom: 14px !important; box-shadow: 0 3px 10px rgba(60,30,10,0.08) !important; transition: transform 0.2s, box-shadow 0.3s, background 0.3s !important; }
   .mitzva-card:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(60,30,10,0.12) !important; }
   .mitzva-card.done { box-shadow: 0 4px 16px rgba(201,169,97,0.35) !important; }
+
+
+  /* === Building tab — milestone + stats === */
+  .build-milestone { margin: 16px 0; padding: 16px; background: linear-gradient(160deg, #fef3d6, #f5e0a8); border: 2px solid #c89a34; border-radius: 12px; text-align: center; box-shadow: 0 4px 14px rgba(200,154,52,0.2); }
+  .build-milestone-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 16px; color: #6b4a1a; margin-bottom: 6px; }
+  .build-milestone-icon { font-size: 36px; margin: 4px 0; filter: drop-shadow(0 3px 8px rgba(200,154,52,0.5)); }
+  .build-milestone-msg { font-family: 'Frank Ruhl Libre', serif; font-size: 14.5px; color: #4a3210; line-height: 1.6; }
+  .build-milestone-bar-wrap { background: rgba(60,30,10,0.10); border-radius: 100px; height: 10px; margin: 12px 0 6px; overflow: hidden; }
+  .build-milestone-bar { background: linear-gradient(90deg, #d4a849, #b8851f); height: 100%; border-radius: 100px; transition: width 0.6s ease-out; }
+  .build-milestone-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: #6b4a1a; font-style: italic; margin-top: 4px; }
+
+  .build-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .build-stat-card { padding: 12px 8px; background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px; text-align: center; }
+  .build-stat-icon { font-size: 20px; margin-bottom: 4px; }
+  .build-stat-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 24px; color: var(--brown-deep); line-height: 1; }
+  .build-stat-label { font-family: 'Frank Ruhl Libre', serif; font-size: 11.5px; color: var(--brown-light); margin-top: 4px; }
+
+  .build-verse-card { margin: 16px 0; padding: 18px 16px; background: linear-gradient(135deg, rgba(60,30,10,0.04), rgba(201,169,97,0.10)); border: 1.5px dashed var(--gold-dark); border-radius: 10px; text-align: center; }
+  .build-verse-text { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-weight: 700; font-size: 16px; color: var(--brown-deep); line-height: 1.6; }
+  .build-verse-ref { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); margin-top: 6px; }
 
   /* ===== Bottom Tab Navigation + tabbed layout ===== */
   body { padding-bottom: 110px; }
@@ -541,50 +604,47 @@
     <div class="build-grid" id="buildGrid"></div>
   </div>
 
+  <div class="tabbed tab-building build-milestone" id="buildMilestone">
+    <div class="build-milestone-title" id="buildMilestoneTitle">היעד הבא</div>
+    <div class="build-milestone-icon" id="buildMilestoneIcon">🧱</div>
+    <div class="build-milestone-msg" id="buildMilestoneMsg">—</div>
+    <div class="build-milestone-bar-wrap"><div class="build-milestone-bar" id="buildMilestoneBar" style="width:0%"></div></div>
+    <div class="build-milestone-sub" id="buildMilestoneSub">—</div>
+  </div>
+
+  <div class="tabbed tab-building build-stats-row">
+    <div class="build-stat-card"><div class="build-stat-icon">📅</div><div class="build-stat-value" id="buildDaysActive">0</div><div class="build-stat-label">ימים פעילים סה״כ</div></div>
+    <div class="build-stat-card"><div class="build-stat-icon">🔥</div><div class="build-stat-value" id="buildStreak">0</div><div class="build-stat-label">רצף נוכחי</div></div>
+  </div>
+
+  <div class="tabbed tab-building build-verse-card">
+    <div class="build-verse-text" id="buildVerseText">״בְּחָכְמָה יִבָּנֶה בָּיִת, וּבִתְבוּנָה יִתְכּוֹנָן״</div>
+    <div class="build-verse-ref" id="buildVerseRef">משלי כ״ד, ג׳</div>
+  </div>
+
   <div id="mitzvotList" class="tabbed tab-home"></div>
   <button class="add-goal-btn tabbed tab-home" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
 
     <div class="tabbed tab-defense tab-header"><span class="tab-header-icon">🛡️</span><span>חומות הגנה</span></div>
   <div class="tabbed tab-defense tab-header-sub">שלוש חומות אש בהשתלשלות. אם 1 לא הספיק — 2. אם 2 לא הספיק — 3.</div>
 
-  <div class="tabbed tab-defense  defense-card">
-    <div class="defense-title">🏃 חומה 1 — דרך יוסף הצדיק</div>
-    <div class="defense-body">
-      <div class="defense-tagline">״ויעזוב בגדו אצלה וינס ויצא החוצה״ — בריחה היא ניצחון.</div>
-      <div class="defense-steps">תוך <strong>3 שניות</strong> מהרגע שאתה מזהה פיתוי:</div>
-      <ol class="defense-list">
-        <li>קום מיד — אל תהסס, אל תחשוב</li>
-        <li>עזוב את החדר / הסיטואציה הפיזית</li>
-        <li>אמור בקול: ״אני בורח כיוסף הצדיק״</li>
-        <li>עשה משהו פיזי חזק — הליכה, מים קרים על הפנים, 20 שכיבות סמיכה</li>
-      </ol>
-    </div>
   </div>
 
-  <div class="tabbed tab-defense  defense-card" style="border-color:#2a5a7a; background:linear-gradient(160deg, rgba(42,90,122,0.16), rgba(60,30,10,0.05));">
-    <div class="defense-title">🌙 חומה 2 — פרוטוקול לילה</div>
-    <div class="defense-body">
-      <div class="defense-tagline">הלילה הוא הזמן הקשה. הכן את ההגנה <strong>לפני</strong> שתהיה זקוק לה.</div>
-      <div class="defense-steps"><strong>לפני השינה:</strong></div>
-      <ol class="defense-list">
-        <li>הטלפון במטען <strong>מחוץ לחדר השינה</strong> — בסלון, במטבח</li>
-        <li>אם חייב טלפון ליד — מצב טיסה + לא להוציא מהשמיכה</li>
-        <li>לא להישאר עם המסך בלילה — לכבות אורות, ספר על השידה</li>
-      </ol>
-      <div class="defense-steps" style="margin-top:10px"><strong>אם הותקפת באמצע הלילה:</strong></div>
-      <ol class="defense-list">
-        <li>לקום מהמיטה <strong>תוך 5 שניות</strong> — בלי לחשוב</li>
-        <li>למטבח או לשירותים — לשטוף פנים במים <strong>קרים</strong></li>
-        <li>לשתות כוס מים. לעמוד או ללכת לפחות 5 דקות</li>
-        <li>לחזור למיטה רק אחרי שהפיתוי שכך</li>
-      </ol>
-      <div class="defense-tagline" style="margin-top:10px">או — לחץ על כפתור החירום למטה והפעל את הפרוטוקול האוטומטי.</div>
-    </div>
+  <div class="tabbed tab-defense pnote-card" id="pnoteCard">
+    <div class="pnote-title">💛 הפתק שלך</div>
+    <div class="pnote-text empty" id="pnoteText">עוד לא כתבת פתק. לחץ "כתוב" וכתוב לעצמך משפט שיופיע לפניך בכל רגע מצוקה — הבטחה, זיכרון של אהובים, שורה שתחזיר אותך לעצמך.</div>
+    <button class="pnote-edit-btn" id="pnoteEditBtn">✏️ כתוב / עדכן</button>
+  </div>
+
+  <div class="tabbed tab-defense victories-card" id="victoriesCard">
+    <div class="victories-title">🏆 הניצחונות שלך</div>
+    <div class="victories-count" id="victoriesCount">0</div>
+    <div class="victories-msg" id="victoriesMsg">כל ניצחון נכתב בשמיים.</div>
   </div>
 
   <div class="tabbed tab-defense  em-btn-wrap" id="emBtnWrap">
     <div class="em-hero-shield" id="emHeroShield">🛡️</div>
-    <div class="em-hero-title">כפתור החילוץ</div>
+    <div class="em-hero-title">🆘 חומה 1 — כפתור המצוקה</div>
     <div class="em-hero-desc">אם אתה במצוקה — לחץ עכשיו.<br>5 דקות של בריחה מודרכת — ותרגיש אחרת.</div>
     <button class="em-btn" id="emergencyBtn"><span id="emBtnLabel">🆘 הצל אותי עכשיו</span></button>
     <div class="em-btn-sub" id="emBtnSub">בלילה — ההגנה הראשונה שלך.</div>
@@ -594,8 +654,8 @@
   <button class="em-fab" id="emFab" aria-label="כפתור החילוץ">🛡️<span class="em-fab-label" id="emFabLabel">כפתור החילוץ</span></button>
 
   <div class="tabbed tab-defense  wall3-card" id="wall3Card">
-    <div class="wall3-title">📞 חומה 3 — חבר אחריות (מוצא אחרון)</div>
-    <div class="wall3-tagline">אם חומות 1+2 לא הספיקו — להתקשר לחבר זה ניצחון, לא חולשה.</div>
+    <div class="wall3-title">📞 חומה 2 — חבר אחריות</div>
+    <div class="wall3-tagline">אם חומה 1 לא הספיקה — להתקשר לחבר זה ניצחון, לא חולשה.</div>
     <div class="wall3-friend-info">
       <div class="wall3-friend-line" id="wall3FriendLine">
         <span class="wall3-friend-empty" id="wall3FriendEmpty">עוד לא הוגדר חבר. לחץ "הגדר" כדי להוסיף מספר.</span>
@@ -607,6 +667,20 @@
       <button class="wall3-config-btn" id="wall3ConfigBtn">✏️ הגדר</button>
     </div>
   </div>
+
+  <div class="tabbed tab-defense aftercare-card">
+    <div class="aftercare-title">🌱 אם בכל זאת נפלת — מה לעשות אחרי</div>
+    <div class="aftercare-body">
+      נפילה אינה סוף. הקימה היא הניצחון האמיתי. עשה את שלוש הפעולות הבאות מיד:
+      <ol>
+        <li><strong>אל תיכנס לבושה ספירלה</strong> — שטוף ידיים, אמור "סלחתי לעצמי", המשך הלאה.</li>
+        <li><strong>תעד ביומן את הנפילה</strong> — לא לכבוד שיפוט אלא לכבוד הבנה. מה הוביל לזה?</li>
+        <li><strong>הבטיח לעצמך משהו קטן למחר</strong> — לקום בזמן, לקרוא 5 דקות תורה, להתקשר לחבר.</li>
+      </ol>
+      ״כי שבע ייפול צדיק וקם״ — צדיק הוא לא מי שלא נפל, אלא מי שקם שוב.
+    </div>
+  </div>
+
 
 
     <div class="tabbed tab-journal tab-header"><span class="tab-header-icon">📜</span><span>יומן</span></div>
@@ -636,7 +710,7 @@
       <div class="fines-cell"><div class="fines-lbl">קנס היום</div><div class="fines-v" id="fineToday">₪0</div></div>
       <div class="fines-cell"><div class="fines-lbl">קנס מצטבר</div><div class="fines-v" id="fineTotal">₪0</div></div>
     </div>
-    <div class="fines-info">חוב נצבר אך ורק אם תועדה נפילה בפועל: 50 ש״ח על כל נפילה בסרט לא טוב. סתם לא לסמן את המצוות — לא יוצר חוב.</div>
+    <div class="fines-info">חוב נצבר רק על נפילה בסרט לא טוב (50 ש״ח). אם עברת את שתי החומות (כפתור + חבר) ונפלת — פטור מחוב.</div>
   </div>
 
 
@@ -765,6 +839,34 @@
   </div>
 
   <!-- Fall questionnaire -->
+  <!-- Personal note edit modal -->
+  <div class="modal-backdrop" id="pnoteModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">💛 הפתק שלך</div><button class="modal-close" id="pnoteClose">×</button></div>
+      <div class="modal-body">
+        <div style="font-family:'Frank Ruhl Libre',serif; font-size:13.5px; color:var(--brown); margin-bottom:12px; font-style:italic;">כתוב משפט אישי שיופיע לפניך בכל מצוקה — הבטחה לעצמך, זיכרון של אהובים, סיבה לחיות בקדושה.</div>
+        <textarea id="pnoteInput" maxlength="280" placeholder="לדוגמה: ״אני בוחר בעתיד שלי, באישה שאני אבנה איתה בית של קודש, בילדים שיגדלו לראות אותי חי באמת.״" style="width:100%; min-height:120px; padding:12px; border:1.5px solid var(--gold); border-radius:8px; font-family:'Frank Ruhl Libre',serif; font-size:15px; line-height:1.6; resize:vertical; background:#fff; color:var(--brown-deep);"></textarea>
+        <div style="font-family:'Frank Ruhl Libre',serif; font-size:12px; color:var(--brown-light); margin-top:8px; text-align:left;"><span id="pnoteCount">0</span> / 280 תווים</div>
+        <div class="goal-form-buttons">
+          <button class="goal-form-btn save" id="pnoteSaveBtn">שמור</button>
+          <button class="goal-form-btn cancel" id="pnoteCancelBtn">ביטול</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tehilim chapter modal -->
+  <div class="modal-backdrop" id="tehilimModal">
+    <div class="modal" style="max-width:560px">
+      <div class="modal-header"><div class="modal-title">📖 תהילים פרק נ״א — תפילת התשובה והטהרה</div><button class="modal-close" id="tehilimClose">×</button></div>
+      <div class="modal-body">
+        <div style="font-family:'Frank Ruhl Libre',serif; font-size:13px; color:var(--brown-light); font-style:italic; text-align:center; margin-bottom:12px;">תפילתו של דוד המלך אחרי החטא עם בת שבע. הפרק שבכל דור ודור פותח את שערי השמיים לבעלי תשובה.</div>
+        <div class="tehilim-modal-body"><div class="tehilim-verse"><span class="tehilim-vnum">א.</span>לַמְנַצֵּחַ, מִזְמוֹר לְדָוִד.</div><div class="tehilim-verse"><span class="tehilim-vnum">ב.</span>בְּבוֹא אֵלָיו, נָתָן הַנָּבִיא — כַּאֲשֶׁר בָּא, אֶל בַּת שָׁבַע.</div><div class="tehilim-verse"><span class="tehilim-vnum">ג.</span>חָנֵּנִי אֱלֹהִים כְּחַסְדֶּךָ, כְּרֹב רַחֲמֶיךָ מְחֵה פְשָׁעָי.</div><div class="tehilim-verse"><span class="tehilim-vnum">ד.</span>הֶרֶב כַּבְּסֵנִי מֵעֲוֺנִי, וּמֵחַטָּאתִי טַהֲרֵנִי.</div><div class="tehilim-verse"><span class="tehilim-vnum">ה.</span>כִּי פְשָׁעַי אֲנִי אֵדָע, וְחַטָּאתִי נֶגְדִּי תָמִיד.</div><div class="tehilim-verse"><span class="tehilim-vnum">ו.</span>לְךָ לְבַדְּךָ חָטָאתִי, וְהָרַע בְּעֵינֶיךָ עָשִׂיתִי — לְמַעַן תִּצְדַּק בְּדָבְרֶךָ, תִּזְכֶּה בְשָׁפְטֶךָ.</div><div class="tehilim-verse"><span class="tehilim-vnum">ז.</span>הֵן בְּעָווֹן חוֹלָלְתִּי, וּבְחֵטְא יֶחֱמַתְנִי אִמִּי.</div><div class="tehilim-verse"><span class="tehilim-vnum">ח.</span>הֵן אֱמֶת חָפַצְתָּ בַטֻּחוֹת, וּבְסָתֻם חָכְמָה תוֹדִיעֵנִי.</div><div class="tehilim-verse"><span class="tehilim-vnum">ט.</span>תְּחַטְּאֵנִי בְאֵזוֹב וְאֶטְהָר, תְּכַבְּסֵנִי וּמִשֶּׁלֶג אַלְבִּין.</div><div class="tehilim-verse"><span class="tehilim-vnum">י.</span>תַּשְׁמִיעֵנִי שָׂשׂוֹן וְשִׂמְחָה, תָּגֵלְנָה עֲצָמוֹת דִּכִּיתָ.</div><div class="tehilim-verse"><span class="tehilim-vnum">יא.</span>הַסְתֵּר פָּנֶיךָ מֵחֲטָאָי, וְכָל עֲווֹנֹתַי מְחֵה.</div><div class="tehilim-verse"><span class="tehilim-vnum">יב.</span>לֵב טָהוֹר בְּרָא לִי אֱלֹהִים, וְרוּחַ נָכוֹן חַדֵּשׁ בְּקִרְבִּי.</div><div class="tehilim-verse"><span class="tehilim-vnum">יג.</span>אַל תַּשְׁלִיכֵנִי מִלְּפָנֶיךָ, וְרוּחַ קָדְשְׁךָ אַל תִּקַּח מִמֶּנִּי.</div><div class="tehilim-verse"><span class="tehilim-vnum">יד.</span>הָשִׁיבָה לִּי שְׂשׂוֹן יִשְׁעֶךָ, וְרוּחַ נְדִיבָה תִסְמְכֵנִי.</div><div class="tehilim-verse"><span class="tehilim-vnum">טו.</span>אֲלַמְּדָה פֹשְׁעִים דְּרָכֶיךָ, וְחַטָּאִים אֵלֶיךָ יָשׁוּבוּ.</div><div class="tehilim-verse"><span class="tehilim-vnum">טז.</span>הַצִּילֵנִי מִדָּמִים אֱלֹהִים, אֱלֹהֵי תְּשׁוּעָתִי — תְּרַנֵּן לְשׁוֹנִי צִדְקָתֶךָ.</div><div class="tehilim-verse"><span class="tehilim-vnum">יז.</span>אֲדֹנָי, שְׂפָתַי תִּפְתָּח — וּפִי, יַגִּיד תְּהִלָּתֶךָ.</div><div class="tehilim-verse"><span class="tehilim-vnum">יח.</span>כִּי לֹא תַחְפֹּץ זֶבַח וְאֶתֵּנָה, עוֹלָה לֹא תִרְצֶה.</div><div class="tehilim-verse"><span class="tehilim-vnum">יט.</span>זִבְחֵי אֱלֹהִים רוּחַ נִשְׁבָּרָה — לֵב נִשְׁבָּר וְנִדְכֶּה, אֱלֹהִים לֹא תִבְזֶה.</div><div class="tehilim-verse"><span class="tehilim-vnum">כ.</span>הֵיטִיבָה בִרְצוֹנְךָ אֶת צִיּוֹן, תִּבְנֶה חוֹמוֹת יְרוּשָׁלָיִם.</div><div class="tehilim-verse"><span class="tehilim-vnum">כא.</span>אָז תַּחְפֹּץ זִבְחֵי צֶדֶק, עוֹלָה וְכָלִיל — אָז יַעֲלוּ עַל מִזְבַּחֲךָ פָרִים.</div></div>
+        <div class="goal-form-buttons" style="margin-top:14px"><button class="goal-form-btn cancel" id="tehilimCloseBtn">סגור</button></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Wall 3 — friend config modal -->
   <div class="modal-backdrop" id="wall3ConfigModal">
     <div class="modal">
@@ -786,6 +888,10 @@
     <div class="modal em-modal" id="emModal">
       <div class="modal-header"><div class="modal-title" id="emTitle">🛡️ מצב חילוץ</div><button class="modal-close" id="emergencyClose">×</button></div>
       <div class="modal-body">
+        <div class="pnote-card" id="emPnoteCard" style="margin-top:0; margin-bottom:14px; display:none;">
+          <div class="pnote-title">💛 הפתק שכתבת לעצמך</div>
+          <div class="pnote-text" id="emPnoteText"></div>
+        </div>
         <div class="em-session-row"><span class="em-session-num">סשן <span id="emSessionNum">1</span></span><span class="em-session-theme" id="emSessionTheme">דרך יוסף</span></div>
         <div class="em-hero-quote" id="emHeroQuote">״ויעזוב בגדו אצלה וינס ויצא החוצה״</div>
         <div class="em-timer" id="emTimer">5:00</div>
@@ -802,11 +908,12 @@
           <button class="em-lose" id="emLose">💔 לא הצלחתי — לתעד נפילה</button>
         </div>
         <div class="em-wall3-escape" id="emWall3Escape">
-          <div class="em-wall3-escape-title">📞 חומה 3 — חבר אחריות</div>
+          <div class="em-wall3-escape-title">📞 חומה 2 — חבר אחריות</div>
           <div class="em-wall3-escape-sub">אם אתה עדיין נלחם — להתקשר לחבר עכשיו זה ניצחון. תמיד מותר.</div>
           <a href="#" class="em-wall3-call-btn disabled" id="emWall3CallBtn">📞 התקשר עכשיו</a>
           <button class="em-wall3-mini" id="emWall3ConfigBtn">✏️ הגדר חבר</button>
         </div>
+        <div style="text-align:center; margin-top:10px;"><button class="em-tehilim-btn" id="emTehilimChapterBtn">📖 פתח תהילים נ״א — קרא בקול</button></div>
         <div class="em-tip">המסך הזה צריך להישאר פתוח עד הסוף. כל תחנה היא דקה.</div>
       </div>
     </div>
@@ -1045,7 +1152,7 @@
     list.innerHTML = entries.map(e => {
       const tags = [];
       if (e.kind === 'victory') tags.push('🏆 ניצחת!');
-      else if (e.kind === 'wall3_call') tags.push('📞 חומה 3');
+      else if (e.kind === 'wall3_call') tags.push('📞 חומה 2');
       else if (e.kind === 'video') tags.push('📹 סרט לא טוב');
       else if (e.kind === 'brit') tags.push('🛡️ ברית');
       else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
@@ -1281,6 +1388,18 @@
     _emSession = _emBuildSession();
     _emCurStation = 0;
     _emEndTs = Date.now() + _EM_DURATION_MS;
+    // Show the personal note at the top, if user has written one
+    try {
+      const pn = loadPnote();
+      const card = document.getElementById('emPnoteCard');
+      const text = document.getElementById('emPnoteText');
+      if (pn && pn.trim()) {
+        if (text) text.textContent = '״' + pn.trim() + '״';
+        if (card) card.style.display = 'block';
+      } else {
+        if (card) card.style.display = 'none';
+      }
+    } catch(e) {}
     // Apply theme
     const t = _emSession.theme;
     const titleEl = document.getElementById('emSessionTheme'); if (titleEl) { titleEl.textContent = t.name; titleEl.style.background = t.color; titleEl.style.color = '#fff7e0'; }
@@ -1334,23 +1453,100 @@
 
   // Wire up emergency button + modal controls (deferred until DOM is ready)
   function updateEmergencyTheme(){
-    const night = isNightNow();
-    const wrap = document.getElementById('emBtnWrap');
-    if (wrap) wrap.classList.toggle('night', night);
+    // RED distress, always — no day/night theme on the FAB or hero button
     const fab = document.getElementById('emFab');
-    if (fab) {
-      fab.classList.toggle('night', night);
-      // Keep the shield icon but add a moon tag at night
-      fab.firstChild.nodeValue = night ? '🌙' : '🛡️';
-    }
-    const shield = document.getElementById('emHeroShield');
-    if (shield) shield.textContent = night ? '🌙' : '🛡️';
-    const label = document.getElementById('emBtnLabel');
-    if (label) label.textContent = night ? '🌙 הצל אותי — לילה' : '🆘 הצל אותי עכשיו';
-    const sub = document.getElementById('emBtnSub');
-    if (sub) sub.textContent = night ? 'לילה — זאת ההגנה הראשונה שלך עכשיו.' : 'בלילה הופך לחומת אש הראשונה.';
-    const fabLabel = document.getElementById('emFabLabel');
-    if (fabLabel) fabLabel.textContent = night ? '🌙 חילוץ לילי' : '🛡️ כפתור חילוץ';
+    if (fab) { fab.classList.remove('night'); fab.firstChild.nodeValue = '🆘'; }
+    const wrap = document.getElementById('emBtnWrap'); if (wrap) wrap.classList.remove('night');
+    const shield = document.getElementById('emHeroShield'); if (shield) shield.textContent = '🆘';
+    const label = document.getElementById('emBtnLabel'); if (label) label.textContent = '🆘 הצל אותי עכשיו';
+    const sub = document.getElementById('emBtnSub'); if (sub) sub.textContent = 'במצוקה? לחץ — אני כאן בשבילך.';
+    const fabLabel = document.getElementById('emFabLabel'); if (fabLabel) fabLabel.textContent = '🆘 כפתור מצוקה';
+  }
+
+
+  // ===== Building tab — milestone + stats =====
+  const _BUILD_VERSES = [
+    { t: '״בְּחָכְמָה יִבָּנֶה בָּיִת, וּבִתְבוּנָה יִתְכּוֹנָן״', r: 'משלי כ״ד, ג׳' },
+    { t: '״אִם ה׳ לֹא יִבְנֶה בַיִת, שָׁוְא עָמְלוּ בוֹנָיו בּוֹ״', r: 'תהילים קכ״ז, א׳' },
+    { t: '״וְעָשׂוּ לִי מִקְדָּשׁ, וְשָׁכַנְתִּי בְּתוֹכָם״', r: 'שמות כ״ה, ח׳' },
+    { t: '״לֵב טָהוֹר בְּרָא לִי אֱלֹהִים״', r: 'תהילים נ״א, י״ב' },
+    { t: '״כִּי שֶׁבַע יִפּוֹל צַדִּיק וָקָם״', r: 'משלי כ״ד, ט״ז' },
+    { t: '״הִנֵּה אָנֹכִי מַשְׁלִיךְ לְאַבְנֵי בוֹחַן״', r: 'ישעיהו כ״ח, ט״ז' },
+    { t: '״כָּל הָאוֹמֵר דָּבָר זֶה בְּשֵׁם אוֹמְרוֹ, מֵבִיא גְּאֻלָּה לָעוֹלָם״', r: 'אבות ו׳' },
+  ];
+  function _buildMilestone(have){
+    // 40-brick journey with intermediate milestones
+    const milestones = [
+      { at: 7,  icon: '🪨', title: '7 לבנים — שבוע נקי',         msg: 'שבוע שלם של בחירה. הבסיס הראשון של היסוד נבנה.' },
+      { at: 18, icon: '🧱', title: '18 לבנים — ח״י',              msg: 'חצי הדרך! ח״י בגימטריה — אתה כבר חי באמת.' },
+      { at: 26, icon: '🏛️', title: '26 לבנים — שם הוי״ה',         msg: 'שמו של הקב״ה. הקדושה נכנסת לבית.' },
+      { at: 30, icon: '⛰️', title: '30 לבנים — שלוש רבעים',       msg: 'רוב הדרך מאחור. עוד מעט הגעת.' },
+      { at: 36, icon: '🌅', title: '36 לבנים — ל״ו צדיקים',       msg: 'הגעת לדרגה של ל״ו צדיקים. עוד 4 ימים בלבד!' },
+      { at: 40, icon: '👑', title: '40 לבנים — בית המקדש שלך',    msg: 'בנית את בית המקדש! 40 יום נקי — דרגת משה רבנו.' },
+    ];
+    let next = milestones.find(function(m){ return have < m.at; }) || milestones[milestones.length-1];
+    return { current: have, next: next, pct: Math.min(100, Math.round((have / next.at) * 100)) };
+  }
+  function _buildCountActiveDays(){
+    // Count unique days in history where at least one mitzva was marked done
+    try {
+      const mz = (typeof MITZVOT!=='undefined'&&MITZVOT)?MITZVOT:[];
+      const hist = loadHistory();
+      let n = 0;
+      hist.forEach(function(h){
+        if (h.items && mz.some(function(m){ const it=h.items[m.id]; return it && it.done; })) n++;
+      });
+      const today = getTodayDate();
+      if (!hist.some(function(h){return h.date===today;})) {
+        if (todayState.items && mz.some(function(m){ const it=todayState.items[m.id]; return it && it.done; })) n++;
+      }
+      return n;
+    } catch(e) { return 0; }
+  }
+  function _buildCountStreak(){
+    // Streak: consecutive recent days where at least one mitzva was done, ending today or yesterday
+    try {
+      const mz = (typeof MITZVOT!=='undefined'&&MITZVOT)?MITZVOT:[];
+      const hist = loadHistory().slice();
+      const today = getTodayDate();
+      const byDate = {};
+      hist.forEach(function(h){ byDate[h.date] = h.items; });
+      // Include today's working state
+      if (!byDate[today]) byDate[today] = (todayState && todayState.items) ? todayState.items : null;
+      let streak = 0;
+      let d = new Date();
+      for (let i = 0; i < 365; i++) {
+        const ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        const items = byDate[ds];
+        const active = items && mz.some(function(m){ const it=items[m.id]; return it && it.done; });
+        if (active) streak++;
+        else if (i > 0) break; // allow today to be empty; older empty breaks the streak
+        d.setDate(d.getDate() - 1);
+      }
+      return streak;
+    } catch(e) { return 0; }
+  }
+  function renderBuildingExtras(){
+    try {
+      const er = (typeof earnedResources==='function') ? earnedResources() : { brick:0 };
+      const m = _buildMilestone(er.brick || 0);
+      const ic = document.getElementById('buildMilestoneIcon'); if (ic) ic.textContent = m.next.icon;
+      const tl = document.getElementById('buildMilestoneTitle'); if (tl) tl.textContent = m.next.title;
+      const mg = document.getElementById('buildMilestoneMsg'); if (mg) mg.textContent = m.next.msg;
+      const bar= document.getElementById('buildMilestoneBar'); if (bar) bar.style.width = m.pct + '%';
+      const sub= document.getElementById('buildMilestoneSub'); if (sub) {
+        const remain = Math.max(0, m.next.at - m.current);
+        sub.textContent = (remain > 0) ? ('עוד ' + remain + ' ימים — אתה ב-' + m.pct + '%') : 'הגעת!';
+      }
+      const da = document.getElementById('buildDaysActive'); if (da) da.textContent = _buildCountActiveDays();
+      const st = document.getElementById('buildStreak');    if (st) st.textContent = _buildCountStreak();
+      // Rotate verse daily
+      const d = new Date();
+      const doy = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000);
+      const v = _BUILD_VERSES[doy % _BUILD_VERSES.length];
+      const vt = document.getElementById('buildVerseText'); if (vt) vt.textContent = v.t;
+      const vr = document.getElementById('buildVerseRef');  if (vr) vr.textContent = v.r;
+    } catch(e) {}
   }
 
   // ===== Hero greeting (time-aware) =====
@@ -1401,6 +1597,78 @@
       if (er && hb) hb.textContent = er.brick || 0;
     } catch(e) {}
   }
+
+
+  // ===== Personal note (shown in defense tab + read at every emergency) =====
+  const PNOTE_KEY = 'neria_pnote_v1';
+  function loadPnote(){ try { return localStorage.getItem(PNOTE_KEY) || ''; } catch(e) { return ''; } }
+  function savePnote(t){ try { localStorage.setItem(PNOTE_KEY, t); } catch(e) {} pushUp(); }
+  function renderPnote(){
+    const txt = loadPnote();
+    const el = document.getElementById('pnoteText');
+    if (!el) return;
+    if (txt && txt.trim()) {
+      el.classList.remove('empty');
+      el.textContent = '״' + txt.trim() + '״';
+    } else {
+      el.classList.add('empty');
+      el.textContent = 'עוד לא כתבת פתק. לחץ "כתוב" וכתוב לעצמך משפט שיופיע לפניך בכל רגע מצוקה — הבטחה, זיכרון של אהובים, שורה שתחזיר אותך לעצמך.';
+    }
+  }
+  function openPnoteEditor(){
+    const m = document.getElementById('pnoteModal'); if (!m) return;
+    const inp = document.getElementById('pnoteInput'); if (inp) { inp.value = loadPnote(); document.getElementById('pnoteCount').textContent = inp.value.length; }
+    m.classList.add('active');
+  }
+  function closePnoteEditor(){ const m = document.getElementById('pnoteModal'); if (m) m.classList.remove('active'); }
+  function savePnoteFromEditor(){
+    const inp = document.getElementById('pnoteInput');
+    const t = (inp.value || '').trim();
+    savePnote(t);
+    closePnoteEditor();
+    renderPnote();
+    try { toast('💛 הפתק נשמר.'); } catch(e) {}
+  }
+
+  // ===== Victories counter =====
+  function countVictories(){
+    try {
+      const log = loadBritLog();
+      return log.filter(function(e){ return e.kind === 'victory'; }).length;
+    } catch(e) { return 0; }
+  }
+  function renderVictories(){
+    const n = countVictories();
+    const cnt = document.getElementById('victoriesCount'); if (cnt) cnt.textContent = n;
+    const msg = document.getElementById('victoriesMsg');
+    if (msg) {
+      if (n === 0) msg.textContent = 'הניצחון הראשון שלך מחכה.';
+      else if (n < 3) msg.textContent = 'התחלת. כל אחד נכתב בשמיים.';
+      else if (n < 10) msg.textContent = 'אתה כבר יודע איך לנצח. שוב ושוב.';
+      else msg.textContent = 'אתה לוחם של אמת. ניצחת ' + n + ' פעמים — תעשה את זה גם הפעם.';
+    }
+  }
+
+  // ===== Tehilim chapter modal =====
+  function openTehilim(){ const m = document.getElementById('tehilimModal'); if (m) m.classList.add('active'); }
+  function closeTehilim(){ const m = document.getElementById('tehilimModal'); if (m) m.classList.remove('active'); }
+
+  function _wireExtras(){
+    // Personal note
+    const ed = document.getElementById('pnoteEditBtn'); if (ed) ed.addEventListener('click', openPnoteEditor);
+    const cl = document.getElementById('pnoteClose'); if (cl) cl.addEventListener('click', closePnoteEditor);
+    const cn = document.getElementById('pnoteCancelBtn'); if (cn) cn.addEventListener('click', closePnoteEditor);
+    const sv = document.getElementById('pnoteSaveBtn'); if (sv) sv.addEventListener('click', savePnoteFromEditor);
+    const inp= document.getElementById('pnoteInput'); if (inp) inp.addEventListener('input', function(){ document.getElementById('pnoteCount').textContent = inp.value.length; });
+    const pm = document.getElementById('pnoteModal'); if (pm) pm.addEventListener('click', function(e){ if (e.target === pm) closePnoteEditor(); });
+    // Tehilim
+    const tb = document.getElementById('emTehilimChapterBtn'); if (tb) tb.addEventListener('click', openTehilim);
+    const tc = document.getElementById('tehilimClose'); if (tc) tc.addEventListener('click', closeTehilim);
+    const tcb= document.getElementById('tehilimCloseBtn'); if (tcb) tcb.addEventListener('click', closeTehilim);
+    const tm = document.getElementById('tehilimModal'); if (tm) tm.addEventListener('click', function(e){ if (e.target === tm) closeTehilim(); });
+    renderPnote(); renderVictories();
+  }
+
 
   // ============= Wall of Fire 3 — friend call =============
   const WALL3_KEY = 'neria_wall3_friend_v1';
@@ -1453,7 +1721,7 @@
     const f = loadFriend();
     arr.push({
       ts: Date.now(),
-      text: '📞 חומה 3: התקשרתי לחבר אחריות' + (f && f.name ? ' (' + f.name + ')' : '') + ' — ' + (source || 'מהדף הראשי'),
+      text: '📞 חומה 2: התקשרתי לחבר אחריות' + (f && f.name ? ' (' + f.name + ')' : '') + ' — ' + (source || 'מהדף הראשי'),
       kind: 'wall3_call',
       usedMethod: false,
       usedEmergency: source === 'modal',
@@ -1553,8 +1821,10 @@
     const isVideo = (a.kind === 'video' || a.kind === 'both');
     const isBrit  = (a.kind === 'brit'  || a.kind === 'both');
     if (a.friend==='yes' && !a.friendAnswered) { note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
+    const triedBoth = (a.emergency==='yes') && (a.friend==='yes');
     let parts = [];
-    if (isVideo) parts.push('💸 נפילה בסרט לא טוב — חוב של 50 ש״ח לקופת הקנסות.');
+    if (isVideo && triedBoth) parts.push('💛 עברת את שתי החומות — אין חוב. עצם המאמץ שלך הוא הניצחון.');
+    else if (isVideo) parts.push('💸 נפילה בסרט לא טוב — חוב של 50 ש״ח (פטור אם תעבור את שתי החומות).');
     if (isBrit && !triedSomething) parts.push('⚠️ נפילת ברית בלי השתדלות — יירדו 40 נקודות.');
     if (!isVideo && isBrit && triedSomething) parts.push('כל הכבוד שניסית להתמודד — לא יירדו נקודות.');
     if (a.method==='yes') parts.push('הבריחה הצילה אותך — כיוסף הצדיק.');
@@ -1570,11 +1840,12 @@
     if (!a.kind || !a.method || !a.emergency || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
     if (a.friend === 'yes' && !a.friendAnswered) { if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
     const triedSomething = (a.method==='yes') || (a.emergency==='yes') || (a.friend==='yes');
+    const triedBothWalls = (a.emergency==='yes') && (a.friend==='yes');
     const isVideoFall = (a.kind === 'video' || a.kind === 'both');
     const isBritFall  = (a.kind === 'brit'  || a.kind === 'both');
-    // Video falls cost 50 ש"ח to the fines instead of a 40-point deduction.
-    // Brit-only falls without effort still cost 40 points.
-    const moneyFine = isVideoFall ? 50 : 0;
+    // No money debt if Neria did full השתדלות through BOTH walls (button + friend).
+    // Otherwise: video falls cost 50 ש"ח. Brit-only falls without effort cost 40 points.
+    const moneyFine = (isVideoFall && !triedBothWalls) ? 50 : 0;
     const penalty   = (!isVideoFall && isBritFall && !triedSomething) ? 40 : 0;
     const arr = loadBritLog();
     arr.push({
@@ -2114,7 +2385,9 @@
   document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
   _wireEmergency();
   _wireWall3();
+  _wireExtras();
   try { renderHero(); setInterval(renderHero, 60000); } catch(e) {}
+  try { renderBuildingExtras(); } catch(e) {}
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
   // Edit day
@@ -2169,9 +2442,10 @@
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) {}
     // Re-render relevant content for each tab so visible data is fresh
     try {
-      if (tab === 'building') renderBuilding();
+      if (tab === 'building') { renderBuilding(); try { renderBuildingExtras(); } catch(e) {} }
       if (tab === 'journal') { renderBritLog(); renderFines(); }
       if (tab === 'home') { render(); try { renderHero(); } catch(e) {} }
+      if (tab === 'defense') { try { renderPnote(); renderVictories(); } catch(e) {} }
     } catch(e) {}
   }
   document.querySelectorAll('.bnav-btn').forEach(function(btn){
