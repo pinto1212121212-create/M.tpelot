@@ -173,6 +173,7 @@
 
   /* Modals */
   .modal-backdrop { position: fixed; inset: 0; background: rgba(60,30,10,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 14px; }
+  #tehilimModal, #pnoteModal { z-index: 1100; } /* sit above emergency modal */
   .modal-backdrop.active { display: flex; }
   .modal { background: var(--parchment-light); border: 3px solid var(--brown-deep); box-shadow: inset 0 0 0 4px var(--parchment-light), inset 0 0 0 5px var(--gold), 0 20px 60px rgba(0,0,0,0.5); border-radius: 4px; max-width: 540px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; }
   .modal-header { padding: 18px 22px 14px; border-bottom: 1.5px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
@@ -721,10 +722,10 @@
     <button class="add-goal-btn" id="addTrackerBtn">+ צור שאלון/מעקב חדש</button>
   </div>
 
-  <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
-  <button class="score-export-excel" id="exportBtn">⤓ ייצוא היומן</button>
+  <button class="tabbed tab-home score-end-day" id="endDayBtn">סיים את היום ושמור</button>
+  <button class="tabbed tab-journal score-export-excel" id="exportBtn">⤓ ייצוא היומן</button>
 
-  <div class="score-summary-grid">
+  <div class="tabbed tab-journal score-summary-grid">
     <div class="score-summary-card"><div class="label">השבוע</div><div class="value" id="scoreWeek">0</div></div>
     <div class="score-summary-card"><div class="label">החודש</div><div class="value" id="scoreMonth">0</div></div>
     <div class="score-summary-card"><div class="label">סה״כ</div><div class="value" id="scoreTotal">0</div></div>
@@ -738,7 +739,7 @@
     <button class="add-goal-btn" id="addGoalBtn">+ הוסף יעד חדש</button>
   </div>
 
-  <div class="score-chart-section">
+  <div class="tabbed tab-journal score-chart-section">
     <div class="score-chart-title">📈 גרף התקדמות</div>
     <div class="score-chart-subtitle">צבירת נקודות לאורך זמן</div>
     <div class="chart-tabs">
@@ -750,7 +751,7 @@
     <div class="chart-stats" id="chartStats"></div>
   </div>
 
-  <div class="score-history">
+  <div class="tabbed tab-journal score-history">
     <div class="score-history-title">היסטוריה</div>
     <div id="scoreHistory"></div>
   </div>
@@ -777,7 +778,7 @@
     <div class="journal-list" id="journalList"></div>
   </div>
 
-  <div class="backup-section">
+  <div class="tabbed tab-journal backup-section">
     <button class="backup-btn" id="backupBtn">⤓ גיבוי כל הנתונים</button>
     <button class="backup-btn" id="restoreBtn">⤒ שחזור מגיבוי</button>
     <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" />
@@ -913,7 +914,7 @@
           <a href="#" class="em-wall3-call-btn disabled" id="emWall3CallBtn">📞 התקשר עכשיו</a>
           <button class="em-wall3-mini" id="emWall3ConfigBtn">✏️ הגדר חבר</button>
         </div>
-        <div style="text-align:center; margin-top:10px;"><button class="em-tehilim-btn" id="emTehilimChapterBtn">📖 פתח תהילים נ״א — קרא בקול</button></div>
+        <div style="text-align:center; margin-top:10px;"><button class="em-tehilim-btn" id="emTehilimChapterBtn" type="button">📖 פתח תהילים נ״א — קרא בקול</button></div>
         <div class="em-tip">המסך הזה צריך להישאר פתוח עד הסוף. כל תחנה היא דקה.</div>
       </div>
     </div>
@@ -2440,12 +2441,34 @@
     });
     try { localStorage.setItem('neria_active_tab_v1', tab); } catch(e) {}
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) {}
-    // Re-render relevant content for each tab so visible data is fresh
+    // Re-render ALL relevant content per tab so visible data is fresh & complete
     try {
-      if (tab === 'building') { renderBuilding(); try { renderBuildingExtras(); } catch(e) {} }
-      if (tab === 'journal') { renderBritLog(); renderFines(); }
-      if (tab === 'home') { render(); try { renderHero(); } catch(e) {} }
-      if (tab === 'defense') { try { renderPnote(); renderVictories(); } catch(e) {} }
+      if (tab === 'home') {
+        render();
+        try { renderHero(); } catch(e) {}
+      }
+      if (tab === 'defense') {
+        try { renderPnote(); } catch(e) {}
+        try { renderVictories(); } catch(e) {}
+        try { renderWall3(); } catch(e) {}
+        try { updateEmergencyTheme(); } catch(e) {}
+      }
+      if (tab === 'building') {
+        renderBuilding();
+        try { renderBuildingExtras(); } catch(e) {}
+      }
+      if (tab === 'journal') {
+        // Render every piece of journal content
+        try { renderBritLog(); } catch(e) {}
+        try { renderReflection(); } catch(e) {}
+        try { renderFines(); } catch(e) {}
+        try { renderTrackers(); } catch(e) {}
+        try { renderGoals(); } catch(e) {}
+        try { renderSummary(); } catch(e) {}
+        try { renderHistory(); } catch(e) {}
+        try { renderChart(); } catch(e) {}
+        try { renderJournal(); } catch(e) {}
+      }
     } catch(e) {}
   }
   document.querySelectorAll('.bnav-btn').forEach(function(btn){
