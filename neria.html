@@ -554,14 +554,12 @@
     <div class="modal">
       <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
       <div class="modal-body">
-        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: פילטר ומגינים זה קו ההגנה הראשון, וחבר אחריות זה המוצא האחרון לפני נפילה. כל ניסיון שעשית — נחשב.</div>
+        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: קודם המגינים (קו ההגנה הראשון), ואם לא הספיק — חבר אחריות (המוצא האחרון לפני נפילה). כל ניסיון שעשית — נחשב.</div>
         <div class="fall-quiz-q">1. סוג הנפילה <span class="fall-quiz-step">לבחור אחד</span></div>
         <div class="fall-quiz-options" data-q="kind"><button class="fall-quiz-btn" data-q="kind" data-val="video">📹 סרט</button><button class="fall-quiz-btn" data-q="kind" data-val="brit">🛡️ ברית</button><button class="fall-quiz-btn" data-q="kind" data-val="both">⚠️ שניהם</button></div>
-        <div class="fall-quiz-q">2. האם הפילטר היה פעיל? <span class="fall-quiz-step">קו ההגנה החיצוני</span></div>
-        <div class="fall-quiz-options" data-q="filter"><button class="fall-quiz-btn" data-q="filter" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="filter" data-val="no">לא</button><button class="fall-quiz-btn" data-q="filter" data-val="none">אין לי</button></div>
-        <div class="fall-quiz-q">3. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הפנימי</span></div>
+        <div class="fall-quiz-q">2. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הראשון</span></div>
         <div class="fall-quiz-options" data-q="method"><button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="method" data-val="no">לא</button></div>
-        <div class="fall-quiz-q">4. האם התקשרת לחבר אחריות? <span class="fall-quiz-step">המוצא האחרון</span></div>
+        <div class="fall-quiz-q">3. האם התקשרת לחבר אחריות? <span class="fall-quiz-step">המוצא האחרון</span></div>
         <div class="fall-quiz-options" data-q="friend"><button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button></div>
         <div class="fall-quiz-sub" id="fallQuizFriendSub" style="display:none;">
           <div class="fall-quiz-q">האם החבר ענה?</div>
@@ -652,19 +650,13 @@
   // ===== Mitzvot — editable by Yosef (defaults below, can add/edit/remove) =====
   const MITZVOT_KEY = 'neria_mitzvot_v1';
   const DEFAULT_MITZVOT = [
-    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 15, hasMinyan: true, extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
-    { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
-    { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
     { id: 'eyes', name: 'יום נקי - שמירת העיניים', icon: '👁️', points: 25, hasMinyan: false, extras: [
-      { id: 'filter_on', label: 'הפילטר היה פעיל כל היום', points: 5 },
       { id: 'phone_away', label: 'הטלפון לא היה איתי במיטה', points: 5 }
     ] },
-    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 20, hasMinyan: false, extras: [
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 25, hasMinyan: false, extras: [
       { id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 },
       { id: 'friend_check', label: 'יצרתי קשר עם חבר אחריות', points: 5 }
-    ] },
-    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 25, hasMinyan: false },
-    { id: 'tehilim', name: 'פרק תהילים יומי', icon: '📖', points: 10, hasMinyan: false }
+    ] }
   ];
   let MITZVOT = JSON.parse(JSON.stringify(DEFAULT_MITZVOT));
   function loadMitzvot() { try { const r = localStorage.getItem(MITZVOT_KEY); if (r) { const a = JSON.parse(r); if (Array.isArray(a) && a.length) return a; } } catch(e) {} return JSON.parse(JSON.stringify(DEFAULT_MITZVOT)); }
@@ -790,9 +782,6 @@
       if (e.kind === 'video') tags.push('📹 סרט');
       else if (e.kind === 'brit') tags.push('🛡️ ברית');
       else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
-      if (e.filterActive === 'yes') tags.push('🔒 פילטר היה פעיל');
-      else if (e.filterActive === 'no') tags.push('🔓 פילטר לא פעיל');
-      else if (e.filterActive === 'none') tags.push('❌ אין פילטר');
       if (e.usedMethod) tags.push('🛡️ מגינים');
       if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
       const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
@@ -807,19 +796,17 @@
     if (entry && entry.penalty && tsToDate(entry.ts) === (todayState.date || getTodayDate())) { todayState.penalty = Math.max(0, (todayState.penalty||0) - entry.penalty); saveToday(); }
     render();
   }
-  let fallQuizText = '', fallQuizAnswers = { kind:null, filter:null, method:null, friend:null, friendAnswered:null };
-  function openFallQuiz(text) { fallQuizText = text; fallQuizAnswers = { kind:null, filter:null, method:null, friend:null, friendAnswered:null }; document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected')); const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none'; const note = document.getElementById('fallQuizNote'); if (note) note.textContent = ''; document.getElementById('fallQuizModal').classList.add('active'); }
+  let fallQuizText = '', fallQuizAnswers = { kind:null, method:null, friend:null, friendAnswered:null };
+  function openFallQuiz(text) { fallQuizText = text; fallQuizAnswers = { kind:null, method:null, friend:null, friendAnswered:null }; document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected')); const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none'; const note = document.getElementById('fallQuizNote'); if (note) note.textContent = ''; document.getElementById('fallQuizModal').classList.add('active'); }
   function closeFallQuiz() { document.getElementById('fallQuizModal').classList.remove('active'); }
   function updateFallQuizNote() {
     const note = document.getElementById('fallQuizNote'); if (!note) return;
     const a = fallQuizAnswers;
-    if (!a.kind || !a.filter || !a.method || !a.friend) { note.textContent = ''; return; }
-    // Used at least one tool? filter=yes OR method=yes OR friend=yes (and answered or tried)
-    const triedSomething = (a.filter==='yes') || (a.method==='yes') || (a.friend==='yes');
-    if (!triedSomething) { note.textContent = 'לא עברת דרך אף כלי התמודדות — יירדו 40 נקודות. בפעם הבאה: פילטר → מגינים → חבר. כל ניסיון נחשב.'; return; }
+    if (!a.kind || !a.method || !a.friend) { note.textContent = ''; return; }
+    const triedSomething = (a.method==='yes') || (a.friend==='yes');
+    if (!triedSomething) { note.textContent = 'לא עברת דרך אף כלי התמודדות — יירדו 40 נקודות. בפעם הבאה: קודם המגינים, ואם לא עזר — להתקשר לחבר. כל ניסיון נחשב.'; return; }
     if (a.friend==='yes' && !a.friendAnswered) { note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
     let msg = 'כל הכבוד שניסית להתמודד — לא יירדו נקודות. ';
-    if (a.filter==='yes') msg += 'הפילטר עבד לטובתך. ';
     if (a.method==='yes') msg += 'המגינים עזרו לך. ';
     if (a.friend==='yes' && a.friendAnswered==='yes') msg += 'החבר ענה — זו זכות גדולה. ';
     if (a.friend==='yes' && a.friendAnswered==='no') msg += 'גם אם החבר לא ענה — עצם הניסיון להתקשר זה ניצחון. ';
@@ -829,16 +816,15 @@
   function selectFallAnswer(q, val, btn) { fallQuizAnswers[q] = val; btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); if (q === 'friend') { const sub = document.getElementById('fallQuizFriendSub'); if (val === 'yes') { if (sub) sub.style.display = 'block'; } else { if (sub) sub.style.display = 'none'; fallQuizAnswers.friendAnswered = null; document.querySelectorAll('#fallQuizFriendSub .fall-quiz-btn').forEach(b => b.classList.remove('selected')); } } updateFallQuizNote(); }
   function saveFallQuiz() {
     const a = fallQuizAnswers; const note = document.getElementById('fallQuizNote');
-    if (!a.kind || !a.filter || !a.method || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
+    if (!a.kind || !a.method || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
     if (a.friend === 'yes' && !a.friendAnswered) { if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
-    const triedSomething = (a.filter==='yes') || (a.method==='yes') || (a.friend==='yes');
+    const triedSomething = (a.method==='yes') || (a.friend==='yes');
     const penalty = triedSomething ? 0 : 40;
     const arr = loadBritLog();
     arr.push({
       ts: Date.now(),
       text: fallQuizText,
       kind: a.kind,                                  // 'video' | 'brit' | 'both'
-      filterActive: a.filter,                         // 'yes' | 'no' | 'none'
       usedMethod: a.method==='yes',
       calledFriend: a.friend==='yes',
       friendAnswered: a.friend==='yes' ? (a.friendAnswered==='yes') : null,
