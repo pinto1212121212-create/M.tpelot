@@ -527,6 +527,19 @@
   .home-mini-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 24px; color: var(--brown-deep); line-height: 1; }
   .home-mini-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); margin-top: 3px; }
 
+
+  /* Emergency modal — bombastic stage UI */
+  .em-modal { background: linear-gradient(160deg, #c93a3a 0%, #8a1f1f 100%); color: #fff; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 12px 50px rgba(0,0,0,0.55); }
+  #emergencyModal .modal-close { background: rgba(255,255,255,0.18); border-radius: 50%; width: 32px; height: 32px; line-height: 1; }
+  .em-dot { background: rgba(255,255,255,0.35); }
+  .em-dot.active { background: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,0.35); }
+  .em-dot.done { background: rgba(255,255,255,0.85); }
+  .em-done-btn { transition: background 0.2s, transform 0.15s; }
+  .em-done-btn:hover:not([disabled]) { transform: translateY(-1px) scale(1.02); }
+  .em-stage-step-row .em-station-step { background: rgba(0,0,0,0.25); color: #fff; padding: 4px 14px; border-radius: 14px; font-weight: 900; }
+  #emStageContent { animation: emStageFade 0.4s ease-out; }
+  @keyframes emStageFade { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
+
   /* === FAB — always RED distress, no day/night themes === */
   .em-fab { background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%) !important; box-shadow: 0 8px 22px rgba(201,58,58,0.55) !important; border-color: rgba(255,247,224,0.85) !important; animation: emFabBreatheRed 2.6s ease-in-out infinite !important; }
   .em-fab:hover { box-shadow: 0 10px 30px rgba(201,58,58,0.8) !important; transform: scale(1.1) !important; }
@@ -925,40 +938,32 @@
     </div>
   </div>
 
-  <!-- Emergency mode modal (randomized 5-station journey) -->
+  <!-- Emergency mode modal — BOMBASTIC, 6 stages -->
   <div class="modal-backdrop" id="emergencyModal">
-    <div class="modal em-modal" id="emModal">
-      <div class="modal-header"><div class="modal-title" id="emTitle">🛡️ מצב חילוץ</div><button class="modal-close" id="emergencyClose">×</button></div>
-      <div class="modal-body">
-        <div class="pnote-card" id="emPnoteCard" style="margin-top:0; margin-bottom:14px; display:none;">
-          <div class="pnote-title">💛 הפתק שכתבת לעצמך</div>
-          <div class="pnote-text" id="emPnoteText"></div>
-        </div>
-        <div class="em-session-row"><span class="em-session-num">סשן <span id="emSessionNum">1</span></span><span class="em-session-theme" id="emSessionTheme">דרך יוסף</span></div>
-        <div class="em-hero-quote" id="emHeroQuote">״ויעזוב בגדו אצלה וינס ויצא החוצה״</div>
-        <div class="em-timer" id="emTimer">5:00</div>
-        <div class="em-station" id="emStation">
-          <div class="em-station-head"><span class="em-station-step" id="emStationStep">תחנה 1 / 5</span><span class="em-station-icon" id="emStationIcon">🏃</span></div>
-          <div class="em-station-title" id="emStationTitle">פעולה ראשונה</div>
-          <div class="em-station-text" id="emStationText">...</div>
-          <div class="em-station-input" id="emStationInput" style="display:none;"><input type="text" id="emCommitInput" placeholder="כתוב כאן..." maxlength="120"></div>
-          <button class="em-done-btn" id="emDoneBtn">✓ עשיתי — לתחנה הבאה</button>
-        </div>
+    <div class="modal em-modal" id="emModal" style="transition: background 0.7s ease;">
+      <div class="modal-header" style="border-bottom-color:rgba(255,255,255,0.3);"><div class="modal-title" id="emTitle" style="color:#fff;">🛡️ מצב חילוץ</div><button class="modal-close" id="emergencyClose" style="color:#fff;">×</button></div>
+      <div class="modal-body" style="padding:14px 12px;">
+        <div class="em-session-row" style="opacity:0.85;"><span class="em-session-num" style="color:#fff;">סשן <span id="emSessionNum">1</span></span><span class="em-session-theme" id="emSessionTheme">דרך יוסף</span></div>
+        <div class="em-hero-quote" id="emHeroQuote" style="background:rgba(0,0,0,0.20); color:#fff; border-right-color:#fff; border-left-color:#fff;">״ויעזב בגדו אצלה וינס ויצא החוצה״</div>
+        <div class="em-timer" id="emTimer" style="color:#fff; text-shadow:0 2px 8px rgba(0,0,0,0.30);">5:00</div>
+        <div class="em-stage-step-row" style="text-align:center; margin-bottom:6px;"><span class="em-station-step" id="emStageStep" style="color:#fff; background:rgba(0,0,0,0.25);">שלב 1 / 6</span></div>
+        <div id="emStageContent" style="background:rgba(255,255,255,0.10); border-radius:14px; padding:6px 8px; margin:4px 0 14px; min-height:200px; backdrop-filter:blur(4px);"></div>
+        <div style="text-align:center; margin:0 0 12px;"><button class="em-done-btn" id="emDoneBtn" style="background:rgba(255,255,255,0.95); color:#5a3a1a;">✓ הלאה →</button></div>
         <div class="em-progress" id="emProgress"></div>
         <div class="em-actions">
-          <button class="em-win" id="emWin" disabled>✅ ניצחתי — תרשום הצלחה (+50 נק׳)</button>
-          <button class="em-lose" id="emLose">💔 לא הצלחתי — לתעד נפילה</button>
+          <button class="em-win" id="emWin" disabled>🏆 ניצחתי — +50 נק׳</button>
+          <button class="em-lose" id="emLose" style="background:rgba(255,255,255,0.20); color:#fff; border-color:rgba(255,255,255,0.4);">💔 לא הצלחתי — לתעד</button>
         </div>
-        <div class="em-wall3-escape" id="emWall3Escape">
-          <div class="em-wall3-escape-title">📞 חומה 2 — חבר אחריות</div>
-          <div class="em-wall3-escape-sub">אם אתה עדיין נלחם — להתקשר לחבר עכשיו זה ניצחון. תמיד מותר.</div>
+        <div class="em-wall3-escape" id="emWall3Escape" style="background:rgba(0,0,0,0.20); border-color:rgba(255,255,255,0.4);">
+          <div class="em-wall3-escape-title" style="color:#fff;">📞 חומה 2 — חבר אחריות</div>
+          <div class="em-wall3-escape-sub" style="color:#fff; opacity:0.92;">אם אתה עדיין נלחם — להתקשר זה ניצחון. תמיד מותר.</div>
           <a href="#" class="em-wall3-call-btn disabled" id="emWall3CallBtn">📞 התקשר עכשיו</a>
-          <button class="em-wall3-mini" id="emWall3ConfigBtn">✏️ הגדר חבר</button>
+          <button class="em-wall3-mini" id="emWall3ConfigBtn" style="color:#fff; border-color:#fff;">✏️ הגדר חבר</button>
         </div>
-        <div style="text-align:center; margin-top:10px;"><button class="em-tehilim-btn" id="emTehilimChapterBtn" type="button">📖 פתח תהילים נ״א — קרא בקול</button></div>
-        <div class="em-tip">המסך הזה צריך להישאר פתוח עד הסוף. כל תחנה היא דקה.</div>
       </div>
     </div>
+  </div>
+
   </div>
 
   <div class="modal-backdrop" id="fallQuizModal">
@@ -1208,110 +1213,68 @@
     }).join('');
     list.querySelectorAll('.brit-log-entry-del').forEach(b => b.addEventListener('click', () => deleteBritLogEntry(parseInt(b.dataset.ts,10))));
   }
-  // ============= Emergency mode — randomized 5-station journey =============
-  // Each session pulls one item from each pool, so no two sessions feel the same.
-  // Session lasts 5 minutes total — 1 minute per station, auto-advances at the
-  // 1/2/3/4 minute mark, and the user can advance early with "✓ עשיתי".
+  // ============= Emergency mode — BOMBASTIC. Pikuach nefesh. =============
+  // This is not an "exercise". This is a friend screaming at him to stop.
+  // Six stages: STOP → Lie → Identity → Action → Tehilim → Win/Friend.
+  // Colors transition red→orange→gold→soft→green as he progresses.
 
-  // ---- Theme pool: each session gets one theme (color tint + hero quote) ----
-  const _EM_THEMES = [
-    { name: 'דרך יוסף הצדיק', color: '#5a3a1a', quote: '״ויעזוב בגדו אצלה וינס ויצא החוצה״' },
-    { name: 'גבורת דוד',      color: '#2a4670', quote: '״ה׳ לי לא אירא — מה יעשה לי אדם״' },
-    { name: 'אור התורה',      color: '#8a6a1f', quote: '״ה׳ אורי וישעי — ממי אירא״' },
-    { name: 'אהבת אבא',       color: '#7a3a3a', quote: '״כרחם אב על בנים — רחם ה׳ על יראיו״' },
-    { name: 'בן מלך',          color: '#5a3a7a', quote: '״אני אמרתי אלוקים אתם — ובני עליון כולכם״' },
-    { name: 'כוח המשיח',      color: '#1f5a4a', quote: '״ובחרת בחיים, למען תחיה אתה וזרעך״' },
-    { name: 'טהרת הלב',        color: '#5e1622', quote: '״לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי״' },
-  ];
-
-  // ---- Stations 1–5: pools of content randomly combined ----
-  // Station 1: physical action (must DO, not just think)
+  // Hard-hitting physical actions. Each is a COMMAND, not a suggestion.
   const _EM_ACTIONS = [
-    { i: '🚿', t: 'מים קרים על הפנים',  d: 'לך לכיור עכשיו. הרטב את הפנים שלך במים קרים — 10 שניות לפחות. הקור משבר את הגל.' },
-    { i: '💪', t: '20 שכיבות סמיכה',     d: 'תרד לרצפה. 20 שכיבות סמיכה — עכשיו. בגוף מותש אין מקום ליצר.' },
-    { i: '🏃', t: 'עזוב את החדר',         d: 'קום ועזוב את הסיטואציה הפיזית. לך לחדר אחר. אל תחזור עד שתהיה רגוע.' },
-    { i: '🌬️', t: 'נשימת 4-7-8',           d: 'שאף 4 שניות דרך האף. עצור 7 שניות. נשוף 8 שניות דרך הפה. חזור 4 פעמים. זה משחרר פיזיולוגית.' },
-    { i: '🦘', t: '30 קפיצות במקום',      d: 'קום וקפוץ במקום 30 פעם. הדם זורם — המוח משתנה. עכשיו.' },
-    { i: '💧', t: 'שתה כוס מים קרים',     d: 'קום. לך למטבח. שתה כוס מים קרים בלגימה אחת. שב למקום אחר.' },
-    { i: '🪟', t: 'פתח חלון',             d: 'פתח חלון בסלון או בכיוון אחר. תן לאוויר קר להיכנס. עמוד מולו 60 שניות.' },
-    { i: '🚪', t: 'צא החוצה',             d: 'נעל את הטלפון בחדר אחר. צא החוצה — לחצר, למדרגות, לרחוב — לדקה.' },
-    { i: '🔢', t: 'ספור אחורה מ-100',     d: 'ספור בקול אחורה: 100, 93, 86, 79... עד 2. זה משתלט על המוח הקדמי.' },
-    { i: '🧱', t: 'עמוד עם הגב לקיר',     d: 'מצא קיר. הצמד את הגב אליו. עמוד 60 שניות בלי לזוז. הגוף לומד שאתה בשליטה.' },
-    { i: '👁️', t: '5 דברים שאני רואה',   d: 'הסתכל סביב. אמור בקול 5 דברים שאתה רואה. אז 4 דברים שאתה שומע. אז 3 דברים שאתה מרגיש.' },
-    { i: '🧊', t: 'קרח על העורף',          d: 'קח קוביית קרח (או רחץ פנים במים קרים מאוד). הצמד לעורף 20 שניות. מערכת העצבים מתאפסת.' },
+    { i:'🚿', t:'תרים את עצמך. עכשיו.',    d:'תקום מהמיטה ותלך לכיור. הרטב את הפנים שלך במים קרים — 30 שניות. הקור משחרר את המוח מאחיזת היצר.' },
+    { i:'📞', t:'תרחיק את הטלפון.',         d:'תקום עכשיו. תיקח את הטלפון ותכניס אותו לחדר אחר. אם אין — תזרוק אותו לרצפה. תרחיק אותו ממך פיזית.' },
+    { i:'💪', t:'30 שכיבות סמיכה — עכשיו.', d:'תרד לרצפה. תספור בקול. הגוף המותש לא יכול להמשיך בפנטזיה. אחרי 30 — תרגיש אחרת.' },
+    { i:'🚪', t:'תצא מהחדר. עכשיו.',         d:'תקום ותלך לסלון, למטבח, לכל מקום שאין בו את הטריגרים שלך. אל תחזור עד שתרגיש רגוע.' },
+    { i:'🛐', t:'תרד על ברכיים.',            d:'תרד על ברכיים. תרים את הקול ותגיד "אבא, אני בורח אליך, תציל אותי". הקב״ה שומע — תאמין.' },
+    { i:'🧊', t:'קרח על הצוואר.',             d:'תיקח קוביית קרח (או רחץ במים קרים מאוד). תצמיד לאחורי הצוואר — 20 שניות. מערכת העצבים מתאפסת מיד.' },
+    { i:'🪟', t:'תזרוק את השמיכה.',           d:'תיקח את השמיכה ותזרוק אותה הצידה. תקום מהמיטה. הסיבה שאתה בקושי? המיטה. תעזוב אותה עכשיו.' },
+    { i:'🏃', t:'תרוץ במקום. 90 שניות.',     d:'תרוץ במקום בלי לעצור — 90 שניות מלאות. תספור עד 90. הדם זורם, האדרנלין עולה, היצר מתפזר. תרוץ.' },
+    { i:'🚿', t:'מקלחת קרה.',                 d:'אם אתה יכול — מקלחת מים קרים, גם דקה. הקור הוא הכלי הכי חזק שיש למוח. תיכנס. עכשיו.' },
+    { i:'🔢', t:'ספור אחורה מ-100 ב-7.',     d:'בקול: 100, 93, 86, 79, 72, 65... עד 2. החישוב משתלט על המוח הקדמי. היצר לא יכול לעבוד יחד עם חישוב.' },
   ];
 
-  // Station 2: a verse to read aloud (varies the Tanach reference)
-  const _EM_VERSES = [
-    { ref: 'בראשית ל״ט, ט׳',     t: 'איך אעשה הרעה הגדולה הזאת, וחטאתי לאלוקים?' },
-    { ref: 'תהילים נ״א, י״ב',    t: 'לב טהור ברא לי אלוקים, ורוח נכון חדש בקרבי.' },
-    { ref: 'תהילים נ״א, י״ג',    t: 'אל תשליכני מלפניך, ורוח קודשך אל תיקח ממני.' },
-    { ref: 'תהילים נ״א, י״ד',    t: 'השיבה לי ששון ישעך, ורוח נדיבה תסמכני.' },
-    { ref: 'תהילים קי״ח, ו׳',   t: 'ה׳ לי, לא אירא — מה יעשה לי אדם.' },
-    { ref: 'תהילים צ״א, א׳',    t: 'יושב בסתר עליון, בצל שדי יתלונן.' },
-    { ref: 'תהילים מ״ו, ח׳',    t: 'ה׳ צבאות עמנו, משגב לנו אלוקי יעקב סלה.' },
-    { ref: 'תהילים כ״ז, א׳',    t: 'ה׳ אורי וישעי — ממי אירא? ה׳ מעוז חיי — ממי אפחד?' },
-    { ref: 'תהילים קי״ט, י׳',   t: 'בכל לבי דרשתיך, אל תשגני ממצוותיך.' },
-    { ref: 'תהילים ק״ג, י״ג',   t: 'כרחם אב על בנים, רחם ה׳ על יראיו.' },
-    { ref: 'תהילים י״ז, ח׳',    t: 'שמרני כאישון בת עין, בצל כנפיך תסתירני.' },
-    { ref: 'ישעיהו מ״א, י׳',   t: 'אל תירא כי עמך אני, אל תשתע כי אני אלוקיך — אמצתיך אף עזרתיך, אף תמכתיך בימין צדקי.' },
-    { ref: 'דברים ל׳, י״ט',     t: 'ובחרת בחיים, למען תחיה אתה וזרעך.' },
-    { ref: 'משלי כ״ד, ט״ז',     t: 'כי שבע ייפול צדיק וקם, ורשעים ייכשלו ברעה.' },
-    { ref: 'תהילים פ״ב, ו׳',   t: 'אני אמרתי אלוקים אתם, ובני עליון כולכם.' },
-    { ref: 'תהילים ק״ג, י״ב',   t: 'כרחוק מזרח ממערב — הרחיק ממנו את פשעינו.' },
-    { ref: 'שיר השירים ו׳, ג׳', t: 'אני לדודי ודודי לי, הרועה בשושנים.' },
-    { ref: 'בראשית ל״ט, כ״א',   t: 'ויהי ה׳ את יוסף, וייט אליו חסד.' },
+  // Reality check — what the YH lies about + what actually happens
+  const _EM_LIES = [
+    { lie:'״רק הפעם.״',                    truth:'אף פעם זה לא ״רק הפעם״. תמיד יש פעם הבאה — קרובה יותר, חזקה יותר.' },
+    { lie:'״אחר כך תרגיש טוב.״',          truth:'תיזכר בפעם הקודמת. הרגשת ריקנות. בושה. שנאה עצמית. אותה תרגיש שוב אם תעשה עכשיו.' },
+    { lie:'״אף אחד לא יראה.״',             truth:'הקב״ה רואה. אתה רואה. הנשמה שלך זוכרת כל רגע. שום דבר לא נשכח.' },
+    { lie:'״אני לא יכול לעצור.״',          truth:'אתה כן יכול. אתה כבר עצרת אלפי פעמים — בדברים אחרים. גם עכשיו — אתה יכול.' },
+    { lie:'״זה לא כזה נורא.״',             truth:'זה נורא. זה מרחיק אותך מהאישה שאתה רוצה לבנות איתה, מהילדים שלך, מעצמך.' },
+    { lie:'״אני לבד עכשיו.״',              truth:'הקב״ה כאן. הצדיקים שלך כאן. כל הצועקים אליו מכל הדורות איתך עכשיו.' },
   ];
 
-  // Station 3: insight / chazal that shifts perspective
-  const _EM_INSIGHTS = [
-    { src: 'הגר״א',                t: 'רגע אחד של ניצחון על היצר הרע — שווה את כל העולם הזה ואת כל העולם הבא.' },
-    { src: 'תנא דבי אליהו',        t: 'כל הגדול מחבירו — יצרו גדול ממנו. עצם הניסיון הזה הוא סימן לגדולה שלך.' },
-    { src: 'יומא ל״ח:',            t: 'בא לטהר — מסייעין אותו. ברגע שאתה בוחר בטוב, השמיים נחלצים לעזרתך מיד.' },
-    { src: 'משנה אבות ד״, א׳',    t: 'איזהו גיבור? הכובש את יצרו. אתה גיבור אמיתי כשאתה נלחם בעצמך — לא במישהו אחר.' },
-    { src: 'חז״ל',                  t: 'מחשבה טובה — הקב״ה מצרפה למעשה. עצם הרצון שלך עכשיו לנצח — נחשב כאילו ניצחת.' },
-    { src: 'תניא',                  t: 'הבינוני — נלחם עם יצרו בכל יום. עצם המלחמה היא הדרגה, לא הניצחון. אתה במקום הנכון.' },
-    { src: 'חובות הלבבות',         t: 'הביטחון בה׳ — הוא הנשק שמפיל את היצר ברגע אחד. תאמין שהוא איתך עכשיו.' },
-    { src: 'אגרת הרמב״ן',          t: 'כל הניצחונות הקטנים שלך — שמורים אצל ה׳ לעולם. אף לא אחד נשכח.' },
-    { src: 'חז״ל',                  t: 'הקב״ה משתעשע בצדיקים שמנצחים את יצרם. אתה גורם עכשיו נחת רוח לאבא שבשמיים.' },
-    { src: 'מסילת ישרים י״א',     t: 'הקדושה מתחילה בהשתדלות שלך — ונגמרת במתנה מן השמיים. תעשה את החצי שלך — והוא יעשה את השאר.' },
-    { src: 'קידושין ל׳:',          t: 'בראתי יצר הרע — בראתי לו תורה תבלין. דבר תורה אחד עכשיו — מנטרל הכל.' },
-    { src: 'חז״ל',                  t: 'אם פגע בך מנוול זה — משכהו לבית המדרש. הסט את המחשבה לדבר תורה אחד.' },
-    { src: 'הבן איש חי',            t: 'יצר הרע גובר עליך — סימן שאתה במלחמה גדולה. רק בעיר נצורה מציבים שומרים.' },
-    { src: 'חז״ל',                  t: 'במקום שבעלי תשובה עומדים — צדיקים גמורים אינם יכולים לעמוד. הניצחון שלך גבוה מן הצדיק הגמור.' },
-    { src: 'ר׳ נחמן מברסלב',       t: 'אסור להתייאש לעולם. גם אם נפלת אלף פעם — הקימה שלך עכשיו היא מה שנחשב.' },
+  // Identity statements — who you really are
+  const _EM_IDENTITY = [
+    'אתה לא חיה. אתה בן של מלך.',
+    'אתה לוחם של אמת — אחרת לא היית לוחץ על הכפתור הזה.',
+    'אתה לא היצר שלך. אתה הבחירה שלך.',
+    'אתה הצדיק שעוד תהיה — הוא מסתכל עליך עכשיו.',
+    'אתה האבא שעוד תהיה. הילדים שלך מסתכלים עליך עכשיו.',
+    'אתה הבעל שעוד תהיה. אישתך מסתכלת עליך עכשיו.',
+    'אתה הסבא שעוד תהיה. הנכדים שלך נושאים את הניצחון שלך עכשיו.',
   ];
 
-  // Station 4: personal commitment — type something concrete
-  const _EM_COMMITS = [
-    { prompt: 'כתוב את שם האבא או הסבא שלך — תקרא אותו בקול ותחשוב מה הוא היה אומר עכשיו.',  ph: 'שם...' },
-    { prompt: 'כתוב את שם הילד שאתה רוצה להיות לו אבא בעוד 5 שנים. דמיין אותו מסתכל עליך.', ph: 'שם הילד שלך לעתיד...' },
-    { prompt: 'כתוב מה תעשה מחר בבוקר אם תנצח הלילה.', ph: 'מחר בבוקר אני...' },
-    { prompt: 'כתוב את חתימתך בעוד 10 שנים — על מה תהיה הכי גאה?', ph: 'בעוד 10 שנים אהיה גאה ש...' },
-    { prompt: 'כתוב 3 דברים שאתה מודה עליהם עכשיו — גם אם זה קשה.', ph: 'מודה ל-ה׳ על...' },
-    { prompt: 'כתוב מה היית רוצה להגיד למשיח כשהוא יבוא.', ph: 'משיח, אני...' },
-    { prompt: 'כתוב את שם החבר הכי טוב שלך. תדמיין שהוא מתפלל עליך עכשיו.', ph: 'שם החבר...' },
-    { prompt: 'כתוב את שם הרב או הצדיק שאתה מכיר. תדמיין שהוא מתפלל עליך עכשיו.', ph: 'שם הצדיק...' },
-    { prompt: 'כתוב הבטחה לעצמך — מה תרגיש בעוד שעה אם תנצח עכשיו?', ph: 'בעוד שעה ארגיש...' },
-    { prompt: 'כתוב משפט אחד שאתה רוצה להגיד לעצמך מחר בבוקר.', ph: 'בוקר טוב לי. אני...' },
-    { prompt: 'כתוב על מי או על מה אתה מתפלל ביום־יום. עכשיו ביקש לעצמך — לכוח להתגבר.', ph: 'אני מתפלל על...' },
-    { prompt: 'כתוב מה היית רוצה שיגידו עליך אנשים שמכירים אותך באמת.', ph: 'אני רוצה שיגידו עליי...' },
-  ];
-
-  // Station 5 — closing celebration (one of these per session)
-  const _EM_CLOSING = [
-    { t: 'ניצחת', d: 'אתה כבר ניצחת ברגע שלחצת על הכפתור הזה. כל מה שעבר עליך עכשיו — נכתב בשמיים. רגע אחד של ניצחון — שווה כל העולם.' },
-    { t: 'גיבור', d: 'איזהו גיבור? הכובש את יצרו. אתה גיבור. תכניס את הניצחון הזה לתוך הלב — הוא נשאר לתמיד.' },
-    { t: 'בא לטהר', d: 'אתה בחרת לטהר את עצמך — והשמיים סייעו לך. אל תפסיק להאמין שאתה יכול. הכוח הזה איתך תמיד.' },
-    { t: 'נחת רוח', d: 'נגרמה עכשיו נחת רוח גדולה לאבא שבשמיים. הרגע הזה יישמר אצלו לזיכרון של אהבה.' },
-    { t: 'אור', d: 'הוספת עכשיו אור גדול בעולם. כל ניצחון של אדם — מאיר על כל הסביבה. אתה לא עשית את זה רק בשבילך.' },
+  // Themes — color + opening
+  const _EM_THEMES = [
+    { name:'דרך יוסף',  color:'#5a3a1a', quote:'״ויעזב בגדו אצלה וינס ויצא החוצה״' },
+    { name:'גבורת דוד', color:'#2a4670', quote:'״ה׳ לי לא אירא — מה יעשה לי אדם״' },
+    { name:'אור התורה', color:'#8a6a1f', quote:'״ה׳ אורי וישעי״' },
+    { name:'אהבת אבא',  color:'#7a3a3a', quote:'״כרחם אב על בנים״' },
+    { name:'בן מלך',    color:'#5a3a7a', quote:'״אני אמרתי אלוקים אתם״' },
+    { name:'טהרת הלב',  color:'#5e1622', quote:'״לב טהור ברא לי אלוקים״' },
   ];
 
   // ---- State ----
-  let _emTimerId = null, _emStationTimerId = null, _emEndTs = 0;
-  let _emCurStation = 0, _emSession = null;
+  let _emTimerId = null, _emEndTs = 0, _emCurStage = 0, _emSession = null;
   const _EM_DURATION_MS = 5 * 60 * 1000;
-  const _EM_STATION_MS = 60 * 1000;
+  // 6 stages with different durations
+  const _EM_STAGES = [
+    { key:'stop',     ms:10000, color:'#c93a3a' },  // 10 sec — STOP. Can't skip.
+    { key:'lie',      ms:40000, color:'#d4683a' },  // 40 sec — The lie vs the truth
+    { key:'identity', ms:40000, color:'#b88748' },  // 40 sec — You are not this
+    { key:'action',   ms:80000, color:'#c89a34' },  // 80 sec — Physical action
+    { key:'tehilim',  ms:80000, color:'#8a6a3a' },  // 80 sec — Tehilim aloud
+    { key:'win',      ms:50000, color:'#3a9a4a' },  // 50 sec — Victory framing
+  ];
 
   function _emPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function _emFmt(ms){
@@ -1328,127 +1291,175 @@
   }
 
   function _emBuildSession(){
-    const theme = _emPick(_EM_THEMES);
     return {
-      theme: theme,
-      stations: [
-        // 1) Hero quote framing (already shown), action
-        { kind:'action',  icon: _emPick(_EM_ACTIONS).i, title: 'פעולה ראשונה — עכשיו', text: null, pick: _emPick(_EM_ACTIONS) },
-        // 2) Verse to read aloud
-        { kind:'verse',   icon: '📖', title: 'פסוק לקרוא בקול — 3 פעמים', pick: _emPick(_EM_VERSES) },
-        // 3) Insight to internalize
-        { kind:'insight', icon: '💡', title: 'תובנה להפנים', pick: _emPick(_EM_INSIGHTS) },
-        // 4) Personal commitment (type something)
-        { kind:'commit',  icon: '✍️', title: 'מחויבות אישית — כתוב כאן', pick: _emPick(_EM_COMMITS) },
-        // 5) Closing celebration
-        { kind:'close',   icon: '🏆', title: 'סיום — הניצחון שלך', pick: _emPick(_EM_CLOSING) },
-      ]
+      theme:    _emPick(_EM_THEMES),
+      action:   _emPick(_EM_ACTIONS),
+      lie:      _emPick(_EM_LIES),
+      identity: _emPick(_EM_IDENTITY),
     };
   }
 
-  function _emRenderStation(idx){
-    if (!_emSession) return;
-    const st = _emSession.stations[idx];
-    if (!st) return;
-    document.getElementById('emStationStep').textContent = 'תחנה ' + (idx+1) + ' / 5';
-    document.getElementById('emStationIcon').textContent = st.icon;
-    document.getElementById('emStationTitle').textContent = st.title;
-    const textEl = document.getElementById('emStationText');
-    const inputEl = document.getElementById('emStationInput');
-    inputEl.style.display = 'none';
-    let html = '';
-    if (st.kind === 'action') {
-      html = '<strong style="font-size:17px">' + st.pick.t + '</strong><br>' + st.pick.d;
-    } else if (st.kind === 'verse') {
-      html = '״' + st.pick.t + '״<span class="em-ref">' + st.pick.ref + '</span>';
-    } else if (st.kind === 'insight') {
-      html = st.pick.t + '<span class="em-source">— ' + st.pick.src + '</span>';
-    } else if (st.kind === 'commit') {
-      html = st.pick.prompt;
-      inputEl.style.display = 'block';
-      const inp = document.getElementById('emCommitInput');
-      if (inp) { inp.placeholder = st.pick.ph; inp.value = ''; }
-    } else if (st.kind === 'close') {
-      html = '<strong style="font-size:18px;color:#2f8a3f">' + st.pick.t + '</strong><br>' + st.pick.d;
+  function _emStageHtml(stageKey){
+    const s = _emSession; if (!s) return '';
+    if (stageKey === 'stop') {
+      return '<div style="text-align:center; padding:20px 0;">'
+           + '<div style="font-size:80px; line-height:1; margin-bottom:10px;">🛑</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:38px; color:#fff; line-height:1.1; margin-bottom:8px;">עצור.</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:18px; color:#fff; opacity:0.95; line-height:1.4;">זה רגע של גורל.<br>בעוד 10 שניות תבין מי אתה.</div>'
+           + '</div>';
     }
-    textEl.innerHTML = html;
+    if (stageKey === 'lie') {
+      return '<div style="padding:10px 4px;">'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:22px; color:#fff; margin-bottom:14px; text-align:center;">היצר הרע משקר עכשיו</div>'
+           + '<div style="background:rgba(0,0,0,0.18); border-radius:10px; padding:14px; margin:10px 0;">'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:13px; color:#fff; opacity:0.7; margin-bottom:4px;">הוא לוחש לך:</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:700; font-size:20px; color:#fff; font-style:italic;">' + s.lie.lie + '</div>'
+           + '</div>'
+           + '<div style="background:rgba(255,255,255,0.18); border-radius:10px; padding:14px; margin:10px 0;">'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:13px; color:#fff; opacity:0.9; margin-bottom:4px;">האמת:</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:700; font-size:17px; color:#fff; line-height:1.5;">' + s.lie.truth + '</div>'
+           + '</div>'
+           + '</div>';
+    }
+    if (stageKey === 'identity') {
+      const pn = (typeof loadPnote === 'function') ? loadPnote() : '';
+      let pnHtml = '';
+      if (pn && pn.trim()) {
+        pnHtml = '<div style="background:rgba(0,0,0,0.20); border-radius:10px; padding:14px; margin:14px 0;">'
+               + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:12.5px; color:#fff; opacity:0.85; margin-bottom:6px;">💛 הסיבה שלך — בכתב ידך:</div>'
+               + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:700; font-size:17px; color:#fff; font-style:italic; line-height:1.55;">״' + pn.trim() + '״</div>'
+               + '</div>';
+      }
+      return '<div style="padding:8px 4px; text-align:center;">'
+           + '<div style="font-size:54px; line-height:1; margin-bottom:6px;">👑</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:24px; color:#fff; margin-bottom:8px;">אתה לא זה.</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:700; font-size:20px; color:#fff; line-height:1.45; opacity:0.97;">' + s.identity + '</div>'
+           + pnHtml
+           + '</div>';
+    }
+    if (stageKey === 'action') {
+      return '<div style="padding:8px 4px;">'
+           + '<div style="text-align:center; font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:18px; color:#fff; margin-bottom:14px; opacity:0.95;">תעשה את זה — עכשיו</div>'
+           + '<div style="background:rgba(0,0,0,0.20); border-radius:12px; padding:16px; text-align:center;">'
+           + '<div style="font-size:48px; line-height:1; margin-bottom:8px;">' + s.action.i + '</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:22px; color:#fff; margin-bottom:10px;">' + s.action.t + '</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:15.5px; color:#fff; line-height:1.6;">' + s.action.d + '</div>'
+           + '</div>'
+           + '</div>';
+    }
+    if (stageKey === 'tehilim') {
+      return '<div style="padding:8px 4px; text-align:center;">'
+           + '<div style="font-size:48px; line-height:1; margin-bottom:8px;">📖</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:22px; color:#fff; margin-bottom:8px;">תקרא תהילים נ״א. בקול.</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:15px; color:#fff; opacity:0.93; line-height:1.6; margin-bottom:14px;">תפילתו של דוד אחרי החטא — שפותחת את שערי השמיים בכל דור.<br>כל פסוק שיצא מפיך — בועט ביצר בפנים.</div>'
+           + '<button class="em-tehilim-btn" id="emTehilimChapterBtn" type="button" style="background:linear-gradient(135deg,#fff7e0,#f5e0a8); color:#5a3a1a; padding:14px 22px; font-size:16px; font-weight:900;">📖 פתח את הפרק — קרא עכשיו</button>'
+           + '</div>';
+    }
+    if (stageKey === 'win') {
+      return '<div style="padding:14px 4px; text-align:center;">'
+           + '<div style="font-size:72px; line-height:1; margin-bottom:6px;">🏆</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-weight:900; font-size:30px; color:#fff; margin-bottom:8px;">ניצחת.</div>'
+           + '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:17px; color:#fff; line-height:1.6; opacity:0.97;">השמיים רואים אותך עכשיו. הרגע הזה נכתב לעולם.<br><br>תיזכר בו ביום הבא של קושי — אתה כבר עברת את זה. אתה יכול שוב.</div>'
+           + '</div>';
+    }
+    return '';
+  }
+
+  function _emRenderStage(idx){
+    if (!_emSession) return;
+    if (idx < 0 || idx >= _EM_STAGES.length) idx = _EM_STAGES.length - 1;
+    _emCurStage = idx;
+    const st = _EM_STAGES[idx];
+    // Color the modal body
+    const modal = document.querySelector('#emergencyModal .em-modal');
+    if (modal) modal.style.background = 'linear-gradient(160deg, ' + st.color + ' 0%, ' + _emShade(st.color) + ' 100%)';
+    // Render stage content
+    const cont = document.getElementById('emStageContent');
+    if (cont) cont.innerHTML = _emStageHtml(st.key);
+    // Re-wire tehilim button if visible
+    const tb = document.getElementById('emTehilimChapterBtn');
+    if (tb) tb.addEventListener('click', function(){ if (typeof openTehilim==='function') openTehilim(); });
     // Update progress dots
     const prog = document.getElementById('emProgress');
     if (prog) {
       let dots = '';
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < _EM_STAGES.length; i++) {
         const cls = (i < idx) ? 'em-dot done' : (i === idx ? 'em-dot active' : 'em-dot');
         dots += '<span class="' + cls + '"></span>';
       }
       prog.innerHTML = dots;
     }
+    // Update stage label
+    const lbl = document.getElementById('emStageStep');
+    if (lbl) lbl.textContent = 'שלב ' + (idx+1) + ' / ' + _EM_STAGES.length;
+    // Disable "next" during stop stage
+    const nextBtn = document.getElementById('emDoneBtn');
+    if (nextBtn) {
+      if (st.key === 'stop') {
+        nextBtn.setAttribute('disabled','disabled');
+        nextBtn.textContent = 'תחזיק 10 שניות...';
+      } else {
+        nextBtn.removeAttribute('disabled');
+        nextBtn.textContent = (idx === _EM_STAGES.length - 1) ? '✓ סיימתי' : '✓ הלאה →';
+      }
+    }
+    // Enable WIN button only at last stage
+    const winBtn = document.getElementById('emWin');
+    if (winBtn) {
+      if (idx >= _EM_STAGES.length - 1) winBtn.removeAttribute('disabled');
+      else winBtn.setAttribute('disabled','disabled');
+    }
   }
 
-  function _emAdvanceStation(){
+  function _emShade(hex){
+    // Darken a hex color by ~25% for the gradient bottom
+    if (!hex || hex[0] !== '#') return hex;
+    const n = parseInt(hex.slice(1), 16);
+    let r = (n>>16)&0xff, g = (n>>8)&0xff, b = n&0xff;
+    r = Math.max(0, Math.floor(r*0.65));
+    g = Math.max(0, Math.floor(g*0.65));
+    b = Math.max(0, Math.floor(b*0.65));
+    return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+  }
+
+  function _emAdvanceStage(){
     if (!_emSession) return;
-    if (_emCurStation >= 4) {
-      // Already on final station — unlock win
-      const winBtn = document.getElementById('emWin');
-      if (winBtn) winBtn.removeAttribute('disabled');
-      return;
-    }
-    _emCurStation++;
-    _emRenderStation(_emCurStation);
-    if (_emCurStation === 4) {
-      const winBtn = document.getElementById('emWin');
-      if (winBtn) winBtn.removeAttribute('disabled');
-    }
+    // For stop stage, prevent manual advance
+    if (_EM_STAGES[_emCurStage] && _EM_STAGES[_emCurStage].key === 'stop') return;
+    if (_emCurStage < _EM_STAGES.length - 1) _emRenderStage(_emCurStage + 1);
   }
 
   function _emTick(){
     const now = Date.now();
     const remain = _emEndTs - now;
-    const tEl = document.getElementById('emTimer');
-    if (tEl) tEl.textContent = _emFmt(remain);
-    // Auto-advance based on elapsed time, only if user hasn't already advanced
-    const elapsed = _EM_DURATION_MS - remain;
-    const expectedStation = Math.min(4, Math.floor(elapsed / _EM_STATION_MS));
-    if (expectedStation > _emCurStation) {
-      _emCurStation = expectedStation;
-      _emRenderStation(_emCurStation);
-      if (_emCurStation === 4) {
-        const winBtn = document.getElementById('emWin');
-        if (winBtn) winBtn.removeAttribute('disabled');
-      }
+    const tEl = document.getElementById('emTimer'); if (tEl) tEl.textContent = _emFmt(remain);
+    // Auto-advance: figure out which stage we should be in based on elapsed time
+    let elapsed = _EM_DURATION_MS - remain;
+    let acc = 0, expected = 0;
+    for (let i = 0; i < _EM_STAGES.length; i++) {
+      acc += _EM_STAGES[i].ms;
+      if (elapsed < acc) { expected = i; break; }
+      expected = i;
     }
+    if (expected > _emCurStage) _emRenderStage(expected);
     if (remain <= 0) {
       clearInterval(_emTimerId); _emTimerId = null;
-      const winBtn = document.getElementById('emWin');
-      if (winBtn) winBtn.removeAttribute('disabled');
-      if (tEl) tEl.textContent = '0:00 ✓';
-      try { toast('הזמן עבר — אתה ניצחת. לחץ "ניצחתי" כדי לתעד.'); } catch(e) {}
+      const winBtn = document.getElementById('emWin'); if (winBtn) winBtn.removeAttribute('disabled');
+      if (tEl) tEl.textContent = '0:00';
+      _emRenderStage(_EM_STAGES.length - 1);
     }
   }
 
   function openEmergency(){
     const m = document.getElementById('emergencyModal'); if (!m) return;
     _emSession = _emBuildSession();
-    _emCurStation = 0;
+    _emCurStage = 0;
     _emEndTs = Date.now() + _EM_DURATION_MS;
-    // Show the personal note at the top, if user has written one
-    try {
-      const pn = loadPnote();
-      const card = document.getElementById('emPnoteCard');
-      const text = document.getElementById('emPnoteText');
-      if (pn && pn.trim()) {
-        if (text) text.textContent = '״' + pn.trim() + '״';
-        if (card) card.style.display = 'block';
-      } else {
-        if (card) card.style.display = 'none';
-      }
-    } catch(e) {}
-    // Apply theme
     const t = _emSession.theme;
-    const titleEl = document.getElementById('emSessionTheme'); if (titleEl) { titleEl.textContent = t.name; titleEl.style.background = t.color; titleEl.style.color = '#fff7e0'; }
-    const heroEl = document.getElementById('emHeroQuote'); if (heroEl) { heroEl.textContent = t.quote; heroEl.style.borderRightColor = t.color; heroEl.style.borderLeftColor = t.color; }
-    const numEl = document.getElementById('emSessionNum'); if (numEl) numEl.textContent = _emIncSessions();
-    const winBtn = document.getElementById('emWin'); if (winBtn) winBtn.setAttribute('disabled','disabled');
-    _emRenderStation(0);
+    const themeEl = document.getElementById('emSessionTheme'); if (themeEl) { themeEl.textContent = t.name; themeEl.style.background = t.color; themeEl.style.color = '#fff7e0'; }
+    const heroEl  = document.getElementById('emHeroQuote');   if (heroEl)  { heroEl.textContent  = t.quote; heroEl.style.borderRightColor = t.color; heroEl.style.borderLeftColor = t.color; }
+    const numEl   = document.getElementById('emSessionNum');  if (numEl)   numEl.textContent = _emIncSessions();
+    _emRenderStage(0);
     m.classList.add('active');
     _emTick();
     if (_emTimerId) clearInterval(_emTimerId);
@@ -1458,14 +1469,13 @@
   function closeEmergency(){
     const m = document.getElementById('emergencyModal'); if (m) m.classList.remove('active');
     if (_emTimerId) { clearInterval(_emTimerId); _emTimerId = null; }
+    // Reset modal background
+    const modal = document.querySelector('#emergencyModal .em-modal'); if (modal) modal.style.background = '';
   }
 
   function emergencyWin(){
-    // Build a positive log entry that captures what they wrote in the commit station
-    let commitText = '';
-    try { const inp = document.getElementById('emCommitInput'); if (inp) commitText = (inp.value||'').trim(); } catch(e) {}
     const themeName = (_emSession && _emSession.theme) ? _emSession.theme.name : '';
-    const text = '🏆 ניצחתי את היצר באמצעות פרוטוקול הלילה' + (themeName ? ' (' + themeName + ')' : '') + (commitText ? ' — "' + commitText + '"' : '');
+    const text = '🏆 ניצחתי את היצר באמצעות פרוטוקול החילוץ' + (themeName ? ' (' + themeName + ')' : '');
     const arr = loadBritLog();
     arr.push({
       ts: Date.now(),
@@ -1891,7 +1901,7 @@
 
   function _wireEmergency(){
     const done = document.getElementById('emDoneBtn');
-    if (done) done.addEventListener('click', _emAdvanceStation);
+    if (done) done.addEventListener('click', _emAdvanceStage);
     const btn = document.getElementById('emergencyBtn');
     if (btn) btn.addEventListener('click', openEmergency);
     const fab = document.getElementById('emFab');
