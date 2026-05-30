@@ -257,6 +257,30 @@
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   /* Emergency mode — nighttime firewall */
   .fall-quiz-night-banner { background: linear-gradient(135deg, rgba(42,90,122,0.18), rgba(60,30,10,0.05)); border: 1.5px solid #2a5a7a; border-radius: 8px; padding: 10px 12px; margin: 8px 0 12px; font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: var(--brown-deep); text-align: center; }
+  /* Wall of Fire 3 — friend call card */
+  .wall3-card { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(60,140,90,0.16), rgba(60,30,10,0.05)); border: 2px solid #3a9a4a; border-radius: 10px; }
+  .wall3-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 17px; color: #1f5a32; margin-bottom: 8px; text-align: center; }
+  .wall3-tagline { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 13.5px; color: var(--brown); text-align: center; margin-bottom: 12px; }
+  .wall3-friend-info { background: var(--parchment-light); border: 1px solid var(--gold); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+  .wall3-friend-line { display: flex; justify-content: space-between; align-items: center; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); }
+  .wall3-friend-name { font-weight: 700; }
+  .wall3-friend-phone { font-family: monospace; color: var(--gold-dark); }
+  .wall3-friend-empty { font-family: 'Frank Ruhl Libre', serif; font-style: italic; color: var(--brown-light); text-align: center; padding: 6px; }
+  .wall3-actions { display: flex; gap: 8px; }
+  .wall3-call-btn { flex: 2; padding: 14px; background: linear-gradient(135deg, #3a9a4a, #2f7a3a); color: #fff; border: none; border-radius: 10px; font-family: 'Heebo', sans-serif; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(58,154,74,0.4); text-decoration: none; display: flex; align-items: center; justify-content: center; }
+  .wall3-call-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(58,154,74,0.55); }
+  .wall3-call-btn[disabled] { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+  .wall3-config-btn { flex: 1; padding: 14px; background: var(--parchment-light); color: var(--brown-deep); border: 1.5px solid var(--brown-light); border-radius: 10px; font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .wall3-config-btn:hover { background: var(--parchment); }
+  /* Escalation row inside emergency modal */
+  .em-wall3-escape { margin-top: 14px; padding: 14px; background: linear-gradient(135deg, rgba(60,140,90,0.12), rgba(201,169,97,0.06)); border: 1.5px dashed #3a9a4a; border-radius: 10px; text-align: center; }
+  .em-wall3-escape-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 14px; color: #1f5a32; margin-bottom: 6px; }
+  .em-wall3-escape-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown); font-style: italic; margin-bottom: 10px; }
+  .em-wall3-call-btn { display: inline-block; padding: 10px 18px; background: linear-gradient(135deg, #3a9a4a, #2f7a3a); color: #fff; text-decoration: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 14px; box-shadow: 0 3px 10px rgba(58,154,74,0.4); }
+  .em-wall3-call-btn:hover { transform: translateY(-1px); }
+  .em-wall3-call-btn.disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+  .em-wall3-mini { display: block; width: 100%; padding: 8px; background: transparent; border: 1px solid #3a9a4a; border-radius: 6px; color: #1f5a32; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 12.5px; cursor: pointer; margin-top: 10px; }
+  .em-wall3-mini:hover { background: rgba(58,154,74,0.08); }
   /* Rescue button — hero card on the page */
   .em-btn-wrap { margin: 20px 0; padding: 20px 18px; background: linear-gradient(135deg, rgba(60,36,16,0.06), rgba(201,169,97,0.12)); border: 2px solid var(--gold-dark); border-radius: 14px; position: relative; transition: all 0.5s ease; }
   .em-btn-wrap.night { background: linear-gradient(135deg, rgba(20,30,55,0.18), rgba(60,90,130,0.10)); border-color: #5a7aa0; }
@@ -447,7 +471,7 @@
   <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
 
   <div class="defense-card">
-    <div class="defense-title">🏃 דרך יוסף הצדיק — חומת האש הראשונה</div>
+    <div class="defense-title">🏃 חומה 1 — דרך יוסף הצדיק</div>
     <div class="defense-body">
       <div class="defense-tagline">״ויעזוב בגדו אצלה וינס ויצא החוצה״ — בריחה היא ניצחון.</div>
       <div class="defense-steps">תוך <strong>3 שניות</strong> מהרגע שאתה מזהה פיתוי:</div>
@@ -461,7 +485,7 @@
   </div>
 
   <div class="defense-card" style="border-color:#2a5a7a; background:linear-gradient(160deg, rgba(42,90,122,0.16), rgba(60,30,10,0.05));">
-    <div class="defense-title">🌙 פרוטוקול לילה — חומת אש שנייה</div>
+    <div class="defense-title">🌙 חומה 2 — פרוטוקול לילה</div>
     <div class="defense-body">
       <div class="defense-tagline">הלילה הוא הזמן הקשה. הכן את ההגנה <strong>לפני</strong> שתהיה זקוק לה.</div>
       <div class="defense-steps"><strong>לפני השינה:</strong></div>
@@ -491,6 +515,22 @@
 
   <!-- Floating Action Button — always visible -->
   <button class="em-fab" id="emFab" aria-label="כפתור החילוץ">🛡️<span class="em-fab-label" id="emFabLabel">כפתור החילוץ</span></button>
+
+  <div class="wall3-card" id="wall3Card">
+    <div class="wall3-title">📞 חומה 3 — חבר אחריות (מוצא אחרון)</div>
+    <div class="wall3-tagline">אם חומות 1+2 לא הספיקו — להתקשר לחבר זה ניצחון, לא חולשה.</div>
+    <div class="wall3-friend-info">
+      <div class="wall3-friend-line" id="wall3FriendLine">
+        <span class="wall3-friend-empty" id="wall3FriendEmpty">עוד לא הוגדר חבר. לחץ "הגדר" כדי להוסיף מספר.</span>
+        <span style="display:none" id="wall3FriendDisplay"><span class="wall3-friend-name" id="wall3FriendName"></span> · <span class="wall3-friend-phone" id="wall3FriendPhone"></span></span>
+      </div>
+    </div>
+    <div class="wall3-actions">
+      <a href="#" class="wall3-call-btn" id="wall3CallBtn" disabled>📞 התקשר עכשיו</a>
+      <button class="wall3-config-btn" id="wall3ConfigBtn">✏️ הגדר</button>
+    </div>
+  </div>
+
 
   <div class="brit-log-section" id="britLogSection">
     <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
@@ -645,6 +685,22 @@
   </div>
 
   <!-- Fall questionnaire -->
+  <!-- Wall 3 — friend config modal -->
+  <div class="modal-backdrop" id="wall3ConfigModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">📞 הגדר חבר אחריות</div><button class="modal-close" id="wall3ConfigClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-form-row"><label class="goal-form-label">שם החבר</label><input type="text" class="goal-form-input" id="wall3NameInput" placeholder="למשל: יוסי" maxlength="40"></div>
+        <div class="goal-form-row"><label class="goal-form-label">מספר טלפון</label><input type="tel" class="goal-form-input" id="wall3PhoneInput" placeholder="05X-XXXXXXX" maxlength="20"></div>
+        <div style="font-family:'Frank Ruhl Libre',serif; font-size:13px; color:var(--brown-light); font-style:italic; margin: 4px 0 14px;">המספר נשמר רק אצלך בטלפון. לחיצה על "התקשר" תפתח את החייגן עם המספר.</div>
+        <div class="goal-form-buttons">
+          <button class="goal-form-btn save" id="wall3SaveBtn">שמור</button>
+          <button class="goal-form-btn cancel" id="wall3CancelBtn">ביטול</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Emergency mode modal (randomized 5-station journey) -->
   <div class="modal-backdrop" id="emergencyModal">
     <div class="modal em-modal" id="emModal">
@@ -664,6 +720,12 @@
         <div class="em-actions">
           <button class="em-win" id="emWin" disabled>✅ ניצחתי — תרשום הצלחה (+50 נק׳)</button>
           <button class="em-lose" id="emLose">💔 לא הצלחתי — לתעד נפילה</button>
+        </div>
+        <div class="em-wall3-escape" id="emWall3Escape">
+          <div class="em-wall3-escape-title">📞 חומה 3 — חבר אחריות</div>
+          <div class="em-wall3-escape-sub">אם אתה עדיין נלחם — להתקשר לחבר עכשיו זה ניצחון. תמיד מותר.</div>
+          <a href="#" class="em-wall3-call-btn disabled" id="emWall3CallBtn">📞 התקשר עכשיו</a>
+          <button class="em-wall3-mini" id="emWall3ConfigBtn">✏️ הגדר חבר</button>
         </div>
         <div class="em-tip">המסך הזה צריך להישאר פתוח עד הסוף. כל תחנה היא דקה.</div>
       </div>
@@ -903,6 +965,7 @@
     list.innerHTML = entries.map(e => {
       const tags = [];
       if (e.kind === 'victory') tags.push('🏆 ניצחת!');
+      else if (e.kind === 'wall3_call') tags.push('📞 חומה 3');
       else if (e.kind === 'video') tags.push('📹 סרט לא טוב');
       else if (e.kind === 'brit') tags.push('🛡️ ברית');
       else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
@@ -1209,6 +1272,91 @@
     const fabLabel = document.getElementById('emFabLabel');
     if (fabLabel) fabLabel.textContent = night ? '🌙 חילוץ לילי' : '🛡️ כפתור חילוץ';
   }
+  // ============= Wall of Fire 3 — friend call =============
+  const WALL3_KEY = 'neria_wall3_friend_v1';
+  function loadFriend(){
+    try { const r = localStorage.getItem(WALL3_KEY); if (!r) return null; const o = JSON.parse(r); return (o && o.phone) ? o : null; } catch(e) { return null; }
+  }
+  function saveFriend(o){ try { localStorage.setItem(WALL3_KEY, JSON.stringify(o)); } catch(e) {} pushUp(); }
+  function _normalizeTelHref(phone){ return 'tel:' + (phone||'').replace(/[^\d+]/g,''); }
+  function renderWall3(){
+    const f = loadFriend();
+    const empty = document.getElementById('wall3FriendEmpty');
+    const disp  = document.getElementById('wall3FriendDisplay');
+    const nameEl= document.getElementById('wall3FriendName');
+    const phEl  = document.getElementById('wall3FriendPhone');
+    const cardCallBtn = document.getElementById('wall3CallBtn');
+    const emCallBtn   = document.getElementById('emWall3CallBtn');
+    if (f && f.phone) {
+      if (empty) empty.style.display = 'none';
+      if (disp)  disp.style.display = 'inline';
+      if (nameEl) nameEl.textContent = f.name || 'חבר';
+      if (phEl)   phEl.textContent   = f.phone;
+      if (cardCallBtn) { cardCallBtn.removeAttribute('disabled'); cardCallBtn.setAttribute('href', _normalizeTelHref(f.phone)); cardCallBtn.textContent = '📞 התקשר ל' + (f.name || 'חבר'); }
+      if (emCallBtn)   { emCallBtn.classList.remove('disabled');  emCallBtn.setAttribute('href',  _normalizeTelHref(f.phone));  emCallBtn.textContent  = '📞 התקשר ל' + (f.name || 'חבר') + ' עכשיו'; }
+    } else {
+      if (empty) empty.style.display = 'inline';
+      if (disp)  disp.style.display = 'none';
+      if (cardCallBtn) { cardCallBtn.setAttribute('disabled','disabled'); cardCallBtn.removeAttribute('href'); cardCallBtn.textContent = '📞 קודם להגדיר חבר'; }
+      if (emCallBtn)   { emCallBtn.classList.add('disabled');    emCallBtn.removeAttribute('href');    emCallBtn.textContent  = '📞 קודם להגדיר חבר'; }
+    }
+  }
+  function openWall3Config(){
+    const f = loadFriend() || {};
+    const ni = document.getElementById('wall3NameInput');  if (ni) ni.value  = f.name  || '';
+    const pi = document.getElementById('wall3PhoneInput'); if (pi) pi.value  = f.phone || '';
+    const m  = document.getElementById('wall3ConfigModal'); if (m) m.classList.add('active');
+  }
+  function closeWall3Config(){ const m = document.getElementById('wall3ConfigModal'); if (m) m.classList.remove('active'); }
+  function saveWall3Config(){
+    const name  = (document.getElementById('wall3NameInput').value  || '').trim();
+    const phone = (document.getElementById('wall3PhoneInput').value || '').trim();
+    if (!phone) { alert('יש להזין מספר טלפון.'); return; }
+    saveFriend({ name: name || 'חבר', phone: phone });
+    closeWall3Config();
+    renderWall3();
+    try { toast('✓ נשמר. כפתור "התקשר" עכשיו פעיל.'); } catch(e) {}
+  }
+  function logWall3Call(source){
+    // Log the wall-3 escalation as a positive entry (using the tool = trying to win)
+    const arr = loadBritLog();
+    const f = loadFriend();
+    arr.push({
+      ts: Date.now(),
+      text: '📞 חומה 3: התקשרתי לחבר אחריות' + (f && f.name ? ' (' + f.name + ')' : '') + ' — ' + (source || 'מהדף הראשי'),
+      kind: 'wall3_call',
+      usedMethod: false,
+      usedEmergency: source === 'modal',
+      calledFriend: true,
+      friendAnswered: null,
+      penalty: 0,
+      moneyFine: 0,
+      bonus: 0
+    });
+    saveBritLog(arr);
+    try { toast('📞 רישום נשמר. שתעבור את זה — אתה כבר ניצחת.'); } catch(e) {}
+    render();
+  }
+  function _wireWall3(){
+    const cfg  = document.getElementById('wall3ConfigBtn');
+    if (cfg) cfg.addEventListener('click', openWall3Config);
+    const cls  = document.getElementById('wall3ConfigClose');
+    if (cls) cls.addEventListener('click', closeWall3Config);
+    const cn   = document.getElementById('wall3CancelBtn');
+    if (cn)  cn.addEventListener('click', closeWall3Config);
+    const sv   = document.getElementById('wall3SaveBtn');
+    if (sv)  sv.addEventListener('click', saveWall3Config);
+    const callBtn = document.getElementById('wall3CallBtn');
+    if (callBtn) callBtn.addEventListener('click', function(){ if (callBtn.hasAttribute('disabled')) { return; } logWall3Call('מהכרטיס הראשי'); });
+    const emCall = document.getElementById('emWall3CallBtn');
+    if (emCall) emCall.addEventListener('click', function(e){ if (emCall.classList.contains('disabled')) { e.preventDefault(); return; } logWall3Call('modal'); });
+    const emCfg  = document.getElementById('emWall3ConfigBtn');
+    if (emCfg) emCfg.addEventListener('click', openWall3Config);
+    const m = document.getElementById('wall3ConfigModal');
+    if (m) m.addEventListener('click', function(e){ if (e.target === m) closeWall3Config(); });
+    renderWall3();
+  }
+
   function _wireEmergency(){
     const done = document.getElementById('emDoneBtn');
     if (done) done.addEventListener('click', _emAdvanceStation);
@@ -1835,6 +1983,7 @@
   document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(btn => btn.addEventListener('click', () => selectFallAnswer(btn.dataset.q, btn.dataset.val, btn)));
   document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
   _wireEmergency();
+  _wireWall3();
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
   // Edit day
