@@ -435,9 +435,32 @@
   .v-shine { transform-box:fill-box; animation:vShine 5.5s ease-in-out infinite; }
   @keyframes vRot2 { to { transform: rotate(360deg); } }
   .v-rays { transform-box:view-box; transform-origin:60px 64px; animation:vRot2 90s linear infinite; }
+
+  /* ===== Bottom Tab Navigation + tabbed layout ===== */
+  body { padding-bottom: 90px; }
+  .tabbed { display: none; }
+  body.app-home    .tabbed.tab-home,
+  body.app-defense .tabbed.tab-defense,
+  body.app-building .tabbed.tab-building,
+  body.app-journal .tabbed.tab-journal { display: block; animation: tabIn 0.35s ease-out; }
+  @keyframes tabIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+
+  .tab-header { margin: 14px 0 8px; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 18px; color: var(--brown-deep); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+  .tab-header-icon { font-size: 22px; filter: drop-shadow(0 2px 4px rgba(201,169,97,0.4)); }
+  .tab-header-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); font-weight: 400; font-style: italic; margin-bottom: 14px; text-align: center; }
+
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,247,224,0.98); border-top: 2px solid var(--gold); display: flex; z-index: 900; box-shadow: 0 -4px 18px rgba(60,30,10,0.18); backdrop-filter: blur(10px); padding: 6px 4px; padding-bottom: max(6px, env(safe-area-inset-bottom)); }
+  .bnav-btn { flex: 1; padding: 10px 2px; background: transparent; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; font-weight: 700; transition: all 0.25s; border-radius: 10px; position: relative; }
+  .bnav-btn:hover { background: rgba(201,169,97,0.08); }
+  .bnav-btn.active { color: var(--brown-deep); }
+  .bnav-btn.active::before { content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 3px; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 0 0 3px 3px; }
+  .bnav-icon { font-size: 22px; filter: grayscale(0.7) opacity(0.7); transition: all 0.25s; }
+  .bnav-btn.active .bnav-icon { filter: grayscale(0) opacity(1); transform: scale(1.15) translateY(-2px); }
+  .bnav-badge { position: absolute; top: 6px; right: calc(50% - 18px); background: var(--wine); color: #fff; font-size: 9px; padding: 2px 5px; border-radius: 10px; min-width: 16px; text-align: center; font-weight: 900; line-height: 1.1; box-shadow: 0 2px 4px rgba(122,32,48,0.4); }
+
 </style>
 </head>
-<body>
+<body class="app-home">
   <header>
     <div class="crown">✦ ✦ ✦</div>
     <h1>ניקוד יומי</h1>
@@ -446,20 +469,24 @@
 
   <div class="hizuk-banner" id="hizukBanner"></div>
 
-  <div class="score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
+    <div class="tabbed tab-home tab-header"><span class="tab-header-icon">🏠</span><span>היום</span></div>
 
-  <div class="score-today-total">
+  <div class="tabbed tab-home score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
+
+  <div class="tabbed tab-home score-today-total">
     <div class="label">סך הניקוד היום</div>
     <div class="value"><span id="scoreToday">0</span></div>
     <div class="max">מתוך <span id="scoreTodayMax">0</span></div>
   </div>
 
-  <div class="st-row">
+  <div class="tabbed tab-home st-row">
     <div class="st-card"><div class="st-label">🔥 רצף ימים</div><div class="st-value" id="streakVal">0</div><div class="st-sub">שיא: <span id="streakBest">0</span></div></div>
     <div class="st-card" id="targetCard"><div class="st-label">🎯 יעד יומי</div><div class="st-value" id="targetState">0/0</div><div class="st-target-bar"><div class="st-target-fill" id="targetFill"></div></div><button class="st-target-edit" id="targetEdit">שנה יעד</button></div>
   </div>
 
-  <div class="building-section">
+    <div class="tabbed tab-building tab-header"><span class="tab-header-icon">🏛️</span><span>בנייה</span></div>
+
+  <div class="tabbed tab-building building-section">
     <div class="building-title">🏛️ בונים את בית המקדש</div>
     <div class="building-subtitle">לבנה לכל יום נקי — אחרי 40 ימים נקיים בנית את בית המקדש</div>
     <div class="res-strip" id="resStrip"></div>
@@ -467,10 +494,13 @@
     <div class="build-grid" id="buildGrid"></div>
   </div>
 
-  <div id="mitzvotList"></div>
-  <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
+  <div id="mitzvotList" class="tabbed tab-home"></div>
+  <button class="add-goal-btn tabbed tab-home" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
 
-  <div class="defense-card">
+    <div class="tabbed tab-defense tab-header"><span class="tab-header-icon">🛡️</span><span>חומות הגנה</span></div>
+  <div class="tabbed tab-defense tab-header-sub">שלוש חומות אש בהשתלשלות. אם 1 לא הספיק — 2. אם 2 לא הספיק — 3.</div>
+
+  <div class="tabbed tab-defense  defense-card">
     <div class="defense-title">🏃 חומה 1 — דרך יוסף הצדיק</div>
     <div class="defense-body">
       <div class="defense-tagline">״ויעזוב בגדו אצלה וינס ויצא החוצה״ — בריחה היא ניצחון.</div>
@@ -484,7 +514,7 @@
     </div>
   </div>
 
-  <div class="defense-card" style="border-color:#2a5a7a; background:linear-gradient(160deg, rgba(42,90,122,0.16), rgba(60,30,10,0.05));">
+  <div class="tabbed tab-defense  defense-card" style="border-color:#2a5a7a; background:linear-gradient(160deg, rgba(42,90,122,0.16), rgba(60,30,10,0.05));">
     <div class="defense-title">🌙 חומה 2 — פרוטוקול לילה</div>
     <div class="defense-body">
       <div class="defense-tagline">הלילה הוא הזמן הקשה. הכן את ההגנה <strong>לפני</strong> שתהיה זקוק לה.</div>
@@ -505,7 +535,7 @@
     </div>
   </div>
 
-  <div class="em-btn-wrap" id="emBtnWrap">
+  <div class="tabbed tab-defense  em-btn-wrap" id="emBtnWrap">
     <div class="em-hero-shield" id="emHeroShield">🛡️</div>
     <div class="em-hero-title">כפתור החילוץ</div>
     <div class="em-hero-desc">אם אתה במצוקה — לחץ עכשיו.<br>5 דקות של בריחה מודרכת — ותרגיש אחרת.</div>
@@ -516,7 +546,7 @@
   <!-- Floating Action Button — always visible -->
   <button class="em-fab" id="emFab" aria-label="כפתור החילוץ">🛡️<span class="em-fab-label" id="emFabLabel">כפתור החילוץ</span></button>
 
-  <div class="wall3-card" id="wall3Card">
+  <div class="tabbed tab-defense  wall3-card" id="wall3Card">
     <div class="wall3-title">📞 חומה 3 — חבר אחריות (מוצא אחרון)</div>
     <div class="wall3-tagline">אם חומות 1+2 לא הספיקו — להתקשר לחבר זה ניצחון, לא חולשה.</div>
     <div class="wall3-friend-info">
@@ -532,7 +562,10 @@
   </div>
 
 
-  <div class="brit-log-section" id="britLogSection">
+    <div class="tabbed tab-journal tab-header"><span class="tab-header-icon">📜</span><span>יומן</span></div>
+  <div class="tabbed tab-journal tab-header-sub">תיעוד, חשבון נפש, יעדים, היסטוריה.</div>
+
+  <div class="tabbed tab-journal  brit-log-section" id="britLogSection">
     <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
     <div class="brit-log-subtitle">לא שיפוט — רק תיעוד. כל נפילה (סרט / ברית / שניהם) — משפט אחד, והשאלון יחושב מי הכלים שעזרו.</div>
     <div class="brit-log-input-row">
@@ -542,7 +575,7 @@
     <div id="britLogList" class="brit-log-list"></div>
   </div>
 
-  <div class="private-reflection-section">
+  <div class="tabbed tab-journal private-reflection-section">
     <div class="private-reflection-title">🔒 חשבון נפש אישי</div>
     <div class="private-reflection-subtitle">פרטי לחלוטין — רק אתה רואה את זה במכשיר הזה.</div>
     <div class="private-reflection-date" id="reflectionDate">—</div>
@@ -550,7 +583,7 @@
     <div class="private-reflection-footer"><span><span id="reflectionCounter">0</span> תווים</span><span class="private-reflection-saved" id="reflectionSaved">נשמר ✓</span></div>
   </div>
 
-  <div class="fines-section">
+  <div class="tabbed tab-journal fines-section">
     <div class="fines-title">⚠️ קנסות</div>
     <div class="fines-grid">
       <div class="fines-cell"><div class="fines-lbl">קנס היום</div><div class="fines-v" id="fineToday">₪0</div></div>
@@ -560,7 +593,7 @@
   </div>
 
 
-    <div class="goals-section">
+    <div class="tabbed tab-journal goals-section">
     <div class="goals-section-title">📋 שאלונים ומעקבים משלי</div>
     <div class="goals-section-subtitle">צור שאלונים משלך, בדיוק כמו תיעוד שמירת הברית</div>
     <div id="trackersList"></div>
@@ -576,7 +609,7 @@
     <div class="score-summary-card"><div class="label">סה״כ</div><div class="value" id="scoreTotal">0</div></div>
   </div>
 
-  <div class="goals-section">
+  <div class="tabbed tab-journal goals-section">
     <div class="goals-section-title">🎁 יעדים ופרסים</div>
     <div class="goals-section-subtitle">תן לעצמך משהו לחכות לו</div>
     <div id="goalsNext"></div>
@@ -601,7 +634,7 @@
     <div id="scoreHistory"></div>
   </div>
 
-  <div class="journal-section">
+  <div class="tabbed tab-journal journal-section">
     <div class="journal-section-title">📖 יומן מפורט</div>
     <div class="journal-section-subtitle">היסטוריה מלאה — סנן, חפש, הוסף הערות לכל יום.</div>
     <div class="journal-stats-bar" id="journalStatsBar"></div>
@@ -2026,7 +2059,34 @@
   setTimeout(() => { appReady = true; }, 1200);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
 })();
-</script>
+
+  // ===== Bottom tab navigation =====
+  function switchAppTab(tab){
+    document.body.classList.remove('app-home','app-defense','app-building','app-journal');
+    document.body.classList.add('app-' + tab);
+    document.querySelectorAll('.bnav-btn').forEach(function(el){
+      el.classList.toggle('active', el.dataset.tab === tab);
+    });
+    try { localStorage.setItem('neria_active_tab_v1', tab); } catch(e) {}
+    try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) {}
+    // Re-render relevant content for each tab so visible data is fresh
+    try {
+      if (tab === 'building') renderBuilding();
+      if (tab === 'journal') { renderBritLog(); renderFines(); }
+      if (tab === 'home') { render(); }
+    } catch(e) {}
+  }
+  document.querySelectorAll('.bnav-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchAppTab(btn.dataset.tab); });
+  });
+  (function initTab(){
+    let saved = 'home';
+    try { saved = localStorage.getItem('neria_active_tab_v1') || 'home'; } catch(e) {}
+    if (!['home','defense','building','journal'].includes(saved)) saved = 'home';
+    switchAppTab(saved);
+  })();
+
+  </script>
 
 <div class="modal-backdrop" id="buildModal">
   <div class="modal">
@@ -2040,5 +2100,12 @@
     </div>
   </div>
 </div>
+
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" data-tab="home"><span class="bnav-icon">🏠</span><span>הבית</span></button>
+    <button class="bnav-btn" data-tab="defense"><span class="bnav-icon">🛡️</span><span>הגנה</span></button>
+    <button class="bnav-btn" data-tab="building"><span class="bnav-icon">🏛️</span><span>בנייה</span></button>
+    <button class="bnav-btn" data-tab="journal"><span class="bnav-icon">📜</span><span>יומן</span></button>
+  </nav>
 </body>
 </html>
