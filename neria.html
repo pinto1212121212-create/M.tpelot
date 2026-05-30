@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>ניקוד יומי — נריה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;900&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f4e9d0; --parchment-light: #faf3e0; --parchment-dark: #e8d9b5;
+    --brown-deep: #3d2410; --brown: #5c3a1e; --brown-light: #7a5230;
+    --gold: #c9a961; --gold-light: #e0c585; --gold-dark: #a08540;
+    --wine: #6b1f2d; --wine-light: #8a2e3f; --ink: #2c1810; --ink-soft: #4a3525;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--parchment); color: var(--ink); font-family: 'Heebo', sans-serif; min-height: 100vh; }
+  body {
+    background-image:
+      radial-gradient(ellipse at top, rgba(201,169,97,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(107,31,45,0.06) 0%, transparent 60%);
+    padding: 16px 14px 60px; max-width: 560px; margin: 0 auto;
+  }
+  header { text-align: center; padding: 12px 0 18px; }
+  .crown { color: var(--gold-dark); letter-spacing: 6px; font-size: 14px; }
+  h1 { font-family: 'Frank Ruhl Libre', serif; font-size: 30px; color: var(--brown-deep); font-weight: 900; margin-top: 4px; }
+  .who { font-size: 15px; color: var(--wine); font-weight: 700; margin-top: 2px; }
+
+  .score-date-header { text-align: center; margin-bottom: 18px; padding: 14px; background: linear-gradient(135deg, var(--brown-deep), var(--brown)); border-radius: 8px; color: var(--gold-light); box-shadow: 0 2px 8px rgba(60,30,10,0.2); }
+  .score-date-header .date-label { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; opacity: 0.85; margin-bottom: 4px; }
+  .score-date-header .date-value { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; font-weight: 700; color: var(--gold); }
+
+  .score-today-total { text-align: center; margin-bottom: 22px; padding: 20px; background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold); }
+  .score-today-total .label { font-family: 'Frank Ruhl Libre', serif; color: var(--brown); font-size: 14px; margin-bottom: 6px; }
+  .score-today-total .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 48px; color: var(--wine); line-height: 1; }
+  .score-today-total .max { font-family: 'Frank Ruhl Libre', serif; color: var(--brown-light); font-size: 16px; margin-top: 4px; }
+
+  .mitzva-card { background: var(--parchment-light); border: 1.5px solid var(--brown); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold), 0 2px 6px rgba(60,30,10,0.08); transition: all 0.25s; }
+  .mitzva-card.done { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.1)); border-color: var(--gold-dark); }
+  .mitzva-row { display: flex; align-items: center; gap: 14px; }
+  .mitzva-icon { font-size: 28px; width: 44px; text-align: center; flex-shrink: 0; }
+  .mitzva-info { flex: 1; }
+  .mitzva-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); line-height: 1.2; }
+  .mitzva-points { font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown-light); margin-top: 3px; }
+  .mitzva-points strong { color: var(--wine); font-weight: 700; }
+  .mitzva-check { width: 44px; height: 44px; min-width: 44px; border-radius: 50%; background: var(--parchment); border: 2px solid var(--brown-light); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s cubic-bezier(0.22,1,0.36,1); padding: 0; flex-shrink: 0; }
+  .mitzva-check svg { width: 22px; height: 22px; fill: none; stroke: var(--brown-light); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.2s; }
+  .mitzva-card.done .mitzva-check { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); box-shadow: 0 3px 10px rgba(201,169,97,0.4); }
+  .mitzva-card.done .mitzva-check svg { stroke: var(--brown-deep); opacity: 1; animation: checkPop 0.4s cubic-bezier(0.22,1,0.36,1); }
+  @keyframes checkPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  .mitzva-expand { width: 34px; height: 34px; min-width: 34px; border-radius: 50%; background: var(--parchment); border: 1.5px solid var(--gold); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+  .mitzva-expand svg { width: 18px; height: 18px; fill: none; stroke: var(--brown); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s; }
+  .mitzva-card.expanded .mitzva-expand svg { transform: rotate(180deg); }
+  .mitzva-extras { display: none; }
+  .mitzva-card.expanded .mitzva-extras { display: block; }
+  .minyan-toggle { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--gold); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .minyan-toggle-label { font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown); display: flex; align-items: center; gap: 6px; }
+  .minyan-toggle-label .bonus { font-size: 12px; color: var(--wine); font-weight: 700; }
+  .switch { position: relative; width: 52px; height: 28px; flex-shrink: 0; }
+  .switch input { display: none; }
+  .switch-slider { position: absolute; inset: 0; background: var(--parchment-dark); border: 1.5px solid var(--brown-light); border-radius: 28px; cursor: pointer; transition: 0.3s; }
+  .switch-slider::before { content: ''; position: absolute; width: 20px; height: 20px; right: 3px; top: 50%; transform: translateY(-50%); background: var(--parchment-light); border-radius: 50%; transition: 0.3s cubic-bezier(0.22,1,0.36,1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .switch input:checked + .switch-slider { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); }
+  .switch input:checked + .switch-slider::before { right: calc(100% - 23px); background: var(--brown-deep); }
+
+  .score-end-day { margin: 24px 0 14px; padding: 16px; background: linear-gradient(135deg, var(--wine), #6b1d2a); color: var(--gold-light); border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 16px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(122,40,55,0.3); }
+  .score-end-day:active { transform: translateY(1px); }
+  .score-export-excel { margin: 0 0 18px; padding: 14px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border: none; border-radius: 8px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; width: 100%; cursor: pointer; transition: all 0.2s; box-shadow: 0 3px 10px rgba(160,133,64,0.3); }
+
+  .score-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .score-summary-card { background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 8px; padding: 14px 8px; text-align: center; }
+  .score-summary-card .label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 4px; }
+  .score-summary-card .value { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 24px; color: var(--wine); line-height: 1; }
+
+  /* Goals */
+  .goals-section { margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--gold); }
+  .goals-section-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); margin-bottom: 6px; text-align: center; }
+  .goals-section-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .goals-next { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08)); border: 2px solid var(--gold); border-radius: 10px; padding: 16px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(201,169,97,0.2); }
+  .goals-next-label { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown); margin-bottom: 6px; text-align: center; }
+  .goals-next-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); text-align: center; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .goals-next-progress { height: 14px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 7px; overflow: hidden; margin-bottom: 6px; }
+  .goals-next-progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 7px; transition: width 0.5s cubic-bezier(0.22,1,0.36,1); }
+  .goals-next-stats { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); }
+  .goal-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; margin-bottom: 10px; transition: all 0.25s; }
+  .goal-card.unlocked { background: linear-gradient(135deg, rgba(201,169,97,0.15), rgba(212,182,121,0.08)); border-color: var(--gold-dark); box-shadow: 0 2px 6px rgba(201,169,97,0.25); }
+  .goal-card.claimed { opacity: 0.6; background: var(--parchment); }
+  .goal-icon { font-size: 28px; width: 40px; text-align: center; flex-shrink: 0; }
+  .goal-info { flex: 1; min-width: 0; }
+  .goal-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); word-break: break-word; }
+  .goal-points { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); margin-top: 3px; }
+  .goal-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .goal-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--brown-light); background: var(--parchment); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; padding: 0; }
+  .goal-btn.claim { border-color: var(--gold-dark); background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); font-weight: 700; }
+  .goal-btn.delete { color: var(--wine); }
+  .add-goal-btn { width: 100%; padding: 14px; background: var(--parchment); border: 2px dashed var(--gold); border-radius: 8px; color: var(--brown-deep); font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+
+  /* Chart */
+  .score-chart-section { margin-top: 24px; padding: 18px 14px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 10px; box-shadow: inset 0 0 0 1px var(--parchment-light), inset 0 0 0 2px var(--gold); }
+  .score-chart-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: var(--brown-deep); margin-bottom: 4px; text-align: center; }
+  .score-chart-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .chart-tabs { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center; }
+  .chart-tab { padding: 6px 14px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 20px; font-family: 'Heebo', sans-serif; font-size: 13px; color: var(--brown); cursor: pointer; transition: all 0.2s; }
+  .chart-tab.active { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); color: var(--brown-deep); font-weight: 700; }
+  .chart-container { position: relative; width: 100%; overflow: hidden; }
+  .chart-svg { width: 100%; height: 180px; display: block; }
+  .chart-grid-line { stroke: var(--brown-light); stroke-width: 0.5; stroke-dasharray: 2,3; opacity: 0.4; }
+  .chart-axis-label { font-family: 'Heebo', sans-serif; font-size: 9px; fill: var(--brown-light); }
+  .chart-area { fill: url(#chartGradient); opacity: 0.6; }
+  .chart-line { fill: none; stroke: var(--gold-dark); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-point { fill: var(--wine); stroke: var(--parchment-light); stroke-width: 2; cursor: pointer; }
+  .chart-point.today { fill: var(--gold-dark); stroke: var(--wine); stroke-width: 2.5; }
+  .chart-tooltip { position: absolute; background: var(--brown-deep); color: var(--gold-light); padding: 6px 10px; border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 12px; pointer-events: none; opacity: 0; transform: translate(-50%, -100%); transition: opacity 0.15s; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .chart-tooltip.active { opacity: 1; }
+  .chart-stats { display: flex; justify-content: space-around; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--gold); }
+  .chart-stat { text-align: center; }
+  .chart-stat-label { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); }
+  .chart-stat-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--wine); line-height: 1.2; }
+  .chart-empty { text-align: center; padding: 40px 20px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; }
+
+  .score-history { margin-top: 24px; }
+  .score-history-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 17px; color: var(--brown-deep); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1.5px solid var(--gold); }
+  .history-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--parchment-light); border: 1px solid var(--brown-light); border-radius: 6px; margin-bottom: 6px; font-family: 'Frank Ruhl Libre', serif; }
+  .history-date { flex: 1; color: var(--brown); font-size: 14px; }
+  .history-score { color: var(--wine); font-weight: 700; font-size: 17px; }
+  .history-bar { width: 60px; height: 6px; background: var(--parchment-dark); border-radius: 3px; overflow: hidden; }
+  .history-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 3px; }
+  .history-empty { text-align: center; padding: 20px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; }
+
+  /* Journal */
+  .journal-section { margin-top: 26px; padding-top: 20px; border-top: 2px solid var(--gold); }
+  .journal-section-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 18px; color: var(--brown-deep); margin-bottom: 6px; text-align: center; }
+  .journal-section-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-light); text-align: center; margin-bottom: 14px; font-style: italic; }
+  .journal-stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px; padding: 12px 8px; background: linear-gradient(135deg, rgba(201,169,97,0.12), rgba(212,182,121,0.05)); border: 1.5px solid var(--gold); border-radius: 10px; }
+  .journal-stat { text-align: center; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-stat-value { font-weight: 700; font-size: 20px; color: var(--wine); line-height: 1; }
+  .journal-stat-label { font-size: 11px; color: var(--brown); margin-top: 4px; line-height: 1.2; }
+  .journal-controls { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .journal-filter-btn { padding: 6px 12px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 16px; font-family: 'Heebo', sans-serif; font-size: 12px; color: var(--brown); cursor: pointer; }
+  .journal-filter-btn.active { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); color: var(--brown-deep); font-weight: 700; }
+  .journal-tools { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .journal-search { flex: 1; min-width: 150px; position: relative; display: flex; align-items: center; }
+  .journal-search input { width: 100%; padding: 8px 32px 8px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); }
+  .journal-clear-search { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--brown-light); font-size: 20px; cursor: pointer; padding: 2px 8px; line-height: 1; display: none; }
+  .journal-clear-search.active { display: inline-block; }
+  .journal-export-btn { padding: 8px 14px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; white-space: nowrap; }
+  .journal-list { }
+  .journal-entry { background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-entry.today { border-color: var(--gold); background: linear-gradient(135deg, rgba(201,169,97,0.10), rgba(212,182,121,0.05)); }
+  .journal-entry.perfect { border-color: var(--gold-dark); background: linear-gradient(135deg, rgba(201,169,97,0.16), rgba(212,182,121,0.08)); }
+  .journal-entry-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--gold); gap: 8px; }
+  .journal-entry-date { font-weight: 700; font-size: 15px; color: var(--brown-deep); flex: 1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .journal-entry-today-badge { display: inline-block; padding: 2px 8px; background: var(--gold); color: var(--brown-deep); border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .journal-perfect-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; background: linear-gradient(135deg, #c9a961, #d4b679); color: var(--brown-deep); border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .journal-entry-score { font-weight: 700; font-size: 16px; color: var(--wine); white-space: nowrap; }
+  .journal-mitzvot-list { display: flex; flex-direction: column; gap: 4px; }
+  .journal-mitzva-item { display: flex; align-items: center; gap: 10px; padding: 5px 8px; font-size: 14px; color: var(--brown); background: rgba(255,250,240,0.5); border-radius: 5px; }
+  .journal-mitzva-item.skipped { background: rgba(120,80,60,0.04); opacity: 0.6; }
+  .journal-mitzva-item-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+  .journal-mitzva-item-name { flex: 1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .journal-mitzva-item-name .minyan-mark { font-size: 11px; color: var(--gold-dark); font-weight: 600; background: rgba(201,169,97,0.15); padding: 1px 6px; border-radius: 8px; }
+  .journal-mitzva-item-points { color: var(--wine); font-weight: 700; font-size: 13px; white-space: nowrap; }
+  .journal-mitzva-status { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .journal-mitzva-status.done { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); }
+  .journal-mitzva-status.skipped { background: var(--parchment-dark); color: var(--brown-light); border: 1px solid var(--brown-light); }
+  .journal-note-section { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--gold); display: flex; align-items: flex-start; gap: 8px; }
+  .journal-note-icon { font-size: 14px; color: var(--brown); margin-top: 2px; flex-shrink: 0; }
+  .journal-note-text { flex: 1; font-size: 13px; color: var(--brown-deep); font-style: italic; line-height: 1.5; word-break: break-word; }
+  .journal-note-empty { flex: 1; font-size: 12px; color: var(--brown-light); font-style: italic; }
+  .journal-note-edit { background: transparent; border: 1px solid var(--brown-light); color: var(--brown); cursor: pointer; padding: 3px 8px; font-size: 12px; border-radius: 4px; flex-shrink: 0; font-family: 'Frank Ruhl Libre', serif; }
+  .journal-empty { text-align: center; padding: 24px 12px; color: var(--brown-light); font-family: 'Frank Ruhl Libre', serif; font-style: italic; background: var(--parchment-light); border: 1px dashed var(--brown-light); border-radius: 8px; }
+
+  /* Modals */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(60,30,10,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 14px; }
+  .modal-backdrop.active { display: flex; }
+  .modal { background: var(--parchment-light); border: 3px solid var(--brown-deep); box-shadow: inset 0 0 0 4px var(--parchment-light), inset 0 0 0 5px var(--gold), 0 20px 60px rgba(0,0,0,0.5); border-radius: 4px; max-width: 540px; width: 100%; max-height: 88vh; display: flex; flex-direction: column; }
+  .modal-header { padding: 18px 22px 14px; border-bottom: 1.5px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-family: 'Frank Ruhl Libre', serif; font-size: 24px; font-weight: 900; color: var(--wine); }
+  .modal-close { background: var(--wine); color: var(--parchment-light); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; }
+  .modal-body { padding: 16px 22px 22px; overflow-y: auto; flex: 1; }
+  .goal-form-row { margin-bottom: 14px; }
+  .goal-form-label { display: block; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); margin-bottom: 6px; }
+  .goal-form-input { width: 100%; padding: 10px 12px; background: var(--parchment); border: 1.5px solid var(--brown-light); border-radius: 6px; font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: var(--brown-deep); }
+  .goal-icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .goal-icon-option { aspect-ratio: 1; border: 1.5px solid var(--brown-light); background: var(--parchment); border-radius: 6px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+  .goal-icon-option.selected { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border-color: var(--gold-dark); transform: scale(1.05); }
+  .goal-form-buttons { display: flex; gap: 10px; margin-top: 16px; }
+  .goal-form-btn { flex: 1; padding: 12px; border-radius: 6px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 15px; cursor: pointer; border: 1.5px solid; }
+  .goal-form-btn.save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); }
+  .goal-form-btn.cancel { background: transparent; color: var(--brown); border-color: var(--brown-light); }
+  .goal-celebration-icon { font-size: 80px; text-align: center; margin-bottom: 14px; }
+  .goal-celebration-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 24px; color: var(--wine); text-align: center; margin-bottom: 8px; }
+  .goal-celebration-points { font-family: 'Frank Ruhl Libre', serif; font-size: 18px; color: var(--gold-dark); text-align: center; margin-bottom: 14px; font-weight: 700; }
+  .goal-celebration-text { font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: var(--brown-deep); text-align: center; margin-bottom: 20px; line-height: 1.5; }
+  .note-editor-date { font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown); margin-bottom: 10px; text-align: center; font-weight: 600; }
+  .note-editor-textarea { width: 100%; min-height: 130px; padding: 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown-deep); resize: vertical; line-height: 1.5; }
+
+  .score-date-header { position: relative; cursor: pointer; }
+  #scoreDatePicker { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: none; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .brit-log-section { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(60,36,16,0.05), rgba(122,82,48,0.05)); border: 1.5px solid var(--brown-light); border-radius: 10px; }
+  .brit-log-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); margin-bottom: 4px; }
+  .brit-log-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); font-style: italic; margin-bottom: 12px; }
+  .brit-log-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .brit-log-input { flex: 1; min-width: 0; padding: 10px 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; color: var(--brown-deep); }
+  .brit-log-add-btn { flex-shrink: 0; padding: 10px 16px; background: var(--brown); color: var(--parchment-light); border: none; border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .brit-log-list { display: flex; flex-direction: column; gap: 8px; }
+  .brit-log-entry { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: var(--parchment-light); border: 1px solid var(--brown-light); border-radius: 8px; }
+  .brit-log-entry-content { flex: 1; min-width: 0; }
+  .brit-log-entry-time { font-size: 12px; color: var(--brown-light); margin-bottom: 3px; }
+  .brit-log-entry-text { font-size: 14px; color: var(--brown-deep); font-family: 'Frank Ruhl Libre', serif; word-break: break-word; }
+  .brit-log-entry-del { flex-shrink: 0; background: transparent; border: none; color: var(--wine); font-size: 20px; cursor: pointer; line-height: 1; padding: 0 4px; }
+  .brit-log-empty { text-align: center; color: var(--brown-light); font-style: italic; font-family: 'Frank Ruhl Libre', serif; padding: 8px; font-size: 13px; }
+  .brit-log-entry-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .brit-log-tag { font-family: 'Heebo', sans-serif; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: var(--parchment); border: 1px solid var(--gold); color: var(--brown); }
+  .fall-quiz-q { font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 600; color: var(--brown-deep); margin: 14px 0 8px; }
+  .fall-quiz-options { display: flex; gap: 10px; }
+  .fall-quiz-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1.5px solid var(--gold); background: var(--parchment-light); font-family: 'Heebo', sans-serif; font-size: 15px; font-weight: 600; color: var(--brown); cursor: pointer; transition: all 0.15s; }
+  .fall-quiz-btn.selected { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); }
+  .fall-quiz-note { min-height: 22px; margin: 14px 0 4px; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 600; text-align: center; color: var(--brown); }
+  .fall-quiz-intro { font-family: 'Heebo', sans-serif; font-size: 13px; line-height: 1.5; color: var(--brown); background: var(--parchment-light); border-right: 3px solid var(--gold); border-radius: 6px; padding: 10px 12px; margin: 2px 0 6px; }
+  .fall-quiz-step { font-size: 11.5px; font-weight: 700; color: var(--gold-dark); margin-right: 4px; }
+  .fall-quiz-sub { margin: 8px 0 0; padding: 4px 12px 12px; background: rgba(0,0,0,0.035); border-radius: 8px; }
+  .private-reflection-section { margin: 18px 0; padding: 16px; background: linear-gradient(160deg, rgba(107,31,45,0.04), rgba(122,82,48,0.04)); border: 1.5px solid var(--brown-light); border-radius: 10px; }
+  .private-reflection-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 16px; color: var(--brown-deep); margin-bottom: 4px; }
+  .private-reflection-subtitle { font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); font-style: italic; margin-bottom: 10px; }
+  .private-reflection-date { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown); margin-bottom: 8px; font-weight: 600; }
+  .private-reflection-textarea { width: 100%; min-height: 120px; padding: 12px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; color: var(--brown-deep); resize: vertical; line-height: 1.5; }
+  .private-reflection-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 12.5px; color: var(--brown-light); }
+  .private-reflection-saved { color: var(--gold-dark); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+  .private-reflection-saved.show { opacity: 1; }
+  .edit-day-body { padding: 16px; overflow-y: auto; flex: 1; min-height: 0; }
+  .edit-day-date { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 17px; color: var(--brown-deep); margin-bottom: 4px; font-weight: 700; }
+  .edit-day-score-preview { text-align: center; margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, rgba(201,169,97,0.18), rgba(212,182,121,0.08)); border: 1.5px solid var(--gold); border-radius: 8px; }
+  .edit-day-score-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 2px; }
+  .edit-day-score-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 32px; color: var(--wine); line-height: 1; }
+  .edit-day-actions { display: flex; gap: 8px; padding: 0 16px 16px; }
+  .edit-day-btn { flex: 1; padding: 12px; border-radius: 6px; font-family: 'Heebo', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; border: 1.5px solid; }
+  .edit-day-btn.save { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--brown-deep); border-color: var(--gold-dark); flex: 2; }
+  .edit-day-btn.delete { background: transparent; color: var(--wine); border-color: var(--wine); }
+
+  .sync-status { text-align: center; font-size: 12px; color: var(--brown-light); margin-top: 18px; }
+  .toast { position: fixed; bottom: 20px; right: 50%; transform: translateX(50%); background: var(--brown-deep); color: var(--parchment-light); padding: 12px 22px; border-radius: 24px; font-weight: 700; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1100; }
+  .toast.show { opacity: 1; }
+  .hizuk-banner { text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 15px; font-style: italic; color: var(--brown-deep); background: linear-gradient(135deg, rgba(201,169,97,0.16), rgba(212,182,121,0.06)); border: 1.5px solid var(--gold); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; line-height: 1.5; }
+  .hizuk-banner b { color: var(--wine); }
+  .st-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .st-card { background: var(--parchment-light); border: 1.5px solid var(--gold); border-radius: 10px; padding: 12px; text-align: center; }
+  .st-card .st-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown); margin-bottom: 4px; }
+  .st-card .st-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 26px; color: var(--wine); line-height: 1; }
+  .st-card .st-sub { font-size: 11px; color: var(--brown-light); margin-top: 4px; }
+  .st-target-bar { height: 10px; background: var(--parchment); border: 1px solid var(--brown-light); border-radius: 6px; overflow: hidden; margin: 8px 0 4px; }
+  .st-target-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 6px; transition: width 0.4s; }
+  .st-target-edit { background: none; border: none; color: var(--gold-dark); font-size: 12px; cursor: pointer; text-decoration: underline; font-family: 'Frank Ruhl Libre', serif; }
+  .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
+  .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
+  .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
+  .kupah-section { margin:18px 0; padding:16px; background:linear-gradient(135deg, rgba(74,168,90,0.16), rgba(201,169,97,0.08)); border:1.5px solid var(--gold); border-radius:12px; text-align:center; }
+  .kupah-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--brown-deep); }
+  .kupah-amount { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:40px; color:#2f8a3f; line-height:1; margin:6px 0; }
+  .kupah-sub { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:var(--brown-light); margin-bottom:12px; }
+  .kupah-btns { display:flex; gap:8px; }
+  .kupah-pay { flex:2; padding:13px; border:none; border-radius:8px; background:linear-gradient(135deg,#3a9a4a,#2f7a3a); color:#fff; font-family:'Heebo',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
+  .kupah-reset { flex:1; padding:13px; border:1.5px solid var(--brown-light); border-radius:8px; background:var(--parchment-light); color:var(--brown-deep); font-family:'Heebo',sans-serif; font-weight:600; font-size:13px; cursor:pointer; }
+  .kupah-cfg { margin-top:8px; background:none; border:none; color:var(--gold-dark); font-size:12.5px; cursor:pointer; text-decoration:underline; font-family:'Frank Ruhl Libre',serif; }
+  .kupah-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0 12px; }
+  .kupah-cell { background:var(--parchment-light); border:1px solid var(--brown-light); border-radius:8px; padding:8px 6px; }
+  .kupah-lbl { font-family:'Frank Ruhl Libre',serif; font-size:11.5px; color:var(--brown); }
+  .kupah-v { font-family:'Frank Ruhl Libre',serif; font-weight:900; font-size:20px; color:var(--brown-deep); margin-top:2px; }
+  .kupah-v.hot { color:#2f8a3f; }
+  .kupah-ledger { margin-top:12px; text-align:right; max-height:230px; overflow-y:auto; }
+  .kupah-tx { display:flex; align-items:center; gap:8px; padding:6px 8px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; font-size:13px; }
+  .kupah-tx-d { color:var(--brown-light); font-size:10.5px; min-width:98px; }
+  .kupah-tx-t { flex:1; color:var(--brown-deep); }
+  .kupah-tx-a { font-weight:700; white-space:nowrap; }
+  .kupah-empty { color:var(--brown-light); font-style:italic; font-size:12.5px; padding:10px; text-align:center; }
+  .building-section { margin: 18px 0; padding: 14px 10px 12px; background: radial-gradient(ellipse at top, #2b3566, #141a33); border: 2px solid var(--gold-dark); border-radius: 14px; text-align: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 6px 22px rgba(0,0,0,0.3); overflow: hidden; }
+  .building-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:17px; color:var(--gold-light); text-shadow:0 1px 4px rgba(0,0,0,0.6); }
+  .building-subtitle { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:#e8d9b5; opacity:0.85; font-style:italic; margin-bottom:8px; }
+  .building-art { border-radius:10px; overflow:hidden; }
+  .building-art svg { width:100%; max-width:360px; height:auto; display:block; margin:0 auto; }
+  .building-caption { font-family:'Frank Ruhl Libre',serif; font-size:15px; color:var(--gold-light); font-weight:700; margin-top:8px; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
+  .building-stage { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; color:#e8d9b5; opacity:0.9; margin-top:2px; }
+  @keyframes bldRise { from{opacity:0;} to{opacity:1;} }
+  .bld-stone-lit { animation: bldRise 0.55s ease both; }
+  @keyframes bldTwinkle { 0%{opacity:0.15;} 100%{opacity:1;} }
+  .bld-star-tw { animation: bldTwinkle 2.5s ease-in-out infinite alternate; }
+  @keyframes bldRot { to { transform: rotate(360deg); } }
+  .bld-rays { transform-box: view-box; transform-origin: 160px 150px; animation: bldRot 80s linear infinite; }
+  @keyframes bldGlow { 0%,100%{opacity:0.35;} 50%{opacity:0.8;} }
+  .bld-glow { animation: bldGlow 4s ease-in-out infinite; }
+  @keyframes bldStarPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.22);} }
+  .bld-star2 { animation: bldStarPulse 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes bldDoor { 0%,100%{opacity:0.6;} 50%{opacity:1;} }
+  .bld-doorpulse { animation: bldDoor 3s ease-in-out infinite; }
+  @keyframes bldFloat { 0%{opacity:0; transform:translateY(0);} 12%{opacity:0.9;} 100%{opacity:0; transform:translateY(-155px);} }
+  .bld-spark { transform-box: fill-box; animation: bldFloat 5s linear infinite; }
+  @keyframes bldDrift1 { from{transform:translateX(-50px);} to{transform:translateX(360px);} }
+  @keyframes bldDrift2 { from{transform:translateX(360px);} to{transform:translateX(-50px);} }
+  .bld-cloud1 { transform-box: view-box; animation: bldDrift1 52s linear infinite; }
+  .bld-cloud2 { transform-box: view-box; animation: bldDrift2 68s linear infinite; }
+  @keyframes bldShim { 0%{opacity:0; transform:translateX(-60px);} 6%{opacity:0.55;} 18%{opacity:0; transform:translateX(360px);} 100%{opacity:0; transform:translateX(360px);} }
+  .bld-shimmer { transform-box: fill-box; animation: bldShim 7s ease-in-out infinite; }
+  .res-strip { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:12px; }
+  .res-chip { display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.06); border:1.5px solid; border-radius:14px; padding:3px 9px; }
+  .res-chip .res-ic { font-size:15px; }
+  .res-chip .res-ct { font-weight:900; font-family:'Frank Ruhl Libre',serif; font-size:15px; }
+  .res-chip .res-nm { font-size:10.5px; color:#e8d9b5; opacity:0.85; }
+  .buildpoints { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:15px; color:var(--gold-light); margin-top:12px; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
+  .build-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .build-card { background:var(--parchment-light); border:1.5px solid var(--brown-light); border-radius:10px; padding:9px; text-align:right; }
+  .build-card.done { border-color:var(--gold-dark); background:linear-gradient(135deg, rgba(201,169,97,0.30), rgba(212,182,121,0.12)); box-shadow:0 0 12px rgba(201,169,97,0.45); }
+  .bc-top { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .bc-icon { font-size:18px; }
+  .bc-name { flex:1; font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:13px; color:var(--brown-deep); }
+  .bc-pts { font-size:11px; font-weight:700; color:var(--wine); white-space:nowrap; }
+  .bc-cost { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
+  .bc-need { font-size:10.5px; border:1px solid; border-radius:8px; padding:1px 5px; color:var(--brown); opacity:0.6; }
+  .bc-need.ok { opacity:1; font-weight:700; background:rgba(201,169,97,0.15); }
+  .bc-bar { height:6px; background:var(--parchment-dark); border-radius:3px; overflow:hidden; }
+  .bc-fill { height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); }
+  .build-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .build-cell { background:radial-gradient(ellipse at 50% 26%, #7a5d22 0%, #3a2c12 80%); border:2px solid #d9b24a; border-radius:14px; padding:8px 8px 9px; cursor:pointer; text-align:center; transition:all 0.18s; box-shadow:inset 0 1px 0 rgba(255,243,200,0.35), inset 0 0 22px rgba(0,0,0,0.5), 0 5px 16px rgba(0,0,0,0.42); }
+  .build-cell:active { transform:scale(0.97); }
+  .build-cell.done { border-color:#ffe9a8; box-shadow:inset 0 1px 0 rgba(255,243,200,0.5), inset 0 0 26px rgba(255,220,140,0.35), 0 0 20px rgba(201,169,97,0.75), 0 5px 16px rgba(0,0,0,0.42); }
+  .build-cell svg { width:100%; height:auto; display:block; }
+  .build-cell .bc-nm { font-family:'Frank Ruhl Libre',serif; font-size:12.5px; font-weight:700; color:#ffeec2; text-shadow:0 1px 3px rgba(0,0,0,0.7); margin-top:4px; line-height:1.15; }
+  .build-cell .bc-pc { font-size:11px; color:#ffd86a; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,0.6); }
+  .bm-art { text-align:center; margin-bottom:8px; background:radial-gradient(ellipse at 50% 28%, #7a5d22 0%, #2c2110 82%); border:2.5px solid #d9b24a; border-radius:16px; padding:12px 10px; box-shadow:inset 0 1px 0 rgba(255,243,200,0.4), inset 0 0 30px rgba(0,0,0,0.55); }
+  .bm-art svg { width:74%; max-width:240px; height:auto; }
+  .bm-art { perspective: 820px; }
+  .art3d { width:78%; max-width:250px; margin:0 auto; position:relative; transform-style:preserve-3d; will-change:transform; touch-action:none; cursor:grab; }
+  .art3d:active { cursor:grabbing; }
+  .art3d-inner { transform-style:preserve-3d; animation: art3dSway 16s linear infinite; }
+  .art3d-inner svg { display:block; width:100%; height:auto; }
+  .art3d-glare { position:absolute; inset:0; border-radius:14px; pointer-events:none; background:radial-gradient(circle at var(--gx,30%) var(--gy,22%), rgba(255,255,255,0.4), rgba(255,255,255,0) 46%); mix-blend-mode:screen; transform:translateZ(24px); }
+  .art3d-hint { font-family:'Frank Ruhl Libre',serif; font-size:11px; color:#e8d9b5; opacity:0.7; text-align:center; margin-top:4px; }
+  @keyframes art3dSway { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  .bm-status { text-align:center; font-family:'Frank Ruhl Libre',serif; font-weight:700; color:var(--wine); margin:6px 0 10px; font-size:15px; }
+  .bm-row { display:flex; align-items:center; gap:8px; padding:8px 2px; border-bottom:1px dashed var(--gold); font-family:'Frank Ruhl Libre',serif; }
+  .bm-ric { font-size:19px; width:24px; text-align:center; }
+  .bm-rnm { flex:1; font-size:14px; color:var(--brown-deep); }
+  .bm-rct { font-weight:900; color:var(--wine); font-size:15px; min-width:42px; text-align:center; }
+  .bm-ravail { font-size:10.5px; color:var(--brown-light); min-width:64px; }
+  .bm-plus,.bm-minus { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--gold-dark); background:var(--parchment); font-size:18px; font-weight:700; cursor:pointer; color:var(--brown-deep); line-height:1; }
+  .bm-plus:disabled,.bm-minus:disabled { opacity:0.3; cursor:default; }
+  @keyframes vFlame { 0%,100%{ transform:scaleY(1) scaleX(1); opacity:0.95; } 50%{ transform:scaleY(0.78) scaleX(1.08); opacity:0.7; } }
+  .v-flame { transform-box:fill-box; transform-origin:50% 100%; animation:vFlame 0.85s ease-in-out infinite; }
+  @keyframes vSmoke { 0%{ opacity:0; transform:translateY(0) scaleX(0.8); } 25%{ opacity:0.55; } 100%{ opacity:0; transform:translateY(-26px) scaleX(1.7); } }
+  .v-smoke { transform-box:fill-box; transform-origin:50% 100%; animation:vSmoke 3.4s ease-in infinite; }
+  @keyframes vWater { 0%,100%{ transform:translateX(0); } 50%{ transform:translateX(-7px); } }
+  .v-water { transform-box:fill-box; animation:vWater 2.6s ease-in-out infinite; }
+  @keyframes vAura { 0%,100%{ opacity:0.3; } 50%{ opacity:0.9; } }
+  .v-aura { animation:vAura 2.6s ease-in-out infinite; }
+  @keyframes vSparkle { 0%{ opacity:0; transform:translateY(0); } 30%{opacity:0.9;} 100%{ opacity:0; transform:translateY(-22px); } }
+  .v-sparkle { transform-box:fill-box; animation:vSparkle 4s linear infinite; }
+  @keyframes vShine { 0%{ opacity:0; transform:translateX(-30px);} 12%{opacity:0.5;} 32%{opacity:0; transform:translateX(120px);} 100%{opacity:0; transform:translateX(120px);} }
+  .v-shine { transform-box:fill-box; animation:vShine 5.5s ease-in-out infinite; }
+  @keyframes vRot2 { to { transform: rotate(360deg); } }
+  .v-rays { transform-box:view-box; transform-origin:60px 64px; animation:vRot2 90s linear infinite; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="crown">✦ ✦ ✦</div>
+    <h1>ניקוד יומי</h1>
+    <div class="who">נריה</div>
+  </header>
+
+  <div class="hizuk-banner" id="hizukBanner"></div>
+
+  <div class="score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
+
+  <div class="score-today-total">
+    <div class="label">סך הניקוד היום</div>
+    <div class="value"><span id="scoreToday">0</span></div>
+    <div class="max">מתוך <span id="scoreTodayMax">0</span></div>
+  </div>
+
+  <div class="st-row">
+    <div class="st-card"><div class="st-label">🔥 רצף ימים</div><div class="st-value" id="streakVal">0</div><div class="st-sub">שיא: <span id="streakBest">0</span></div></div>
+    <div class="st-card" id="targetCard"><div class="st-label">🎯 יעד יומי</div><div class="st-value" id="targetState">0/0</div><div class="st-target-bar"><div class="st-target-fill" id="targetFill"></div></div><button class="st-target-edit" id="targetEdit">שנה יעד</button></div>
+  </div>
+
+  <div class="building-section">
+    <div class="building-title">🏛️ הבניין שלך</div>
+    <div class="building-subtitle">אסוף משאבים מהמצוות ובנֵה את בית המקדש וקדשי ישראל</div>
+    <div class="res-strip" id="resStrip"></div>
+    <div class="buildpoints" id="buildPoints"></div>
+    <div class="build-grid" id="buildGrid"></div>
+  </div>
+
+  <div id="mitzvotList"></div>
+  <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-bottom:14px">⚙️ נהל את המצוות שלי</button>
+
+  <div class="brit-log-section" id="britLogSection">
+    <div class="brit-log-title">🛡️ תיעוד נפילות — ברית וסרטים</div>
+    <div class="brit-log-subtitle">לא שיפוט — רק תיעוד. כל נפילה (סרט / ברית / שניהם) — משפט אחד, והשאלון יחושב מי הכלים שעזרו.</div>
+    <div class="brit-log-input-row">
+      <input type="text" id="britLogInput" class="brit-log-input" placeholder="מה הוביל לזה — שעמום, בדידות, לחץ, לילה..." maxlength="200" />
+      <button id="britLogAddBtn" class="brit-log-add-btn">תעד</button>
+    </div>
+    <div id="britLogList" class="brit-log-list"></div>
+  </div>
+
+  <div class="private-reflection-section">
+    <div class="private-reflection-title">🔒 חשבון נפש אישי</div>
+    <div class="private-reflection-subtitle">פרטי לחלוטין — רק אתה רואה את זה במכשיר הזה.</div>
+    <div class="private-reflection-date" id="reflectionDate">—</div>
+    <textarea class="private-reflection-textarea" id="reflectionTextarea" placeholder="מה היה לי היום? חשבון נפש, מחשבות, מה הלך טוב ומה פחות..."></textarea>
+    <div class="private-reflection-footer"><span><span id="reflectionCounter">0</span> תווים</span><span class="private-reflection-saved" id="reflectionSaved">נשמר ✓</span></div>
+  </div>
+
+  <div class="kupah-section">
+      <div class="kupah-title">🪙 קופת הפרסים שלי</div>
+      <div class="kupah-grid">
+        <div class="kupah-cell"><div class="kupah-lbl">נצבר מנקודות</div><div class="kupah-v" id="kupAccr">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">ממתין להפקדה</div><div class="kupah-v hot" id="kupPend">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">בקופת ביט</div><div class="kupah-v" id="kupInbit">₪0</div></div>
+        <div class="kupah-cell"><div class="kupah-lbl">הוצאת על פרסים</div><div class="kupah-v" id="kupSpent">₪0</div></div>
+      </div>
+      <div class="kupah-btns"><button class="kupah-pay" id="kupahPay">📲 פתח ביט והפקד</button><button class="kupah-reset" id="kupahDep">✓ הפקדתי</button></div>
+      <div class="kupah-btns" style="margin-top:8px"><button class="kupah-reset" id="kupahBuy">🎁 קניתי פרס</button><button class="kupah-reset" id="kupahExport">⤓ ייצוא לאקסל</button></div>
+      <button class="kupah-cfg" id="kupahCfg">⚙️ הגדר קישור ויחס</button>
+      <div class="kupah-ledger" id="kupahLedger"></div>
+    </div>
+
+    <div class="goals-section">
+    <div class="goals-section-title">📋 שאלונים ומעקבים משלי</div>
+    <div class="goals-section-subtitle">צור שאלונים משלך, בדיוק כמו תיעוד שמירת הברית</div>
+    <div id="trackersList"></div>
+    <button class="add-goal-btn" id="addTrackerBtn">+ צור שאלון/מעקב חדש</button>
+  </div>
+
+  <button class="score-end-day" id="endDayBtn">סיים את היום ושמור</button>
+  <button class="score-export-excel" id="exportBtn">⤓ ייצוא היומן</button>
+
+  <div class="score-summary-grid">
+    <div class="score-summary-card"><div class="label">השבוע</div><div class="value" id="scoreWeek">0</div></div>
+    <div class="score-summary-card"><div class="label">החודש</div><div class="value" id="scoreMonth">0</div></div>
+    <div class="score-summary-card"><div class="label">סה״כ</div><div class="value" id="scoreTotal">0</div></div>
+  </div>
+
+  <div class="goals-section">
+    <div class="goals-section-title">🎁 יעדים ופרסים</div>
+    <div class="goals-section-subtitle">תן לעצמך משהו לחכות לו</div>
+    <div id="goalsNext"></div>
+    <div id="goalsList"></div>
+    <button class="add-goal-btn" id="addGoalBtn">+ הוסף יעד חדש</button>
+  </div>
+
+  <div class="score-chart-section">
+    <div class="score-chart-title">📈 גרף התקדמות</div>
+    <div class="score-chart-subtitle">צבירת נקודות לאורך זמן</div>
+    <div class="chart-tabs">
+      <button class="chart-tab" data-range="7">7 ימים</button>
+      <button class="chart-tab active" data-range="14">14 ימים</button>
+      <button class="chart-tab" data-range="30">30 ימים</button>
+    </div>
+    <div class="chart-container"><div id="chartContent"></div><div class="chart-tooltip" id="chartTooltip"></div></div>
+    <div class="chart-stats" id="chartStats"></div>
+  </div>
+
+  <div class="score-history">
+    <div class="score-history-title">היסטוריה</div>
+    <div id="scoreHistory"></div>
+  </div>
+
+  <div class="journal-section">
+    <div class="journal-section-title">📖 יומן מפורט</div>
+    <div class="journal-section-subtitle">היסטוריה מלאה — סנן, חפש, הוסף הערות לכל יום.</div>
+    <div class="journal-stats-bar" id="journalStatsBar"></div>
+    <div class="journal-controls">
+      <button class="journal-filter-btn active" data-filter="all">הכל</button>
+      <button class="journal-filter-btn" data-filter="week">שבוע</button>
+      <button class="journal-filter-btn" data-filter="month">חודש</button>
+      <button class="journal-filter-btn" data-filter="active">פעיל</button>
+      <button class="journal-filter-btn" data-filter="perfect">⭐ מושלם</button>
+      <button class="journal-filter-btn" data-filter="notes">📝 עם הערות</button>
+    </div>
+    <div class="journal-tools">
+      <div class="journal-search">
+        <input type="date" id="journalDateSearch" aria-label="חיפוש לפי תאריך" />
+        <button class="journal-clear-search" id="journalClearSearch" type="button">×</button>
+      </div>
+      <button class="journal-export-btn" id="journalExportBtn" type="button">⤓ ייצוא</button>
+    </div>
+    <div class="journal-list" id="journalList"></div>
+  </div>
+
+  <div class="backup-section">
+    <button class="backup-btn" id="backupBtn">⤓ גיבוי כל הנתונים</button>
+    <button class="backup-btn" id="restoreBtn">⤒ שחזור מגיבוי</button>
+    <input type="file" id="restoreFile" accept="application/json,.json" style="display:none" />
+  </div>
+
+  <div class="sync-status" id="syncStatus">מסתנכרן…</div>
+  <div class="toast" id="toast"></div>
+
+  <!-- Goal edit modal -->
+  <div class="modal-backdrop" id="goalEditModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="goalEditTitle">עריכת יעד</div><button class="modal-close" id="goalEditClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-form-row"><label class="goal-form-label">שם הפרס</label><input type="text" class="goal-form-input" id="goalNameInput" placeholder="למשל: פרס קטן, ספר חדש..."></div>
+        <div class="goal-form-row"><label class="goal-form-label">כמות נקודות</label><input type="number" class="goal-form-input" id="goalPointsInput" min="50" max="100000" step="50"></div>
+        <div class="goal-form-row"><label class="goal-form-label">בחר אייקון</label><div class="goal-icon-grid" id="goalIconGrid"></div></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="goalSaveBtn">שמור</button><button class="goal-form-btn cancel" id="goalCancelBtn">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal celebration modal -->
+  <div class="modal-backdrop" id="goalCelebrationModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">🎉 הגעת ליעד!</div><button class="modal-close" id="goalCelebClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-celebration-icon" id="celebIcon">🥉</div>
+        <div class="goal-celebration-title" id="celebTitle">פרס</div>
+        <div class="goal-celebration-points" id="celebPoints">500 נקודות</div>
+        <div class="goal-celebration-text">הגעת ליעד שלך! עכשיו הזמן לממש את הפרס שעבדת עליו.</div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="celebClaimBtn">✓ מימשתי את הפרס</button><button class="goal-form-btn cancel" id="celebLaterBtn">אחר כך</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note editor modal -->
+  <div class="modal-backdrop" id="noteEditorModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">📝 הערה</div><button class="modal-close" id="noteEditorClose">×</button></div>
+      <div class="modal-body">
+        <div class="note-editor-date" id="noteEditorDate">—</div>
+        <textarea class="note-editor-textarea" id="noteEditorTextarea" placeholder="מה היה ביום הזה? מחשבות, הספדים, מה הלך טוב..."></textarea>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="noteEditorSave">שמור</button><button class="goal-form-btn cancel" id="noteEditorCancel">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit day modal -->
+  <div class="modal-backdrop" id="editDayModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">עריכת יום</div><button class="modal-close" id="editDayClose">×</button></div>
+      <div class="edit-day-body">
+        <div class="edit-day-date" id="editDayDate">—</div>
+        <div class="edit-day-score-preview"><div class="edit-day-score-label">נקודות ביום זה</div><div class="edit-day-score-value" id="editDayScore">0</div></div>
+        <div id="editDayMitzvot"></div>
+      </div>
+      <div class="edit-day-actions"><button class="edit-day-btn delete" id="editDayDelete">🗑 מחק יום</button><button class="edit-day-btn save" id="editDaySave">שמור שינויים</button></div>
+    </div>
+  </div>
+
+  <!-- Fall questionnaire -->
+  <div class="modal-backdrop" id="fallQuizModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">רגע לפני — תיעוד נפילה</div><button class="modal-close" id="fallQuizClose">×</button></div>
+      <div class="modal-body">
+        <div class="fall-quiz-intro">רק תיעוד, לא שיפוט. סדר ההתמודדות: פילטר ומגינים זה קו ההגנה הראשון, וחבר אחריות זה המוצא האחרון לפני נפילה. כל ניסיון שעשית — נחשב.</div>
+        <div class="fall-quiz-q">1. סוג הנפילה <span class="fall-quiz-step">לבחור אחד</span></div>
+        <div class="fall-quiz-options" data-q="kind"><button class="fall-quiz-btn" data-q="kind" data-val="video">📹 סרט</button><button class="fall-quiz-btn" data-q="kind" data-val="brit">🛡️ ברית</button><button class="fall-quiz-btn" data-q="kind" data-val="both">⚠️ שניהם</button></div>
+        <div class="fall-quiz-q">2. האם הפילטר היה פעיל? <span class="fall-quiz-step">קו ההגנה החיצוני</span></div>
+        <div class="fall-quiz-options" data-q="filter"><button class="fall-quiz-btn" data-q="filter" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="filter" data-val="no">לא</button><button class="fall-quiz-btn" data-q="filter" data-val="none">אין לי</button></div>
+        <div class="fall-quiz-q">3. האם השתמשת בשיטת המגינים? <span class="fall-quiz-step">קו ההגנה הפנימי</span></div>
+        <div class="fall-quiz-options" data-q="method"><button class="fall-quiz-btn" data-q="method" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="method" data-val="no">לא</button></div>
+        <div class="fall-quiz-q">4. האם התקשרת לחבר אחריות? <span class="fall-quiz-step">המוצא האחרון</span></div>
+        <div class="fall-quiz-options" data-q="friend"><button class="fall-quiz-btn" data-q="friend" data-val="yes">כן</button><button class="fall-quiz-btn" data-q="friend" data-val="no">לא</button></div>
+        <div class="fall-quiz-sub" id="fallQuizFriendSub" style="display:none;">
+          <div class="fall-quiz-q">האם החבר ענה?</div>
+          <div class="fall-quiz-options" data-q="friendAnswered"><button class="fall-quiz-btn" data-q="friendAnswered" data-val="yes">ענה</button><button class="fall-quiz-btn" data-q="friendAnswered" data-val="no">לא ענה</button></div>
+        </div>
+        <div class="fall-quiz-note" id="fallQuizNote"></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="fallQuizSave">שמור תיעוד</button><button class="goal-form-btn cancel" id="fallQuizCancel">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mitzvot manager -->
+  <div class="modal-backdrop" id="mitzvotManagerModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">המצוות שלי</div><button class="modal-close" id="mitzvotManagerClose">×</button></div>
+      <div class="modal-body">
+        <div id="mitzvotManagerList"></div>
+        <div class="goal-form-buttons" style="flex-direction:column;gap:8px">
+          <button class="goal-form-btn save" id="mitzvaAddBtn" style="width:100%">+ הוסף מצווה חדשה</button>
+          <button class="add-goal-btn" id="mitzvaPresetBtn" style="margin-top:0">📚 הוסף מספריית המצוות</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mitzva edit -->
+  <div class="modal-backdrop" id="mitzvaEditModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="mitzvaEditTitle">מצווה חדשה</div><button class="modal-close" id="mitzvaEditClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-form-row"><label class="goal-form-label">שם המצווה</label><input type="text" class="goal-form-input" id="mitzvaNameInput" placeholder="למשל: שחרית, שיעור תורה..."></div>
+        <div class="goal-form-row"><label class="goal-form-label">כמות נקודות</label><input type="number" class="goal-form-input" id="mitzvaPointsInput" min="1" max="500" step="1"></div>
+        <div class="goal-form-row"><label class="goal-form-label" style="display:flex;align-items:center;justify-content:space-between">יש מניין? (×2 נקודות) <label class="switch"><input type="checkbox" id="mitzvaMinyanInput"><span class="switch-slider"></span></label></label></div>
+        <div class="goal-form-row"><label class="goal-form-label">בחר אייקון</label><div class="goal-icon-grid" id="mitzvaIconGrid"></div></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="mitzvaSaveBtn">שמור</button><button class="goal-form-btn cancel" id="mitzvaCancelBtn">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preset picker -->
+  <div class="modal-backdrop" id="presetPickerModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title">ספריית המצוות</div><button class="modal-close" id="presetPickerClose">×</button></div>
+      <div class="modal-body"><div id="presetGrid" style="display:flex;flex-direction:column;gap:8px"></div></div>
+    </div>
+  </div>
+
+  <!-- Tracker edit -->
+  <div class="modal-backdrop" id="trackerEditModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="trackerEditTitleHead">שאלון חדש</div><button class="modal-close" id="trackerEditClose">×</button></div>
+      <div class="modal-body">
+        <div class="goal-form-row"><label class="goal-form-label">שם השאלון/המעקב</label><input type="text" class="goal-form-input" id="trackerTitleInput" placeholder="למשל: מעקב כעס, מעקב לימוד..."></div>
+        <div class="goal-form-row"><label class="goal-form-label">תיאור קצר (לא חובה)</label><input type="text" class="goal-form-input" id="trackerSubtitleInput" placeholder="משפט הסבר"></div>
+        <div class="goal-form-row"><label class="goal-form-label">שאלות (כן/לא)</label><div id="trackerQuestionsList"></div><button class="add-goal-btn" id="trackerAddQBtn" style="margin-top:4px">+ הוסף שאלה</button></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="trackerSaveBtn">שמור</button><button class="goal-form-btn cancel" id="trackerCancelBtn">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracker entry (questionnaire) -->
+  <div class="modal-backdrop" id="trackerEntryModal">
+    <div class="modal">
+      <div class="modal-header"><div class="modal-title" id="trackerEntryTitle">תיעוד</div><button class="modal-close" id="trackerEntryClose">×</button></div>
+      <div class="modal-body">
+        <div id="trackerEntryQuestions"></div>
+        <div class="goal-form-row" style="margin-top:10px"><label class="goal-form-label">הערה (לא חובה)</label><input type="text" class="goal-form-input" id="trackerEntryNote" maxlength="200"></div>
+        <div class="goal-form-buttons"><button class="goal-form-btn save" id="trackerEntrySave">שמור</button><button class="goal-form-btn cancel" id="trackerEntryCancel">ביטול</button></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ===== Firebase — נריה. משתמש בפרויקט yosef-niku (משותף עם yosef) — נתוני נריה ב-/neria, אין שום קשר לאוריאל. =====
+  const DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
+  const API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
+  const FB_TOK = '_nfb_id_token_v1', FB_REF = '_nfb_refresh_token_v1', FB_EXP = '_nfb_token_exp_v1';
+  function fbSave(id, ref, exp) { try { localStorage.setItem(FB_TOK, id); if (ref) localStorage.setItem(FB_REF, ref); localStorage.setItem(FB_EXP, String(Date.now() + ((parseInt(exp,10)||3600)*1000) - 60000)); } catch(e) {} }
+  async function fbSignIn() { const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + API_KEY, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ returnSecureToken: true }) }); if (!r.ok) throw new Error('signin'); const d = await r.json(); fbSave(d.idToken, d.refreshToken, d.expiresIn); return d.idToken; }
+  async function fbRefresh(ref) { const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + API_KEY, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) }); if (!r.ok) throw new Error('refresh'); const d = await r.json(); fbSave(d.id_token, d.refresh_token, d.expires_in); return d.id_token; }
+  async function fbToken() { try { const t = localStorage.getItem(FB_TOK), e = parseInt(localStorage.getItem(FB_EXP)||'0',10); if (t && Date.now() < e) return t; const ref = localStorage.getItem(FB_REF); if (ref) { try { return await fbRefresh(ref); } catch(x) {} } return await fbSignIn(); } catch(x) { return null; } }
+  async function dbUrl() { const t = await fbToken(); return DB_URL + '/neria.json' + (t ? ('?auth=' + encodeURIComponent(t)) : ''); }
+
+  // ===== Mitzvot (same list as the app) =====
+  // ===== Mitzvot — editable by Yosef (defaults below, can add/edit/remove) =====
+  const MITZVOT_KEY = 'neria_mitzvot_v1';
+  const DEFAULT_MITZVOT = [
+    { id: 'shacharit', name: 'שחרית', icon: '🌅', points: 15, hasMinyan: true, extras: [{ id: 'tefillin', label: 'הנחתי תפילין', points: 5, independent: true }] },
+    { id: 'mincha', name: 'מנחה', icon: '☀️', points: 10, hasMinyan: true },
+    { id: 'arvit', name: 'ערבית', icon: '🌙', points: 10, hasMinyan: true },
+    { id: 'eyes', name: 'יום נקי - שמירת העיניים', icon: '👁️', points: 25, hasMinyan: false, extras: [
+      { id: 'filter_on', label: 'הפילטר היה פעיל כל היום', points: 5 },
+      { id: 'phone_away', label: 'הטלפון לא היה איתי במיטה', points: 5 }
+    ] },
+    { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 20, hasMinyan: false, extras: [
+      { id: 'ifs', label: 'השתמשתי בשיטת המגינים (IFS)', points: 5 },
+      { id: 'friend_check', label: 'יצרתי קשר עם חבר אחריות', points: 5 }
+    ] },
+    { id: 'shiur', name: 'שיעור תורה', icon: '📚', points: 25, hasMinyan: false },
+    { id: 'tehilim', name: 'פרק תהילים יומי', icon: '📖', points: 10, hasMinyan: false }
+  ];
+  let MITZVOT = JSON.parse(JSON.stringify(DEFAULT_MITZVOT));
+  function loadMitzvot() { try { const r = localStorage.getItem(MITZVOT_KEY); if (r) { const a = JSON.parse(r); if (Array.isArray(a) && a.length) return a; } } catch(e) {} return JSON.parse(JSON.stringify(DEFAULT_MITZVOT)); }
+  function saveMitzvot() { try { localStorage.setItem(MITZVOT_KEY, JSON.stringify(MITZVOT)); } catch(e) {} pushUp(); }
+  const MITZVA_ICONS = ['🌅','☀️','🌙','🙏','📜','📖','📚','📕','📗','📘','⚖️','✨','🛡️','👁️','🤐','🧘','🌱','🤝','❤️','🫶','👴','🏡','👨‍👩‍👧','💪','💧','😴','🥗','📵','⏰','🧹','🎯','🎓','🕰️','🍞','🛏️','🕯️','🏃','📝','🌟','💎'];
+  const PRESET_MITZVOT = [
+    {name:'שחרית',icon:'🌅',points:20,hasMinyan:true},{name:'מנחה',icon:'☀️',points:10,hasMinyan:true},{name:'ערבית',icon:'🌙',points:10,hasMinyan:true},
+    {name:'תפילה בכוונה',icon:'🙏',points:15,hasMinyan:false},{name:'ברכות השחר',icon:'📜',points:10,hasMinyan:false},{name:'ברכת המזון בכוונה',icon:'🍞',points:10,hasMinyan:false},
+    {name:'קריאת שמע על המיטה',icon:'🛏️',points:5,hasMinyan:false},{name:'שיעור תורה',icon:'📚',points:30,hasMinyan:false},{name:'דף יומי',icon:'📖',points:30,hasMinyan:false},
+    {name:'הלכה יומית',icon:'⚖️',points:15,hasMinyan:false},{name:'משניות',icon:'📕',points:20,hasMinyan:false},{name:'תהילים',icon:'📗',points:15,hasMinyan:false},
+    {name:'מוסר/חסידות',icon:'📘',points:15,hasMinyan:false},{name:'חיזוק אמונה',icon:'✨',points:10,hasMinyan:false},{name:'יום נקי - שמירת הברית',icon:'🛡️',points:15,hasMinyan:false},
+    {name:'שמירת העיניים',icon:'👁️',points:15,hasMinyan:false},{name:'שמירת הלשון',icon:'🤐',points:15,hasMinyan:false},{name:'התגברות על הכעס',icon:'🧘',points:15,hasMinyan:false},
+    {name:'עבודת המידות',icon:'🌱',points:10,hasMinyan:false},{name:'צדקה',icon:'🤝',points:15,hasMinyan:false},{name:'ביקור חולים',icon:'❤️',points:20,hasMinyan:false},
+    {name:'חסד עם הזולת',icon:'🫶',points:15,hasMinyan:false},{name:'כיבוד הורים',icon:'👴',points:20,hasMinyan:false},{name:'עזרה בבית',icon:'🏡',points:15,hasMinyan:false},
+    {name:'זמן איכות עם המשפחה',icon:'👨‍👩‍👧',points:20,hasMinyan:false},{name:'כושר/ספורט',icon:'💪',points:25,hasMinyan:false},{name:'שתיית מים',icon:'💧',points:5,hasMinyan:false},
+    {name:'שינה מסודרת',icon:'😴',points:10,hasMinyan:false},{name:'אכילה בריאה',icon:'🥗',points:10,hasMinyan:false},{name:'הימנעות ממסכים מיותרים',icon:'📵',points:15,hasMinyan:false},
+    {name:'קימה בזמן',icon:'⏰',points:10,hasMinyan:false},{name:'סדר ונקיון',icon:'🧹',points:10,hasMinyan:false},{name:'הכרת הטוב',icon:'🌟',points:10,hasMinyan:false},
+    {name:'מטרה אישית',icon:'🎯',points:15,hasMinyan:false},{name:'לימוד מקצועי',icon:'🎓',points:20,hasMinyan:false},{name:'קביעת עיתים לתורה',icon:'🕰️',points:25,hasMinyan:false}
+  ];
+
+  const TODAY_KEY = 'neria_score_today_v1', HISTORY_KEY = 'neria_score_history_v1';
+  const GOALS_KEY = 'neria_goals_v1', NOTES_KEY = 'neria_journal_notes_v1';
+  const GOAL_ICONS = ['🍦','📖','🍽️','🚗','🤝','⭐','🏆','🎁','🍕','☕','🎮','🎵','📚','💎','👑','🎨','🌟','🎯'];
+  const DEFAULT_GOALS = [
+    { id:'g1', points:500, name:'פרס קטן / קינוח', icon:'🍦', claimed:false },
+    { id:'g2', points:1000, name:'ספר / קפה', icon:'📖', claimed:false },
+    { id:'g3', points:2000, name:'ארוחה בחוץ', icon:'🍽️', claimed:false },
+    { id:'g4', points:3000, name:'טיול', icon:'🚗', claimed:false },
+    { id:'g5', points:5000, name:'תרומה', icon:'🤝', claimed:false },
+    { id:'g6', points:7500, name:'אבן דרך מיוחדת', icon:'⭐', claimed:false },
+    { id:'g7', points:10000, name:'הישג גדול', icon:'🏆', claimed:false }
+  ];
+
+  function getTodayDate() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  function fmtDate(s) { if (!s) return ''; const p = s.split('-'); if (p.length !== 3) return s; const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת']; const d = new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2])); return 'יום ' + days[d.getDay()] + ' · ' + p[2] + '.' + p[1] + '.' + p[0]; }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  let todayState = {}, goalsState = [], editingGoalId = null, selectedIcon = '🎁', lastCelebId = null;
+  let journalFilter = 'all', journalSearchDate = '', chartRange = 14, editingNoteDate = null;
+
+  function autoCommitDay(prev) { if (!prev || !prev.date || !prev.items) return; let score=0; MITZVOT.forEach(function(m){ score += mitzvaItemPoints(m, prev.items[m.id]); }); score -= (prev.penalty||0); const anyDone=Object.values(prev.items).some(function(it){return it&&it.done;}); if (!anyDone && score<=0) return; const h=loadHistory(); const ex=h.find(function(x){return x.date===prev.date;}); if (ex){ if (score>(ex.score||0)){ ex.score=score; ex.items=prev.items; saveHistory(h); } return; } h.push({date:prev.date,score:score,items:prev.items}); h.sort(function(a,b){return a.date.localeCompare(b.date);}); saveHistory(h.slice(-90)); }
+  function loadToday() { try { const raw = localStorage.getItem(TODAY_KEY); if (raw) { const p = JSON.parse(raw); if (p.date === getTodayDate()) { todayState = p; ensureItems(); return; } try { autoCommitDay(p); } catch(e) {} } } catch(e) {} todayState = { date: getTodayDate(), items: {} }; ensureItems(); }
+  function ensureItems() { if (!todayState.items) todayState.items = {}; MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done:false, minyan:false, extras:{} }; }); }
+  function saveToday() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} pushUp(); }
+  function saveTodayLocal() { try { localStorage.setItem(TODAY_KEY, JSON.stringify(todayState)); } catch(e) {} }
+  function loadHistory() { try { const r = localStorage.getItem(HISTORY_KEY); if (r) return JSON.parse(r) || []; } catch(e) {} return []; }
+  function saveHistory(h) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e) {} }
+  function loadGoals() { try { const r = localStorage.getItem(GOALS_KEY); if (r) { const p = JSON.parse(r); if (Array.isArray(p) && p.length) { goalsState = p; return; } } } catch(e) {} goalsState = JSON.parse(JSON.stringify(DEFAULT_GOALS)); saveGoals(); }
+  function saveGoals() { try { localStorage.setItem(GOALS_KEY, JSON.stringify(goalsState)); } catch(e) {} pushUp(); }
+  function loadNotes() { try { const r = localStorage.getItem(NOTES_KEY); return r ? JSON.parse(r) : {}; } catch(e) { return {}; } }
+  function saveNotes(n) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(n)); } catch(e) {} pushUp(); }
+
+  function mitzvaItemPoints(m, item) { if (!item) return 0; let pts = 0; if (item.done) pts += (m.hasMinyan && item.minyan) ? m.points*2 : m.points; if (m.extras && item.extras) m.extras.forEach(ex => { if (item.extras[ex.id] && (ex.independent || item.done)) pts += ex.points; }); return pts; }
+  function mitzvaMaxPoints(m) { let p = m.hasMinyan ? m.points*2 : m.points; if (m.extras) m.extras.forEach(ex => p += ex.points); return p; }
+  function calcToday() { let t = 0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, todayState.items[m.id])); t -= (todayState.penalty || 0); return t; }
+  function calcMax() { let t = 0; MITZVOT.forEach(m => t += mitzvaMaxPoints(m)); return t; }
+  function isPerfectDay(items) { return MITZVOT.every(m => items[m.id] && items[m.id].done); }
+
+  function renderMitzvaCard(m, rawItem) {
+    const item = rawItem || { done:false, minyan:false, extras:{} };
+    const extras = item.extras || {};
+    const eff = mitzvaItemPoints(m, Object.assign({}, item, { done:true }));
+    const hasExtras = m.extras && m.extras.length;
+    const anyOn = hasExtras && m.extras.some(ex => extras[ex.id]);
+    const bonus = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') + (hasExtras ? m.extras.filter(ex=>extras[ex.id]).map(ex=>' +'+ex.points).join('') : '');
+    return '<div class="mitzva-card'+(item.done?' done':'')+(anyOn?' expanded':'')+'" data-id="'+m.id+'"><div class="mitzva-row">' +
+      (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+      '<div class="mitzva-icon">'+m.icon+'</div><div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div><div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
+      '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button></div>' +
+      (m.hasMinyan ? '<div class="minyan-toggle"><div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div><label class="switch"><input type="checkbox" data-action="minyan"'+(item.minyan?' checked':'')+'><span class="switch-slider"></span></label></div>' : '') +
+      (hasExtras ? '<div class="mitzva-extras">' + m.extras.map(ex => '<div class="minyan-toggle"><div class="minyan-toggle-label">'+ex.label+' <span class="bonus">+'+ex.points+' נקודות</span></div><label class="switch"><input type="checkbox" data-action="extra" data-extra="'+ex.id+'"'+(extras[ex.id]?' checked':'')+'><span class="switch-slider"></span></label></div>').join('') + '</div>' : '') +
+    '</div>';
+  }
+
+  // ===== Edit any day (date picker / history click) =====
+  let editingDayDate = null, editingDayItems = {};
+  function openEditDay(dateStr) {
+    editingDayDate = dateStr; const today = getTodayDate();
+    if (dateStr === today) editingDayItems = JSON.parse(JSON.stringify(todayState.items));
+    else { const e = loadHistory().find(h => h.date === dateStr); editingDayItems = (e && e.items) ? JSON.parse(JSON.stringify(e.items)) : {}; }
+    MITZVOT.forEach(m => { if (!editingDayItems[m.id]) editingDayItems[m.id] = { done:false, minyan:false, extras:{} }; });
+    document.getElementById('editDayDate').textContent = fmtDate(dateStr) + (dateStr===today?' · היום':'');
+    renderEditDayMitzvot(); document.getElementById('editDayModal').classList.add('active');
+  }
+  function calcEditScore() { let t=0; MITZVOT.forEach(m => t += mitzvaItemPoints(m, editingDayItems[m.id])); return t; }
+  function renderEditDayMitzvot() {
+    const list = document.getElementById('editDayMitzvot');
+    list.innerHTML = MITZVOT.map(m => renderMitzvaCard(m, editingDayItems[m.id])).join('');
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => { editingDayItems[id].done = !editingDayItems[id].done; renderEditDayMitzvot(); });
+      const mi = card.querySelector('[data-action="minyan"]'); if (mi) mi.addEventListener('change', () => { editingDayItems[id].minyan = mi.checked; renderEditDayMitzvot(); });
+      const ex = card.querySelector('[data-action="expand"]'); if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => inp.addEventListener('change', () => { if (!editingDayItems[id].extras) editingDayItems[id].extras = {}; editingDayItems[id].extras[inp.dataset.extra] = inp.checked; renderEditDayMitzvot(); }));
+    });
+    document.getElementById('editDayScore').textContent = calcEditScore();
+  }
+  function saveEditDay() {
+    if (!editingDayDate) return; const score = calcEditScore(); const today = getTodayDate();
+    if (editingDayDate === today) { todayState.items = JSON.parse(JSON.stringify(editingDayItems)); saveToday(); }
+    else { const h = loadHistory().filter(x => x.date !== editingDayDate); if (score > 0) h.push({ date: editingDayDate, score: score, items: JSON.parse(JSON.stringify(editingDayItems)) }); h.sort((a,b) => a.date.localeCompare(b.date)); saveHistory(h.slice(-90)); pushUp(); }
+    document.getElementById('editDayModal').classList.remove('active'); render();
+  }
+  function deleteEditDay() {
+    if (!editingDayDate) return; if (!confirm('למחוק את כל הסימונים של יום זה?')) return; const today = getTodayDate();
+    if (editingDayDate === today) { MITZVOT.forEach(m => todayState.items[m.id] = { done:false, minyan:false, extras:{} }); saveToday(); }
+    else { saveHistory(loadHistory().filter(x => x.date !== editingDayDate)); pushUp(); }
+    document.getElementById('editDayModal').classList.remove('active'); render();
+  }
+
+  // ===== Brit log + fall questionnaire =====
+  const BRIT_LOG_KEY = 'neria_brit_log_v1';
+  function loadBritLog() { try { const r = localStorage.getItem(BRIT_LOG_KEY); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; } catch(e) { return []; } }
+  function saveBritLog(a) { try { localStorage.setItem(BRIT_LOG_KEY, JSON.stringify(a)); } catch(e) {} pushUp(); }
+  function tsToDate(ts) { const d = new Date(ts); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function fmtBritTime(ts) { try { return fmtDate(tsToDate(ts)) + ' · ' + String(new Date(ts).getHours()).padStart(2,'0')+':'+String(new Date(ts).getMinutes()).padStart(2,'0'); } catch(e) { return ''; } }
+  function renderBritLog() {
+    const list = document.getElementById('britLogList'); if (!list) return;
+    const entries = loadBritLog().slice().sort((a,b) => b.ts - a.ts);
+    if (!entries.length) { list.innerHTML = '<div class="brit-log-empty">אין תיעודים. בעזרת ה׳ שלא יהיו.</div>'; return; }
+    list.innerHTML = entries.map(e => {
+      const tags = [];
+      if (e.kind === 'video') tags.push('📹 סרט');
+      else if (e.kind === 'brit') tags.push('🛡️ ברית');
+      else if (e.kind === 'both') tags.push('⚠️ סרט + ברית');
+      if (e.filterActive === 'yes') tags.push('🔒 פילטר היה פעיל');
+      else if (e.filterActive === 'no') tags.push('🔓 פילטר לא פעיל');
+      else if (e.filterActive === 'none') tags.push('❌ אין פילטר');
+      if (e.usedMethod) tags.push('🛡️ מגינים');
+      if (e.calledFriend) tags.push(e.friendAnswered === false ? '📞 חבר לא ענה' : '📞 חבר ענה');
+      const th = tags.length ? '<div class="brit-log-entry-tags">'+tags.map(t=>'<span class="brit-log-tag">'+t+'</span>').join('')+'</div>' : '';
+      return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div><div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>'+th+'</div><button class="brit-log-entry-del" data-ts="'+e.ts+'">×</button></div>';
+    }).join('');
+    list.querySelectorAll('.brit-log-entry-del').forEach(b => b.addEventListener('click', () => deleteBritLogEntry(parseInt(b.dataset.ts,10))));
+  }
+  function addBritLogEntry() { const inp = document.getElementById('britLogInput'); if (!inp) return; if (!(inp.value||'').trim()) return; openFallQuiz(inp.value.trim()); }
+  function deleteBritLogEntry(ts) {
+    const all = loadBritLog(); const entry = all.find(e => e.ts === ts);
+    saveBritLog(all.filter(e => e.ts !== ts));
+    if (entry && entry.penalty && tsToDate(entry.ts) === (todayState.date || getTodayDate())) { todayState.penalty = Math.max(0, (todayState.penalty||0) - entry.penalty); saveToday(); }
+    render();
+  }
+  let fallQuizText = '', fallQuizAnswers = { kind:null, filter:null, method:null, friend:null, friendAnswered:null };
+  function openFallQuiz(text) { fallQuizText = text; fallQuizAnswers = { kind:null, filter:null, method:null, friend:null, friendAnswered:null }; document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(b => b.classList.remove('selected')); const sub = document.getElementById('fallQuizFriendSub'); if (sub) sub.style.display = 'none'; const note = document.getElementById('fallQuizNote'); if (note) note.textContent = ''; document.getElementById('fallQuizModal').classList.add('active'); }
+  function closeFallQuiz() { document.getElementById('fallQuizModal').classList.remove('active'); }
+  function updateFallQuizNote() {
+    const note = document.getElementById('fallQuizNote'); if (!note) return;
+    const a = fallQuizAnswers;
+    if (!a.kind || !a.filter || !a.method || !a.friend) { note.textContent = ''; return; }
+    // Used at least one tool? filter=yes OR method=yes OR friend=yes (and answered or tried)
+    const triedSomething = (a.filter==='yes') || (a.method==='yes') || (a.friend==='yes');
+    if (!triedSomething) { note.textContent = 'לא עברת דרך אף כלי התמודדות — יירדו 40 נקודות. בפעם הבאה: פילטר → מגינים → חבר. כל ניסיון נחשב.'; return; }
+    if (a.friend==='yes' && !a.friendAnswered) { note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
+    let msg = 'כל הכבוד שניסית להתמודד — לא יירדו נקודות. ';
+    if (a.filter==='yes') msg += 'הפילטר עבד לטובתך. ';
+    if (a.method==='yes') msg += 'המגינים עזרו לך. ';
+    if (a.friend==='yes' && a.friendAnswered==='yes') msg += 'החבר ענה — זו זכות גדולה. ';
+    if (a.friend==='yes' && a.friendAnswered==='no') msg += 'גם אם החבר לא ענה — עצם הניסיון להתקשר זה ניצחון. ';
+    msg += 'חזק!';
+    note.textContent = msg;
+  }
+  function selectFallAnswer(q, val, btn) { fallQuizAnswers[q] = val; btn.parentElement.querySelectorAll('.fall-quiz-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); if (q === 'friend') { const sub = document.getElementById('fallQuizFriendSub'); if (val === 'yes') { if (sub) sub.style.display = 'block'; } else { if (sub) sub.style.display = 'none'; fallQuizAnswers.friendAnswered = null; document.querySelectorAll('#fallQuizFriendSub .fall-quiz-btn').forEach(b => b.classList.remove('selected')); } } updateFallQuizNote(); }
+  function saveFallQuiz() {
+    const a = fallQuizAnswers; const note = document.getElementById('fallQuizNote');
+    if (!a.kind || !a.filter || !a.method || !a.friend) { if (note) note.textContent = 'אנא ענה על כל השאלות.'; return; }
+    if (a.friend === 'yes' && !a.friendAnswered) { if (note) note.textContent = 'ציינת שהתקשרת לחבר — אנא בחר אם הוא ענה או לא.'; return; }
+    const triedSomething = (a.filter==='yes') || (a.method==='yes') || (a.friend==='yes');
+    const penalty = triedSomething ? 0 : 40;
+    const arr = loadBritLog();
+    arr.push({
+      ts: Date.now(),
+      text: fallQuizText,
+      kind: a.kind,                                  // 'video' | 'brit' | 'both'
+      filterActive: a.filter,                         // 'yes' | 'no' | 'none'
+      usedMethod: a.method==='yes',
+      calledFriend: a.friend==='yes',
+      friendAnswered: a.friend==='yes' ? (a.friendAnswered==='yes') : null,
+      penalty: penalty
+    });
+    saveBritLog(arr);
+    if (penalty) { todayState.penalty = (todayState.penalty||0) + penalty; saveToday(); }
+    const inp = document.getElementById('britLogInput'); if (inp) inp.value = '';
+    closeFallQuiz(); render();
+  }
+
+  // ===== Private reflection (local only) =====
+  const REFLECT_KEY = 'neria_reflection_v1';
+  function loadReflections() { try { return JSON.parse(localStorage.getItem(REFLECT_KEY) || '{}') || {}; } catch(e) { return {}; } }
+  function renderReflection() { const ta = document.getElementById('reflectionTextarea'); if (!ta) return; const date = getTodayDate(); const dl = document.getElementById('reflectionDate'); if (dl) dl.textContent = fmtDate(date); ta.value = loadReflections()[date] || ''; const c = document.getElementById('reflectionCounter'); if (c) c.textContent = ta.value.length; }
+
+  // ===== "Your building" — a temple that grows one golden stone per active day =====
+  function bldStageName(days) { if (days<=0) return 'המגרש מוכן — התחל לבנות!'; if (days<8) return 'יסודות'; if (days<20) return 'הקירות עולים'; if (days<40) return 'עמודים וגג'; if (days<48) return 'בונים את הכיפה'; return '✦ הבניין שלם — וממשיך לזהור! ✦'; }
+  function buildingSVG(f) {
+    const COLS=8, ROWS=6, SW=30, GAP=3, SH=16, VG=3, startX=30, groundY=205, slots=COLS*ROWS;
+    const lit=Math.min(f.wall||0,slots);
+    let stars=''; for(let i=0;i<16;i++){ const sx=(i*53%300)+8, sy=8+(i*29%64), rr=(i%3===0?1.5:0.9), d=(i*0.37%3).toFixed(2); stars+='<circle class="bld-star-tw" cx="'+sx+'" cy="'+sy+'" r="'+rr+'" fill="#fff7e0" style="animation-delay:'+d+'s"/>'; }
+    let rays=''; for(let a=0;a<14;a++){ rays+='<polygon points="160,150 155,30 165,30" fill="#f4d98a" opacity="0.09" transform="rotate('+(a*360/14)+' 160 150)"/>'; }
+    let stones=''; for(let i=0;i<slots;i++){ const r=Math.floor(i/COLS),c=i%COLS,x=startX+c*(SW+GAP),y=(groundY-2)-SH-r*(SH+VG); if(i<lit){ const dl=Math.min(i*0.04,1.6).toFixed(2); stones+='<rect class="bld-stone-lit" x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:'+dl+'s"/><rect class="bld-stone-lit" x="'+(x+1.5)+'" y="'+(y+1.5)+'" width="'+(SW-3)+'" height="3.4" rx="1.5" fill="#fce9b0" opacity="0.7" style="animation-delay:'+dl+'s"/>'; } else { stones+='<rect x="'+x+'" y="'+y+'" width="'+SW+'" height="'+SH+'" rx="2.5" fill="none" stroke="#caa85f" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.28"/>'; } }
+    const wallTop=(groundY-2)-SH-(ROWS-1)*(SH+VG);
+    let deco='';
+    if(f.columns){ [16,290].forEach(function(x,idx){ deco+='<rect x="'+(x-3)+'" y="'+(groundY-2)+'" width="20" height="7" rx="1" fill="url(#stoneG)"/><rect class="bld-stone-lit" x="'+x+'" y="'+(wallTop-2)+'" width="14" height="'+(groundY-wallTop)+'" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.5" style="animation-delay:'+(0.2+idx*0.1)+'s"/><rect x="'+(x-3)+'" y="'+(wallTop-7)+'" width="20" height="7" rx="1" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.4"/>'; }); }
+    if(f.roof){ const ry=wallTop-8; deco+='<polygon class="bld-stone-lit" points="2,'+ry+' 318,'+ry+' 160,'+(ry-52)+'" fill="url(#roofG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:0.3s"/><circle class="bld-doorpulse" cx="160" cy="'+(ry-20)+'" r="7.5" fill="#fce9b0"/>'; }
+    if(f.dome){ const ry=wallTop-60; deco+='<path class="bld-stone-lit" d="M134 '+ry+' Q160 '+(ry-32)+' 186 '+ry+' Z" fill="url(#stoneG)" stroke="#7d6328" stroke-width="0.6" style="animation-delay:0.4s"/>'; }
+    if(f.star){ const sy=wallTop-70; deco+='<circle class="bld-glow" cx="160" cy="'+sy+'" r="32" fill="url(#glowG)"/><text class="bld-star2" x="160" y="'+(sy+12)+'" text-anchor="middle" font-size="36" fill="#ffe9a8">✦</text>'; }
+    const door = lit>=4 ? '<rect class="bld-doorpulse" x="146" y="'+(groundY-24)+'" width="28" height="24" rx="13" fill="url(#doorG)"/>' : '';
+    let parts=''; for(let i=0;i<16;i++){ const px=36+(i*37%248), pd=(i*0.5%5).toFixed(2), pr=(i%2?1.7:1.1); parts+='<circle class="bld-spark" cx="'+px+'" cy="205" r="'+pr+'" fill="#ffe9a8" style="animation-delay:'+pd+'s"/>'; }
+    const clouds='<g class="bld-cloud1" opacity="0.45"><ellipse cx="40" cy="50" rx="24" ry="8" fill="#fbe6c8"/><ellipse cx="60" cy="46" rx="16" ry="7" fill="#fbe6c8"/></g><g class="bld-cloud2" opacity="0.35"><ellipse cx="250" cy="34" rx="20" ry="7" fill="#fbe6c8"/><ellipse cx="234" cy="38" rx="13" ry="6" fill="#fbe6c8"/></g>';
+    const shimmer='<rect class="bld-shimmer" x="0" y="40" width="46" height="180" fill="url(#shineG)"/>';
+    return '<svg viewBox="0 0 320 250" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2b3566"/><stop offset="55%" stop-color="#7a4450"/><stop offset="100%" stop-color="#e7b074"/></linearGradient><radialGradient id="sunG"><stop offset="0%" stop-color="#ffe6a0" stop-opacity="0.85"/><stop offset="100%" stop-color="#ffe6a0" stop-opacity="0"/></radialGradient><linearGradient id="stoneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f3d98e"/><stop offset="100%" stop-color="#c39a34"/></linearGradient><linearGradient id="roofG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a2734"/><stop offset="100%" stop-color="#561620"/></linearGradient><radialGradient id="glowG"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.95"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient><linearGradient id="doorG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff0bf"/><stop offset="100%" stop-color="#d8a84a"/></linearGradient><linearGradient id="shineG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.5"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect x="0" y="0" width="320" height="250" fill="url(#skyG)"/>'+stars+clouds+'<g class="bld-rays">'+rays+'</g><circle class="bld-glow" cx="160" cy="150" r="92" fill="url(#sunG)"/><rect x="6" y="'+(groundY+5)+'" width="308" height="14" rx="3" fill="url(#stoneG)" opacity="0.9"/><rect x="22" y="'+(groundY-2)+'" width="276" height="9" rx="2" fill="url(#stoneG)" opacity="0.8"/>'+stones+deco+door+parts+shimmer+'</svg>';
+  }
+  let _bgLastSig='', _bgLastBP=-1, currentBuildId=null;
+  const RESOURCES=[
+    {id:'boker',name:'שחרית',icon:'☀️',color:'#e0a72a'},
+    {id:'tzohoraim',name:'מנחה',icon:'🌤️',color:'#d9772a'},
+    {id:'erev',name:'ערבית',icon:'🌙',color:'#7a6ad0'},
+    {id:'torah',name:'תורה',icon:'📖',color:'#caa85f'},
+    {id:'kedusha',name:'קדושה',icon:'🛡️',color:'#3ab0aa'},
+    {id:'koach',name:'כוח',icon:'💪',color:'#4aa85a'}
+  ];
+  const RES_BY_ID={shacharit:'boker',mincha:'tzohoraim',arvit:'erev',brit:'kedusha',shiur:'torah',kosher:'koach',tal_tefila:'boker',tal_seder:'torah',tal_kosher:'koach'};
+  function resForMitzva(m){ if(RES_BY_ID[m.id])return RES_BY_ID[m.id]; const n=m.name||''; if(/שחרית|שחר/.test(n))return 'boker'; if(/מנחה|צהר/.test(n))return 'tzohoraim'; if(/ערבית|ערב|לילה|שמע/.test(n))return 'erev'; if(/תורה|לימוד|שיעור|דף|משני|הלכה|תהיל|מוסר|חסידות/.test(n))return 'torah'; if(/ברית|נקי|עיני|לשון|כעס|מידות|קדוש|צניע/.test(n))return 'kedusha'; if(/כושר|ספורט|בריא|מים|שינ|אכיל|סדר/.test(n))return 'koach'; if(/תפיל|ברכ/.test(n))return 'boker'; return 'torah'; }
+  function earnedResources(){ const res={}; RESOURCES.forEach(function(r){res[r.id]=0;}); const mz=(typeof MITZVOT!=='undefined'&&MITZVOT)?MITZVOT:[]; function add(items){ if(!items)return; mz.forEach(function(m){ const it=items[m.id]; if(it&&it.done){ const rid=resForMitzva(m); res[rid]=(res[rid]||0)+1; } }); } let hist=[]; try{ hist=loadHistory(); }catch(e){} hist.forEach(function(h){ add(h.items); }); const today=getTodayDate(); if(!hist.some(function(h){return h.date===today;})){ try{ add(todayState.items); }catch(e){} } return res; }
+  const BUILDINGS=[
+    {id:'kiyor',name:'הכִּיּוֹר',cost:{koach:40,kedusha:25},points:200},
+    {id:'menora',name:'מנורת הזהב',cost:{boker:50,torah:45},points:300},
+    {id:'shulchan',name:'שולחן לחם הפנים',cost:{tzohoraim:50,torah:45},points:300},
+    {id:'mizbeach_zahav',name:'מזבח הקטורת',cost:{boker:40,tzohoraim:40,erev:40},points:400},
+    {id:'mizbeach_olah',name:'מזבח העולה',cost:{koach:70,boker:35,erev:35},points:450},
+    {id:'aron',name:'ארון הברית',cost:{kedusha:90,torah:90},points:650},
+    {id:'mikdash',name:'בית המקדש',cost:{boker:350,tzohoraim:320,erev:320,torah:350,kedusha:250,koach:250},points:3000}
+  ];
+  const BUILDING_ART={'kiyor':{box:[18,10,84,106],silh:'<ellipse cx="60" cy="9" rx="3.6" ry="4.6"/><rect x="57.5" y="11" width="5" height="6"/><path d="M46 31 Q46 13 60 12 Q74 13 74 31 Z"/><rect x="41" y="27" width="38" height="15" rx="2"/><ellipse cx="60" cy="45" rx="23" ry="8"/><rect x="49" y="45" width="22" height="12"/><ellipse cx="60" cy="80" rx="42" ry="29"/><rect x="51" y="98" width="18" height="9"/><ellipse cx="60" cy="103" rx="10" ry="6"/><ellipse cx="60" cy="110" rx="21" ry="5"/><rect x="39" y="109" width="42" height="6" rx="2"/><ellipse cx="60" cy="115" rx="25" ry="5"/>',orn:'<g fill="none" stroke="@CG@" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="60" cy="9" rx="3.6" ry="4.6"/><path d="M46 31 Q46 13 60 12 Q74 13 74 31 Z"/><rect x="41" y="27" width="38" height="15" rx="2"/><ellipse cx="60" cy="45" rx="23" ry="8"/><rect x="49" y="45" width="22" height="12"/><ellipse cx="60" cy="80" rx="42" ry="29"/><rect x="51" y="98" width="18" height="9"/><ellipse cx="60" cy="110" rx="21" ry="5"/><rect x="39" y="109" width="42" height="6" rx="2"/><ellipse cx="60" cy="115" rx="25" ry="5"/></g><g stroke="#ffe7cc" stroke-width="1.4" opacity="0.7" stroke-linecap="round"><line x1="45" y1="31" x2="75" y2="31"/><line x1="45" y1="37" x2="75" y2="37"/><path d="M26 66 Q60 60 94 66"/></g><g fill="@CG@" stroke="#7a4a28" stroke-width="0.6"><circle cx="21" cy="90" r="3.2"/><path d="M19 91 q-3 1 -4 4 q-1 3 1 5 l2 -1 q-1 -2 0 -4 q1 -2 3 -2 Z"/><circle cx="40" cy="93" r="3.2"/><path d="M38 94 q-3 1 -4 4 q-1 3 1 5 l2 -1 q-1 -2 0 -4 q1 -2 3 -2 Z"/><circle cx="60" cy="94" r="3.2"/><path d="M58 95 q-3 1 -4 4 q-1 3 1 5 l2 -1 q-1 -2 0 -4 q1 -2 3 -2 Z"/><circle cx="80" cy="93" r="3.2"/><path d="M78 94 q-3 1 -4 4 q-1 3 1 5 l2 -1 q-1 -2 0 -4 q1 -2 3 -2 Z"/><circle cx="99" cy="90" r="3.2"/><path d="M97 91 q-3 1 -4 4 q-1 3 1 5 l2 -1 q-1 -2 0 -4 q1 -2 3 -2 Z"/></g>',fx:'<path class="v-water" d="M40 70 q10 5 20 0 q10 -5 20 0" fill="none" stroke="#ffe7cc" stroke-width="2" opacity="0.55" stroke-linecap="round"/><ellipse class="v-water" cx="60" cy="100" rx="1.5" ry="3" fill="#cfeaf0" opacity="0.7"/>'},'menora':{box:[20,30,80,76],silh:'<rect x="56" y="40" width="8" height="64"/><rect x="44" y="100" width="32" height="7"/><polygon points="48,100 72,100 65,92 55,92"/><path d="M24,64 Q60,22 96,64 L96,72 Q60,34 24,72 Z"/><path d="M38,62 Q60,32 82,62 L82,70 Q60,42 38,70 Z"/><rect x="20" y="30" width="8" height="12"/><rect x="34" y="30" width="8" height="12"/><rect x="48" y="30" width="8" height="12"/><rect x="62" y="30" width="8" height="12"/><rect x="76" y="30" width="8" height="12"/><rect x="90" y="30" width="8" height="12"/><rect x="56" y="28" width="8" height="14"/>',orn:'<g fill="none" stroke="@GG@" stroke-width="3.2" stroke-linecap="round"><path d="M60 104 L60 34"/><path d="M60 78 Q60 50 24 50 L24 34"/><path d="M60 72 Q60 48 38 46 L38 34"/><path d="M60 66 Q60 46 52 44 L52 34"/><path d="M60 78 Q60 50 96 50 L96 34"/><path d="M60 72 Q60 48 82 46 L82 34"/><path d="M60 66 Q60 46 68 44 L68 34"/></g><path d="M44 104 L76 104 L68 94 L52 94 Z" fill="@GG@" stroke="#8a6a1f" stroke-width="0.8"/><rect x="40" y="103" width="40" height="5" rx="2" fill="@GG@"/><g fill="@GG@"><circle cx="60" cy="56" r="3.2"/><circle cx="60" cy="70" r="3.2"/><circle cx="60" cy="84" r="3.2"/></g>',fx:'<g><ellipse class="v-flame" style="animation-delay:0s" cx="24" cy="29" rx="3" ry="6" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.2s" cx="38" cy="29" rx="3" ry="6" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.4s" cx="52" cy="29" rx="3" ry="6" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.1s" cx="60" cy="27" rx="3.2" ry="6.5" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.5s" cx="68" cy="29" rx="3" ry="6" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.3s" cx="82" cy="29" rx="3" ry="6" fill="@FG@"/><ellipse class="v-flame" style="animation-delay:0.15s" cx="96" cy="29" rx="3" ry="6" fill="@FG@"/></g>'},'shulchan':{box:[16,22,88,86],silh:'<polygon points="20,66 100,66 90,54 30,54"/><rect x="20" y="65" width="80" height="8" rx="1.5"/><path d="M24 72 L34 72 L31 104 L27 104 Z"/><path d="M86 72 L96 72 L93 104 L89 104 Z"/><rect x="38" y="22" width="20" height="32" rx="3"/><rect x="60" y="22" width="20" height="32" rx="3"/>',orn:'<rect x="12" y="61.5" width="96" height="3.5" rx="1.75" fill="@GG@"/><circle cx="14" cy="63.2" r="3.2" fill="none" stroke="@GG@" stroke-width="2"/><circle cx="106" cy="63.2" r="3.2" fill="none" stroke="@GG@" stroke-width="2"/><rect x="34" y="58" width="6" height="46" rx="2" fill="#9c7826"/><rect x="80" y="58" width="6" height="46" rx="2" fill="#9c7826"/><polygon points="20,66 100,66 90,54 30,54" fill="@GG@" stroke="#7d5e1c" stroke-width="0.6"/><polygon points="30,54 90,54 86,52 34,52" fill="#fff7d8" opacity="0.45"/><polygon points="22,65 98,65 96,62.5 24,62.5" fill="#fff7d8" opacity="0.35"/><rect x="20" y="65" width="80" height="8" rx="1.5" fill="@GG@"/><rect x="20" y="71.5" width="80" height="1.8" rx="0.9" fill="#6e4f18" opacity="0.55"/><g fill="#fff3c8"><circle cx="24.0" cy="66" r="1.3"/><circle cx="29.4" cy="66" r="1.3"/><circle cx="34.8" cy="66" r="1.3"/><circle cx="40.2" cy="66" r="1.3"/><circle cx="45.6" cy="66" r="1.3"/><circle cx="51.0" cy="66" r="1.3"/><circle cx="56.4" cy="66" r="1.3"/><circle cx="61.8" cy="66" r="1.3"/><circle cx="67.2" cy="66" r="1.3"/><circle cx="72.6" cy="66" r="1.3"/><circle cx="78.0" cy="66" r="1.3"/><circle cx="83.4" cy="66" r="1.3"/><circle cx="88.8" cy="66" r="1.3"/><circle cx="94.2" cy="66" r="1.3"/></g><path d="M24 72 L34 72 L31 104 L27 104 Z" fill="@GG@" stroke="#7d5e1c" stroke-width="0.6"/><ellipse cx="29" cy="86" rx="4.2" ry="4.6" fill="@GG@" stroke="#7d5e1c" stroke-width="0.6"/><path d="M26 73 L28 73 L27 103 L26.5 103 Z" fill="#fff7d8" opacity="0.4"/><path d="M86 72 L96 72 L93 104 L89 104 Z" fill="@GG@" stroke="#7d5e1c" stroke-width="0.6"/><ellipse cx="91" cy="86" rx="4.2" ry="4.6" fill="@GG@" stroke="#7d5e1c" stroke-width="0.6"/><path d="M88 73 L90 73 L89 103 L88.5 103 Z" fill="#fff7d8" opacity="0.4"/><g><rect x="40" y="52.0" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="52.7" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="55.8" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="40" y="46.6" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="47.3" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="50.4" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="40" y="41.2" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="41.9" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="45.0" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="40" y="35.8" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="36.5" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="39.6" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="40" y="30.4" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="31.1" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="34.2" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="40" y="25.0" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="42" y="25.7" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="40" y="28.8" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="52.0" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="52.7" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="55.8" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="46.6" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="47.3" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="50.4" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="41.2" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="41.9" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="45.0" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="35.8" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="36.5" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="39.6" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="30.4" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="31.1" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="34.2" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/><rect x="62" y="25.0" width="18" height="5" rx="2.4" fill="#e7c887" stroke="#b8923f" stroke-width="0.5"/><rect x="64" y="25.7" width="10" height="1.5" rx="0.7" fill="#fff6da" opacity="0.5"/><rect x="62" y="28.8" width="18" height="1.2" rx="0.6" fill="#8a6a2a" opacity="0.45"/></g><polygon points="34,64.5 56,55.5 60,55.5 38,64.5" fill="#ffffff" opacity="0.22"/>',fx:'<rect class="v-shine" x="12" y="20" width="16" height="90" fill="#fff" opacity="0"/>'},'mizbeach_zahav':{box:[34,52,52,54],silh:'<rect x="36" y="58" width="48" height="46" rx="2"/><rect x="34" y="52" width="52" height="8" rx="2"/><polygon points="34,52 43,52 41,42 36,42"/><polygon points="77,52 86,52 84,42 79,42"/>',orn:'<g fill="none" stroke="@GG@" stroke-width="2.6" stroke-linejoin="round"><rect x="36" y="58" width="48" height="46" rx="2"/><rect x="34" y="52" width="52" height="8" rx="2"/></g><polygon points="34,52 43,52 41,42 36,42" fill="@GG@" stroke="#8a6a1f" stroke-width="0.7"/><polygon points="77,52 86,52 84,42 79,42" fill="@GG@" stroke="#8a6a1f" stroke-width="0.7"/><g stroke="@GG@" stroke-width="1.3" opacity="0.7"><line x1="40" y1="72" x2="80" y2="72"/><line x1="40" y1="88" x2="80" y2="88"/></g>',fx:'<g fill="none" stroke="#d8cdbb" stroke-width="3" stroke-linecap="round"><path class="v-smoke" style="animation-delay:0s" d="M53 50 q5 -7 0 -14"/><path class="v-smoke" style="animation-delay:1.1s" d="M60 50 q-5 -8 0 -15"/><path class="v-smoke" style="animation-delay:2.1s" d="M67 50 q5 -7 0 -14"/></g>'},'mizbeach_olah':{box:[26,52,68,54],silh:'<rect x="28" y="60" width="64" height="44" rx="2"/><polygon points="28,60 38,60 38,52 30,52"/><polygon points="82,60 92,60 90,52 84,52"/><polygon points="92,104 110,104 100,62 92,62"/>',orn:'<g fill="none" stroke="@CG@" stroke-width="2.6" stroke-linejoin="round"><rect x="28" y="60" width="64" height="44" rx="2"/><polygon points="92,104 110,104 100,62 92,62"/></g><polygon points="28,60 38,60 38,52 30,52" fill="@CG@" stroke="#7a4a28" stroke-width="0.7"/><polygon points="82,60 92,60 90,52 84,52" fill="@CG@" stroke="#7a4a28" stroke-width="0.7"/><g stroke="@CG@" stroke-width="1.2" opacity="0.6"><line x1="34" y1="74" x2="86" y2="74"/><line x1="34" y1="90" x2="86" y2="90"/></g>',fx:'<g fill="@FG@"><path class="v-flame" style="animation-delay:0s" d="M40 60 q4 -12 0 -18 q8 6 4 18 Z"/><path class="v-flame" style="animation-delay:0.3s" d="M54 60 q5 -14 0 -22 q9 7 5 22 Z"/><path class="v-flame" style="animation-delay:0.15s" d="M68 60 q5 -13 0 -20 q9 7 4 20 Z"/><path class="v-flame" style="animation-delay:0.45s" d="M80 60 q4 -11 0 -16 q8 5 4 16 Z"/></g>'},'aron':{box:[34,54,52,52],silh:'<rect x="34" y="54" width="52" height="50" rx="3"/><rect x="24" y="60" width="72" height="6" rx="3"/><rect x="24" y="94" width="72" height="6" rx="3"/><path d="M48 54 Q42 32 60 44 Q78 32 72 54 Z"/>',orn:'<g fill="none" stroke="@GG@" stroke-width="2.6" stroke-linejoin="round"><rect x="34" y="54" width="52" height="50" rx="3"/><rect x="24" y="60" width="72" height="6" rx="3"/><rect x="24" y="94" width="72" height="6" rx="3"/></g><path d="M58 54 Q46 30 60 43 Q74 30 62 54 Z" fill="@GG@" stroke="#8a6a1f" stroke-width="0.8"/><circle cx="52" cy="44" r="4" fill="@GG@" stroke="#8a6a1f" stroke-width="0.8"/><circle cx="68" cy="44" r="4" fill="@GG@" stroke="#8a6a1f" stroke-width="0.8"/><line x1="34" y1="76" x2="86" y2="76" stroke="@GG@" stroke-width="1.6" opacity="0.7"/>',fx:'<circle class="v-aura" cx="60" cy="40" r="9" fill="#fff3c0"/><circle class="v-sparkle" style="animation-delay:0s" cx="56" cy="40" r="1.6" fill="#fff"/><circle class="v-sparkle" style="animation-delay:1.6s" cx="64" cy="42" r="1.6" fill="#fff"/>'},'mikdash':{box:[18,48,86,58],silh:'<polygon points="16,50 104,50 60,24"/><rect x="24" y="50" width="72" height="52"/><rect x="16" y="100" width="88" height="8" rx="1"/>',orn:'<g fill="none" stroke="@GG@" stroke-width="2.6" stroke-linejoin="round"><polygon points="16,50 104,50 60,24"/><rect x="24" y="50" width="72" height="52"/><rect x="16" y="100" width="88" height="8" rx="1"/></g><g stroke="@GG@" stroke-width="2.4" stroke-linecap="round"><line x1="34" y1="52" x2="34" y2="100"/><line x1="48" y1="52" x2="48" y2="100"/><line x1="72" y1="52" x2="72" y2="100"/><line x1="86" y1="52" x2="86" y2="100"/></g><path d="M54 100 L54 74 Q60 66 66 74 L66 100 Z" fill="none" stroke="@GG@" stroke-width="2"/>',fx:'<g class="v-rays" opacity="0.45"><polygon points="60,64 57,28 63,28" fill="#f4d98a"/><polygon points="60,64 57,100 63,100" fill="#f4d98a"/><polygon points="60,64 28,61 28,67" fill="#f4d98a"/><polygon points="60,64 92,61 92,67" fill="#f4d98a"/></g><circle class="v-sparkle" style="animation-delay:0s" cx="44" cy="100" r="1.6" fill="#ffe9a8"/><circle class="v-sparkle" style="animation-delay:1.3s" cx="60" cy="100" r="1.6" fill="#ffe9a8"/><circle class="v-sparkle" style="animation-delay:2.6s" cx="78" cy="100" r="1.6" fill="#ffe9a8"/><rect class="v-shine" x="14" y="24" width="16" height="84" fill="#fff" opacity="0"/>'}};
+  const INV_KEY='neria_bg_invest_v1';
+  function loadInvest(){ try{ const r=localStorage.getItem(INV_KEY); const o=r?JSON.parse(r):{}; return (o&&typeof o==='object')?o:{}; }catch(e){ return {}; } }
+  function saveInvest(st){ try{ localStorage.setItem(INV_KEY, JSON.stringify(st)); }catch(e){} }
+  function invObj(st,id){ if(!st[id]) st[id]={}; return st[id]; }
+  function availableRes(){ const earned=earnedResources(); const st=loadInvest(); const avail={}; RESOURCES.forEach(function(r){ avail[r.id]=earned[r.id]||0; }); Object.keys(st).forEach(function(bid){ Object.keys(st[bid]).forEach(function(k){ avail[k]=(avail[k]||0)-(st[bid][k]||0); }); }); RESOURCES.forEach(function(r){ if(avail[r.id]<0)avail[r.id]=0; }); return avail; }
+  function buildingComplete(b,st){ const inv=st[b.id]||{}; return Object.keys(b.cost).every(function(k){ return (inv[k]||0)>=b.cost[k]; }); }
+  function getBuildPoints(){ const st=loadInvest(); let p=0; BUILDINGS.forEach(function(b){ if(buildingComplete(b,st)) p+=b.points; }); return p; }
+  function buildingArtSVG(b, inv){
+    const id=b.id; const A=BUILDING_ART[id]||{box:[14,16,92,92],silh:'<rect x="30" y="30" width="60" height="76" rx="4"/>',orn:'',fx:''};
+    const box=A.box, y2=box[1]+box[3]; let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
+    let cy=y2, bands='';
+    RESOURCES.forEach(function(r){ if(!b.cost[r.id])return; const v=Math.min(inv[r.id]||0,b.cost[r.id]); const h=total? v/total*box[3] : 0; if(h>0.3){ bands+='<rect x="'+box[0]+'" y="'+(cy-h).toFixed(1)+'" width="'+box[2]+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
+    const st=loadInvest(); const done=buildingComplete(b,st);
+    const aura = done ? '<circle class="v-aura" cx="60" cy="60" r="60" fill="url(#gl_'+id+')"/>' : '';
+    const orn=(A.orn||'').replace(/@GG@/g,'url(#gg_'+id+')').replace(/@CG@/g,'url(#cg_'+id+')');
+    const fx=(A.fx||'').replace(/@FG@/g,'url(#fg_'+id+')').replace(/@GG@/g,'url(#gg_'+id+')');
+    return '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet"><defs>'
+      +'<clipPath id="clip_'+id+'">'+A.silh+'</clipPath>'
+      +'<linearGradient id="gg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#fff7da"/><stop offset="22%" stop-color="#f0d488"/><stop offset="45%" stop-color="#c89a34"/><stop offset="58%" stop-color="#f6e3a4"/><stop offset="74%" stop-color="#b07f24"/><stop offset="100%" stop-color="#6e4f18"/></linearGradient>'
+      +'<linearGradient id="cg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#f8caa0"/><stop offset="40%" stop-color="#c47a48"/><stop offset="60%" stop-color="#eaae80"/><stop offset="100%" stop-color="#764626"/></linearGradient>'
+      +'<radialGradient id="fg_'+id+'"><stop offset="0%" stop-color="#fff3b0"/><stop offset="55%" stop-color="#ff9a3c"/><stop offset="100%" stop-color="#e2521a"/></radialGradient>'
+      +'<radialGradient id="gl_'+id+'"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.9"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
+      +'<linearGradient id="spec_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.5"/><stop offset="38%" stop-color="#fff" stop-opacity="0.07"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'
+      +'<linearGradient id="shd_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a1606" stop-opacity="0.55"/></linearGradient>'
+      +'<filter id="sh_'+id+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-color="#160c03" flood-opacity="0.55"/></filter>'
+      +'<filter id="bl_'+id+'"><feGaussianBlur stdDeviation="2.4"/></filter>'
+      +'</defs>'
+      +'<ellipse cx="60" cy="112" rx="38" ry="5" fill="#160c03" opacity="0.45" filter="url(#bl_'+id+')"/>'
+      +aura
+      +'<g clip-path="url(#clip_'+id+')"><rect x="0" y="0" width="120" height="120" fill="#2a2238"/>'+bands+'<rect x="0" y="0" width="120" height="120" fill="url(#shd_'+id+')"/><rect x="0" y="0" width="120" height="66" fill="url(#spec_'+id+')"/></g>'
+      +'<g filter="url(#sh_'+id+')">'+orn+'</g>'+fx+'</svg>';
+  }
+  function renderBank(avail){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(avail[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
+  function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=BUILDINGS.map(function(b){ const inv=st[b.id]||{}; let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(inv[k]||0,b.cost[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
+  function openBuildModal(id){ currentBuildId=id; const m=document.getElementById('buildModal'); if(!m)return; m.classList.add('active'); m.onclick=function(e){ if(e.target===m) m.classList.remove('active'); }; const cl=document.getElementById('bmClose'); if(cl) cl.onclick=function(){ m.classList.remove('active'); }; const ia=document.getElementById('bmInvestAll'); if(ia) ia.onclick=function(){ investMax(id); }; const wd=document.getElementById('bmWithdraw'); if(wd) wd.onclick=function(){ withdrawAll(id); }; renderBuildModal(); }
+  function renderBuildModal(){ if(!currentBuildId)return; const b=BUILDINGS.find(function(x){return x.id===currentBuildId;}); if(!b)return; const st=loadInvest(); const inv=st[b.id]||{}; const avail=availableRes(); const done=buildingComplete(b,st);
+    const nm=document.getElementById('bmName'); if(nm) nm.textContent=b.name;
+    const art=document.getElementById('bmArt'); if(art) art.innerHTML=buildingArtSVG(b,inv);
+    const stt=document.getElementById('bmStatus'); if(stt) stt.textContent = done ? ('✓ הושלם! +'+b.points+' נקודות בנייה') : 'השקע משאבים כדי לבנות (' + b.points + ' נק׳)';
+    const rb=document.getElementById('bmRes'); if(rb){ rb.innerHTML=RESOURCES.filter(function(r){return b.cost[r.id];}).map(function(r){ const need=b.cost[r.id], iv=inv[r.id]||0, av=avail[r.id]||0; return '<div class="bm-row"><span class="bm-ric">'+r.icon+'</span><span class="bm-rnm">'+r.name+'</span><span class="bm-rct">'+iv+'/'+need+'</span><span class="bm-ravail">זמין: '+av+'</span><button class="bm-minus" data-r="'+r.id+'"'+(iv<=0?' disabled':'')+'>−</button><button class="bm-plus" data-r="'+r.id+'"'+((iv>=need||av<=0)?' disabled':'')+'>+</button></div>'; }).join(''); rb.querySelectorAll('.bm-plus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, 1); }); }); rb.querySelectorAll('.bm-minus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, -1); }); }); }
+  }
+  function investOne(bid,res,delta){ const b=BUILDINGS.find(function(x){return x.id===bid;}); if(!b)return; const st=loadInvest(); const o=invObj(st,bid); const cur=o[res]||0; const avail=availableRes(); if(delta>0){ if(cur>=b.cost[res] || (avail[res]||0)<=0) return; o[res]=cur+1; } else { if(cur<=0) return; o[res]=cur-1; } saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function investMax(bid){ const b=BUILDINGS.find(function(x){return x.id===bid;}); if(!b)return; const st=loadInvest(); const o=invObj(st,bid); Object.keys(b.cost).forEach(function(res){ let avail=availableRes()[res]||0; while((o[res]||0)<b.cost[res] && avail>0){ o[res]=(o[res]||0)+1; avail--; } }); saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function withdrawAll(bid){ const st=loadInvest(); if(st[bid]){ delete st[bid]; saveInvest(st); afterBuildChange(); renderBuildModal(); } }
+  function afterBuildChange(){ renderGrid(); renderBank(availableRes()); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(appReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ toast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; }
+  (function(){
+    function wire(){
+      const stage=document.getElementById('art3d'); if(!stage){ setTimeout(wire,600); return; }
+      let dragging=false, sx=0, sy=0, baseRy=0, ry=0, rx=0;
+      function apply(){ stage.style.transform='rotateX('+rx.toFixed(1)+'deg) rotateY('+ry.toFixed(1)+'deg)'; const g=document.getElementById('art3dGlare'); if(g){ const yy=((ry%360)+360)%360; g.style.setProperty('--gx',(30 - Math.sin(yy*Math.PI/180)*24)+'%'); g.style.setProperty('--gy',(22 + rx*0.8)+'%'); } }
+      stage.addEventListener('pointerdown',function(e){ dragging=true; sx=e.clientX; sy=e.clientY; baseRy=ry; stage.style.transition='none'; try{ stage.setPointerCapture(e.pointerId); }catch(x){} });
+      stage.addEventListener('pointermove',function(e){ if(!dragging)return; ry=baseRy+(e.clientX-sx)*0.8; rx=Math.max(-28,Math.min(28,-(e.clientY-sy)*0.4)); apply(); });
+      function end(){ if(!dragging)return; dragging=false; stage.style.transition='transform 0.5s ease'; rx=0; apply(); }
+      stage.addEventListener('pointerup',end); stage.addEventListener('pointercancel',end);
+    }
+    wire();
+  })();
+
+  function loadKupah(){ try{ const o=JSON.parse(localStorage.getItem('neria_kupah_v1')||'{}'); const k=Object.assign({rateP:10,rateS:2,link:'',tx:[]}, (o&&typeof o==='object')?o:{}); if(!Array.isArray(k.tx)) k.tx=[]; return k; }catch(e){ return {rateP:10,rateS:2,link:'',tx:[]}; } }
+  function saveKupah(k){ try{ localStorage.setItem('neria_kupah_v1', JSON.stringify(k)); }catch(e){} }
+  function kupahAccrued(k){ let pts=0; try{ pts=getTotalLifetimePoints(); }catch(e){} return Math.floor(pts/(k.rateP||10))*(k.rateS||2); }
+  function kupahSum(k,t){ return (k.tx||[]).reduce(function(s,x){ return s + (x.type===t ? (+x.amount||0) : 0); },0); }
+  function kupahFmtTs(ts){ const d=new Date(ts); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+  function kupahPay(){ const k=loadKupah(); const pend=Math.max(0,kupahAccrued(k)-kupahSum(k,'deposit')); try{ if(navigator.clipboard) navigator.clipboard.writeText(String(pend)); }catch(e){} alert('הפקד ₪'+pend+' לכיס "קופת הפרסים" בביט (כיס חיסכון יומיומי). הסכום הועתק — הדבק אותו בביט.'); if(k.link){ window.open(k.link,'_blank'); return; } try{ window.location.href='intent://#Intent;package=com.bnhp.payments.paymentsapp;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.bnhp.payments.paymentsapp;end'; }catch(e){ window.open('https://play.google.com/store/apps/details?id=com.bnhp.payments.paymentsapp','_blank'); } }
+  function kupahDep(){ const k=loadKupah(); const pend=Math.max(0,kupahAccrued(k)-kupahSum(k,'deposit')); if(pend<=0){ alert('אין סכום שממתין להפקדה.'); return; } if(!confirm('לרשום הפקדה של ₪'+pend+' לקופת ביט?')) return; k.tx.push({ts:Date.now(),type:'deposit',amount:pend,note:''}); saveKupah(k); renderKupah(); }
+  function kupahBuy(){ const k=loadKupah(); const name=prompt('איזה פרס קנית?',''); if(name===null) return; const amtS=prompt('כמה עלה הפרס? (₪)',''); if(amtS===null) return; const amt=parseFloat(amtS); if(!amt||amt<=0){ alert('סכום לא תקין.'); return; } k.tx.push({ts:Date.now(),type:'prize',amount:amt,note:(name||'').trim()}); saveKupah(k); renderKupah(); }
+  function kupahExport(){ const k=loadKupah(); const tx=(k.tx||[]).slice().sort(function(a,b){return a.ts-b.ts;}); const accr=kupahAccrued(k), dep=kupahSum(k,'deposit'), spent=kupahSum(k,'prize'); const rows=[['קופת הפרסים — דוח'],['נצבר מנקודות','₪'+accr],['סך הפקדות','₪'+dep],['הוצאת על פרסים','₪'+spent],['יתרה בקופת ביט','₪'+(dep-spent)],[''],['תאריך','סוג','סכום בשקלים','פירוט']]; tx.forEach(function(x){ rows.push([kupahFmtTs(x.ts), x.type==='deposit'?'הפקדה':'קניית פרס', x.amount, x.note||'']); }); const csv='﻿'+rows.map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(','); }).join('\n'); try{ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='kupat-prasim-'+getTodayDate()+'.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){URL.revokeObjectURL(url);},1000); }catch(e){ alert('שגיאה בייצוא'); } }
+  function kupahCfg(){ const k=loadKupah(); const link=prompt('קישור תשלום מותאם (ריק = פתיחת אפליקציית ביט):', k.link||''); if(link!==null) k.link=link.trim(); const rp=prompt('כל כמה נקודות?', k.rateP); if(rp!==null){ const n=parseInt(rp,10); if(n>0) k.rateP=n; } const rs=prompt('כמה שקלים לכל '+k.rateP+' נקודות?', k.rateS); if(rs!==null){ const n=parseFloat(rs); if(n>0) k.rateS=n; } saveKupah(k); renderKupah(); }
+  function renderKupah(){ const k=loadKupah(); const accr=kupahAccrued(k), dep=kupahSum(k,'deposit'), spent=kupahSum(k,'prize'); const pend=Math.max(0,accr-dep), inbit=Math.max(0,dep-spent); const set=function(id,v){ const el=document.getElementById(id); if(el) el.textContent='₪'+v; }; set('kupAccr',accr); set('kupPend',pend); set('kupInbit',inbit); set('kupSpent',spent); const led=document.getElementById('kupahLedger'); if(led){ const tx=(k.tx||[]).slice().sort(function(a,b){return b.ts-a.ts;}).slice(0,15); led.innerHTML = tx.length ? tx.map(function(x){ const isDep=x.type==='deposit'; return '<div class="kupah-tx"><span class="kupah-tx-d">'+kupahFmtTs(x.ts)+'</span><span class="kupah-tx-t">'+(isDep?'הפקדה לביט':('🎁 '+(x.note||'פרס')))+'</span><span class="kupah-tx-a" style="color:'+(isDep?'#2f8a3f':'#a32a2a')+'">'+(isDep?'+':'−')+'₪'+x.amount+'</span></div>'; }).join('') : '<div class="kupah-empty">אין עדיין תנועות. צבור נקודות, הפקד, וקנה פרסים.</div>'; } const w=function(id,fn){ const el=document.getElementById(id); if(el) el.onclick=fn; }; w('kupahPay',kupahPay); w('kupahDep',kupahDep); w('kupahBuy',kupahBuy); w('kupahExport',kupahExport); w('kupahCfg',kupahCfg); }
+
+  function renderBuilding(){ const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(appReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ toast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
+
+  // ===== Mitzvot manager (build your own + preset library) =====
+  let editingMitzvaId = null, selectedMitzvaIcon = '🎯';
+  function openMitzvotManager() { renderMitzvotManager(); document.getElementById('mitzvotManagerModal').classList.add('active'); }
+  function renderMitzvotManager() {
+    const list = document.getElementById('mitzvotManagerList');
+    list.innerHTML = MITZVOT.map(m => '<div class="goal-card" data-id="'+m.id+'"><div class="goal-icon">'+m.icon+'</div><div class="goal-info"><div class="goal-name">'+m.name+'</div><div class="goal-points">'+m.points+' נקודות'+(m.hasMinyan?' · ×2 במניין':'')+'</div></div><div class="goal-actions"><button class="goal-btn" data-action="edit">✏️</button><button class="goal-btn delete" data-action="delete">×</button></div></div>').join('');
+    list.querySelectorAll('.goal-card').forEach(card => { const id = card.dataset.id; card.querySelector('[data-action="edit"]').addEventListener('click', () => openMitzvaEdit(id)); card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteMitzva(id)); });
+  }
+  function deleteMitzva(id) { const m = MITZVOT.find(x => x.id === id); if (!m) return; if (!confirm('למחוק את "'+m.name+'"?')) return; MITZVOT = MITZVOT.filter(x => x.id !== id); saveMitzvot(); renderMitzvotManager(); render(); }
+  function openMitzvaEdit(id) { editingMitzvaId = id; const m = id ? MITZVOT.find(x => x.id === id) : null; document.getElementById('mitzvaEditTitle').textContent = m ? 'עריכת מצווה' : 'מצווה חדשה'; document.getElementById('mitzvaNameInput').value = m ? m.name : ''; document.getElementById('mitzvaPointsInput').value = m ? m.points : ''; document.getElementById('mitzvaMinyanInput').checked = m ? !!m.hasMinyan : false; selectedMitzvaIcon = m ? m.icon : '🎯'; renderMitzvaIconGrid(); document.getElementById('mitzvaEditModal').classList.add('active'); }
+  function renderMitzvaIconGrid() { const g = document.getElementById('mitzvaIconGrid'); g.innerHTML = MITZVA_ICONS.map(ic => '<button class="goal-icon-option'+(ic===selectedMitzvaIcon?' selected':'')+'" data-icon="'+ic+'">'+ic+'</button>').join(''); g.querySelectorAll('.goal-icon-option').forEach(b => b.addEventListener('click', () => { selectedMitzvaIcon = b.dataset.icon; renderMitzvaIconGrid(); })); }
+  function saveMitzvaEdit() { const name = document.getElementById('mitzvaNameInput').value.trim(); const pts = parseInt(document.getElementById('mitzvaPointsInput').value, 10); const minyan = document.getElementById('mitzvaMinyanInput').checked; if (!name) { alert('נא להזין שם'); return; } if (!pts || pts < 1) { alert('נא להזין מספר נקודות תקין'); return; } if (editingMitzvaId) { const m = MITZVOT.find(x => x.id === editingMitzvaId); if (m) { m.name = name; m.points = pts; m.hasMinyan = minyan; m.icon = selectedMitzvaIcon; } } else { MITZVOT.push({ id: 'm'+Date.now(), name: name, points: pts, hasMinyan: minyan, icon: selectedMitzvaIcon }); } saveMitzvot(); ensureItems(); document.getElementById('mitzvaEditModal').classList.remove('active'); renderMitzvotManager(); render(); }
+  function openPresetPicker() { const g = document.getElementById('presetGrid'); g.innerHTML = PRESET_MITZVOT.map((p,i) => '<button class="goal-card" data-idx="'+i+'" style="cursor:pointer;text-align:right;width:100%;border:1.5px solid var(--brown-light)"><div class="goal-icon">'+p.icon+'</div><div class="goal-info"><div class="goal-name">'+p.name+'</div><div class="goal-points">'+p.points+' נק׳'+(p.hasMinyan?' · ×2 במניין':'')+'</div></div><div style="color:var(--gold-dark);font-size:20px;font-weight:700">+</div></button>').join(''); g.querySelectorAll('[data-idx]').forEach(b => b.addEventListener('click', () => addPreset(parseInt(b.dataset.idx,10)))); document.getElementById('presetPickerModal').classList.add('active'); }
+  function addPreset(i) { const p = PRESET_MITZVOT[i]; if (!p) return; MITZVOT.push({ id:'m'+Date.now()+Math.floor(Math.random()*99), name:p.name, points:p.points, hasMinyan:p.hasMinyan, icon:p.icon }); saveMitzvot(); ensureItems(); toast('נוסף: '+p.name); renderMitzvotManager(); render(); }
+
+  // ===== Custom trackers / questionnaires (like the brit log) =====
+  const TRACKERS_KEY = 'neria_trackers_v1';
+  let editingTrackerId = null, trackerDraftQuestions = [], entryTrackerId = null, entryAnswers = {};
+  function loadTrackers() { try { const r = localStorage.getItem(TRACKERS_KEY); const a = r ? JSON.parse(r) : []; return Array.isArray(a) ? a : []; } catch(e) { return []; } }
+  function saveTrackers(a) { try { localStorage.setItem(TRACKERS_KEY, JSON.stringify(a)); } catch(e) {} pushUp(); }
+  function renderTrackers() {
+    const wrap = document.getElementById('trackersList'); if (!wrap) return;
+    const trackers = loadTrackers();
+    if (!trackers.length) { wrap.innerHTML = '<div class="brit-log-empty">עוד אין שאלונים. צור אחד משלך — למשל "מעקב לימוד" או "מעקב כעס".</div>'; return; }
+    wrap.innerHTML = trackers.map(t => {
+      const entries = (t.entries || []).slice().sort((a,b) => b.ts - a.ts).slice(0, 6);
+      const entriesHtml = entries.length ? entries.map(e => { const tags = (t.questions||[]).map(q => (e.answers && e.answers[q.id]) ? '<span class="brit-log-tag">✓ '+escapeHtml(q.text)+'</span>' : '').filter(Boolean).join(''); return '<div class="brit-log-entry"><div class="brit-log-entry-content"><div class="brit-log-entry-time">'+fmtBritTime(e.ts)+'</div>'+(e.text?'<div class="brit-log-entry-text">'+escapeHtml(e.text)+'</div>':'')+(tags?'<div class="brit-log-entry-tags">'+tags+'</div>':'')+'</div><button class="brit-log-entry-del" data-tid="'+t.id+'" data-ts="'+e.ts+'">×</button></div>'; }).join('') : '<div class="brit-log-empty">אין עדיין רישומים.</div>';
+      return '<div class="brit-log-section"><div class="brit-log-title">'+escapeHtml(t.title)+' <button class="goal-btn" data-tedit="'+t.id+'" style="float:left;width:30px;height:30px;font-size:13px">✏️</button><button class="goal-btn delete" data-tdel="'+t.id+'" style="float:left;width:30px;height:30px;margin-left:4px">×</button></div>'+(t.subtitle?'<div class="brit-log-subtitle">'+escapeHtml(t.subtitle)+'</div>':'')+'<div class="brit-log-input-row"><input type="text" class="brit-log-input" id="tinp_'+t.id+'" placeholder="הערה (לא חובה)" maxlength="200"><button class="brit-log-add-btn" data-tdoc="'+t.id+'">תעד</button></div><div class="brit-log-list">'+entriesHtml+'</div></div>';
+    }).join('');
+    wrap.querySelectorAll('[data-tdoc]').forEach(b => b.addEventListener('click', () => openTrackerEntry(b.dataset.tdoc)));
+    wrap.querySelectorAll('[data-tedit]').forEach(b => b.addEventListener('click', () => openTrackerEdit(b.dataset.tedit)));
+    wrap.querySelectorAll('[data-tdel]').forEach(b => b.addEventListener('click', () => deleteTracker(b.dataset.tdel)));
+    wrap.querySelectorAll('[data-ts][data-tid]').forEach(b => b.addEventListener('click', () => deleteTrackerEntry(b.dataset.tid, parseInt(b.dataset.ts,10))));
+  }
+  function deleteTracker(id) { const t = loadTrackers().find(x => x.id === id); if (!t) return; if (!confirm('למחוק את השאלון "'+t.title+'" וכל הרישומים שלו?')) return; saveTrackers(loadTrackers().filter(x => x.id !== id)); renderTrackers(); }
+  function deleteTrackerEntry(tid, ts) { const all = loadTrackers(); const t = all.find(x => x.id === tid); if (!t) return; t.entries = (t.entries||[]).filter(e => e.ts !== ts); saveTrackers(all); renderTrackers(); }
+  function openTrackerEdit(id) { editingTrackerId = id; const t = id ? loadTrackers().find(x => x.id === id) : null; document.getElementById('trackerEditTitleHead').textContent = t ? 'עריכת שאלון' : 'שאלון/מעקב חדש'; document.getElementById('trackerTitleInput').value = t ? t.title : ''; document.getElementById('trackerSubtitleInput').value = t ? (t.subtitle||'') : ''; trackerDraftQuestions = t ? JSON.parse(JSON.stringify(t.questions||[])) : []; renderTrackerQuestions(); document.getElementById('trackerEditModal').classList.add('active'); }
+  function renderTrackerQuestions() {
+    const c = document.getElementById('trackerQuestionsList');
+    c.innerHTML = trackerDraftQuestions.map((q,i) => '<div class="brit-log-input-row"><input type="text" class="brit-log-input" data-qidx="'+i+'" value="'+escapeHtml(q.text).replace(/"/g,'&quot;')+'" placeholder="שאלה (כן/לא)"><button class="goal-btn delete" data-qdel="'+i+'" style="width:36px;height:36px">×</button></div>').join('');
+    c.querySelectorAll('[data-qidx]').forEach(inp => inp.addEventListener('input', () => { trackerDraftQuestions[parseInt(inp.dataset.qidx,10)].text = inp.value; }));
+    c.querySelectorAll('[data-qdel]').forEach(b => b.addEventListener('click', () => { trackerDraftQuestions.splice(parseInt(b.dataset.qdel,10),1); renderTrackerQuestions(); }));
+  }
+  function addTrackerQuestion() { trackerDraftQuestions.push({ id: 'q'+Date.now()+Math.floor(Math.random()*999), text: '' }); renderTrackerQuestions(); }
+  function saveTrackerEdit() {
+    const title = document.getElementById('trackerTitleInput').value.trim(); const subtitle = document.getElementById('trackerSubtitleInput').value.trim();
+    if (!title) { alert('נא להזין שם לשאלון'); return; }
+    const questions = trackerDraftQuestions.filter(q => (q.text||'').trim()).map(q => ({ id: q.id, text: q.text.trim() }));
+    const all = loadTrackers();
+    if (editingTrackerId) { const t = all.find(x => x.id === editingTrackerId); if (t) { t.title = title; t.subtitle = subtitle; t.questions = questions; } } else { all.push({ id:'t'+Date.now(), title, subtitle, questions, entries: [] }); }
+    saveTrackers(all); document.getElementById('trackerEditModal').classList.remove('active'); renderTrackers();
+  }
+  function openTrackerEntry(id) {
+    const t = loadTrackers().find(x => x.id === id); if (!t) return;
+    entryTrackerId = id; entryAnswers = {};
+    document.getElementById('trackerEntryTitle').textContent = t.title;
+    const qc = document.getElementById('trackerEntryQuestions');
+    qc.innerHTML = (t.questions||[]).map(q => '<div class="fall-quiz-q">'+escapeHtml(q.text)+'</div><div class="fall-quiz-options" data-qid="'+q.id+'"><button class="fall-quiz-btn" data-qid="'+q.id+'" data-val="yes">כן</button><button class="fall-quiz-btn" data-qid="'+q.id+'" data-val="no">לא</button></div>').join('') || '<div class="brit-log-subtitle">אין שאלות בשאלון הזה — רק הערה חופשית.</div>';
+    qc.querySelectorAll('.fall-quiz-btn').forEach(b => b.addEventListener('click', () => { entryAnswers[b.dataset.qid] = (b.dataset.val === 'yes'); b.parentElement.querySelectorAll('.fall-quiz-btn').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); }));
+    const ti = document.getElementById('tinp_'+id); document.getElementById('trackerEntryNote').value = ti ? ti.value : '';
+    document.getElementById('trackerEntryModal').classList.add('active');
+  }
+  function saveTrackerEntry() {
+    const all = loadTrackers(); const t = all.find(x => x.id === entryTrackerId); if (!t) return;
+    if (!t.entries) t.entries = [];
+    t.entries.push({ ts: Date.now(), text: (document.getElementById('trackerEntryNote').value||'').trim(), answers: entryAnswers });
+    saveTrackers(all); document.getElementById('trackerEntryModal').classList.remove('active'); renderTrackers();
+  }
+
+  // ===== Daily חיזוק, streak, target, celebrations, backup =====
+  const HIZUK = [
+    'כל יום הוא הזדמנות חדשה להתחיל מחדש.','מעט מעט — ככה בונים הרגלים גדולים.','הקב״ה אוהב אותך ושמח בכל צעד קטן שלך.','איזהו גיבור? הכובש את יצרו.','גם נפילה היא חלק מהדרך — מה שחשוב זה לקום.','כל מצווה קטנה היא אבן יקרה בכתר שלך.','היום אתה יכול להיות טוב יותר מאתמול.','השתדלות שלך ועזרת ה׳ יחד — מביאות להצלחה.','אל תזלזל בצעד קטן, הוא מצטרף לדרך גדולה.','יראת ה׳ היא ראשית החכמה.','שמחה היא המפתח לעבודת ה׳.','כל התחלה קשה — אבל אתה כבר התחלת.','מי שמתמיד — מנצח.','הקב״ה לא מבקש שתהיה מושלם, רק שתתקדם.','הניצחון הגדול ביותר הוא על עצמך.','תן לעצמך קרדיט על כל מה שכבר עשית.','רצף קטן הופך להרגל, והרגל הופך לאופי.','בכל רגע אתה בוחר מחדש מי אתה רוצה להיות.','התפילה שלך עולה ופועלת, גם כשאינך רואה.','אחרי החושך תמיד בא האור.','גם זו לטובה — הכל מכוון מלמעלה לטובתך.','כוחך גדול ממה שאתה חושב.','עוד יום, עוד הזדמנות לזכות.','הדרך אל הקודש עוברת בצעדים קטנים וקבועים.','מי שזורע בדמעה — יקצור ברינה.','אל תשווה את עצמך לאחרים, רק לעצמך של אתמול.','כל יום נקי הוא ניצחון אמיתי.','ההתמדה חשובה יותר מההישג החד-פעמי.','אתה בדרך הנכונה — תמשיך.','קום, התנער, והתחל מחדש היום.','ה׳ עמך, גיבור החיל.'
+  ];
+  function renderHizuk() { const el = document.getElementById('hizukBanner'); if (!el) return; const d = new Date(); const doy = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000); el.innerHTML = '✦ ' + HIZUK[doy % HIZUK.length] + ' ✦'; }
+  function computeStreak() {
+    const history = loadHistory(), today = getTodayDate(); const by = {}; history.forEach(h => by[h.date] = h.score); by[today] = calcToday();
+    let current = 0; const d = new Date(); if ((by[today]||0) <= 0) d.setDate(d.getDate()-1);
+    while (true) { const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); if ((by[ds]||0) > 0) { current++; d.setDate(d.getDate()-1); } else break; }
+    const dates = Object.keys(by).filter(k => by[k] > 0).sort(); let best=0, cur=0, prev=null;
+    dates.forEach(ds => { if (prev) { const pd=new Date(prev); pd.setDate(pd.getDate()+1); cur = (pd.toISOString().slice(0,10)===ds)?cur+1:1; } else cur=1; if (cur>best) best=cur; prev=ds; });
+    return { current, best };
+  }
+  const TARGET_KEY = 'neria_daily_target_v1';
+  function loadTarget() { const v = parseInt(localStorage.getItem(TARGET_KEY)||'',10); return (v && v>0) ? v : 80; }
+  function saveTarget(v) { try { localStorage.setItem(TARGET_KEY, String(v)); } catch(e) {} }
+  function renderStreakTarget() {
+    const s = computeStreak();
+    const sv = document.getElementById('streakVal'); if (sv) sv.textContent = s.current;
+    const sb = document.getElementById('streakBest'); if (sb) sb.textContent = s.best;
+    const target = loadTarget(), score = calcToday(); const pct = Math.max(0, Math.min(100, target>0?(score/target*100):0));
+    const ts = document.getElementById('targetState'); if (ts) ts.textContent = score + '/' + target;
+    const tf = document.getElementById('targetFill'); if (tf) tf.style.width = pct + '%';
+    const tc = document.getElementById('targetCard'); if (tc) tc.classList.toggle('reached', target>0 && score >= target);
+  }
+  let appReady = false;
+  function checkCelebrations() {
+    if (!appReady) return; const date = getTodayDate(), score = calcToday(), target = loadTarget();
+    if (target>0 && score>=target && !localStorage.getItem('neria_celeb_target_'+date)) { try{localStorage.setItem('neria_celeb_target_'+date,'1');}catch(e){} toast('🎉 הגעת ליעד היומי! '+score+' נק׳'); }
+    if (isPerfectDay(todayState.items) && !localStorage.getItem('neria_celeb_perfect_'+date)) { try{localStorage.setItem('neria_celeb_perfect_'+date,'1');}catch(e){} toast('⭐ יום מושלם! כל הכבוד!'); }
+  }
+  function exportBackup() {
+    const data = {}; for (let i=0;i<localStorage.length;i++) { const k = localStorage.key(i); if (k && k.indexOf('neria_')===0) data[k] = localStorage.getItem(k); }
+    try { const blob = new Blob([JSON.stringify({ _app:'neria-nikud', _date:getTodayDate(), data }, null, 2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'gibuy-neria-'+getTodayDate()+'.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url),1000); toast('הגיבוי הורד'); } catch(e) { alert('שגיאה בגיבוי'); }
+  }
+  function importBackup(file) {
+    const reader = new FileReader();
+    reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('neria_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot(); loadToday(); loadGoals(); render(); pushUp(); toast('שוחזר בהצלחה'); } catch(e) { alert('קובץ גיבוי לא תקין'); } };
+    reader.readAsText(file);
+  }
+
+  function render() {
+    document.getElementById('dateValue').textContent = fmtDate(todayState.date);
+    document.getElementById('scoreTodayMax').textContent = calcMax();
+    const list = document.getElementById('mitzvotList');
+    list.innerHTML = MITZVOT.map(m => {
+      const item = todayState.items[m.id] || { done:false, minyan:false, extras:{} };
+      const extras = item.extras || {};
+      const eff = mitzvaItemPoints(m, Object.assign({}, item, { done:true }));
+      const hasExtras = m.extras && m.extras.length;
+      const anyOn = hasExtras && m.extras.some(ex => extras[ex.id]);
+      const bonus = (m.hasMinyan && item.minyan ? ' (×2 במניין)' : '') + (hasExtras ? m.extras.filter(ex=>extras[ex.id]).map(ex=>' +'+ex.points).join('') : '');
+      return '<div class="mitzva-card' + (item.done?' done':'') + (anyOn?' expanded':'') + '" data-id="'+m.id+'"><div class="mitzva-row">' +
+        (hasExtras ? '<button class="mitzva-expand" data-action="expand"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' : '') +
+        '<div class="mitzva-icon">'+m.icon+'</div><div class="mitzva-info"><div class="mitzva-name">'+m.name+'</div><div class="mitzva-points"><strong>'+eff+'</strong> נקודות'+bonus+'</div></div>' +
+        '<button class="mitzva-check" data-action="check"><svg viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"></polyline></svg></button></div>' +
+        (m.hasMinyan ? '<div class="minyan-toggle"><div class="minyan-toggle-label">במניין <span class="bonus">×2 נקודות</span></div><label class="switch"><input type="checkbox" data-action="minyan"'+(item.minyan?' checked':'')+'><span class="switch-slider"></span></label></div>' : '') +
+        (hasExtras ? '<div class="mitzva-extras">' + m.extras.map(ex => '<div class="minyan-toggle"><div class="minyan-toggle-label">'+ex.label+' <span class="bonus">+'+ex.points+' נקודות</span></div><label class="switch"><input type="checkbox" data-action="extra" data-extra="'+ex.id+'"'+(extras[ex.id]?' checked':'')+'><span class="switch-slider"></span></label></div>').join('') + '</div>' : '') +
+      '</div>';
+    }).join('');
+    list.querySelectorAll('.mitzva-card').forEach(card => {
+      const id = card.dataset.id;
+      card.querySelector('[data-action="check"]').addEventListener('click', () => { todayState.items[id].done = !todayState.items[id].done; saveToday(); render(); });
+      const mi = card.querySelector('[data-action="minyan"]'); if (mi) mi.addEventListener('change', () => { todayState.items[id].minyan = mi.checked; saveToday(); render(); });
+      const ex = card.querySelector('[data-action="expand"]'); if (ex) ex.addEventListener('click', () => card.classList.toggle('expanded'));
+      card.querySelectorAll('[data-action="extra"]').forEach(inp => { inp.addEventListener('change', () => { if (!todayState.items[id].extras) todayState.items[id].extras = {}; todayState.items[id].extras[inp.dataset.extra] = inp.checked; saveToday(); render(); }); });
+    });
+    document.getElementById('scoreToday').textContent = calcToday();
+    renderSummary(); renderHistory(); renderGoals(); renderChart(); renderJournal(); renderBritLog(); renderReflection(); renderTrackers();
+    renderHizuk(); renderStreakTarget(); renderBuilding(); renderKupah(); checkCelebrations();
+  }
+
+  function renderSummary() {
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const wa = new Date(); wa.setDate(wa.getDate()-6); const was = wa.toISOString().slice(0,10);
+    let week = ts; history.forEach(h => { if (h.date >= was && h.date < today) week += h.score; });
+    const ma = new Date(); ma.setDate(ma.getDate()-29); const mas = ma.toISOString().slice(0,10);
+    let month = ts; history.forEach(h => { if (h.date >= mas && h.date < today) month += h.score; });
+    let total = ts; history.forEach(h => { if (h.date !== today) total += h.score; });
+    document.getElementById('scoreWeek').textContent = week;
+    document.getElementById('scoreMonth').textContent = month;
+    document.getElementById('scoreTotal').textContent = total;
+  }
+
+  function renderHistory() {
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    let all = history.slice();
+    if (ts > 0 && !history.find(h => h.date === today)) all.push({ date: today, score: ts });
+    else if (ts > 0) all = all.map(h => h.date === today ? Object.assign({}, h, { score: ts }) : h);
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date)).slice(0, 14);
+    const c = document.getElementById('scoreHistory');
+    if (!sorted.length) { c.innerHTML = '<div class="history-empty">עוד אין היסטוריה. סיים את היום הראשון!</div>'; return; }
+    const max = calcMax();
+    c.innerHTML = sorted.map(h => { const pct = Math.min(100,(h.score/max)*100); const it = h.date===today; return '<div class="history-row" data-date="'+h.date+'" style="cursor:pointer"><div class="history-date">'+fmtDate(h.date)+(it?' · היום':'')+'</div><div class="history-bar"><div class="history-bar-fill" style="width:'+pct+'%"></div></div><div class="history-score">'+h.score+'</div></div>'; }).join('');
+    c.querySelectorAll('.history-row').forEach(row => row.addEventListener('click', () => openEditDay(row.dataset.date)));
+  }
+
+  // ===== Goals =====
+  function getTotalLifetimePoints() { const history = loadHistory(), today = getTodayDate(); let t = calcToday(); history.forEach(h => { if (h.date !== today) t += h.score; }); try { t += getBuildPoints(); } catch(e) {} return t; }
+  function renderGoals() {
+    goalsState.sort((a,b) => a.points - b.points);
+    const total = getTotalLifetimePoints();
+    const next = goalsState.find(g => !g.claimed && total < g.points);
+    const nextEl = document.getElementById('goalsNext');
+    if (next) {
+      const remaining = next.points - total;
+      const prev = goalsState.filter(g => g.points < next.points).reduce((m,g) => Math.max(m,g.points), 0);
+      const pct = Math.max(0, Math.min(100, ((total-prev)/(next.points-prev))*100));
+      nextEl.innerHTML = '<div class="goals-next"><div class="goals-next-label">היעד הבא</div><div class="goals-next-name"><span style="font-size:26px">'+next.icon+'</span><span>'+next.name+'</span></div><div class="goals-next-progress"><div class="goals-next-progress-fill" style="width:'+pct+'%"></div></div><div class="goals-next-stats">עוד '+remaining+' נקודות ('+total+' / '+next.points+')</div></div>';
+    } else nextEl.innerHTML = '';
+    const listEl = document.getElementById('goalsList');
+    listEl.innerHTML = goalsState.map(g => { const unlocked = total >= g.points && !g.claimed; const cls = g.claimed ? 'claimed' : (unlocked ? 'unlocked' : ''); return '<div class="goal-card '+cls+'" data-id="'+g.id+'"><div class="goal-icon">'+g.icon+'</div><div class="goal-info"><div class="goal-name">'+g.name+'</div><div class="goal-points">'+g.points+' נקודות'+(g.claimed?' · מומש ✓':(unlocked?' · זמין!':''))+'</div></div><div class="goal-actions">'+(unlocked?'<button class="goal-btn claim" data-action="claim">✓</button>':'')+'<button class="goal-btn" data-action="edit">✏️</button><button class="goal-btn delete" data-action="delete">×</button></div></div>'; }).join('');
+    listEl.querySelectorAll('.goal-card').forEach(card => { const id = card.dataset.id; const cb = card.querySelector('[data-action="claim"]'); if (cb) cb.addEventListener('click', () => claimGoal(id)); card.querySelector('[data-action="edit"]').addEventListener('click', () => openGoalEdit(id)); card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteGoal(id)); });
+    checkCeleb(total);
+  }
+  function checkCeleb(total) {
+    const unlocked = goalsState.filter(g => total >= g.points && !g.claimed);
+    if (!unlocked.length) { lastCelebId = null; return; }
+    unlocked.sort((a,b) => b.points - a.points); const top = unlocked[0];
+    if (top.id !== lastCelebId) { const sk = 'neria_goal_seen_' + top.id; if (!localStorage.getItem(sk)) { try { localStorage.setItem(sk,'1'); } catch(e) {} showCeleb(top); } lastCelebId = top.id; }
+  }
+  function showCeleb(goal) {
+    document.getElementById('celebIcon').textContent = goal.icon;
+    document.getElementById('celebTitle').textContent = goal.name;
+    document.getElementById('celebPoints').textContent = goal.points + ' נקודות';
+    document.getElementById('celebClaimBtn').onclick = () => { claimGoal(goal.id); document.getElementById('goalCelebrationModal').classList.remove('active'); };
+    document.getElementById('goalCelebrationModal').classList.add('active');
+  }
+  function claimGoal(id) { const g = goalsState.find(x => x.id === id); if (g) { g.claimed = true; saveGoals(); renderGoals(); } }
+  function deleteGoal(id) { const g = goalsState.find(x => x.id === id); if (!g) return; if (!confirm('למחוק את היעד "'+g.name+'"?')) return; goalsState = goalsState.filter(x => x.id !== id); saveGoals(); renderGoals(); }
+  function openGoalEdit(id) { editingGoalId = id; const g = id ? goalsState.find(x => x.id === id) : null; document.getElementById('goalEditTitle').textContent = g ? 'ערוך יעד' : 'יעד חדש'; document.getElementById('goalNameInput').value = g ? g.name : ''; document.getElementById('goalPointsInput').value = g ? g.points : ''; selectedIcon = g ? g.icon : '🎁'; renderIconGrid(); document.getElementById('goalEditModal').classList.add('active'); }
+  function renderIconGrid() { const grid = document.getElementById('goalIconGrid'); grid.innerHTML = GOAL_ICONS.map(ic => '<button class="goal-icon-option'+(ic===selectedIcon?' selected':'')+'" data-icon="'+ic+'">'+ic+'</button>').join(''); grid.querySelectorAll('.goal-icon-option').forEach(b => b.addEventListener('click', () => { selectedIcon = b.dataset.icon; renderIconGrid(); })); }
+  function saveGoalEdit() { const name = document.getElementById('goalNameInput').value.trim(); const pts = parseInt(document.getElementById('goalPointsInput').value, 10); if (!name) { alert('נא להזין שם לפרס'); return; } if (!pts || pts < 1) { alert('נא להזין מספר נקודות תקין'); return; } if (editingGoalId) { const g = goalsState.find(x => x.id === editingGoalId); if (g) { g.name = name; g.points = pts; g.icon = selectedIcon; } } else { goalsState.push({ id:'g'+Date.now(), points:pts, name:name, icon:selectedIcon, claimed:false }); } saveGoals(); document.getElementById('goalEditModal').classList.remove('active'); renderGoals(); }
+
+  // ===== Journal =====
+  function getDayNote(date) { return loadNotes()[date] || ''; }
+  function getAllJournalDays() {
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const hasItems = todayState.items && Object.values(todayState.items).some(it => it && it.done);
+    const notes = loadNotes();
+    const all = history.filter(h => h.date !== today).map(h => ({ date: h.date, score: h.score||0, items: h.items||{}, note: notes[h.date]||'' }));
+    if (ts > 0 || hasItems) all.push({ date: today, score: ts, items: todayState.items||{}, note: notes[today]||'' });
+    else if (notes[today]) all.push({ date: today, score: 0, items: {}, note: notes[today] });
+    return all;
+  }
+  function renderJournalStats() {
+    const all = getAllJournalDays();
+    const totalDays = all.length, totalPoints = all.reduce((s,d) => s+(d.score||0), 0), perfect = all.filter(d => isPerfectDay(d.items)).length;
+    let best = 0, cur = 0, prev = null;
+    all.filter(d => d.score > 0).map(d => d.date).sort().forEach(date => { if (prev) { const pd = new Date(prev); pd.setDate(pd.getDate()+1); cur = (pd.toISOString().slice(0,10) === date) ? cur+1 : 1; } else cur = 1; if (cur > best) best = cur; prev = date; });
+    document.getElementById('journalStatsBar').innerHTML = '<div class="journal-stat"><div class="journal-stat-value">'+totalDays+'</div><div class="journal-stat-label">ימים</div></div><div class="journal-stat"><div class="journal-stat-value">'+perfect+'</div><div class="journal-stat-label">⭐ מושלמים</div></div><div class="journal-stat"><div class="journal-stat-value">'+best+'</div><div class="journal-stat-label">רצף שיא</div></div><div class="journal-stat"><div class="journal-stat-value">'+totalPoints+'</div><div class="journal-stat-label">סה״כ נק׳</div></div>';
+  }
+  function renderJournal() {
+    renderJournalStats();
+    const container = document.getElementById('journalList'), today = getTodayDate();
+    let all = getAllJournalDays();
+    if (journalSearchDate) all = all.filter(d => d.date === journalSearchDate);
+    else if (journalFilter === 'week' || journalFilter === 'month') { const days = journalFilter === 'week' ? 6 : 29; const co = new Date(); co.setDate(co.getDate()-days); const cos = co.toISOString().slice(0,10); all = all.filter(d => d.date >= cos); }
+    else if (journalFilter === 'active') all = all.filter(d => d.score > 0);
+    else if (journalFilter === 'perfect') all = all.filter(d => isPerfectDay(d.items));
+    else if (journalFilter === 'notes') all = all.filter(d => d.note && d.note.length > 0);
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date));
+    if (!sorted.length) { container.innerHTML = '<div class="journal-empty">'+(journalSearchDate?'לא נמצא רישום לתאריך זה.':(journalFilter==='all'?'עוד אין רישומים ביומן.<br>כל מצווה שתסמן תופיע כאן.':'אין רישומים תואמים לפילטר זה.'))+'</div>'; return; }
+    container.innerHTML = sorted.map(h => {
+      const it = h.date === today, items = h.items || {}, perfect = isPerfectDay(items);
+      const mh = MITZVOT.map(m => { const item = items[m.id] || { done:false, minyan:false }; const done = !!item.done; const wm = done && m.hasMinyan && item.minyan; const pts = mitzvaItemPoints(m, item); const extraMarks = (done && m.extras && item.extras) ? m.extras.filter(ex => item.extras[ex.id]).map(ex => '<span class="minyan-mark">'+ex.label+'</span>').join('') : ''; const mark = (wm?'<span class="minyan-mark">×2 במניין</span>':'')+extraMarks; const status = done ? '<span class="journal-mitzva-status done">✓</span>' : '<span class="journal-mitzva-status skipped">○</span>'; return '<div class="journal-mitzva-item'+(done?'':' skipped')+'">'+status+'<div class="journal-mitzva-item-icon">'+m.icon+'</div><div class="journal-mitzva-item-name">'+m.name+mark+'</div><div class="journal-mitzva-item-points">'+(done?'+'+pts:'—')+'</div></div>'; }).join('');
+      const badges = (it?'<span class="journal-entry-today-badge">היום</span>':'') + (perfect?'<span class="journal-perfect-badge">⭐ מושלם</span>':'');
+      const noteHtml = h.note ? '<div class="journal-note-text">'+escapeHtml(h.note)+'</div>' : '<div class="journal-note-empty">אין הערה ליום זה</div>';
+      return '<div class="journal-entry'+(it?' today':'')+(perfect?' perfect':'')+'"><div class="journal-entry-header"><div class="journal-entry-date">'+fmtDate(h.date)+badges+'</div><div class="journal-entry-score">'+h.score+' נק׳</div></div><div class="journal-mitzvot-list">'+mh+'</div><div class="journal-note-section"><div class="journal-note-icon">📝</div>'+noteHtml+'<button class="journal-note-edit" data-note-edit="'+h.date+'">'+(h.note?'ערוך':'+ הוסף')+'</button></div></div>';
+    }).join('');
+    container.querySelectorAll('[data-note-edit]').forEach(b => b.addEventListener('click', () => openNoteEditor(b.dataset.noteEdit)));
+  }
+  function openNoteEditor(date) { editingNoteDate = date; document.getElementById('noteEditorDate').textContent = fmtDate(date); document.getElementById('noteEditorTextarea').value = getDayNote(date); document.getElementById('noteEditorModal').classList.add('active'); }
+  function saveNoteEditor() { if (!editingNoteDate) return; const notes = loadNotes(); const txt = (document.getElementById('noteEditorTextarea').value || '').trim(); if (txt) notes[editingNoteDate] = txt; else delete notes[editingNoteDate]; saveNotes(notes); document.getElementById('noteEditorModal').classList.remove('active'); renderJournal(); }
+
+  // ===== Chart =====
+  function renderChart() {
+    const content = document.getElementById('chartContent'), statsEl = document.getElementById('chartStats'), tooltip = document.getElementById('chartTooltip');
+    if (!content) return;
+    const history = loadHistory(), today = getTodayDate(), ts = calcToday();
+    const days = [];
+    for (let i = chartRange - 1; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate()-i); const ds = d.toISOString().slice(0,10); let score = 0; if (ds === today) score = ts; else { const e = history.find(h => h.date === ds); if (e) score = e.score; } days.push({ date: ds, score, isToday: ds === today }); }
+    if (!days.some(d => d.score > 0)) { content.innerHTML = '<div class="chart-empty">עוד אין מספיק נתונים.<br>סיים יום אחד לפחות כדי לראות את הגרף.</div>'; statsEl.innerHTML = ''; return; }
+    const W=320,H=180,pT=16,pB=28,pL=30,pR=10,cW=W-pL-pR,cH=H-pT-pB;
+    const max = calcMax(); const yMax = Math.max(max, ...days.map(d=>d.score)); const yStep = Math.ceil(yMax/4/25)*25; const yCeil = yStep*4 || 100;
+    const stepX = cW / Math.max(1, days.length-1);
+    const points = days.map((d,i) => ({ x: pL+i*stepX, y: pT+cH-(d.score/yCeil)*cH, score: d.score, date: d.date, isToday: d.isToday }));
+    const linePath = points.map((p,i) => (i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+    const areaPath = linePath + ' L'+points[points.length-1].x.toFixed(1)+','+(pT+cH)+' L'+points[0].x.toFixed(1)+','+(pT+cH)+' Z';
+    let grid = ''; for (let i=0;i<=4;i++) { const y=pT+(cH*i/4); const label=yCeil-(yCeil*i/4); grid += '<line class="chart-grid-line" x1="'+pL+'" y1="'+y+'" x2="'+(W-pR)+'" y2="'+y+'"/><text class="chart-axis-label" x="'+(pL-4)+'" y="'+(y+3)+'" text-anchor="end">'+Math.round(label)+'</text>'; }
+    const every = chartRange<=7?1:(chartRange<=14?2:5); let xl='';
+    points.forEach((p,i) => { if (i%every===0 || i===points.length-1) { const d=new Date(p.date); xl += '<text class="chart-axis-label" x="'+p.x+'" y="'+(H-12)+'" text-anchor="middle">'+d.getDate()+'/'+(d.getMonth()+1)+'</text>'; } });
+    let circles=''; points.forEach((p,i) => circles += '<circle class="chart-point'+(p.isToday?' today':'')+'" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" data-idx="'+i+'"/>');
+    content.innerHTML = '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c9a961" stop-opacity="0.5"/><stop offset="100%" stop-color="#c9a961" stop-opacity="0"/></linearGradient></defs>'+grid+xl+'<path class="chart-area" d="'+areaPath+'"/><path class="chart-line" d="'+linePath+'"/>'+circles+'</svg>';
+    content.querySelectorAll('.chart-point').forEach(circle => { circle.addEventListener('click', (e) => { e.stopPropagation(); const p = points[parseInt(circle.dataset.idx,10)]; const d = new Date(p.date); const dn = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת']; tooltip.textContent = dn[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1)+' · '+p.score+' נק׳'; const sr = content.querySelector('svg').getBoundingClientRect(); const cr = content.parentElement.getBoundingClientRect(); tooltip.style.left = (sr.left-cr.left+p.x*(sr.width/W))+'px'; tooltip.style.top = (sr.top-cr.top+p.y*(sr.height/H)-8)+'px'; tooltip.classList.add('active'); setTimeout(() => tooltip.classList.remove('active'), 2000); }); });
+    const totalR = days.reduce((s,d)=>s+d.score,0); const dws = days.filter(d=>d.score>0).length; const avg = dws>0?Math.round(totalR/dws):0; const best = Math.max(...days.map(d=>d.score));
+    let streak = 0; for (let i=days.length-1;i>=0;i--) { if (days[i].score>0) streak++; else if (i!==days.length-1) break; else continue; }
+    statsEl.innerHTML = '<div class="chart-stat"><div class="chart-stat-value">'+avg+'</div><div class="chart-stat-label">ממוצע יומי</div></div><div class="chart-stat"><div class="chart-stat-value">'+best+'</div><div class="chart-stat-label">שיא</div></div><div class="chart-stat"><div class="chart-stat-value">'+streak+'</div><div class="chart-stat-label">רצף ימים</div></div><div class="chart-stat"><div class="chart-stat-value">'+totalR+'</div><div class="chart-stat-label">סה״כ</div></div>';
+  }
+
+  function endDay() { const score = calcToday(), date = todayState.date || getTodayDate(); const h = loadHistory(); const idx = h.findIndex(e => e.date === date); if (idx>=0) h[idx] = { date, score, items: todayState.items }; else h.push({ date, score, items: todayState.items }); saveHistory(h); pushUp(); toast('נשמר! '+score+' נקודות'); render(); }
+
+  function exportJournal() {
+    const all = getAllJournalDays(); if (!all.length) { alert('אין עדיין רישומים לייצא.'); return; }
+    const sorted = all.sort((a,b) => b.date.localeCompare(a.date));
+    const lines = ['יומן ניקוד יומי — נריה','═══════════════════════════','יוצא בתאריך: '+fmtDate(getTodayDate()),'סך ימים: '+all.length,'סך נקודות: '+all.reduce((s,d)=>s+d.score,0),''];
+    sorted.forEach(h => { lines.push('───────────────────────────'); lines.push(fmtDate(h.date)+' · '+h.score+' נקודות'+(isPerfectDay(h.items)?' ⭐ מושלם':'')); MITZVOT.forEach(m => { const item = h.items[m.id]||{done:false,minyan:false}; lines.push('  '+(item.done?'✓':'✗')+' '+m.name+(item.done&&m.hasMinyan&&item.minyan?' (במניין ×2)':'')); }); if (h.note) lines.push('  📝 '+h.note); });
+    try { const blob = new Blob([lines.join('\n')], { type:'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'יומן-ניקוד-נריה-'+getTodayDate()+'.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch(e) { alert(lines.join('\n')); }
+  }
+
+  function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+  function setSync(s) { const el = document.getElementById('syncStatus'); if (el) el.textContent = s; }
+
+  // ===== Sync — של נריה (כותב/קורא /neria.json בלבד) =====
+  let pushTimer = null;
+  function pushUp() { clearTimeout(pushTimer); pushTimer = setTimeout(doPush, 800); }
+  async function doPush() {
+    try { const url = await dbUrl(); const payload = { name:'נריה', score_today: todayState, today_score: calcToday(), mitzvot: MITZVOT, score_history: loadHistory(), goals: goalsState, notes: loadNotes(), brit_log: loadBritLog(), trackers: loadTrackers(), updatedAt: Date.now() }; const r = await fetch(url, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); setSync(r.ok ? ('מסונכרן ✓ · ' + new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})) : 'סנכרון נכשל (נשמר במכשיר)'); } catch(e) { setSync('לא מקוון · נשמר במכשיר'); }
+  }
+  async function pullDown() {
+    try {
+      const url = await dbUrl(); const r = await fetch(url, { cache:'no-store' }); if (!r.ok) { setSync('עובד במצב מקומי'); return; }
+      const remote = await r.json();
+      if (remote) {
+        const localH = loadHistory(); const map = {}; localH.forEach(e => map[e.date] = e); (remote.score_history||[]).forEach(e => { if (map[e.date] == null) map[e.date] = e; }); saveHistory(Object.keys(map).map(d => map[d]));
+        if (remote.notes && typeof remote.notes === 'object') { const ln = loadNotes(); let ch = false; Object.keys(remote.notes).forEach(d => { if (!ln[d]) { ln[d] = remote.notes[d]; ch = true; } }); if (ch) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(ln)); } catch(e) {} } }
+        if (Array.isArray(remote.goals) && remote.goals.length && !localStorage.getItem(GOALS_KEY)) { goalsState = remote.goals; saveGoals(); }
+        if (Array.isArray(remote.brit_log)) { const lb = loadBritLog(); const seen = {}; lb.forEach(e => seen[e.ts]=true); let bch=false; remote.brit_log.forEach(e => { if (!seen[e.ts]) { lb.push(e); bch=true; } }); if (bch) { try { localStorage.setItem(BRIT_LOG_KEY, JSON.stringify(lb)); } catch(x){} } }
+        if (Array.isArray(remote.mitzvot) && remote.mitzvot.length && !localStorage.getItem(MITZVOT_KEY)) { MITZVOT = remote.mitzvot; saveMitzvot(); ensureItems(); }
+        if (Array.isArray(remote.trackers) && !localStorage.getItem(TRACKERS_KEY)) { try { localStorage.setItem(TRACKERS_KEY, JSON.stringify(remote.trackers)); } catch(x){} }
+        if (remote.score_today && remote.score_today.date === getTodayDate()) { const empty = !Object.values(todayState.items||{}).some(it => it.done); if (empty) { todayState = remote.score_today; ensureItems(); saveTodayLocal(); } }
+      }
+      setSync('מסונכרן ✓');
+    } catch(e) { setSync('עובד במצב מקומי'); }
+    render();
+  }
+
+  // ===== Wiring =====
+  function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('active'); }
+  document.getElementById('endDayBtn').addEventListener('click', endDay);
+  document.getElementById('exportBtn').addEventListener('click', exportJournal);
+  document.getElementById('journalExportBtn').addEventListener('click', exportJournal);
+  document.getElementById('addGoalBtn').addEventListener('click', () => openGoalEdit(null));
+  document.getElementById('goalSaveBtn').addEventListener('click', saveGoalEdit);
+  document.getElementById('goalCancelBtn').addEventListener('click', () => closeModal('goalEditModal'));
+  document.getElementById('goalEditClose').addEventListener('click', () => closeModal('goalEditModal'));
+  document.getElementById('goalCelebClose').addEventListener('click', () => closeModal('goalCelebrationModal'));
+  document.getElementById('celebLaterBtn').addEventListener('click', () => closeModal('goalCelebrationModal'));
+  document.getElementById('noteEditorSave').addEventListener('click', saveNoteEditor);
+  document.getElementById('noteEditorCancel').addEventListener('click', () => closeModal('noteEditorModal'));
+  document.getElementById('noteEditorClose').addEventListener('click', () => closeModal('noteEditorModal'));
+  document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', (e) => { if (e.target === b) b.classList.remove('active'); }));
+  document.querySelectorAll('.chart-tab').forEach(tab => tab.addEventListener('click', () => { document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); chartRange = parseInt(tab.dataset.range,10); renderChart(); }));
+  document.querySelectorAll('.journal-filter-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.journal-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); journalFilter = btn.dataset.filter; journalSearchDate = ''; const di = document.getElementById('journalDateSearch'); if (di) di.value = ''; document.getElementById('journalClearSearch').classList.remove('active'); renderJournal(); }));
+  (function(){ const input = document.getElementById('journalDateSearch'), clr = document.getElementById('journalClearSearch'); if (input) { input.max = getTodayDate(); input.addEventListener('change', () => { journalSearchDate = input.value || ''; clr.classList.toggle('active', !!journalSearchDate); renderJournal(); }); } if (clr) clr.addEventListener('click', () => { input.value=''; journalSearchDate=''; clr.classList.remove('active'); renderJournal(); }); })();
+
+  // Brit log
+  document.getElementById('britLogAddBtn').addEventListener('click', addBritLogEntry);
+  document.getElementById('britLogInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addBritLogEntry(); } });
+  // Fall quiz
+  document.querySelectorAll('#fallQuizModal .fall-quiz-btn').forEach(btn => btn.addEventListener('click', () => selectFallAnswer(btn.dataset.q, btn.dataset.val, btn)));
+  document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
+  document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
+  document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
+  // Edit day
+  document.getElementById('editDayClose').addEventListener('click', () => closeModal('editDayModal'));
+  document.getElementById('editDaySave').addEventListener('click', saveEditDay);
+  document.getElementById('editDayDelete').addEventListener('click', deleteEditDay);
+  // Date picker → edit any day
+  (function(){ const p = document.getElementById('scoreDatePicker'); if (p) { const prime = () => { p.value = getTodayDate(); p.max = getTodayDate(); }; p.addEventListener('focus', prime); p.addEventListener('click', prime); p.addEventListener('change', () => { if (p.value) openEditDay(p.value); }); } })();
+  // Private reflection autosave (local only)
+  (function(){ const ta = document.getElementById('reflectionTextarea'); if (!ta) return; let t = null; ta.addEventListener('input', () => { const c = document.getElementById('reflectionCounter'); if (c) c.textContent = ta.value.length; clearTimeout(t); t = setTimeout(() => { const map = loadReflections(); const d = getTodayDate(); const v = ta.value.trim(); if (v) map[d] = v; else delete map[d]; try { localStorage.setItem(REFLECT_KEY, JSON.stringify(map)); } catch(e) {} const s = document.getElementById('reflectionSaved'); if (s) { s.classList.add('show'); setTimeout(() => s.classList.remove('show'), 1500); } }, 600); }); })();
+
+  // Mitzvot manager
+  document.getElementById('manageMitzvotBtn').addEventListener('click', openMitzvotManager);
+  document.getElementById('mitzvotManagerClose').addEventListener('click', () => closeModal('mitzvotManagerModal'));
+  document.getElementById('mitzvaAddBtn').addEventListener('click', () => openMitzvaEdit(null));
+  document.getElementById('mitzvaPresetBtn').addEventListener('click', openPresetPicker);
+  document.getElementById('mitzvaSaveBtn').addEventListener('click', saveMitzvaEdit);
+  document.getElementById('mitzvaCancelBtn').addEventListener('click', () => closeModal('mitzvaEditModal'));
+  document.getElementById('mitzvaEditClose').addEventListener('click', () => closeModal('mitzvaEditModal'));
+  document.getElementById('presetPickerClose').addEventListener('click', () => closeModal('presetPickerModal'));
+  // Trackers / questionnaires
+  document.getElementById('addTrackerBtn').addEventListener('click', () => openTrackerEdit(null));
+  document.getElementById('trackerAddQBtn').addEventListener('click', addTrackerQuestion);
+  document.getElementById('trackerSaveBtn').addEventListener('click', saveTrackerEdit);
+  document.getElementById('trackerCancelBtn').addEventListener('click', () => closeModal('trackerEditModal'));
+  document.getElementById('trackerEditClose').addEventListener('click', () => closeModal('trackerEditModal'));
+  document.getElementById('trackerEntrySave').addEventListener('click', saveTrackerEntry);
+  document.getElementById('trackerEntryCancel').addEventListener('click', () => closeModal('trackerEntryModal'));
+  document.getElementById('trackerEntryClose').addEventListener('click', () => closeModal('trackerEntryModal'));
+
+  // Daily target + backup
+  document.getElementById('targetEdit').addEventListener('click', () => { const cur = loadTarget(); const v = prompt('היעד היומי שלך (נקודות):', cur); if (v === null) return; const n = parseInt(v, 10); if (n && n > 0) { saveTarget(n); renderStreakTarget(); } });
+  document.getElementById('backupBtn').addEventListener('click', exportBackup);
+  document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('restoreFile').click());
+  document.getElementById('restoreFile').addEventListener('change', (e) => { if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]); e.target.value = ''; });
+
+  // ===== Init =====
+  MITZVOT = loadMitzvot();
+  loadToday(); loadGoals(); render(); pullDown();
+  setTimeout(() => { appReady = true; }, 1200);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
+})();
+</script>
+
+<div class="modal-backdrop" id="buildModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="bmName">מבנה</div><button class="modal-close" id="bmClose">×</button></div>
+    <div class="modal-body">
+      <div class="bm-art"><div class="art3d" id="art3d"><div class="art3d-inner" id="bmArt"></div><div class="art3d-glare" id="art3dGlare"></div></div></div>
+      <div class="art3d-hint">סובב עם האצבע ↔</div>
+      <div class="bm-status" id="bmStatus"></div>
+      <div id="bmRes"></div>
+      <div class="goal-form-buttons"><button class="goal-form-btn save" id="bmInvestAll">השקע מקסימום</button><button class="goal-form-btn cancel" id="bmWithdraw">משוך הכל</button></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
