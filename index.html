@@ -3459,6 +3459,28 @@
       </div>
     </div>
 
+
+    <div class="neria-admin-section" id="neriaAdminSection">
+      <div class="neria-admin-title">🛡️ ניהול חשבוניות נריה</div>
+      <div class="neria-admin-sub">חוב, נעילה, ופתיחה אחרי תשלום</div>
+      <div class="neria-admin-grid">
+        <div class="neria-admin-cell"><div class="neria-admin-lbl">חוב נוכחי</div><div class="neria-admin-v hot" id="neriaDebt">—</div></div>
+        <div class="neria-admin-cell"><div class="neria-admin-lbl">מצב</div><div class="neria-admin-v" id="neriaLockState">—</div></div>
+      </div>
+      <div class="neria-admin-grid">
+        <div class="neria-admin-cell"><div class="neria-admin-lbl">סך קנסות</div><div class="neria-admin-v" id="neriaTotalFines">—</div></div>
+        <div class="neria-admin-cell"><div class="neria-admin-lbl">סך תשלומים</div><div class="neria-admin-v" id="neriaTotalPaid">—</div></div>
+      </div>
+      <div class="neria-admin-actions">
+        <button class="neria-admin-btn unlock" id="neriaUnlock24">🔓 פתח את האתר ל-24 שעות</button>
+        <button class="neria-admin-btn pay" id="neriaRecordPay">💰 נריה שילם — רשום תשלום</button>
+        <button class="neria-admin-btn reset" id="neriaResetDebt">♻️ אפס חוב (אחרי תשלום מלא)</button>
+        <button class="neria-admin-btn phone" id="neriaSetPhone">📞 הגדר מספר טלפון שלך (לכפתור החיוג שלו)</button>
+      </div>
+      <div class="neria-admin-status" id="neriaAdminStatus">לחץ "רענן" כדי לטעון את הנתונים האחרונים</div>
+      <button class="neria-admin-btn reset" id="neriaRefresh" style="margin-top:8px">🔄 רענן</button>
+    </div>
+
     <div class="kupah-section">
       <div class="kupah-title">🪙 קופת הפרסים שלי</div>
       <div class="kupah-grid">
@@ -4820,6 +4842,7 @@ const TOTAL_OSHER = TEFILOT.length;
 
       // Handle score tab specially
       if (tabName === 'score') {
+        try { setTimeout(renderNeriaAdmin, 400); } catch(e) {}
         document.body.classList.add('score-mode');
         const titleEl = document.getElementById('mainTitle');
         const subtitleEl = document.getElementById('mainSubtitle');
@@ -7468,6 +7491,149 @@ const TOTAL_OSHER = TEFILOT.length;
   document.addEventListener('visibilitychange', function() {
     if (!document.hidden && isSyncActive()) syncDown();
   });
+
+  // ============= Neria admin panel (in score view) =============
+  const NERIA_DB_URL = 'https://yosef-niku-default-rtdb.europe-west1.firebasedatabase.app';
+  const NERIA_API_KEY = 'AIzaSyCUWDG0JThZOTUAUJpeVTwkP4LqXZi2HsQ';
+  const NERIA_TOK_KEY = '_neria_admin_tok_v1';
+  const NERIA_REF_KEY = '_neria_admin_ref_v1';
+  const NERIA_EXP_KEY = '_neria_admin_exp_v1';
+  function _neriaFbSave(tok, ref, expIn){ try { localStorage.setItem(NERIA_TOK_KEY, tok); localStorage.setItem(NERIA_REF_KEY, ref); localStorage.setItem(NERIA_EXP_KEY, String(Date.now() + (parseInt(expIn,10)*1000) - 30000)); } catch(e) {} }
+  async function _neriaFbSignIn(){
+    const r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + NERIA_API_KEY, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ returnSecureToken: true }) });
+    if (!r.ok) throw new Error('neria signin failed');
+    const d = await r.json();
+    _neriaFbSave(d.idToken, d.refreshToken, d.expiresIn);
+    return d.idToken;
+  }
+  async function _neriaFbRefresh(ref){
+    const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + NERIA_API_KEY, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'grant_type=refresh_token&refresh_token=' + encodeURIComponent(ref) });
+    if (!r.ok) throw new Error('neria refresh failed');
+    const d = await r.json();
+    _neriaFbSave(d.id_token, d.refresh_token, d.expires_in);
+    return d.id_token;
+  }
+  async function _neriaFbToken(){
+    try {
+      const t = localStorage.getItem(NERIA_TOK_KEY), e = parseInt(localStorage.getItem(NERIA_EXP_KEY)||'0', 10);
+      if (t && Date.now() < e) return t;
+      const ref = localStorage.getItem(NERIA_REF_KEY);
+      if (ref) { try { return await _neriaFbRefresh(ref); } catch(x) {} }
+      return await _neriaFbSignIn();
+    } catch(e) { return null; }
+  }
+  async function _neriaFetch(path, opts){
+    const t = await _neriaFbToken();
+    const url = NERIA_DB_URL + path + (t ? ('?auth=' + encodeURIComponent(t)) : '');
+    return fetch(url, opts || {});
+  }
+  async function loadNeriaState(){
+    try {
+      const r = await _neriaFetch('/neria.json', { cache: 'no-store' });
+      if (!r.ok) return null;
+      return await r.json();
+    } catch(e) { return null; }
+  }
+  async function loadNeriaAdmin(){
+    try {
+      const r = await _neriaFetch('/neria_admin.json', { cache: 'no-store' });
+      if (!r.ok) return null;
+      return await r.json();
+    } catch(e) { return null; }
+  }
+  async function saveNeriaAdmin(adm){
+    try {
+      const r = await _neriaFetch('/neria_admin.json', { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(adm) });
+      return r.ok;
+    } catch(e) { return false; }
+  }
+  function _calcNeriaTotalFines(state){
+    // Sum moneyFine from brit_log entries
+    try {
+      const log = (state && Array.isArray(state.brit_log)) ? state.brit_log : [];
+      return log.reduce(function(sum, e){ return sum + (e.moneyFine || 0); }, 0);
+    } catch(e) { return 0; }
+  }
+  async function renderNeriaAdmin(){
+    const setStatus = function(t){ const el = document.getElementById('neriaAdminStatus'); if (el) el.textContent = t; };
+    setStatus('טוען...');
+    const state = await loadNeriaState();
+    const adm   = (await loadNeriaAdmin()) || {};
+    const totalFines = _calcNeriaTotalFines(state);
+    const paidTotal  = adm.paid_total || 0;
+    const debt       = Math.max(0, totalFines - paidTotal);
+    const unlockUntil= adm.unlock_until || 0;
+    const tempUnlocked = unlockUntil && Date.now() < unlockUntil;
+    const isLocked = (debt >= 150) && !tempUnlocked;
+    const fmtTime = function(ts){
+      const d = new Date(ts);
+      return d.toLocaleString('he-IL', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+    };
+    document.getElementById('neriaDebt').textContent = '₪' + debt;
+    document.getElementById('neriaTotalFines').textContent = '₪' + totalFines;
+    document.getElementById('neriaTotalPaid').textContent  = '₪' + paidTotal;
+    const stateEl = document.getElementById('neriaLockState');
+    if (isLocked) { stateEl.textContent = '🔒 נעול'; stateEl.classList.add('locked'); }
+    else if (tempUnlocked) { stateEl.textContent = '🔓 פתוח עד ' + fmtTime(unlockUntil); stateEl.classList.remove('locked'); }
+    else { stateEl.textContent = '✓ פתוח'; stateEl.classList.remove('locked'); }
+    let status = '';
+    if (state && state.updatedAt) status += 'עודכן לאחרונה: ' + fmtTime(state.updatedAt) + '. ';
+    if (adm.uriel_phone) status += 'טלפון מוגדר: ' + adm.uriel_phone;
+    else status += 'הגדר מספר טלפון כדי שכפתור החיוג שלו יעבוד.';
+    setStatus(status);
+  }
+  async function neriaUnlock24(){
+    if (!confirm('האם נריה דיבר איתך והכל סוכם? לפתוח את האתר שלו ל-24 שעות?')) return;
+    const adm = (await loadNeriaAdmin()) || {};
+    adm.unlock_until = Date.now() + (24 * 60 * 60 * 1000);
+    if (await saveNeriaAdmin(adm)) { alert('✅ פתוח ל-24 שעות. נריה יקבל גישה תוך 30 שניות.'); renderNeriaAdmin(); }
+    else alert('❌ שגיאה. נסה שוב.');
+  }
+  async function neriaRecordPayment(){
+    const amt = prompt('כמה שקל נריה שילם?', '50');
+    if (amt === null) return;
+    const n = parseFloat(amt);
+    if (!n || n <= 0) { alert('סכום לא תקין'); return; }
+    const adm = (await loadNeriaAdmin()) || {};
+    adm.paid_total = (adm.paid_total || 0) + n;
+    adm.payments = adm.payments || [];
+    adm.payments.push({ ts: Date.now(), amount: n });
+    if (await saveNeriaAdmin(adm)) { alert('✅ נרשם תשלום של ₪' + n + '. החוב יתעדכן תוך 30 שניות.'); renderNeriaAdmin(); }
+    else alert('❌ שגיאה. נסה שוב.');
+  }
+  async function neriaResetDebt(){
+    if (!confirm('לאפס את כל החוב של נריה? (משמש אחרי תשלום מלא)')) return;
+    const state = await loadNeriaState();
+    const totalFines = _calcNeriaTotalFines(state);
+    const adm = (await loadNeriaAdmin()) || {};
+    adm.paid_total = totalFines; // pay off everything
+    adm.payments = adm.payments || [];
+    adm.payments.push({ ts: Date.now(), amount: totalFines - (adm.paid_total || 0) + (adm.paid_total || 0), note: 'איפוס מלא' });
+    if (await saveNeriaAdmin(adm)) { alert('✅ החוב אופס. נריה יקבל גישה מלאה.'); renderNeriaAdmin(); }
+    else alert('❌ שגיאה. נסה שוב.');
+  }
+  async function neriaSetPhone(){
+    const adm = (await loadNeriaAdmin()) || {};
+    const cur = adm.uriel_phone || '';
+    const phone = prompt('מספר הטלפון שלך (לכפתור חיוג של נריה):', cur);
+    if (phone === null) return;
+    adm.uriel_phone = (phone || '').trim();
+    if (await saveNeriaAdmin(adm)) { alert('✅ נשמר.'); renderNeriaAdmin(); }
+    else alert('❌ שגיאה. נסה שוב.');
+  }
+  function _wireNeriaAdmin(){
+    const wire = function(id, fn){ const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+    wire('neriaUnlock24',    neriaUnlock24);
+    wire('neriaRecordPay',   neriaRecordPayment);
+    wire('neriaResetDebt',   neriaResetDebt);
+    wire('neriaSetPhone',    neriaSetPhone);
+    wire('neriaRefresh',     renderNeriaAdmin);
+  }
+
+  // Wire up Neria admin panel
+  try { _wireNeriaAdmin(); } catch(e) {}
+  // Render initial state if on score view
+  try { if (typeof currentTab !== 'undefined' && currentTab === 'score') { setTimeout(renderNeriaAdmin, 800); } } catch(e) {}
 </script>
 
 
