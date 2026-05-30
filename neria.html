@@ -2471,15 +2471,30 @@
       }
     } catch(e) {}
   }
-  document.querySelectorAll('.bnav-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){ switchAppTab(btn.dataset.tab); });
+  // Use event delegation — the .bnav-btn elements live AFTER this script
+  // in the DOM (the bottom-nav HTML is inserted right before </body>),
+  // so a direct querySelectorAll here would find nothing. Delegating on
+  // document works regardless of when the buttons appear.
+  document.addEventListener('click', function(e){
+    const btn = e.target && e.target.closest && e.target.closest('.bnav-btn');
+    if (btn && btn.dataset && btn.dataset.tab) {
+      switchAppTab(btn.dataset.tab);
+    }
   });
-  (function initTab(){
+  // Initial tab from localStorage. Run once immediately (sets body class so
+  // the right tab content is visible from first paint) AND once on
+  // DOMContentLoaded (when the bnav-btn elements actually exist, so the
+  // right button gets the .active highlight).
+  function _initAppTab(){
     let saved = 'home';
     try { saved = localStorage.getItem('neria_active_tab_v1') || 'home'; } catch(e) {}
     if (!['home','defense','building','journal'].includes(saved)) saved = 'home';
     switchAppTab(saved);
-  })();
+  }
+  _initAppTab();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _initAppTab);
+  }
 
   </script>
 
