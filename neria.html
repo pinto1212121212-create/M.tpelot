@@ -436,6 +436,44 @@
   @keyframes vRot2 { to { transform: rotate(360deg); } }
   .v-rays { transform-box:view-box; transform-origin:60px 64px; animation:vRot2 90s linear infinite; }
 
+
+  /* === Hero greeting card (top of home tab) — calm, personal === */
+  .hero-greet { margin: 12px 0 18px; padding: 22px 20px; background: linear-gradient(160deg, #fff7e0 0%, #f5e6c4 100%); border: 1.5px solid var(--gold); border-radius: 16px; box-shadow: 0 6px 22px rgba(60,30,10,0.10), inset 0 0 0 1px rgba(255,255,255,0.5); position: relative; overflow: hidden; }
+  .hero-greet::before { content: ''; position: absolute; top: -40px; left: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(201,169,97,0.3) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-greet::after { content: ''; position: absolute; bottom: -50px; right: -30px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(122,32,48,0.10) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-greet-row { position: relative; z-index: 2; }
+  .hero-greet-time { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 14.5px; color: var(--brown); margin-bottom: 4px; }
+  .hero-greet-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 30px; color: var(--brown-deep); letter-spacing: 0.5px; line-height: 1.1; }
+  .hero-greet-date { font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: var(--brown-light); margin-top: 4px; font-weight: 400; }
+  .hero-status-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; position: relative; z-index: 2; }
+  .hero-stat { background: rgba(255,255,255,0.55); border: 1px solid rgba(201,169,97,0.4); border-radius: 10px; padding: 10px 8px; text-align: center; backdrop-filter: blur(4px); }
+  .hero-stat-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown-light); margin-bottom: 2px; letter-spacing: 0.2px; }
+  .hero-stat-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 26px; color: var(--wine); line-height: 1.05; }
+  .hero-stat-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown); margin-top: 2px; }
+  .hero-status-line { margin-top: 14px; text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 14.5px; color: var(--brown-deep); font-weight: 600; position: relative; z-index: 2; padding: 8px 12px; background: rgba(255,255,255,0.35); border-radius: 8px; border-right: 3px solid var(--gold-dark); }
+
+  /* === Compact today's score chip (smaller, calmer, integrated into hero) === */
+  .home-mini-row { display: flex; gap: 10px; margin: 0 0 18px; }
+  .home-mini-card { flex: 1; padding: 12px; background: var(--parchment-light); border: 1px solid var(--gold); border-radius: 12px; text-align: center; }
+  .home-mini-label { font-family: 'Frank Ruhl Libre', serif; font-size: 11.5px; color: var(--brown-light); margin-bottom: 4px; }
+  .home-mini-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 24px; color: var(--brown-deep); line-height: 1; }
+  .home-mini-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); margin-top: 3px; }
+
+  /* === Softer FAB — warm gold, not red === */
+  .em-fab { background: linear-gradient(135deg, #d4a574 0%, #b88748 100%) !important; box-shadow: 0 8px 22px rgba(184,135,72,0.45) !important; border-color: rgba(255,247,224,0.7) !important; animation: emFabBreatheSoft 4s ease-in-out infinite !important; }
+  .em-fab:hover { box-shadow: 0 10px 30px rgba(184,135,72,0.65) !important; }
+  .em-fab.night { background: linear-gradient(135deg, #5a7aa0 0%, #3a5a80 100%) !important; box-shadow: 0 8px 22px rgba(58,90,128,0.55) !important; }
+  @keyframes emFabBreatheSoft { 0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(184,135,72,0.45); } 50% { transform: scale(1.05); box-shadow: 0 12px 32px rgba(212,165,116,0.7); } }
+
+  /* === Stat row a touch cleaner === */
+  .st-row { margin-bottom: 18px; }
+  .st-card { border-radius: 12px !important; }
+
+  /* === Mitzva cards: cleaner spacing === */
+  .mitzva-card { border-radius: 12px !important; margin-bottom: 14px !important; box-shadow: 0 3px 10px rgba(60,30,10,0.08) !important; transition: transform 0.2s, box-shadow 0.3s, background 0.3s !important; }
+  .mitzva-card:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(60,30,10,0.12) !important; }
+  .mitzva-card.done { box-shadow: 0 4px 16px rgba(201,169,97,0.35) !important; }
+
   /* ===== Bottom Tab Navigation + tabbed layout ===== */
   body { padding-bottom: 90px; }
   .tabbed { display: none; }
@@ -469,14 +507,23 @@
 
   <div class="hizuk-banner" id="hizukBanner"></div>
 
-    <div class="tabbed tab-home tab-header"><span class="tab-header-icon">🏠</span><span>היום</span></div>
+  <div class="tabbed tab-home hero-greet">
+    <div class="hero-greet-row">
+      <div class="hero-greet-time" id="heroGreetTime">בוקר טוב</div>
+      <div class="hero-greet-name">נריה</div>
+      <div class="hero-greet-date" id="heroGreetDate">—</div>
+    </div>
+    <div class="hero-status-row">
+      <div class="hero-stat"><div class="hero-stat-label">🔥 רצף נקי</div><div class="hero-stat-value" id="heroStreak">0</div><div class="hero-stat-sub">ימים</div></div>
+      <div class="hero-stat"><div class="hero-stat-label">🧱 לבנים</div><div class="hero-stat-value" id="heroBricks">0</div><div class="hero-stat-sub">מתוך 40</div></div>
+    </div>
+    <div class="hero-status-line" id="heroStatusLine">״טוב לחסות בה׳״</div>
+  </div>
 
-  <div class="tabbed tab-home score-date-header"><div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div><div class="date-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" /></div>
-
-  <div class="tabbed tab-home score-today-total">
-    <div class="label">סך הניקוד היום</div>
-    <div class="value"><span id="scoreToday">0</span></div>
-    <div class="max">מתוך <span id="scoreTodayMax">0</span></div>
+  
+  <div class="tabbed tab-home home-mini-row">
+    <div class="home-mini-card" style="position:relative;cursor:pointer"><div class="home-mini-label">📅 לחץ לעריכת יום אחר</div><div class="home-mini-value" id="dateValue">—</div><input type="date" id="scoreDatePicker" aria-label="בחר תאריך" style="position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer" /></div>
+    <div class="home-mini-card"><div class="home-mini-label">סך הניקוד היום</div><div class="home-mini-value"><span id="scoreToday">0</span></div><div class="home-mini-sub">מתוך <span id="scoreTodayMax">0</span></div></div>
   </div>
 
   <div class="tabbed tab-home st-row">
@@ -1305,6 +1352,56 @@
     const fabLabel = document.getElementById('emFabLabel');
     if (fabLabel) fabLabel.textContent = night ? '🌙 חילוץ לילי' : '🛡️ כפתור חילוץ';
   }
+
+  // ===== Hero greeting (time-aware) =====
+  function _heroGreetingTime(){
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return 'בוקר טוב,';
+    if (h >= 12 && h < 17) return 'צהריים טובים,';
+    if (h >= 17 && h < 22) return 'ערב טוב,';
+    return 'לילה טוב,';
+  }
+  function _heroStatusLine(){
+    // Pick a line that resonates with current state
+    const lines = [
+      '״טוב לחסות בה׳ מבטוח באדם״',
+      '״אני לדודי ודודי לי״',
+      '״ה׳ אורי וישעי — ממי אירא״',
+      '״כל הנשבר מנצח״',
+      '״רגע אחד של ניצחון — שווה כל העולם״',
+      '״ה׳ צילך על יד ימינך״',
+      '״ובחרת בחיים״',
+      '״הוא איתך — תמיד״',
+    ];
+    // Rotate based on day-of-year so it changes daily
+    const d = new Date();
+    const doy = Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000);
+    return lines[doy % lines.length];
+  }
+  function _heroDate(){
+    try {
+      const d = new Date();
+      return d.toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' });
+    } catch(e) { return ''; }
+  }
+  function renderHero(){
+    const tEl = document.getElementById('heroGreetTime'); if (tEl) tEl.textContent = _heroGreetingTime();
+    const dEl = document.getElementById('heroGreetDate'); if (dEl) dEl.textContent = _heroDate();
+    const sEl = document.getElementById('heroStatusLine'); if (sEl) sEl.textContent = _heroStatusLine();
+    // Streak: try to read from existing streak-val element if available
+    try {
+      const sv = document.getElementById('streakVal');
+      const hs = document.getElementById('heroStreak');
+      if (sv && hs) hs.textContent = sv.textContent || '0';
+    } catch(e) {}
+    // Bricks: from earnedResources
+    try {
+      const er = (typeof earnedResources === 'function') ? earnedResources() : null;
+      const hb = document.getElementById('heroBricks');
+      if (er && hb) hb.textContent = er.brick || 0;
+    } catch(e) {}
+  }
+
   // ============= Wall of Fire 3 — friend call =============
   const WALL3_KEY = 'neria_wall3_friend_v1';
   function loadFriend(){
@@ -2017,6 +2114,7 @@
   document.getElementById('fallQuizSave').addEventListener('click', saveFallQuiz);
   _wireEmergency();
   _wireWall3();
+  try { renderHero(); setInterval(renderHero, 60000); } catch(e) {}
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
   // Edit day
@@ -2073,7 +2171,7 @@
     try {
       if (tab === 'building') renderBuilding();
       if (tab === 'journal') { renderBritLog(); renderFines(); }
-      if (tab === 'home') { render(); }
+      if (tab === 'home') { render(); try { renderHero(); } catch(e) {} }
     } catch(e) {}
   }
   document.querySelectorAll('.bnav-btn').forEach(function(btn){
