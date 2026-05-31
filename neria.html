@@ -1328,11 +1328,8 @@
   // ===== Mitzvot — editable by Yosef (defaults below, can add/edit/remove) =====
   const MITZVOT_KEY = 'neria_mitzvot_v1';
   const DEFAULT_MITZVOT = [
-    { id: 'eyes', name: 'יום נקי מסרטים - שמירת העיניים', icon: '👁️', points: 25, hasMinyan: false, extras: [
-      { id: 'phone_away', label: 'הטלפון לא היה איתי במיטה', points: 5 }
-    ] },
+    { id: 'eyes', name: 'יום נקי מסרטים - שמירת העיניים', icon: '👁️', points: 25, hasMinyan: false, extras: [] },
     { id: 'brit', name: 'יום נקי - שמירת הברית', icon: '🛡️', points: 25, hasMinyan: false, extras: [
-      { id: 'escape', label: 'ברחתי מיד מהסיטואציה (כיוסף הצדיק)', points: 5 },
       { id: 'friend_check', label: 'יצרתי קשר עם חבר אחריות', points: 5 }
     ] }
   ];
@@ -3155,7 +3152,7 @@
   function importBackup(file) {
     const reader = new FileReader();
     reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('neria_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot();
-  // === Migration: strip filter_on + rename ifs→escape in saved mitzvot ===
+  // === Migration: keep only "friend_check" extra (on brit); remove all others ===
   (function migrateMitzvot(){
     try {
       let changed = false;
@@ -3168,12 +3165,9 @@
         }
         if (!Array.isArray(m.extras)) return;
         const before = JSON.stringify(m.extras);
-        m.extras = m.extras.filter(function(ex){ return ex && ex.id !== 'filter_on'; });
-        m.extras.forEach(function(ex){
-          if (ex && ex.id === 'ifs') {
-            ex.id = 'escape';
-            ex.label = 'ברחתי מיד מהסיטואציה (כיוסף הצדיק)';
-          }
+        // Strip ALL extras except "friend_check" on the brit mitzva
+        m.extras = m.extras.filter(function(ex){
+          return ex && ex.id === 'friend_check' && m.id === 'brit';
         });
         if (JSON.stringify(m.extras) !== before) changed = true;
       });
