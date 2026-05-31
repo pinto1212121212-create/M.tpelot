@@ -595,10 +595,11 @@
   /* ===== Bottom Tab Navigation + tabbed layout ===== */
   body { padding-bottom: 110px; }
   .tabbed { display: none; }
-  body.app-home    .tabbed.tab-home,
-  body.app-defense .tabbed.tab-defense,
+  body.app-home     .tabbed.tab-home,
+  body.app-defense  .tabbed.tab-defense,
+  body.app-prayers  .tabbed.tab-prayers,
   body.app-building .tabbed.tab-building,
-  body.app-journal .tabbed.tab-journal { display: block; animation: tabIn 0.35s ease-out; }
+  body.app-journal  .tabbed.tab-journal { display: block; animation: tabIn 0.35s ease-out; }
   @keyframes tabIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
 
   .tab-header { margin: 14px 0 8px; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 18px; color: var(--brown-deep); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
@@ -624,6 +625,25 @@
   </header>
 
   <div class="hizuk-banner" id="hizukBanner"></div>
+
+  <div class="tabbed tab-prayers tab-header"><span class="tab-header-icon">🙏</span><span>תפילות לשמירת הברית</span></div>
+  <div class="tabbed tab-prayers tab-header-sub">515 תפילות — אחת ביום, אחת ברגע קושי. כל תפילה כתובה במיוחד בשבילך.</div>
+
+  <div class="tabbed tab-prayers pr-stats">
+    <div class="pr-stat-card"><div class="pr-stat-label">סך תפילות שאמרתי</div><div class="pr-stat-value"><span id="prSaidTotal">0</span><span class="pr-stat-of"> / 515</span></div></div>
+    <div class="pr-stat-card"><div class="pr-stat-label">אמרתי היום</div><div class="pr-stat-value" id="prSaidToday">0</div></div>
+  </div>
+  <div class="tabbed tab-prayers pr-progress-wrap"><div class="pr-progress-bar" id="prProgressBar" style="width:0%"></div></div>
+
+  <div class="tabbed tab-prayers pr-filters">
+    <button class="pr-filter-btn active" data-pr-filter="unsaid">לא נאמרו</button>
+    <button class="pr-filter-btn" data-pr-filter="all">הכל</button>
+    <button class="pr-filter-btn" data-pr-filter="fav">⭐ מועדפות</button>
+    <button class="pr-filter-btn" data-pr-filter="today">היום</button>
+  </div>
+
+  <div class="tabbed tab-prayers" id="prCardContainer"><div class="pr-loading">טוען תפילות...</div></div>
+
 
   <div class="tabbed tab-home hero-greet">
     <div class="hero-greet-row">
@@ -2162,6 +2182,164 @@
   function openTehilim(){ const m = document.getElementById('tehilimModal'); if (m) m.classList.add('active'); }
   function closeTehilim(){ const m = document.getElementById('tehilimModal'); if (m) m.classList.remove('active'); }
 
+
+  // ============= Prayers tab (515 תפילות לשמירת הברית) =============
+  const PR_SAID_KEY = 'neria_tef_brit_said_v1';   // { idx: timestamp }
+  const PR_FAV_KEY  = 'neria_tef_brit_fav_v1';    // [idx, idx, ...]
+  let _prPool = null;       // loaded on demand
+  let _prPoolPromise = null;
+  let _prFilter = 'unsaid';
+  let _prCurIdx = 0;        // currently displayed prayer index
+  let _prInitialized = false;
+
+  function loadPrSaid(){ try { return JSON.parse(localStorage.getItem(PR_SAID_KEY) || '{}') || {}; } catch(e) { return {}; } }
+  function savePrSaid(o){ try { localStorage.setItem(PR_SAID_KEY, JSON.stringify(o)); } catch(e) {} pushUp(); }
+  function loadPrFav(){ try { const a = JSON.parse(localStorage.getItem(PR_FAV_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch(e) { return []; } }
+  function savePrFav(a){ try { localStorage.setItem(PR_FAV_KEY, JSON.stringify(a)); } catch(e) {} pushUp(); }
+  function isPrSaidToday(idx){
+    const said = loadPrSaid(); const ts = said[idx]; if (!ts) return false;
+    const today = getTodayDate();
+    const d = new Date(ts); const ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    return ds === today;
+  }
+  function countPrSaid(){ return Object.keys(loadPrSaid()).length; }
+  function countPrSaidToday(){
+    const said = loadPrSaid();
+    const today = getTodayDate();
+    let n = 0;
+    for (const k in said) {
+      const d = new Date(said[k]);
+      const ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      if (ds === today) n++;
+    }
+    return n;
+  }
+
+  async function loadPrayerPool(){
+    if (_prPool) return _prPool;
+    if (_prPoolPromise) return _prPoolPromise;
+    _prPoolPromise = fetch('data/neria_brit.json', { cache: 'force-cache' })
+      .then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function(arr){ _prPool = arr; return arr; })
+      .catch(function(e){ console.error('prayer pool load failed:', e); _prPoolPromise = null; return null; });
+    return _prPoolPromise;
+  }
+
+  function getPrFilteredIndices(){
+    if (!_prPool) return [];
+    const said = loadPrSaid();
+    const fav = loadPrFav();
+    const favSet = {}; fav.forEach(function(i){ favSet[i] = true; });
+    const out = [];
+    for (let i = 0; i < _prPool.length; i++) {
+      if (_prFilter === 'all') out.push(i);
+      else if (_prFilter === 'unsaid') { if (!said[i]) out.push(i); }
+      else if (_prFilter === 'fav')    { if (favSet[i])  out.push(i); }
+      else if (_prFilter === 'today')  { if (isPrSaidToday(i)) out.push(i); }
+    }
+    return out;
+  }
+
+  function renderPrayer(){
+    const cont = document.getElementById('prCardContainer'); if (!cont) return;
+    if (!_prPool) { cont.innerHTML = '<div class="pr-loading">טוען תפילות...</div>'; return; }
+    // Update stats
+    const total = countPrSaid();
+    const today = countPrSaidToday();
+    const totEl = document.getElementById('prSaidTotal'); if (totEl) totEl.textContent = total;
+    const todayEl = document.getElementById('prSaidToday'); if (todayEl) todayEl.textContent = today;
+    const bar = document.getElementById('prProgressBar'); if (bar) bar.style.width = Math.round((total / 515) * 100) + '%';
+    // Build filtered list
+    const indices = getPrFilteredIndices();
+    if (indices.length === 0) {
+      const msgs = {
+        'unsaid': '🎉 כל התפילות נאמרו! יפה.',
+        'all':    'התפילות עוד לא נטענו.',
+        'fav':    'עוד לא סימנת תפילה כמועדפת.',
+        'today':  'עוד לא אמרת תפילה היום. בוא נתחיל!'
+      };
+      cont.innerHTML = '<div class="pr-card-empty">' + (msgs[_prFilter] || '—') + '</div>';
+      return;
+    }
+    // Pick current index — ensure it's in the filtered list
+    if (indices.indexOf(_prCurIdx) === -1) _prCurIdx = indices[0];
+    const idx = _prCurIdx;
+    const text = _prPool[idx] || '—';
+    const said = loadPrSaid();
+    const isSaid = !!said[idx];
+    const fav = loadPrFav();
+    const isFav = fav.indexOf(idx) !== -1;
+    cont.innerHTML =
+      '<div class="pr-card">' +
+        '<div class="pr-card-num">תפילה #' + (idx + 1) + ' מתוך 515</div>' +
+        '<div class="pr-card-text">' + escapeHtml(text) + '</div>' +
+        '<div class="pr-card-actions">' +
+          '<button class="pr-action-btn fav' + (isFav ? ' on' : '') + '" id="prFavBtn">' + (isFav ? '⭐ במועדפים' : '☆ הוסף') + '</button>' +
+          '<button class="pr-action-btn said' + (isSaid ? ' done' : '') + '" id="prSaidBtn">' + (isSaid ? '✓ סומנה' : '✓ סמנתי שאמרתי') + '</button>' +
+          '<button class="pr-action-btn next" id="prNextBtn">⏭️ הבא</button>' +
+        '</div>' +
+      '</div>';
+    // Wire actions
+    document.getElementById('prFavBtn').addEventListener('click', function(){
+      const a = loadPrFav();
+      const i = a.indexOf(idx);
+      if (i === -1) a.push(idx); else a.splice(i, 1);
+      savePrFav(a);
+      renderPrayer();
+    });
+    document.getElementById('prSaidBtn').addEventListener('click', function(){
+      const o = loadPrSaid();
+      if (o[idx]) delete o[idx]; else o[idx] = Date.now();
+      savePrSaid(o);
+      // If now said and filter is "unsaid", move to next automatically
+      if (o[idx] && _prFilter === 'unsaid') {
+        const nextIdx = pickNextPrayer(idx);
+        if (nextIdx !== null) _prCurIdx = nextIdx;
+      }
+      renderPrayer();
+      try { toast(o[idx] ? '✓ תפילה ' + (idx + 1) + ' סומנה' : '✓ סימון בוטל'); } catch(e) {}
+    });
+    document.getElementById('prNextBtn').addEventListener('click', function(){
+      const nextIdx = pickNextPrayer(idx);
+      if (nextIdx !== null) { _prCurIdx = nextIdx; renderPrayer(); }
+    });
+  }
+
+  function pickNextPrayer(currentIdx){
+    const indices = getPrFilteredIndices();
+    if (indices.length === 0) return null;
+    const pos = indices.indexOf(currentIdx);
+    if (pos === -1) return indices[0];
+    return indices[(pos + 1) % indices.length];
+  }
+
+  async function initPrayers(){
+    if (_prInitialized) { renderPrayer(); return; }
+    _prInitialized = true;
+    // Wire filter buttons
+    document.querySelectorAll('[data-pr-filter]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('[data-pr-filter]').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        _prFilter = btn.dataset.prFilter;
+        // Reset to first item in filter
+        const list = getPrFilteredIndices();
+        if (list.length) _prCurIdx = list[0];
+        renderPrayer();
+      });
+    });
+    // Load pool
+    await loadPrayerPool();
+    // Default current idx — first unsaid prayer
+    if (_prPool) {
+      const said = loadPrSaid();
+      for (let i = 0; i < _prPool.length; i++) {
+        if (!said[i]) { _prCurIdx = i; break; }
+      }
+    }
+    renderPrayer();
+  }
+
   function _wireExtras(){
     // Personal note
     const ed = document.getElementById('pnoteEditBtn'); if (ed) ed.addEventListener('click', openPnoteEditor);
@@ -3071,7 +3249,7 @@
 
   // ===== Bottom tab navigation =====
   function switchAppTab(tab){
-    document.body.classList.remove('app-home','app-defense','app-building','app-journal');
+    document.body.classList.remove('app-home','app-defense','app-prayers','app-building','app-journal');
     document.body.classList.add('app-' + tab);
     document.querySelectorAll('.bnav-btn').forEach(function(el){
       el.classList.toggle('active', el.dataset.tab === tab);
@@ -3126,7 +3304,7 @@
   function _initAppTab(){
     let saved = 'home';
     try { saved = localStorage.getItem('neria_active_tab_v1') || 'home'; } catch(e) {}
-    if (!['home','defense','building','journal'].includes(saved)) saved = 'home';
+    if (!['home','defense','prayers','building','journal'].includes(saved)) saved = 'home';
     switchAppTab(saved);
   }
   _initAppTab();
@@ -3152,6 +3330,7 @@
   <nav class="bottom-nav">
     <button class="bnav-btn active" data-tab="home"><span class="bnav-icon">🏠</span><span>הבית</span></button>
     <button class="bnav-btn" data-tab="defense"><span class="bnav-icon">🛡️</span><span>הגנה</span></button>
+    <button class="bnav-btn" data-tab="prayers"><span class="bnav-icon">🙏</span><span>תפילות</span></button>
     <button class="bnav-btn" data-tab="building"><span class="bnav-icon">🏛️</span><span>בנייה</span></button>
     <button class="bnav-btn" data-tab="journal"><span class="bnav-icon">📜</span><span>יומן</span></button>
   </nav>
