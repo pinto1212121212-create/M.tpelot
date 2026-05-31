@@ -600,6 +600,18 @@
   body.app-prayers  .tabbed.tab-prayers,
   body.app-building .tabbed.tab-building,
   body.app-journal  .tabbed.tab-journal { display: block; animation: tabIn 0.35s ease-out; }
+  /* High-specificity rule to hide non-active tabs — overrides .tab-header {display:flex} etc. */
+  body.app-home     .tabbed:not(.tab-home),
+  body.app-defense  .tabbed:not(.tab-defense),
+  body.app-prayers  .tabbed:not(.tab-prayers),
+  body.app-building .tabbed:not(.tab-building),
+  body.app-journal  .tabbed:not(.tab-journal) { display: none !important; }
+  /* Restore flex layout for tab-header *when* it IS the active tab */
+  body.app-home     .tabbed.tab-home.tab-header,
+  body.app-defense  .tabbed.tab-defense.tab-header,
+  body.app-prayers  .tabbed.tab-prayers.tab-header,
+  body.app-building .tabbed.tab-building.tab-header,
+  body.app-journal  .tabbed.tab-journal.tab-header { display: flex !important; }
   @keyframes tabIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
 
   .tab-header { margin: 14px 0 8px; padding: 8px 4px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 18px; color: var(--brown-deep); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
@@ -2215,13 +2227,26 @@
     return n;
   }
 
+  let _prLoadError = null;
   async function loadPrayerPool(){
     if (_prPool) return _prPool;
     if (_prPoolPromise) return _prPoolPromise;
-    _prPoolPromise = fetch('data/neria_brit.json', { cache: 'force-cache' })
-      .then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-      .then(function(arr){ _prPool = arr; return arr; })
-      .catch(function(e){ console.error('prayer pool load failed:', e); _prPoolPromise = null; return null; });
+    _prLoadError = null;
+    _prPoolPromise = fetch('data/neria_brit.json', { cache: 'default' })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(arr){
+        if (!Array.isArray(arr) || arr.length < 100) throw new Error('invalid data');
+        _prPool = arr;
+        return arr;
+      })
+      .catch(function(e){
+        console.error('prayer pool load failed:', e);
+        _prLoadError = (e && e.message) ? e.message : 'unknown';
+        _prPoolPromise = null;
+        // Re-render to show error
+        try { renderPrayer(); } catch(x) {}
+        return null;
+      });
     return _prPoolPromise;
   }
 
@@ -2242,7 +2267,20 @@
 
   function renderPrayer(){
     const cont = document.getElementById('prCardContainer'); if (!cont) return;
-    if (!_prPool) { cont.innerHTML = '<div class="pr-loading">טוען תפילות...</div>'; return; }
+    if (!_prPool) {
+      if (_prLoadError) {
+        cont.innerHTML = '<div class="pr-card-empty">⚠️ שגיאה בטעינה. נסה שוב.<br><br><button class="pr-action-btn next" id="prRetryBtn">🔄 נסה שוב</button></div>';
+        var rb = document.getElementById('prRetryBtn');
+        if (rb) rb.addEventListener('click', function(){
+          _prInitialized = false; _prLoadError = null; _prPool = null; _prPoolPromise = null;
+          cont.innerHTML = '<div class="pr-loading">טוען תפילות...</div>';
+          initPrayers();
+        });
+      } else {
+        cont.innerHTML = '<div class="pr-loading">טוען תפילות...</div>';
+      }
+      return;
+    }
     // Update stats
     const total = countPrSaid();
     const today = countPrSaidToday();
@@ -2314,7 +2352,7 @@
   }
 
   async function initPrayers(){
-    if (_prInitialized) { renderPrayer(); return; }
+    if (_prInitialized && _prPool) { renderPrayer(); return; }
     _prInitialized = true;
     // Wire filter buttons
     document.querySelectorAll('[data-pr-filter]').forEach(function(btn){
