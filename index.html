@@ -3799,13 +3799,15 @@
           if (i < args.length - 1) msg += ' ';
         }
         if (stack) msg += '\n' + stack;
+        if (window.__debugLog.length > 500) window.__debugLog.shift();
         window.__debugLog.push({ ts: ts, kind: kind, msg: msg });
         if (kind === 'error') {
           errCount++;
           var dot = document.getElementById('debugBtnDot');
           if (dot) { dot.textContent = errCount; dot.classList.add('show'); }
         }
-        renderDebugBody();
+        var pnl = document.getElementById('debugPanel');
+        if (pnl && pnl.classList.contains('open')) renderDebugBody();
       } catch(e) {}
     }
     function renderDebugBody() {
@@ -3839,7 +3841,7 @@
       var cls = document.getElementById('dbgClose');
       var clr = document.getElementById('dbgClear');
       var cpy = document.getElementById('dbgCopy');
-      if (btn) btn.addEventListener('click', function() { if (pnl) pnl.classList.add('open'); renderDebugBody(); });
+      if (btn) btn.addEventListener('click', function() { if (pnl) pnl.classList.add('open'); setTimeout(renderDebugBody, 0); });
       if (cls) cls.addEventListener('click', function() { if (pnl) pnl.classList.remove('open'); });
       if (clr) clr.addEventListener('click', function() { window.__debugLog = []; errCount = 0; var dot = document.getElementById('debugBtnDot'); if (dot) { dot.classList.remove('show'); dot.textContent = '0'; } renderDebugBody(); });
       if (cpy) cpy.addEventListener('click', function() {
@@ -4956,8 +4958,9 @@ const TOTAL_OSHER = TEFILOT.length;
   }
 
   function switchTab(tabName) {
+    try { window.dbg && window.dbg('switchTab → ' + tabName); } catch(e) {}
     try {
-      if (tabName === currentTab) return;
+      if (tabName === currentTab) { try { window.dbg && window.dbg('switchTab: same tab, bail'); } catch(e) {} return; }
       currentTab = tabName;
 
       const mainTabName = mainTabFor(tabName);
@@ -4977,15 +4980,20 @@ const TOTAL_OSHER = TEFILOT.length;
         if (subtitleEl) subtitleEl.textContent = 'מעקב מצוות וצבירת זכויות';
         if (verseEl) verseEl.textContent = '״ויעקב הלך לדרכו ויפגעו בו מלאכי אלוהים״';
         try { localStorage.setItem(STORAGE_KEY_TAB, tabName); } catch(e) {}
+        try { window.dbg && window.dbg('switchTab/score: loadTodayState'); } catch(e) {}
         loadTodayState();
+        try { window.dbg && window.dbg('switchTab/score: loadGoals'); } catch(e) {}
         loadGoals();
+        try { window.dbg && window.dbg('switchTab/score: renderScoreView'); } catch(e) {}
         renderScoreView();
+        try { window.dbg && window.dbg('switchTab/score: done'); } catch(e) {}
         return;
       }
 
       // Normal tabs
       document.body.classList.remove('score-mode');
       const data = TABS_DATA[tabName];
+      if (!data) { try { window.dbg && window.dbg('switchTab: NO TABS_DATA[' + tabName + ']'); } catch(e) {} return; }
       const titleEl = document.getElementById('mainTitle');
       const subtitleEl = document.getElementById('mainSubtitle');
       const verseEl = document.getElementById('mainVerse');
@@ -4996,10 +5004,15 @@ const TOTAL_OSHER = TEFILOT.length;
       try { localStorage.setItem(STORAGE_KEY_TAB, tabName); } catch(e) {}
 
       displayedIndices = [];
+      try { window.dbg && window.dbg('switchTab: loadState'); } catch(e) {}
       loadState();
+      try { window.dbg && window.dbg('switchTab: renderPrayers'); } catch(e) {}
       renderPrayers();
+      try { window.dbg && window.dbg('switchTab: updateStats'); } catch(e) {}
       updateStats();
+      try { window.dbg && window.dbg('switchTab: updateTabColors'); } catch(e) {}
       updateTabColors();
+      try { window.dbg && window.dbg('switchTab: done'); } catch(e) {}
     } catch(err) {
       console.error('switchTab error:', err);
     }
@@ -7170,7 +7183,10 @@ const TOTAL_OSHER = TEFILOT.length;
   try { updateSubtabs(); } catch(e) {}
   try { updateProfileButtons(); } catch(e) {}
   try { MITZVOT = getActiveMitzvot(); } catch(e) {}
-  try { _backgroundWarmupPools(); } catch(e) {}
+  // _backgroundWarmupPools disabled — was downloading all 23 pools (~7.5MB) and
+  // saturating slow mobile connections, making the active tab fetch hang.
+  // Pools now load on-demand when the user clicks the relevant tab.
+  // try { _backgroundWarmupPools(); } catch(e) {}
 
   // Refresh data when user returns to the page (e.g., from background)
   document.addEventListener('visibilitychange', function() {
