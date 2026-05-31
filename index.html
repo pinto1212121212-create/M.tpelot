@@ -4477,7 +4477,7 @@ const TOTAL_OSHER = TEFILOT.length;
     const __pv = poolVarForTab(currentTab);
     if(__pv && !_poolLoaded[__pv]){
       showPoolLoading();
-      ensurePool(__pv).then(function(){ try { renderPrayers(); } catch(e){} });
+      ensurePool(__pv).then(function(){ try { renderPrayers(); updateStats(); } catch(e){} });
       return;
     }
     hidePoolLoading();
