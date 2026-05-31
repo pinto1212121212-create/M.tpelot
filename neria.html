@@ -3396,6 +3396,32 @@
   loadToday(); loadGoals(); render(); pullDown();
   setTimeout(() => { appReady = true; }, 1200);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
+
+  // Expose IIFE-scoped functions to the outer scope so switchAppTab
+  // (defined outside this IIFE) can call them.
+  try { window.render             = render; } catch(e) {}
+  try { window.renderHero         = renderHero; } catch(e) {}
+  try { window.renderWhy          = renderWhy; } catch(e) {}
+  try { window.renderIntention    = renderIntention; } catch(e) {}
+  try { window.renderPnote        = renderPnote; } catch(e) {}
+  try { window.renderVictories    = renderVictories; } catch(e) {}
+  try { window.renderWall3        = renderWall3; } catch(e) {}
+  try { window.updateEmergencyTheme = updateEmergencyTheme; } catch(e) {}
+  try { window.renderBuilding     = renderBuilding; } catch(e) {}
+  try { window.renderBuildingExtras = renderBuildingExtras; } catch(e) {}
+  try { window.renderMikdashStage = renderMikdashStage; } catch(e) {}
+  try { window.initPrayers        = initPrayers; } catch(e) {}
+  try { window.renderPrayer       = renderPrayer; } catch(e) {}
+  try { window.renderBritLog      = renderBritLog; } catch(e) {}
+  try { window.renderReflection   = renderReflection; } catch(e) {}
+  try { window.renderFines        = renderFines; } catch(e) {}
+  try { window.renderTrackers     = renderTrackers; } catch(e) {}
+  try { window.renderGoals        = renderGoals; } catch(e) {}
+  try { window.renderSummary      = renderSummary; } catch(e) {}
+  try { window.renderHistory      = renderHistory; } catch(e) {}
+  try { window.renderChart        = renderChart; } catch(e) {}
+  try { window.renderJournal      = renderJournal; } catch(e) {}
+  try { window.dbg && window.dbg('exposed all render functions to window'); } catch(e) {}
 })();
 
   // ===== Bottom tab navigation =====
