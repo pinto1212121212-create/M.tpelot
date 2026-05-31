@@ -3151,9 +3151,41 @@
   .v-shine { transform-box:fill-box; animation:vShine 5.5s ease-in-out infinite; }
   @keyframes vRot2 { to { transform: rotate(360deg); } }
   .v-rays { transform-box:view-box; transform-origin:60px 64px; animation:vRot2 90s linear infinite; }
+
+  /* ===== Debug panel ===== */
+  #debugBtn { position: fixed; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #6b1f1f, #8a2a2a); color: #fff; border: 2px solid #fff; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.4); z-index: 100000; }
+  #debugBtn:active { transform: scale(0.95); }
+  #debugBtn .dot { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; border-radius: 50%; background: #ffcc00; color: #000; font-size: 11px; font-weight: 900; display: none; align-items: center; justify-content: center; border: 2px solid #fff; }
+  #debugBtn .dot.show { display: flex; }
+  #debugPanel { position: fixed; inset: 0; background: rgba(20,15,10,0.97); color: #f0f0f0; z-index: 99999; display: none; flex-direction: column; padding: 50px 10px 10px; }
+  #debugPanel.open { display: flex; }
+  #debugPanel .hdr { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  #debugPanel .hdr h3 { margin: 0; color: #ffcc00; font-family: monospace; font-size: 14px; flex: 1; }
+  #debugPanel button { padding: 6px 10px; background: #444; color: #fff; border: 1px solid #666; border-radius: 4px; font-family: monospace; font-size: 12px; cursor: pointer; }
+  #debugPanel .body { flex: 1; overflow-y: auto; background: #000; padding: 8px; border-radius: 4px; font-family: monospace; font-size: 11px; line-height: 1.4; white-space: pre-wrap; word-break: break-all; }
+  #debugPanel .line { margin: 0 0 4px; padding: 4px 6px; border-radius: 3px; }
+  #debugPanel .line.log { background: #1a2a3a; color: #d0e0f0; }
+  #debugPanel .line.warn { background: #3a2a1a; color: #ffd060; }
+  #debugPanel .line.error { background: #3a1a1a; color: #ff8080; font-weight: 700; }
+  #debugPanel .line.info { background: #1a3a2a; color: #80ff80; }
+  #debugPanel .line.step { background: #2a1a3a; color: #c0a0ff; }
+  #debugPanel .ts { opacity: 0.5; font-size: 9px; margin-right: 4px; }
+  #debugVersion { position: fixed; top: 12px; left: 12px; background: rgba(0,0,0,0.7); color: #ffcc00; font-family: monospace; font-size: 10px; padding: 4px 8px; border-radius: 4px; z-index: 99998; pointer-events: none; }
 </style>
 </head>
 <body>
+
+  <button id="debugBtn" type="button" aria-label="Debug" title="לחץ לפתיחת פאנל שגיאות">🐛<span class="dot" id="debugBtnDot">0</span></button>
+  <div id="debugVersion">v2026-05-31 13:00 UTC</div>
+  <div id="debugPanel">
+    <div class="hdr">
+      <h3>🐛 Debug — v2026-05-31 13:00 UTC</h3>
+      <button id="dbgCopy">📋 העתק הכל</button>
+      <button id="dbgClear">🗑️ נקה</button>
+      <button id="dbgClose">✕ סגור</button>
+    </div>
+    <div class="body" id="debugBody"></div>
+  </div>
 
 <div class="page-frame">
   <svg class="corner-ornament tl" viewBox="0 0 40 40">
@@ -3748,6 +3780,83 @@
 </div>
 
 <script>
+
+  // ===== Debug capture system — installed FIRST in the main script =====
+  (function() {
+    window.__debugLog = [];
+    window.__debugVersion = '2026-05-31 13:00 UTC';
+    var errCount = 0;
+    function pushDebug(kind, args, stack) {
+      try {
+        var ts = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        var msg = '';
+        for (var i = 0; i < args.length; i++) {
+          var a = args[i];
+          try {
+            if (a && typeof a === 'object') msg += JSON.stringify(a, null, 2);
+            else msg += String(a);
+          } catch(e) { msg += '[unstringifiable]'; }
+          if (i < args.length - 1) msg += ' ';
+        }
+        if (stack) msg += '\n' + stack;
+        window.__debugLog.push({ ts: ts, kind: kind, msg: msg });
+        if (kind === 'error') {
+          errCount++;
+          var dot = document.getElementById('debugBtnDot');
+          if (dot) { dot.textContent = errCount; dot.classList.add('show'); }
+        }
+        renderDebugBody();
+      } catch(e) {}
+    }
+    function renderDebugBody() {
+      var b = document.getElementById('debugBody');
+      if (!b) return;
+      var html = '';
+      for (var i = 0; i < window.__debugLog.length; i++) {
+        var L = window.__debugLog[i];
+        html += '<div class="line ' + L.kind + '"><span class="ts">' + L.ts + '</span>' + escapeHtmlForDebug(L.msg) + '</div>';
+      }
+      b.innerHTML = html;
+      b.scrollTop = b.scrollHeight;
+    }
+    function escapeHtmlForDebug(s) {
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    var origLog = console.log, origWarn = console.warn, origErr = console.error;
+    console.log = function() { pushDebug('log', arguments); try { origLog.apply(console, arguments); } catch(e){} };
+    console.warn = function() { pushDebug('warn', arguments); try { origWarn.apply(console, arguments); } catch(e){} };
+    console.error = function() { pushDebug('error', arguments); try { origErr.apply(console, arguments); } catch(e){} };
+    window.addEventListener('error', function(e) {
+      pushDebug('error', ['UNCAUGHT: ' + (e.message || e) + ' @ ' + (e.filename || '?') + ':' + (e.lineno || '?')], e.error && e.error.stack ? e.error.stack : null);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      pushDebug('error', ['UNHANDLED PROMISE: ' + (e.reason && e.reason.message ? e.reason.message : e.reason)], e.reason && e.reason.stack);
+    });
+    window.dbg = function(msg) { pushDebug('step', ['▶ ' + msg], null); };
+    function wireDebugUI() {
+      var btn = document.getElementById('debugBtn');
+      var pnl = document.getElementById('debugPanel');
+      var cls = document.getElementById('dbgClose');
+      var clr = document.getElementById('dbgClear');
+      var cpy = document.getElementById('dbgCopy');
+      if (btn) btn.addEventListener('click', function() { if (pnl) pnl.classList.add('open'); renderDebugBody(); });
+      if (cls) cls.addEventListener('click', function() { if (pnl) pnl.classList.remove('open'); });
+      if (clr) clr.addEventListener('click', function() { window.__debugLog = []; errCount = 0; var dot = document.getElementById('debugBtnDot'); if (dot) { dot.classList.remove('show'); dot.textContent = '0'; } renderDebugBody(); });
+      if (cpy) cpy.addEventListener('click', function() {
+        var lines = window.__debugLog.map(function(L) { return '[' + L.kind.toUpperCase() + ' ' + L.ts + '] ' + L.msg; }).join('\n');
+        var text = 'v2026-05-31 13:00 UTC\n\n' + lines;
+        try {
+          if (navigator.clipboard) navigator.clipboard.writeText(text);
+          else { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+          alert('הועתק! עכשיו תוכל להדביק את זה לצ\'אט.');
+        } catch(e) { alert('שגיאה בהעתקה: ' + e); }
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireDebugUI);
+    else wireDebugUI();
+    pushDebug('info', ['🚀 Debug system loaded · v2026-05-31 13:00 UTC'], null);
+  })();
+
   // ============= TEFILOT POOL (1-30) =============
   const TEFILOT = []; // lazy-loaded from data/osher.json (515 items)
 
