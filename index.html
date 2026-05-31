@@ -3236,6 +3236,71 @@
   #moreSheet .close-x { background: none; border: none; font-size: 22px; color: var(--brown, #6a3a1a); cursor: pointer; padding: 0 8px; position: absolute; top: 14px; left: 14px; }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ===== Category picker (replaces the horizontal-scroll top tabs) ===== */
+  /* Hide the old top tabs scroll — categories now live in the picker sheet */
+  .tabs { display: none !important; }
+  /* Hide verse on phones to give the prayer cards more vertical room */
+  @media (max-width: 640px) { .verse { display: none; } }
+  /* Compact the header slightly */
+  header { cursor: pointer; user-select: none; -webkit-user-select: none; padding: 6px 4px 12px; transition: opacity 0.15s; }
+  header:active { opacity: 0.7; }
+  header h1 { display: inline-flex; align-items: center; gap: 8px; }
+  header h1::after {
+    content: '▾'; font-size: 18px; color: var(--gold, #c9a961);
+    transform: translateY(2px); transition: transform 0.2s;
+  }
+  body.cat-open header h1::after { transform: rotate(180deg) translateY(-2px); }
+  header .picker-hint { display: block; font-size: 11px; color: var(--brown-light, #8a6a4a); margin-top: 4px; letter-spacing: 0.3px; }
+
+  #categoryPicker { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8000; display: none; align-items: flex-end; }
+  #categoryPicker.open { display: flex; animation: fadeIn 0.2s; }
+  #categoryPicker .sheet {
+    width: 100%;
+    background: var(--parchment, #fdf6e3);
+    border-radius: 16px 16px 0 0;
+    padding: 18px 14px max(18px, env(safe-area-inset-bottom));
+    max-height: 85vh; overflow-y: auto;
+    animation: slideUp 0.25s ease-out;
+    position: relative;
+  }
+  #categoryPicker h3 { margin: 0 0 14px; color: var(--brown-deep, #4a2a1a); text-align: center; font-size: 18px; }
+  #categoryPicker .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  #categoryPicker .cat-card {
+    padding: 14px 10px; border: 1.5px solid var(--gold, #c9a961);
+    border-radius: 12px; background: #fff;
+    cursor: pointer; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-family: inherit; transition: all 0.2s;
+    color: var(--brown-deep, #4a2a1a);
+  }
+  #categoryPicker .cat-card:active { transform: scale(0.97); }
+  #categoryPicker .cat-card.active {
+    background: linear-gradient(135deg, var(--brown-deep, #4a2a1a), var(--brown, #6a3a1a));
+    color: #fff8e7; border-color: var(--gold-dark, #b8932f);
+    box-shadow: 0 4px 12px rgba(60,30,10,0.25);
+  }
+  #categoryPicker .cat-icon { font-size: 28px; line-height: 1; }
+  #categoryPicker .cat-name { font-weight: 700; font-size: 13.5px; line-height: 1.2; }
+  #categoryPicker .cat-progress { font-size: 11px; opacity: 0.72; font-variant-numeric: tabular-nums; }
+  #categoryPicker .cat-done { font-size: 10px; color: var(--gold-dark, #b8932f); font-weight: 700; }
+  #categoryPicker .cat-card.active .cat-done { color: var(--gold-light, #f0d68f); }
+
+  /* Compact profile selector to small avatars in the top corner */
+  .profile-selector {
+    position: fixed; top: 10px; right: 60px;
+    z-index: 99997; gap: 4px;
+    background: rgba(255,247,224,0.85);
+    border-radius: 22px; padding: 3px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 8px rgba(60,30,10,0.15);
+  }
+  .profile-selector .profile-btn {
+    padding: 4px 8px !important; gap: 4px !important;
+    font-size: 12px !important; min-width: 0 !important;
+  }
+  .profile-selector .profile-label { font-size: 12px !important; }
+  .profile-selector .profile-icon { font-size: 16px !important; }
 </style>
 </head>
 <body>
@@ -3270,11 +3335,12 @@
     <circle cx="22" cy="22" r="2" fill="currentColor"/>
   </svg>
 
-  <header>
+  <header id="appHeader">
     <div class="crown">✦ ✦ ✦</div>
     <h1 id="mainTitle">תקט״ו תפילות</h1>
     <div class="subtitle" id="mainSubtitle">לעושר ולשפע · במניין תפילות משה רבינו</div>
     <div class="verse" id="mainVerse">״ואתחנן אל ה׳ בעת ההיא לאמר״</div>
+    <span class="picker-hint" id="pickerHint">לחץ כדי לבחור מאגר אחר</span>
   </header>
 
   <div class="profile-selector">
@@ -7918,10 +7984,74 @@ const TOTAL_OSHER = TEFILOT.length;
     const rs = document.getElementById('moreRestore'); if (rs) rs.addEventListener('click', function(){ const f = document.getElementById('restoreFile'); if (f) f.click(); closeMoreSheet(); });
     const rb = document.getElementById('moreReset'); if (rb) rb.addEventListener('click', function(){ try { requestReset(); } catch(e){} closeMoreSheet(); });
   }
+  // ===== Category picker (replaces the horizontal-scroll top tabs) =====
+  const PICKER_TABS = [
+    { id: 'osher',    icon: '💰', label: 'עושר ושפע' },
+    { id: 'roei',     icon: '👶', label: 'רועי בני' },
+    { id: 'leda',     icon: '🤰', label: 'לידה קלה' },
+    { id: 'hayalim',  icon: '🪖', label: 'חיילי צה״ל' },
+    { id: 'refua',    icon: '🩹', label: 'רפואה שלמה' },
+    { id: 'briaut',   icon: '💚', label: 'בריאות' },
+    { id: 'zikui',    icon: '✨', label: 'זיכוי הרבים' },
+    { id: 'hochma',   icon: '📚', label: 'חכמה' },
+    { id: 'bitachon', icon: '🛡️', label: 'ביטחון בה׳' },
+    { id: 'brit',     icon: '💎', label: 'שמירת הברית' },
+    { id: 'friends',  icon: '👥', label: 'חברים ומשפחה' }
+  ];
+  function _saidCountForTab(tabId) {
+    try {
+      const data = TABS_DATA[tabId];
+      if (!data || !data.storageKey) return 0;
+      const raw = localStorage.getItem(data.storageKey);
+      if (!raw) return 0;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr.length : 0;
+    } catch(e) { return 0; }
+  }
+  function openCategoryPicker() {
+    const grid = document.getElementById('catpickGrid');
+    if (!grid) return;
+    const activeId = (typeof currentTab !== 'undefined' && currentTab !== 'score') ? mainTabFor(currentTab) : null;
+    grid.innerHTML = PICKER_TABS.map(function(t){
+      const data = TABS_DATA[t.id];
+      const said = _saidCountForTab(t.id);
+      const total = (data && data.total) || 515;
+      const active = (t.id === activeId) ? ' active' : '';
+      const doneBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
+      return '<button class="cat-card' + active + '" data-tab="' + t.id + '">' +
+        '<span class="cat-icon">' + t.icon + '</span>' +
+        '<span class="cat-name">' + t.label + '</span>' +
+        '<span class="cat-progress">' + said + ' / ' + total + '</span>' +
+        doneBadge +
+      '</button>';
+    }).join('');
+    const p = document.getElementById('categoryPicker');
+    if (p) p.classList.add('open');
+    document.body.classList.add('cat-open');
+  }
+  function closeCategoryPicker() {
+    const p = document.getElementById('categoryPicker');
+    if (p) p.classList.remove('open');
+    document.body.classList.remove('cat-open');
+  }
+  function wireCategoryPicker() {
+    const hdr = document.getElementById('appHeader');
+    if (hdr) hdr.addEventListener('click', openCategoryPicker);
+    const cp = document.getElementById('categoryPicker');
+    if (cp) cp.addEventListener('click', function(e){
+      if (e.target === cp) { closeCategoryPicker(); return; }
+      const btn = e.target && e.target.closest && e.target.closest('.cat-card');
+      if (btn) { switchTab(btn.dataset.tab); closeCategoryPicker(); }
+    });
+    const cls = document.getElementById('catpickClose');
+    if (cls) cls.addEventListener('click', function(e){ e.stopPropagation(); closeCategoryPicker(); });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ wireMoreSheet(); updateBottomNavActive(); });
+    document.addEventListener('DOMContentLoaded', function(){ wireMoreSheet(); wireCategoryPicker(); updateBottomNavActive(); });
   } else {
     wireMoreSheet();
+    wireCategoryPicker();
     updateBottomNavActive();
   }
 </script>
@@ -7947,6 +8077,14 @@ const TOTAL_OSHER = TEFILOT.length;
   <button class="bnav-btn" data-mtab="archive"><span class="bnav-icon">📜</span><span>ארכיון</span></button>
   <button class="bnav-btn" data-mtab="more"><span class="bnav-icon">⚙️</span><span>עוד</span></button>
 </nav>
+
+<div id="categoryPicker" role="dialog" aria-modal="true">
+  <div class="sheet">
+    <button class="close-x" id="catpickClose" aria-label="סגור">✕</button>
+    <h3>בחר מאגר תפילות</h3>
+    <div class="grid" id="catpickGrid"></div>
+  </div>
+</div>
 
 <div id="moreSheet" role="dialog" aria-modal="true">
   <div class="sheet">
