@@ -2374,7 +2374,9 @@
   }
 
   function renderPrayer(){
-    const cont = document.getElementById('prCardContainer'); if (!cont) return;
+    const cont = document.getElementById('prCardContainer');
+    try { window.dbg && window.dbg('renderPrayer: cont=' + (cont ? 'found' : 'NULL') + ', _prPool=' + (_prPool ? _prPool.length : 'null') + ', _prCurIdx=' + _prCurIdx + ', _prFilter=' + _prFilter); } catch(e){}
+    if (!cont) { try { window.dbg && window.dbg('⚠️ prCardContainer element NOT FOUND in DOM'); } catch(e){} return; }
     if (!_prPool) {
       if (_prLoadError) {
         cont.innerHTML = '<div class="pr-card-empty">⚠️ שגיאה בטעינה. נסה שוב.<br><br><button class="pr-action-btn next" id="prRetryBtn">🔄 נסה שוב</button></div>';
@@ -2397,6 +2399,7 @@
     const bar = document.getElementById('prProgressBar'); if (bar) bar.style.width = Math.round((total / 515) * 100) + '%';
     // Build filtered list
     const indices = getPrFilteredIndices();
+    try { window.dbg && window.dbg('filtered indices: ' + indices.length + ' (filter=' + _prFilter + ')'); } catch(e){}
     if (indices.length === 0) {
       const msgs = {
         'unsaid': '🎉 כל התפילות נאמרו! יפה.',
@@ -2415,6 +2418,7 @@
     const isSaid = !!said[idx];
     const fav = loadPrFav();
     const isFav = fav.indexOf(idx) !== -1;
+    try { window.dbg && window.dbg("✓ rendering prayer card #" + (idx+1)); } catch(e){}
     cont.innerHTML =
       '<div class="pr-card">' +
         '<div class="pr-card-num">תפילה #' + (idx + 1) + ' מתוך 515</div>' +
@@ -2460,9 +2464,11 @@
   }
 
   function initPrayers(){
+    try { window.dbg && window.dbg('initPrayers() start. _prPool=' + (_prPool ? _prPool.length : 'null') + ', _prInitialized=' + _prInitialized); } catch(e){}
     // Make sure pool is loaded (synchronous)
     loadPrayerPool();
-    if (_prInitialized) { renderPrayer(); return; }
+    try { window.dbg && window.dbg('after loadPrayerPool. _prPool=' + (_prPool ? _prPool.length : 'null')); } catch(e){}
+    if (_prInitialized) { try { window.dbg && window.dbg('already initialized → renderPrayer'); } catch(e){} renderPrayer(); return; }
     _prInitialized = true;
     // Wire filter buttons
     document.querySelectorAll('[data-pr-filter]').forEach(function(btn){
@@ -3394,6 +3400,7 @@
 
   // ===== Bottom tab navigation =====
   function switchAppTab(tab){
+    try { window.dbg && window.dbg('switchAppTab(' + tab + ')'); } catch(e){}
     document.body.classList.remove('app-home','app-defense','app-prayers','app-building','app-journal');
     document.body.classList.add('app-' + tab);
     document.querySelectorAll('.bnav-btn').forEach(function(el){
