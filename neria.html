@@ -3151,29 +3151,7 @@
   }
   function importBackup(file) {
     const reader = new FileReader();
-    reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('neria_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot();
-  // === Migration: keep only "friend_check" extra (on brit); remove all others ===
-  (function migrateMitzvot(){
-    try {
-      let changed = false;
-      MITZVOT.forEach(function(m){
-        if (!m) return;
-        // Rename eyes mitzva to clarify it's about porn movies
-        if (m.id === 'eyes' && m.name === 'יום נקי - שמירת העיניים') {
-          m.name = 'יום נקי מסרטים - שמירת העיניים';
-          changed = true;
-        }
-        if (!Array.isArray(m.extras)) return;
-        const before = JSON.stringify(m.extras);
-        // Strip ALL extras except "friend_check" on the brit mitzva
-        m.extras = m.extras.filter(function(ex){
-          return ex && ex.id === 'friend_check' && m.id === 'brit';
-        });
-        if (JSON.stringify(m.extras) !== before) changed = true;
-      });
-      if (changed) saveMitzvot();
-    } catch(e) {}
-  })(); loadToday(); loadGoals(); render(); pushUp(); toast('שוחזר בהצלחה'); } catch(e) { alert('קובץ גיבוי לא תקין'); } };
+    reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('neria_')===0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); MITZVOT = loadMitzvot(); migrateMitzvot(); loadToday(); loadGoals(); render(); pushUp(); toast('שוחזר בהצלחה'); } catch(e) { alert('קובץ גיבוי לא תקין'); } };
     reader.readAsText(file);
   }
 
@@ -3442,8 +3420,30 @@
   document.getElementById('restoreBtn').addEventListener('click', () => document.getElementById('restoreFile').click());
   document.getElementById('restoreFile').addEventListener('change', (e) => { if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]); e.target.value = ''; });
 
+  // === Migration: rename eyes; keep only "friend_check" extra on brit; strip all other extras ===
+  function migrateMitzvot(){
+    try {
+      let changed = false;
+      MITZVOT.forEach(function(m){
+        if (!m) return;
+        if (m.id === 'eyes' && m.name === 'יום נקי - שמירת העיניים') {
+          m.name = 'יום נקי מסרטים - שמירת העיניים';
+          changed = true;
+        }
+        if (!Array.isArray(m.extras)) return;
+        const before = JSON.stringify(m.extras);
+        m.extras = m.extras.filter(function(ex){
+          return ex && ex.id === 'friend_check' && m.id === 'brit';
+        });
+        if (JSON.stringify(m.extras) !== before) changed = true;
+      });
+      if (changed) saveMitzvot();
+    } catch(e) {}
+  }
+
   // ===== Init =====
   MITZVOT = loadMitzvot();
+  migrateMitzvot();
   loadToday(); loadGoals(); render(); pullDown();
   setTimeout(() => { appReady = true; }, 1200);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { loadToday(); render(); pullDown(); } });
