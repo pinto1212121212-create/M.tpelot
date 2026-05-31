@@ -3232,6 +3232,10 @@
       שמירת הברית
       <span class="tab-subtitle">בקדושה ובטהרה</span>
     </button>
+    <button class="tab-btn" data-tab="friends">
+      חברים ומשפחה
+      <span class="tab-subtitle">תפילות אישיות מסתובבות</span>
+    </button>
     <button class="tab-btn" data-tab="score">
       ניקוד יומי
       <span class="tab-subtitle">מעקב מצוות</span>
@@ -3749,6 +3753,7 @@
 
   // ============= TEFILOT_BRIT POOL (1-40) - Initial set =============
   const TEFILOT_BRIT = []; // lazy-loaded from data/brit.json (515 items)
+  const TEFILOT_FRIENDS = []; // lazy-loaded from data/friends.json (515 items)
 
   // ============= TEFILOT_BRIT_TAL POOL (515 prayers - קדושת בנות ישראל - לטל) =============
   const TEFILOT_BRIT_TAL = []; // lazy-loaded from data/brit_tal.json (515 items)
@@ -3805,6 +3810,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const TOTAL_BRIT = TEFILOT_BRIT.length;
   const STORAGE_KEY_OSHER = 'tefilot_said_v2';
   const STORAGE_KEY_BRIT = 'tefilot_brit_said_v1';
+  const STORAGE_KEY_FRIENDS = 'tefilot_friends_said_v1';
   const STORAGE_KEY_BRIT_TAL = 'tefilot_brit_tal_said_v1';
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_said_v1';
@@ -3987,6 +3993,7 @@ const TOTAL_OSHER = TEFILOT.length;
   }
   const FAV_KEY_OSHER = 'tefilot_osher_fav_v1';
   const FAV_KEY_BRIT = 'tefilot_brit_fav_v1';
+  const FAV_KEY_FRIENDS = 'tefilot_friends_fav_v1';
   const FAV_KEY_BRIT_TAL = 'tefilot_brit_tal_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
   const FAV_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_fav_v1';
@@ -4088,6 +4095,16 @@ const TOTAL_OSHER = TEFILOT.length;
       title: 'שמירת הברית',
       subtitle: 'תפילות לקדושה ולטהרה',
       verse: '״לב טהור ברא לי אלוהים״',
+      poolLength: 515
+    },
+    friends: {
+      pool: TEFILOT_FRIENDS,
+      total: 515,
+      storageKey: STORAGE_KEY_FRIENDS,
+      favStorageKey: FAV_KEY_FRIENDS,
+      title: 'תקט״ו תפילות לחברים ולמשפחה',
+      subtitle: 'תפילה אישית על כל אחד מהיקרים — מסתובבת מדי יום',
+      verse: '״המתפלל על חברו והוא צריך לאותו דבר הוא נענה תחילה״',
       poolLength: 515
     },
     brit_tal: {
@@ -4775,8 +4792,8 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ROEI': TEFILOT_ROEI,
     'TEFILOT_ROEI_TAL': TEFILOT_ROEI_TAL
   };
-  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
-  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
+  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
+  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
   const _poolLoaded = {};
   const _poolLoading = {};
   function poolVarForTab(t){ return _POOL_TAB_TO_VAR[t]; }
