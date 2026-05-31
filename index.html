@@ -3306,10 +3306,10 @@
 <body>
 
   <button id="debugBtn" type="button" aria-label="Debug" title="לחץ לפתיחת פאנל שגיאות">🐛<span class="dot" id="debugBtnDot">0</span></button>
-  <div id="debugVersion">v2026-05-31 13:00 UTC</div>
+  <div id="debugVersion">v2026-05-31 16:00 UTC</div>
   <div id="debugPanel">
     <div class="hdr">
-      <h3>🐛 Debug — v2026-05-31 13:00 UTC</h3>
+      <h3>🐛 Debug — v2026-05-31 16:00 UTC</h3>
       <button id="dbgCopy">📋 העתק הכל</button>
       <button id="dbgClear">🗑️ נקה</button>
       <button id="dbgClose">✕ סגור</button>
@@ -3977,7 +3977,7 @@
       if (clr) clr.addEventListener('click', function() { window.__debugLog = []; errCount = 0; var dot = document.getElementById('debugBtnDot'); if (dot) { dot.classList.remove('show'); dot.textContent = '0'; } renderDebugBody(); });
       if (cpy) cpy.addEventListener('click', function() {
         var lines = window.__debugLog.map(function(L) { return '[' + L.kind.toUpperCase() + ' ' + L.ts + '] ' + L.msg; }).join('\n');
-        var text = 'v2026-05-31 13:00 UTC\n\n' + lines;
+        var text = 'v2026-05-31 16:00 UTC\n\n' + lines;
         try {
           if (navigator.clipboard) navigator.clipboard.writeText(text);
           else { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
@@ -3987,7 +3987,7 @@
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireDebugUI);
     else wireDebugUI();
-    pushDebug('info', ['🚀 Debug system loaded · v2026-05-31 13:00 UTC'], null);
+    pushDebug('info', ['🚀 Debug system loaded · v2026-05-31 16:00 UTC'], null);
   })();
 
   // ============= TEFILOT POOL (1-30) =============
