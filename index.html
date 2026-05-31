@@ -7893,8 +7893,11 @@ const TOTAL_OSHER = TEFILOT.length;
       switchTab('score');
       updateBottomNavActive();
     } else if (mtab === 'favs') {
+      // Favs/archive modals read TABS_DATA[currentTab] — switch off score first.
+      if (currentTab === 'score' || !TABS_DATA[currentTab]) switchTab(lastPrayerTab());
       const f = document.getElementById('favsBtn'); if (f) f.click();
     } else if (mtab === 'archive') {
+      if (currentTab === 'score' || !TABS_DATA[currentTab]) switchTab(lastPrayerTab());
       const a = document.getElementById('archiveBtn'); if (a) a.click();
     } else if (mtab === 'more') {
       openMoreSheet();
