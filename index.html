@@ -3273,6 +3273,35 @@
   }
   body.cat-open #categoryChip .chip-chevron { transform: rotate(180deg); }
   #categoryChip[data-mode="score"] { background: linear-gradient(135deg, #8a6a30, #6b5024); }
+  /* Daily-done state — when 5+ prayers said today in this pool, chip turns green */
+  #categoryChip[data-done="1"] {
+    background: linear-gradient(135deg, #2f7a3a, #3a9a4a);
+    border-color: #f0d68f;
+    box-shadow: 0 4px 14px rgba(40,120,50,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+  #categoryChip[data-done="1"] .chip-progress { color: #fff8e7; }
+  #categoryChip[data-done="1"] .chip-chevron { color: #fff8e7; }
+  #categoryChip .chip-checkmark { display: none; font-size: 14px; color: #ffd700; }
+  #categoryChip[data-done="1"] .chip-checkmark { display: inline-block; margin-right: 2px; }
+
+  /* Picker cards — green border + ✓ badge when daily-done (5+ today) */
+  #categoryPicker .cat-card[data-done="1"] {
+    border-color: #3a9a4a;
+    box-shadow: 0 2px 8px rgba(40,120,50,0.18);
+  }
+  #categoryPicker .cat-card[data-done="1"]:not(.active) {
+    background: linear-gradient(135deg, rgba(58,154,74,0.12), rgba(58,154,74,0.04));
+  }
+  #categoryPicker .cat-card[data-done="1"].active {
+    background: linear-gradient(135deg, #2f7a3a, #3a9a4a);
+    border-color: #f0d68f;
+  }
+  #categoryPicker .cat-daily {
+    display: none; font-size: 10.5px; font-weight: 700; color: #2f7a3a;
+    background: rgba(58,154,74,0.15); padding: 1px 6px; border-radius: 8px;
+  }
+  #categoryPicker .cat-card[data-done="1"] .cat-daily { display: inline-block; }
+  #categoryPicker .cat-card[data-done="1"].active .cat-daily { color: #fff8e7; background: rgba(255,255,255,0.18); }
 
   #categoryPicker { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8000; display: none; align-items: flex-end; }
   #categoryPicker.open { display: flex; animation: fadeIn 0.2s; }
@@ -3366,6 +3395,7 @@
   <button id="categoryChip" type="button" aria-label="בחר מאגר תפילות">
     <span class="chip-icon" id="chipIcon">🙏</span>
     <span class="chip-name" id="chipName">בחר מאגר תפילות</span>
+    <span class="chip-checkmark" title="יעד יומי הושג">✓</span>
     <span class="chip-progress" id="chipProgress"></span>
     <span class="chip-chevron">▾</span>
   </button>
@@ -4797,6 +4827,7 @@ const TOTAL_OSHER = TEFILOT.length;
     saidSet.add(idx);
     saveState();
     incrementDailyCount(currentTab);
+    try { updateCategoryChip(); } catch(e){}
     displayedIndices = displayedIndices.filter(i => i !== idx);
     card.classList.add('removing');
     setTimeout(() => {
@@ -8041,17 +8072,23 @@ const TOTAL_OSHER = TEFILOT.length;
     const grid = document.getElementById('catpickGrid');
     if (!grid) return;
     const activeId = (typeof currentTab !== 'undefined' && currentTab !== 'score') ? mainTabFor(currentTab) : null;
+    let greenCounts = {};
+    try { greenCounts = loadGreenCounts(); } catch(e) {}
     grid.innerHTML = PICKER_TABS.map(function(t){
       const data = TABS_DATA[t.id];
       const said = _saidCountForTab(t.id);
       const total = (data && data.total) || 515;
       const active = (t.id === activeId) ? ' active' : '';
-      const doneBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
-      return '<button class="cat-card' + active + '" data-tab="' + t.id + '">' +
+      const todayCount = greenCounts[t.id] || 0;
+      const dailyDone = todayCount >= DAILY_TARGET;
+      const doneAttr = dailyDone ? ' data-done="1"' : '';
+      const finishBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
+      const dailyBadge = dailyDone ? '<span class="cat-daily">✓ יעד יומי</span>' : '';
+      return '<button class="cat-card' + active + '" data-tab="' + t.id + '"' + doneAttr + '>' +
         '<span class="cat-icon">' + t.icon + '</span>' +
         '<span class="cat-name">' + t.label + '</span>' +
         '<span class="cat-progress">' + said + ' / ' + total + '</span>' +
-        doneBadge +
+        dailyBadge + finishBadge +
       '</button>';
     }).join('');
     const p = document.getElementById('categoryPicker');
@@ -8069,6 +8106,7 @@ const TOTAL_OSHER = TEFILOT.length;
     const iconEl = document.getElementById('chipIcon');
     const nameEl = document.getElementById('chipName');
     const progEl = document.getElementById('chipProgress');
+    chip.removeAttribute('data-done');
     if (typeof currentTab === 'undefined' || currentTab === 'score') {
       if (iconEl) iconEl.textContent = '🏆';
       if (nameEl) nameEl.textContent = 'בחר מאגר תפילות';
@@ -8086,6 +8124,10 @@ const TOTAL_OSHER = TEFILOT.length;
       const total = (TABS_DATA[mainId] && TABS_DATA[mainId].total) || 515;
       progEl.textContent = said + ' / ' + total;
     }
+    try {
+      const counts = loadGreenCounts();
+      if ((counts[mainId] || 0) >= DAILY_TARGET) chip.dataset.done = '1';
+    } catch(e){}
   }
   function wireCategoryPicker() {
     const chip = document.getElementById('categoryChip');
