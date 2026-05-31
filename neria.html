@@ -674,6 +674,7 @@
     <div class="res-strip" id="resStrip"></div>
     <div class="buildpoints" id="buildPoints"></div>
     <div class="build-grid" id="buildGrid"></div>
+    <div class="mikdash-stage-label" id="mikdashStageLabel"></div>
   </div>
 
   <div class="tabbed tab-building build-milestone" id="buildMilestone">
@@ -1903,6 +1904,45 @@
       return streak;
     } catch(e) { return 0; }
   }
+
+  // ===== Beit HaMikdash stage label =====
+  const _MIKDASH_STAGES = [
+    { at: 0,  name: 'מתכננים את היסוד',           desc: 'הר המוריה מוכן. עוד מעט מתחילים.' },
+    { at: 5,  name: 'יסוד הר המוריה',             desc: 'אבני היסוד הראשונות הונחו. הבסיס שעליו הכל יבנה.' },
+    { at: 10, name: 'שורת הקירות התחתונה',         desc: 'הקיר הראשון עומד. שבעה לבנים שווים יום שבוע נקי.' },
+    { at: 15, name: 'שורת הקירות האמצעית',         desc: 'הקירות מתבססים. אתה במחצית הדרך הראשונה.' },
+    { at: 20, name: 'הפתח נחצב',                   desc: 'חצי הדרך! דלת המקדש נראית. ח״י (18) לבנים חיים.' },
+    { at: 25, name: 'עמודי יכין ובועז',           desc: 'שני העמודים הקדושים הוקמו. שם הוי״ה (26) חיים בלבנים.' },
+    { at: 30, name: 'הגג מורכב',                   desc: 'שלושת הרבעים מאחור. עוד 10 ימים — הגעת.' },
+    { at: 35, name: 'עיטורי הזהב',                 desc: 'דרגת ל״ו צדיקים. הזהב הקדוש מאיר.' },
+    { at: 40, name: '✨ השכינה שורה — בית המקדש שלם!', desc: 'בנית את בית המקדש. דרגת משה רבנו — 40 ימים נקיים. שמיים נפתחו.' },
+  ];
+
+  function renderMikdashStage(){
+    const el = document.getElementById('mikdashStageLabel');
+    if (!el) return;
+    let have = 0;
+    try {
+      const er = (typeof earnedResources === 'function') ? earnedResources() : null;
+      have = (er && er.brick) ? er.brick : 0;
+    } catch(e) {}
+    let cur = _MIKDASH_STAGES[0];
+    for (let i = 0; i < _MIKDASH_STAGES.length; i++) {
+      if (have >= _MIKDASH_STAGES[i].at) cur = _MIKDASH_STAGES[i];
+    }
+    const stageIdx = _MIKDASH_STAGES.indexOf(cur);
+    const next = _MIKDASH_STAGES[Math.min(stageIdx + 1, _MIKDASH_STAGES.length - 1)];
+    const nextAt = next.at;
+    const pct = nextAt > 0 ? Math.min(100, Math.round((have / 40) * 100)) : 100;
+    const isComplete = have >= 40;
+    el.innerHTML =
+        '<div class="mikdash-stage-title">' + (isComplete ? '🏆 בית המקדש שלך' : 'שלב ' + (stageIdx) + ' / 8') + '</div>' +
+        '<div class="mikdash-stage-name">' + cur.name + '</div>' +
+        '<div class="mikdash-stage-desc">' + cur.desc + '</div>' +
+        '<div class="mikdash-stage-progress"><div class="mikdash-stage-bar" style="width:' + pct + '%"></div></div>' +
+        '<div class="mikdash-stage-meta">' + (isComplete ? '40 / 40 לבנים — בנית את בית המקדש!' : have + ' / 40 לבנים · ' + Math.max(0, nextAt - have) + ' לבנים לשלב הבא') + '</div>';
+  }
+
   function renderBuildingExtras(){
     try {
       const er = (typeof earnedResources==='function') ? earnedResources() : { brick:0 };
@@ -2403,45 +2443,171 @@
   function buildingComplete(b,st){ const inv=st[b.id]||{}; return Object.keys(b.cost).every(function(k){ return (inv[k]||0)>=b.cost[k]; }); }
   function getBuildPoints(){ const st=loadInvest(); let p=0; BUILDINGS.forEach(function(b){ if(buildingComplete(b,st)) p+=b.points; }); return p; }
   function buildingArtSVG(b, inv){
-    const id=b.id; const A=BUILDING_ART[id]||{box:[14,16,92,92],silh:'<rect x="30" y="30" width="60" height="76" rx="4"/>',orn:'',fx:''};
-    const box=A.box, y2=box[1]+box[3]; let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
-    let cy=y2, bands='';
-    if(id==='mikdash' && b.cost.brick){
-      // Draw 40 bricks in a 5-column × 8-row layout, building from bottom up.
-      // Each "on" brick is colored; off slots are faint outlines.
-      const need=b.cost.brick, have=Math.min(inv.brick||0, need);
-      const cols=5, rows=8, bx=26, by=52.5, bw=14.4, bh=6.0;
-      for(let i=0;i<need;i++){
-        const r=rows-1-Math.floor(i/cols), c=i%cols;
-        const off=(r%2===0)?0:bw/2;
-        const x=bx+c*bw+off, y=by+r*bh;
-        const on=i<have;
-        const fill = on ? '#b8623b' : 'rgba(160,110,80,0.10)';
-        const stroke = on ? '#7a4222' : 'rgba(120,80,50,0.35)';
-        bands += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(bw-1).toFixed(1)+'" height="'+(bh-0.6).toFixed(1)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="0.4" rx="0.4"/>';
-      }
-    } else {
-      RESOURCES.forEach(function(r){ if(!b.cost[r.id])return; const v=Math.min(inv[r.id]||0,b.cost[r.id]); const h=total? v/total*box[3] : 0; if(h>0.3){ bands+='<rect x="'+box[0]+'" y="'+(cy-h).toFixed(1)+'" width="'+box[2]+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
+    const id = b.id;
+    // For non-mikdash buildings (none in Neria's app, but safe): minimal silhouette
+    if (id !== 'mikdash') {
+      return '<svg viewBox="0 0 120 120"><rect x="30" y="30" width="60" height="76" rx="4" fill="#7a5a3a"/></svg>';
     }
-    const st=loadInvest(); const done=buildingComplete(b,st);
-    const aura = done ? '<circle class="v-aura" cx="60" cy="60" r="60" fill="url(#gl_'+id+')"/>' : '';
-    const orn=(A.orn||'').replace(/@GG@/g,'url(#gg_'+id+')').replace(/@CG@/g,'url(#cg_'+id+')');
-    const fx=(A.fx||'').replace(/@FG@/g,'url(#fg_'+id+')').replace(/@GG@/g,'url(#gg_'+id+')');
-    return '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet"><defs>'
-      +'<clipPath id="clip_'+id+'">'+A.silh+'</clipPath>'
-      +'<linearGradient id="gg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#fff7da"/><stop offset="22%" stop-color="#f0d488"/><stop offset="45%" stop-color="#c89a34"/><stop offset="58%" stop-color="#f6e3a4"/><stop offset="74%" stop-color="#b07f24"/><stop offset="100%" stop-color="#6e4f18"/></linearGradient>'
-      +'<linearGradient id="cg_'+id+'" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0%" stop-color="#f8caa0"/><stop offset="40%" stop-color="#c47a48"/><stop offset="60%" stop-color="#eaae80"/><stop offset="100%" stop-color="#764626"/></linearGradient>'
-      +'<radialGradient id="fg_'+id+'"><stop offset="0%" stop-color="#fff3b0"/><stop offset="55%" stop-color="#ff9a3c"/><stop offset="100%" stop-color="#e2521a"/></radialGradient>'
-      +'<radialGradient id="gl_'+id+'"><stop offset="0%" stop-color="#fff0bf" stop-opacity="0.9"/><stop offset="100%" stop-color="#fff0bf" stop-opacity="0"/></radialGradient>'
-      +'<linearGradient id="spec_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.5"/><stop offset="38%" stop-color="#fff" stop-opacity="0.07"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>'
-      +'<linearGradient id="shd_'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a1606" stop-opacity="0.55"/></linearGradient>'
-      +'<filter id="sh_'+id+'" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-color="#160c03" flood-opacity="0.55"/></filter>'
-      +'<filter id="bl_'+id+'"><feGaussianBlur stdDeviation="2.4"/></filter>'
-      +'</defs>'
-      +'<ellipse cx="60" cy="112" rx="38" ry="5" fill="#160c03" opacity="0.45" filter="url(#bl_'+id+')"/>'
-      +aura
-      +'<g clip-path="url(#clip_'+id+')"><rect x="0" y="0" width="120" height="120" fill="#2a2238"/>'+bands+'<rect x="0" y="0" width="120" height="120" fill="url(#shd_'+id+')"/><rect x="0" y="0" width="120" height="66" fill="url(#spec_'+id+')"/></g>'
-      +'<g filter="url(#sh_'+id+')">'+orn+'</g>'+fx+'</svg>';
+    // ===== Stage-based Beit HaMikdash =====
+    const need = b.cost.brick;            // 40
+    const have = Math.min(inv.brick || 0, need);
+    // Stage thresholds: 5,10,15,20,25,30,35,40 → stage 1..8
+    const thresholds = [5, 10, 15, 20, 25, 30, 35, 40];
+    let stage = 0;
+    for (let i = 0; i < thresholds.length; i++) if (have >= thresholds[i]) stage = i + 1;
+
+    let s = '<svg viewBox="0 0 120 120" preserveAspectRatio="xMidYMid meet">';
+    // === Gradients & filters ===
+    s += '<defs>';
+    s += '<radialGradient id="auraM"><stop offset="0%" stop-color="#fff8d0" stop-opacity="0.95"/><stop offset="55%" stop-color="#fff8d0" stop-opacity="0.35"/><stop offset="100%" stop-color="#fff8d0" stop-opacity="0"/></radialGradient>';
+    s += '<linearGradient id="goldM" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0%" stop-color="#fff7c8"/><stop offset="30%" stop-color="#f4d680"/><stop offset="55%" stop-color="#c89a34"/><stop offset="78%" stop-color="#f4d680"/><stop offset="100%" stop-color="#7a5a1a"/></linearGradient>';
+    s += '<linearGradient id="stoneM" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0%" stop-color="#f0dcb0"/><stop offset="50%" stop-color="#c8a878"/><stop offset="100%" stop-color="#6a4a2a"/></linearGradient>';
+    s += '<linearGradient id="roofM" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a04a30"/><stop offset="100%" stop-color="#5a1f10"/></linearGradient>';
+    s += '<linearGradient id="bgM" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1a3a"/><stop offset="100%" stop-color="#0a0820"/></linearGradient>';
+    s += '<linearGradient id="grdM" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a2a1a"/><stop offset="100%" stop-color="#1a0a04"/></linearGradient>';
+    s += '<filter id="shM"><feDropShadow dx="0" dy="1.5" stdDeviation="1.2" flood-color="#0a0500" flood-opacity="0.6"/></filter>';
+    s += '<filter id="glowM" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2"/></filter>';
+    s += '</defs>';
+
+    // === Background sky ===
+    s += '<rect x="0" y="0" width="120" height="120" fill="url(#bgM)"/>';
+
+    // === Stars in sky (always) ===
+    s += '<circle cx="15" cy="20" r="0.7" fill="#fff" opacity="0.8"/>';
+    s += '<circle cx="100" cy="14" r="0.5" fill="#fff" opacity="0.7"/>';
+    s += '<circle cx="25" cy="35" r="0.4" fill="#fff" opacity="0.6"/>';
+    s += '<circle cx="105" cy="32" r="0.6" fill="#fff" opacity="0.75"/>';
+    s += '<circle cx="50" cy="12" r="0.4" fill="#fff" opacity="0.5"/>';
+
+    // === Shechina aura at stage 8 ===
+    if (stage >= 8) {
+      s += '<circle cx="60" cy="60" r="58" fill="url(#auraM)"/>';
+      // Light beams from heaven
+      s += '<polygon points="58,4 53,52 67,52 62,4" fill="#fff7c0" opacity="0.45"/>';
+      s += '<polygon points="42,6 30,55 54,55 56,6" fill="#fff7c0" opacity="0.22"/>';
+      s += '<polygon points="64,6 66,55 90,55 78,6" fill="#fff7c0" opacity="0.22"/>';
+      // Heaven cloud
+      s += '<ellipse cx="60" cy="8" rx="38" ry="5" fill="#fff7c8" opacity="0.7" filter="url(#glowM)"/>';
+    }
+
+    // === Ground / Mount Moriah (always) ===
+    s += '<rect x="0" y="108" width="120" height="12" fill="url(#grdM)"/>';
+    s += '<path d="M0 108 Q30 105 60 107 Q90 109 120 106 L120 108 Z" fill="#5a3a1a" opacity="0.6"/>';
+
+    // === Steps approaching the Temple (always) ===
+    s += '<rect x="14" y="104" width="92" height="4" fill="#7a5a3a" stroke="#3a1a0a" stroke-width="0.3"/>';
+    s += '<rect x="18" y="100" width="84" height="4" fill="#8a6a4a" stroke="#3a1a0a" stroke-width="0.3"/>';
+    s += '<rect x="22" y="96" width="76" height="4" fill="#9a7a5a" stroke="#3a1a0a" stroke-width="0.3"/>';
+
+    // === STAGE 1 (5 bricks): Foundation platform ===
+    if (stage >= 1) {
+      s += '<rect x="20" y="88" width="80" height="8" fill="url(#stoneM)" stroke="#5a3a1a" stroke-width="0.5" filter="url(#shM)"/>';
+      // Stone block divisions on foundation
+      for (let i = 1; i < 5; i++) {
+        s += '<line x1="' + (20 + i * 16) + '" y1="88" x2="' + (20 + i * 16) + '" y2="96" stroke="#5a3a1a" stroke-width="0.35" opacity="0.7"/>';
+      }
+    }
+
+    // === STAGE 2 (10): First wall row ===
+    if (stage >= 2) {
+      s += '<rect x="22" y="78" width="76" height="10" fill="url(#stoneM)" stroke="#5a3a1a" stroke-width="0.4"/>';
+      for (let i = 1; i < 5; i++) {
+        s += '<line x1="' + (22 + i * 15.2) + '" y1="78" x2="' + (22 + i * 15.2) + '" y2="88" stroke="#5a3a1a" stroke-width="0.3" opacity="0.6"/>';
+      }
+    }
+
+    // === STAGE 3 (15): Second wall row (offset stones — brick pattern) ===
+    if (stage >= 3) {
+      s += '<rect x="22" y="68" width="76" height="10" fill="url(#stoneM)" stroke="#5a3a1a" stroke-width="0.4"/>';
+      for (let i = 0; i < 5; i++) {
+        s += '<line x1="' + (22 + 7.6 + i * 15.2) + '" y1="68" x2="' + (22 + 7.6 + i * 15.2) + '" y2="78" stroke="#5a3a1a" stroke-width="0.3" opacity="0.6"/>';
+      }
+    }
+
+    // === STAGE 4 (20): Third wall row + entrance door ===
+    if (stage >= 4) {
+      s += '<rect x="22" y="58" width="76" height="10" fill="url(#stoneM)" stroke="#5a3a1a" stroke-width="0.4"/>';
+      for (let i = 1; i < 5; i++) {
+        s += '<line x1="' + (22 + i * 15.2) + '" y1="58" x2="' + (22 + i * 15.2) + '" y2="68" stroke="#5a3a1a" stroke-width="0.3" opacity="0.6"/>';
+      }
+      // Entrance — arched doorway carved into the wall
+      s += '<path d="M52 88 L52 70 Q60 62 68 70 L68 88 Z" fill="#1a0a04" stroke="#7a5a1a" stroke-width="0.6"/>';
+      // Door details — gold band above
+      s += '<path d="M52 70 Q60 62 68 70" fill="none" stroke="#c89a34" stroke-width="0.8"/>';
+      // Door handle hint
+      s += '<circle cx="64" cy="82" r="0.8" fill="#c89a34"/>';
+    }
+
+    // === STAGE 5 (25): Pillars Yachin and Boaz ===
+    if (stage >= 5) {
+      // Right pillar (Yachin)
+      s += '<rect x="28" y="56" width="6" height="32" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.4"/>';
+      // Capital
+      s += '<rect x="25.5" y="54" width="11" height="4" rx="1" fill="url(#goldM)" stroke="#5a3a1a" stroke-width="0.4"/>';
+      // Pomegranate ornaments
+      s += '<circle cx="27" cy="54" r="1.5" fill="#a04030" stroke="#5a3a1a" stroke-width="0.3"/>';
+      s += '<circle cx="35" cy="54" r="1.5" fill="#a04030" stroke="#5a3a1a" stroke-width="0.3"/>';
+      // Base
+      s += '<rect x="25.5" y="86" width="11" height="3" rx="0.5" fill="url(#goldM)" stroke="#5a3a1a" stroke-width="0.3"/>';
+
+      // Left pillar (Boaz)
+      s += '<rect x="86" y="56" width="6" height="32" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.4"/>';
+      s += '<rect x="83.5" y="54" width="11" height="4" rx="1" fill="url(#goldM)" stroke="#5a3a1a" stroke-width="0.4"/>';
+      s += '<circle cx="85" cy="54" r="1.5" fill="#a04030" stroke="#5a3a1a" stroke-width="0.3"/>';
+      s += '<circle cx="93" cy="54" r="1.5" fill="#a04030" stroke="#5a3a1a" stroke-width="0.3"/>';
+      s += '<rect x="83.5" y="86" width="11" height="3" rx="0.5" fill="url(#goldM)" stroke="#5a3a1a" stroke-width="0.3"/>';
+
+      // Pillar names labels — tiny gold etching
+      s += '<text x="31" y="76" font-family="serif" font-size="3" fill="#5a3a1a" text-anchor="middle" opacity="0.6">יכין</text>';
+      s += '<text x="89" y="76" font-family="serif" font-size="3" fill="#5a3a1a" text-anchor="middle" opacity="0.6">בעז</text>';
+    }
+
+    // === STAGE 6 (30): Roof ===
+    if (stage >= 6) {
+      // Triangular pitched roof — sandstone red
+      s += '<polygon points="16,54 104,54 60,28" fill="url(#roofM)" stroke="#3a0a04" stroke-width="0.6" filter="url(#shM)"/>';
+      // Decorative band under roof
+      s += '<rect x="20" y="52" width="80" height="3" fill="#8a6a3a" stroke="#5a3a1a" stroke-width="0.3"/>';
+      // Roof lines — decorative
+      s += '<line x1="22" y1="50" x2="98" y2="50" stroke="#fff7c8" stroke-width="0.4" opacity="0.5"/>';
+      s += '<line x1="30" y1="42" x2="90" y2="42" stroke="#fff7c8" stroke-width="0.3" opacity="0.4"/>';
+    }
+
+    // === STAGE 7 (35): Gold decorations — finials, spikes, sparkles ===
+    if (stage >= 7) {
+      // Top finial (golden spire)
+      s += '<rect x="59" y="20" width="2" height="10" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.3"/>';
+      s += '<polygon points="56,22 64,22 60,16" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.3"/>';
+      s += '<circle cx="60" cy="14" r="2" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.3"/>';
+      // Bird spikes along the roof edge (Talmud — to prevent ravens)
+      for (let i = 0; i < 5; i++) {
+        const x = 24 + i * 16;
+        s += '<polygon points="' + x + ',52 ' + (x + 2) + ',46 ' + (x + 4) + ',52" fill="url(#goldM)" stroke="#7a5a1a" stroke-width="0.25"/>';
+      }
+      // Gold band at top of walls
+      s += '<rect x="22" y="56" width="76" height="1.5" fill="url(#goldM)" opacity="0.9"/>';
+      // Door gold frame upgrade
+      s += '<path d="M52 88 L52 70 Q60 62 68 70 L68 88" fill="none" stroke="url(#goldM)" stroke-width="1.2"/>';
+    }
+
+    // === STAGE 8 (40): COMPLETE — Shechina, full glow, sparkles ===
+    if (stage >= 8) {
+      // Animated sparkles
+      s += '<circle class="v-sparkle" style="animation-delay:0s" cx="38" cy="92" r="1.4" fill="#fff7c0"/>';
+      s += '<circle class="v-sparkle" style="animation-delay:0.6s" cx="82" cy="90" r="1.4" fill="#fff7c0"/>';
+      s += '<circle class="v-sparkle" style="animation-delay:1.2s" cx="60" cy="96" r="1.6" fill="#fff7c0"/>';
+      s += '<circle class="v-sparkle" style="animation-delay:1.8s" cx="30" cy="65" r="1.2" fill="#fff7c0"/>';
+      s += '<circle class="v-sparkle" style="animation-delay:2.4s" cx="92" cy="60" r="1.2" fill="#fff7c0"/>';
+      // Golden glow around finial
+      s += '<circle cx="60" cy="14" r="6" fill="#fff7c0" opacity="0.5" filter="url(#glowM)"/>';
+    }
+
+    // === Progress indicator overlay (bottom right) — small "X / 40" badge ===
+    s += '<rect x="76" y="113" width="36" height="11" rx="5.5" fill="#1a0a04" stroke="url(#goldM)" stroke-width="0.6" opacity="0.92"/>';
+    s += '<text x="94" y="121" font-family="serif" font-weight="700" font-size="7" fill="#fff7c0" text-anchor="middle">🧱 ' + have + ' / ' + need + '</text>';
+
+    s += '</svg>';
+    return s;
   }
   function renderBank(avail){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(avail[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
   function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=BUILDINGS.map(function(b){ const inv=st[b.id]||{}; let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(inv[k]||0,b.cost[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
@@ -2859,7 +3025,7 @@
   _wireIntention();
   try { renderHero(); setInterval(renderHero, 60000); } catch(e) {}
   try { renderWhy(); renderIntention(); } catch(e) {}
-  try { renderBuildingExtras(); } catch(e) {}
+  try { renderBuildingExtras(); renderMikdashStage(); } catch(e) {}
   document.getElementById('fallQuizCancel').addEventListener('click', closeFallQuiz);
   document.getElementById('fallQuizClose').addEventListener('click', closeFallQuiz);
   // Edit day
