@@ -3425,6 +3425,9 @@
         renderBuilding();
         try { renderBuildingExtras(); } catch(e) {}
       }
+      if (tab === 'prayers') {
+        try { initPrayers(); } catch(e) { try { window.dbg && window.dbg('prayers branch error: ' + e.message); } catch(x){} }
+      }
       if (tab === 'journal') {
         // Render every piece of journal content
         try { renderBritLog(); } catch(e) {}
