@@ -7879,8 +7879,10 @@ const TOTAL_OSHER = TEFILOT.length;
     const s = document.getElementById('moreSheet');
     if (s) s.classList.remove('open');
   }
-  document.getElementById('bottomNav').addEventListener('click', function(e){
-    const btn = e.target && e.target.closest && e.target.closest('.bnav-btn');
+  // Event delegation on document — works even if #bottomNav doesn't exist yet
+  // (the bottom-nav HTML lives AFTER this script in the body).
+  document.addEventListener('click', function(e){
+    const btn = e.target && e.target.closest && e.target.closest('#bottomNav .bnav-btn');
     if (!btn) return;
     const mtab = btn.dataset.mtab;
     if (mtab === 'prayers') {
@@ -7898,8 +7900,9 @@ const TOTAL_OSHER = TEFILOT.length;
       openMoreSheet();
     }
   });
-  // More-sheet button wiring
-  (function wireMoreSheet(){
+  // More-sheet button wiring — deferred until DOM is parsed (the elements
+  // live after this script in the body, so direct lookup at script-time is null).
+  function wireMoreSheet(){
     const ms = document.getElementById('moreSheet');
     if (!ms) return;
     ms.addEventListener('click', function(e){
@@ -7911,9 +7914,13 @@ const TOTAL_OSHER = TEFILOT.length;
     const bk = document.getElementById('moreBackup'); if (bk) bk.addEventListener('click', function(){ try { exportFullBackup(); } catch(e){} closeMoreSheet(); });
     const rs = document.getElementById('moreRestore'); if (rs) rs.addEventListener('click', function(){ const f = document.getElementById('restoreFile'); if (f) f.click(); closeMoreSheet(); });
     const rb = document.getElementById('moreReset'); if (rb) rb.addEventListener('click', function(){ try { requestReset(); } catch(e){} closeMoreSheet(); });
-  })();
-  // Initial active state
-  updateBottomNavActive();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ wireMoreSheet(); updateBottomNavActive(); });
+  } else {
+    wireMoreSheet();
+    updateBottomNavActive();
+  }
 </script>
 
 
