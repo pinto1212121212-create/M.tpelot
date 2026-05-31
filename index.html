@@ -4889,6 +4889,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_HAYALIM': TEFILOT_HAYALIM,
     'TEFILOT_HAYALIM_TAL': TEFILOT_HAYALIM_TAL,
     'TEFILOT_BRIT': TEFILOT_BRIT,
+    'TEFILOT_FRIENDS': TEFILOT_FRIENDS,
     'TEFILOT_BRIT_TAL': TEFILOT_BRIT_TAL,
     'TEFILOT_BITACHON': TEFILOT_BITACHON,
     'TEFILOT_BITACHON_TAL': TEFILOT_BITACHON_TAL,
@@ -4918,13 +4919,18 @@ const TOTAL_OSHER = TEFILOT.length;
       .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.json(); })
       .then(function(arr){
         const ref = _poolRefs[v];
-        if(!Array.isArray(ref)) return;
+        if(!Array.isArray(ref)) {
+          console.error('pool ref missing for', v, '— marking as loaded to avoid infinite retry');
+          _poolLoaded[v] = true;
+          delete _poolLoading[v];
+          return;
+        }
         ref.length = 0;
         for(let i=0;i<arr.length;i++) ref.push(arr[i]);
         _poolLoaded[v] = true;
         delete _poolLoading[v];
       })
-      .catch(function(e){ console.error('pool load failed', v, e); delete _poolLoading[v]; });
+      .catch(function(e){ console.error('pool load failed', v, e); _poolLoaded[v] = true; delete _poolLoading[v]; });
     return _poolLoading[v];
   }
   function ensurePoolForTab(t){ return ensurePool(poolVarForTab(t)); }
