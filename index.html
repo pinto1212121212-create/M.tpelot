@@ -4119,6 +4119,7 @@
   const TEFILOT_ANAVA = []; // lazy-loaded from data/anava.json (515 items)
   const TEFILOT_TIKUN = []; // lazy-loaded from data/tikun.json (515 items)
   const TEFILOT_SHMIRA = []; // lazy-loaded from data/shmira.json (515 items)
+  const TEFILOT_DATE = []; // lazy-loaded from data/date.json (515 items)
 
   // ============= TEFILOT_BRIT_TAL POOL (515 prayers - קדושת בנות ישראל - לטל) =============
   const TEFILOT_BRIT_TAL = []; // lazy-loaded from data/brit_tal.json (515 items)
@@ -4180,6 +4181,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_ANAVA = 'tefilot_anava_said_v1';
   const STORAGE_KEY_TIKUN = 'tefilot_tikun_said_v1';
   const STORAGE_KEY_SHMIRA = 'tefilot_shmira_said_v1';
+  const STORAGE_KEY_DATE = 'tefilot_date_said_v1';
   const STORAGE_KEY_BRIT_TAL = 'tefilot_brit_tal_said_v1';
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_said_v1';
@@ -4367,6 +4369,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const FAV_KEY_ANAVA = 'tefilot_anava_fav_v1';
   const FAV_KEY_TIKUN = 'tefilot_tikun_fav_v1';
   const FAV_KEY_SHMIRA = 'tefilot_shmira_fav_v1';
+  const FAV_KEY_DATE = 'tefilot_date_fav_v1';
   const FAV_KEY_BRIT_TAL = 'tefilot_brit_tal_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
   const FAV_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_fav_v1';
@@ -4518,6 +4521,16 @@ const TOTAL_OSHER = TEFILOT.length;
       title: 'תקט״ו תפילות לשמירה לעם ישראל',
       subtitle: 'תפילות לשעת מלחמה — שיגן עלינו ה׳ מכל רע',
       verse: '״הנה לא ינום ולא ייׁשן שומר ישראל״',
+      poolLength: 515
+    },
+    date: {
+      pool: TEFILOT_DATE,
+      total: 515,
+      storageKey: STORAGE_KEY_DATE,
+      favStorageKey: FAV_KEY_DATE,
+      title: 'תקט״ו תפילות לדייט',
+      subtitle: 'לפני המפגש — שייגלה הזיווג מן השמים',
+      verse: '״לא טוב היות האדם לבדו אעשה לו עזר כנגדו״',
       poolLength: 515
     },
     brit_tal: {
@@ -5206,6 +5219,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ANAVA': TEFILOT_ANAVA,
     'TEFILOT_TIKUN': TEFILOT_TIKUN,
     'TEFILOT_SHMIRA': TEFILOT_SHMIRA,
+    'TEFILOT_DATE': TEFILOT_DATE,
     'TEFILOT_BRIT_TAL': TEFILOT_BRIT_TAL,
     'TEFILOT_BITACHON': TEFILOT_BITACHON,
     'TEFILOT_BITACHON_TAL': TEFILOT_BITACHON_TAL,
@@ -5220,8 +5234,8 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ROEI': TEFILOT_ROEI,
     'TEFILOT_ROEI_TAL': TEFILOT_ROEI_TAL
   };
-  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
-  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
+  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "date": "TEFILOT_DATE", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
+  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_DATE": "data/date.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
   const _poolLoaded = {};
   const _poolLoading = {};
   function poolVarForTab(t){ return _POOL_TAB_TO_VAR[t]; }
@@ -7196,7 +7210,17 @@ const TOTAL_OSHER = TEFILOT.length;
     const todayScore = calculateTodayScore();
 
     // Build complete data array (including days without entries = 0)
+    // For stock-chart style: also compute cumulative (running total INCLUDING
+    // all history BEFORE the range start), so the line accumulates rather than
+    // resetting to 0 each day.
     const days = [];
+    const rangeStart = (() => {
+      const d = new Date(); d.setDate(d.getDate() - (chartRange - 1));
+      return d.toISOString().slice(0, 10);
+    })();
+    // Sum every history entry strictly before rangeStart
+    let cumulative = 0;
+    history.forEach(h => { if (h.date < rangeStart) cumulative += (h.score || 0); });
     for (let i = chartRange - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
@@ -7208,11 +7232,12 @@ const TOTAL_OSHER = TEFILOT.length;
         const entry = history.find(h => h.date === dateStr);
         if (entry) score = entry.score;
       }
-      days.push({ date: dateStr, score, isToday: dateStr === today });
+      cumulative += score;
+      days.push({ date: dateStr, score, cumulative, isToday: dateStr === today });
     }
 
     // Check if any data exists
-    const hasData = days.some(d => d.score > 0);
+    const hasData = days.some(d => d.cumulative > 0);
     if (!hasData) {
       content.innerHTML = '<div class="chart-empty">עוד אין מספיק נתונים.<br>סיים יום אחד לפחות כדי לראות את הגרף.</div>';
       statsEl.innerHTML = '';
@@ -7224,23 +7249,33 @@ const TOTAL_OSHER = TEFILOT.length;
     const H = 180;
     const padTop = 16;
     const padBottom = 28;
-    const padLeft = 30;
+    const padLeft = 36;  // a bit wider to fit larger cumulative numbers
     const padRight = 10;
     const chartW = W - padLeft - padRight;
     const chartH = H - padTop - padBottom;
 
-    const max = calculateMaxScore();
-    // Use max possible score as ceiling, but if exceeded use actual max
-    const yMax = Math.max(max, ...days.map(d => d.score));
-    const yStep = Math.ceil(yMax / 4 / 25) * 25; // round to 25
-    const yCeil = yStep * 4 || 100;
+    // Y-axis range: from the lowest cumulative (start of range) to the highest.
+    // This makes the line use the full chart height even when the numbers are
+    // large — exactly like a stock chart that "zooms in" on the active range.
+    const cumulativeValues = days.map(d => d.cumulative);
+    const yLow = Math.min(...cumulativeValues);
+    const yHigh = Math.max(...cumulativeValues);
+    const yRange = Math.max(1, yHigh - yLow);
+    // Round to nice numbers — step is one quarter of the range, rounded
+    const rawStep = yRange / 4;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(Math.max(1, rawStep))));
+    const yStep = Math.ceil(rawStep / magnitude) * magnitude;
+    // Floor yLow to step boundary, then add 4 steps for ceiling
+    const yFloor = Math.floor(yLow / yStep) * yStep;
+    const yCeil = yFloor + yStep * 4;
 
     // Calculate positions
     const stepX = chartW / Math.max(1, days.length - 1);
     const points = days.map((d, i) => ({
       x: padLeft + i * stepX,
-      y: padTop + chartH - (d.score / yCeil) * chartH,
+      y: padTop + chartH - ((d.cumulative - yFloor) / (yCeil - yFloor)) * chartH,
       score: d.score,
+      cumulative: d.cumulative,
       date: d.date,
       isToday: d.isToday
     }));
@@ -7249,11 +7284,11 @@ const TOTAL_OSHER = TEFILOT.length;
     const linePath = points.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
     const areaPath = linePath + ' L' + points[points.length-1].x.toFixed(1) + ',' + (padTop + chartH) + ' L' + points[0].x.toFixed(1) + ',' + (padTop + chartH) + ' Z';
 
-    // Grid lines (y-axis)
+    // Grid lines (y-axis) — cumulative scale
     let gridLines = '';
     for (let i = 0; i <= 4; i++) {
       const y = padTop + (chartH * i / 4);
-      const label = yCeil - (yCeil * i / 4);
+      const label = yCeil - (yStep * i);
       gridLines += `<line class="chart-grid-line" x1="${padLeft}" y1="${y}" x2="${W - padRight}" y2="${y}"/>`;
       gridLines += `<text class="chart-axis-label" x="${padLeft - 4}" y="${y + 3}" text-anchor="end">${Math.round(label)}</text>`;
     }
@@ -7298,7 +7333,7 @@ const TOTAL_OSHER = TEFILOT.length;
         const p = points[idx];
         const d = new Date(p.date);
         const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${p.score} נק׳`;
+        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · יומי ${p.score} · סה״כ ${p.cumulative}`;
         const svgRect = content.querySelector('svg').getBoundingClientRect();
         const containerRect = content.parentElement.getBoundingClientRect();
         const scaleX = svgRect.width / W;
@@ -7315,7 +7350,7 @@ const TOTAL_OSHER = TEFILOT.length;
         const p = points[idx];
         const d = new Date(p.date);
         const dayNames = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
-        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${p.score} נק׳`;
+        tooltip.textContent = `${dayNames[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · יומי ${p.score} · סה״כ ${p.cumulative}`;
         const svgRect = content.querySelector('svg').getBoundingClientRect();
         const containerRect = content.parentElement.getBoundingClientRect();
         const scaleX = svgRect.width / W;
@@ -7751,6 +7786,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'tefilot_anava_said_v1', 'tefilot_anava_fav_v1',
     'tefilot_tikun_said_v1', 'tefilot_tikun_fav_v1',
     'tefilot_shmira_said_v1', 'tefilot_shmira_fav_v1',
+    'tefilot_date_said_v1', 'tefilot_date_fav_v1',
     'tefilot_osher_fav_v1', 'tefilot_brit_fav_v1', 'tefilot_bitachon_fav_v1',
     'tefilot_hochma_fav_v1', 'tefilot_roei_fav_v1', 'tefilot_refua_fav_v1',
     'tefilot_osher_tal_fav_v1', 'tefilot_leda_fav_v1', 'tefilot_hayalim_fav_v1', 'tefilot_leda_uriel_fav_v1', 'tefilot_targilim_fav_v1', 'tefilot_briaut_fav_v1', 'tefilot_zikui_fav_v1', 'tefilot_zikui_tal_fav_v1', 'tefilot_hochma_tal_fav_v1', 'tefilot_bitachon_tal_fav_v1', 'tefilot_targilim_tal_fav_v1', 'tefilot_briaut_tal_fav_v1', 'tefilot_hayalim_tal_fav_v1', 'tefilot_refua_tal_fav_v1', 'tefilot_roei_tal_fav_v1', 'tefilot_brit_tal_fav_v1'
@@ -8350,7 +8386,8 @@ const TOTAL_OSHER = TEFILOT.length;
     { id: 'mashiach', icon: '👑', label: 'ביאת המשיח' },
     { id: 'anava',    icon: '🌸', label: 'ענווה' },
     { id: 'tikun',    icon: '✨', label: 'תיקון השלם' },
-    { id: 'shmira',   icon: '✡️', label: 'שמירה לעם ישראל' }
+    { id: 'shmira',   icon: '✡️', label: 'שמירה לעם ישראל' },
+    { id: 'date',     icon: '💍', label: 'דייט / זיווג' }
   ];
   function _saidCountForTab(tabId) {
     try {
