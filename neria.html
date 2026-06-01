@@ -3381,6 +3381,20 @@
   _wireExtras();
   _wireWhy();
   _wireIntention();
+
+  // External-link trigger: if URL has #sos hash, jump to defense tab and
+  // open the emergency modal immediately. Used by the main app's SOS button
+  // to open the full feature here.
+  try {
+    if (window.location.hash === '#sos') {
+      setTimeout(function(){
+        try { if (typeof switchAppTab === 'function') switchAppTab('defense'); } catch(e) {}
+        try { openEmergency(); } catch(e) {}
+        // Clean the hash so reloads don't keep re-triggering
+        try { history.replaceState(null, '', location.pathname); } catch(e) {}
+      }, 200);
+    }
+  } catch(e) {}
   try { renderHero(); setInterval(renderHero, 60000); } catch(e) {}
   try { renderWhy(); renderIntention(); } catch(e) {}
   try { renderBuildingExtras(); renderMikdashStage(); } catch(e) {}

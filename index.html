@@ -3072,6 +3072,86 @@
   /* Hide the old big score-today/date header on score view — replaced by hero+mini */
   body.score-mode .score-date-header,
   body.score-mode .score-today-total { display: none !important; }
+
+  /* ===== Emergency SOS — Uriel only ===== */
+  /* SOS button card shown in the score view (only when profile=pinto) */
+  .em-btn-wrap {
+    display: none;  /* shown by JS when profile=pinto */
+    margin: 6px 0 18px;
+    padding: 20px;
+    background: linear-gradient(135deg, #7a2030, #5e1622);
+    border: 2px solid var(--gold, #c9a961);
+    border-radius: 16px;
+    text-align: center;
+    color: #fff8e7;
+    box-shadow: 0 6px 18px rgba(122,32,48,0.35);
+    position: relative;
+    overflow: hidden;
+  }
+  body.profile-pinto.score-mode .em-btn-wrap { display: block; }
+  .em-btn-wrap::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12), transparent 60%);
+    pointer-events: none;
+  }
+  .em-hero-shield { font-size: 38px; margin-bottom: 6px; line-height: 1; position: relative; z-index: 1; }
+  .em-hero-title { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 18px; margin-bottom: 6px; position: relative; z-index: 1; }
+  .em-hero-desc { font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: rgba(255,247,224,0.9); margin-bottom: 14px; line-height: 1.55; position: relative; z-index: 1; }
+  .em-btn {
+    background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%);
+    color: #fff;
+    border: 2px solid rgba(255,247,224,0.85);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(201,58,58,0.45);
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+  .em-btn:active { transform: scale(0.98); }
+  .em-btn-sub { font-size: 12px; color: rgba(255,247,224,0.8); margin-top: 10px; position: relative; z-index: 1; }
+
+  /* Floating FAB — visible across all screens when on Uriel profile */
+  .em-fab {
+    display: none;  /* shown by body.profile-pinto */
+    position: fixed; bottom: 96px; left: 16px;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%);
+    color: #fff;
+    border: 2px solid rgba(255,247,224,0.85);
+    cursor: pointer;
+    font-size: 24px;
+    align-items: center; justify-content: center;
+    box-shadow: 0 8px 22px rgba(201,58,58,0.55);
+    z-index: 998;
+    animation: emFabBreathe 2.6s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  body.profile-pinto .em-fab { display: flex; }
+  .em-fab:hover { transform: scale(1.1); }
+  .em-fab:active { transform: scale(0.95); }
+  @keyframes emFabBreathe {
+    0%, 100% { transform: scale(1); box-shadow: 0 8px 22px rgba(201,58,58,0.55); }
+    50% { transform: scale(1.08); box-shadow: 0 12px 32px rgba(220,80,80,0.85); }
+  }
+  .em-fab-label {
+    position: absolute; right: 70px; top: 50%; transform: translateY(-50%);
+    background: rgba(60,36,16,0.92);
+    color: #fff7e0;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 12.5px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .em-fab:hover .em-fab-label { opacity: 1; }
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   .kupah-section { margin:18px 0; padding:16px; background:linear-gradient(135deg, rgba(74,168,90,0.16), rgba(201,169,97,0.08)); border:1.5px solid var(--gold); border-radius:12px; text-align:center; }
@@ -3681,6 +3761,16 @@
     </div>
 
     <div class="hizuk-banner" id="hizukBanner"></div>
+
+    <!-- Emergency SOS — shown only to Uriel (אוריאל). Opens neria.html's
+         full guided escape feature in a new tab. -->
+    <div class="em-btn-wrap" id="emBtnWrap">
+      <div class="em-hero-shield">🛡️</div>
+      <div class="em-hero-title">🆘 חומה 1 — כפתור המצוקה</div>
+      <div class="em-hero-desc">אם אתה במצוקה — לחץ עכשיו.<br>5 דקות של בריחה מודרכת — ותרגיש אחרת.</div>
+      <button class="em-btn" id="emergencySosBtn">🆘 הצל אותי עכשיו</button>
+      <div class="em-btn-sub">בלילה — ההגנה הראשונה שלך.</div>
+    </div>
 
     <div class="st-row">
       <div class="st-card"><div class="st-label">🔥 רצף ימים</div><div class="st-value" id="streakVal">0</div><div class="st-sub">שיא: <span id="streakBest">0</span></div></div>
@@ -4336,11 +4426,19 @@ const TOTAL_OSHER = TEFILOT.length;
   function pk(key) { return currentProfile + '_' + key; }
   function pkFor(profile, key) { return profile + '_' + key; }
 
+  // Toggle body class so profile-only UI (e.g. SOS button for Uriel) shows/hides
+  function applyProfileBodyClass() {
+    try {
+      document.body.classList.toggle('profile-pinto', currentProfile === 'pinto');
+      document.body.classList.toggle('profile-tal', currentProfile === 'tal');
+    } catch(e) {}
+  }
   function setProfile(newProfile) {
     if (!PROFILES[newProfile]) return;
     if (newProfile === currentProfile) return;
     currentProfile = newProfile;
     try { localStorage.setItem(PROFILE_KEY, newProfile); } catch(e) {}
+    applyProfileBodyClass();
     // Update active mitzvot list based on profile
     try { MITZVOT = getActiveMitzvot(); } catch(e) {}
     updateProfileButtons();
@@ -8669,12 +8767,27 @@ const TOTAL_OSHER = TEFILOT.length;
     }
   }
 
+  // ===== Emergency SOS — Uriel only — opens neria.html's guided escape =====
+  function openEmergencySos() {
+    // Open neria.html in a new tab with #sos hash so it auto-triggers the full
+    // emergency modal there. The user gets the EXACT same feature as in Neria.
+    try { window.open('neria.html#sos', '_blank'); } catch(e) { window.location.href = 'neria.html#sos'; }
+  }
+  function wireEmergencySos() {
+    const btn = document.getElementById('emergencySosBtn');
+    if (btn) btn.addEventListener('click', openEmergencySos);
+    const fab = document.getElementById('emFabBtn');
+    if (fab) fab.addEventListener('click', openEmergencySos);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ wireMoreSheet(); wireCategoryPicker(); updateBottomNavActive(); });
+    document.addEventListener('DOMContentLoaded', function(){ wireMoreSheet(); wireCategoryPicker(); wireEmergencySos(); updateBottomNavActive(); applyProfileBodyClass(); });
   } else {
     wireMoreSheet();
     wireCategoryPicker();
+    wireEmergencySos();
     updateBottomNavActive();
+    applyProfileBodyClass();
   }
 </script>
 
@@ -8691,6 +8804,9 @@ const TOTAL_OSHER = TEFILOT.length;
     </div>
   </div>
 </div>
+
+<!-- Emergency SOS floating button — Uriel only (gated by body.profile-pinto class) -->
+<button class="em-fab" id="emFabBtn" aria-label="כפתור החילוץ">🛡️<span class="em-fab-label">כפתור החילוץ</span></button>
 
 <nav class="bottom-nav" id="bottomNav">
   <button class="bnav-btn active" data-mtab="prayers"><span class="bnav-icon">🙏</span><span>תפילות</span></button>
