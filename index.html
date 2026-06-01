@@ -3278,6 +3278,57 @@
   }
   body.cat-open #categoryChip .chip-chevron { transform: rotate(180deg); }
   #categoryChip[data-mode="score"] { background: linear-gradient(135deg, #8a6a30, #6b5024); }
+
+  /* ===== Heart-awakening daily card ===== */
+  #hitorerutCard {
+    position: relative;
+    margin: 6px auto 18px;
+    max-width: 460px;
+    padding: 18px 20px 16px;
+    background: linear-gradient(160deg, #fff6e0 0%, #fce8c4 100%);
+    border: 1.5px solid var(--gold-dark, #b8932f);
+    border-radius: 14px;
+    box-shadow:
+      0 4px 14px rgba(120,70,30,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.5);
+    font-family: 'Frank Ruhl Libre', serif;
+    color: var(--brown-deep, #4a2a1a);
+    cursor: pointer;
+  }
+  #hitorerutCard::before {
+    content: '✦';
+    position: absolute;
+    top: -10px; right: 18px;
+    background: var(--brown-deep, #4a2a1a);
+    color: var(--gold-light, #f0d68f);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(60,30,10,0.3);
+  }
+  #hitorerutCard .ht-title {
+    font-size: 12.5px; font-weight: 700;
+    color: var(--brown, #6a3a1a);
+    letter-spacing: 1px; text-align: center;
+    text-transform: none;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(184,147,47,0.35);
+    padding-bottom: 6px;
+  }
+  #hitorerutCard .ht-body {
+    font-size: 15.5px; line-height: 1.75;
+    color: var(--brown-deep, #4a2a1a);
+    text-align: right;
+    font-weight: 500;
+  }
+  #hitorerutCard .ht-footer {
+    font-size: 11px; color: var(--brown-light, #8a6a4a);
+    margin-top: 10px; text-align: center;
+    font-style: italic;
+    letter-spacing: 0.3px;
+  }
+  #hitorerutCard.dismissed { display: none; }
   /* Daily-done state — when 5+ prayers said today in this pool, chip turns green */
   #categoryChip[data-done="1"] {
     background: linear-gradient(135deg, #2f7a3a, #3a9a4a);
@@ -3404,6 +3455,12 @@
     <span class="chip-progress" id="chipProgress"></span>
     <span class="chip-chevron">▾</span>
   </button>
+
+  <div id="hitorerutCard" role="article" aria-label="התעוררות הלב לתפילה">
+    <div class="ht-title">✦ רגע לפני שאתה מתפלל ✦</div>
+    <div class="ht-body" id="hitorerutBody">…</div>
+    <div class="ht-footer">לחץ להצגת התעוררות אחרת</div>
+  </div>
 
   <div class="profile-selector">
     <button class="profile-btn" data-profile="pinto" onclick="setProfile('pinto')">
@@ -5261,6 +5318,7 @@ const TOTAL_OSHER = TEFILOT.length;
     try { rememberPrayerTab(tabName); } catch(e) {}
     try { updateBottomNavActive(); } catch(e) {}
     try { updateCategoryChip(); } catch(e) {}
+    try { renderHitorerutCard(); } catch(e) {}
   }
 
   // ============= קוד סודי לשמירת הברית =============
@@ -8309,6 +8367,63 @@ const TOTAL_OSHER = TEFILOT.length;
     if (p) p.classList.remove('open');
     document.body.classList.remove('cat-open');
   }
+  // ===== Heart-awakening card =====
+  // Loaded lazily on first need; cached for the session.
+  let _HITORERUT = null;
+  let _hitorerutLoading = null;
+  function loadHitorerut() {
+    if (_HITORERUT) return Promise.resolve(_HITORERUT);
+    if (_hitorerutLoading) return _hitorerutLoading;
+    _hitorerutLoading = fetch('data/hitorerut.json')
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ _HITORERUT = j || {}; return _HITORERUT; })
+      .catch(function(){ _HITORERUT = {}; return _HITORERUT; });
+    return _hitorerutLoading;
+  }
+  function _hitorerutKey() {
+    // Allow re-rolling within the same day by storing a per-tab offset
+    return 'tefilot_hitorerut_offset_v1';
+  }
+  function _dayIndex() {
+    // ms since epoch / 86400000, floored — same value all day
+    return Math.floor(Date.now() / 86400000);
+  }
+  function _hitorerutMessage(tabId) {
+    if (!_HITORERUT) return null;
+    const list = _HITORERUT[tabId];
+    if (!list || !list.length) return null;
+    let offset = 0;
+    try { offset = parseInt(localStorage.getItem(pk(_hitorerutKey()+'_'+tabId)) || '0', 10) || 0; } catch(e) {}
+    const idx = (_dayIndex() + offset) % list.length;
+    return list[idx];
+  }
+  function renderHitorerutCard() {
+    const card = document.getElementById('hitorerutCard');
+    const body = document.getElementById('hitorerutBody');
+    if (!card || !body) return;
+    if (typeof currentTab === 'undefined' || currentTab === 'score') {
+      card.style.display = 'none';
+      return;
+    }
+    const main = mainTabFor(currentTab);
+    loadHitorerut().then(function(){
+      const msg = _hitorerutMessage(main);
+      if (!msg) { card.style.display = 'none'; return; }
+      body.textContent = msg;
+      card.style.display = 'block';
+    });
+  }
+  function _rerollHitorerut() {
+    if (typeof currentTab === 'undefined' || currentTab === 'score') return;
+    const main = mainTabFor(currentTab);
+    try {
+      const k = pk(_hitorerutKey()+'_'+main);
+      const cur = parseInt(localStorage.getItem(k) || '0', 10) || 0;
+      localStorage.setItem(k, String(cur + 1));
+    } catch(e) {}
+    renderHitorerutCard();
+  }
+
   function updateCategoryChip() {
     const chip = document.getElementById('categoryChip');
     if (!chip) return;
@@ -8350,6 +8465,12 @@ const TOTAL_OSHER = TEFILOT.length;
     const cls = document.getElementById('catpickClose');
     if (cls) cls.addEventListener('click', function(e){ e.stopPropagation(); closeCategoryPicker(); });
     updateCategoryChip();
+    renderHitorerutCard();
+    const card = document.getElementById('hitorerutCard');
+    if (card && !card._wired) {
+      card._wired = true;
+      card.addEventListener('click', _rerollHitorerut);
+    }
   }
 
   if (document.readyState === 'loading') {
