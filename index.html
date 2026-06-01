@@ -3044,6 +3044,34 @@
   .st-target-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold)); border-radius: 6px; transition: width 0.4s; }
   .st-target-edit { background: none; border: none; color: var(--gold-dark); font-size: 12px; cursor: pointer; text-decoration: underline; font-family: 'Frank Ruhl Libre', serif; }
   .st-card.reached { background: linear-gradient(135deg, rgba(201,169,97,0.28), rgba(212,182,121,0.12)); }
+
+  /* ===== Neria-style hero greeting + home mini row (score tab) ===== */
+  .hero-greet { margin: 12px 0 18px; padding: 22px 20px; background: linear-gradient(160deg, #fff7e0 0%, #f5e6c4 100%); border: 1.5px solid var(--gold); border-radius: 16px; box-shadow: 0 6px 22px rgba(60,30,10,0.10), inset 0 0 0 1px rgba(255,255,255,0.5); position: relative; overflow: hidden; }
+  .hero-greet::before { content: ''; position: absolute; top: -40px; left: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(201,169,97,0.3) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-greet::after { content: ''; position: absolute; bottom: -50px; right: -30px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(122,32,48,0.10) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-greet-row { position: relative; z-index: 2; }
+  .hero-greet-time { font-family: 'Frank Ruhl Libre', serif; font-style: italic; font-size: 14.5px; color: var(--brown); margin-bottom: 4px; }
+  .hero-greet-name { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 30px; color: var(--brown-deep); letter-spacing: 0.5px; line-height: 1.1; }
+  .hero-greet-date { font-family: 'Frank Ruhl Libre', serif; font-size: 13.5px; color: var(--brown-light); margin-top: 4px; font-weight: 400; }
+  .hero-status-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; position: relative; z-index: 2; }
+  .hero-stat { background: rgba(255,255,255,0.55); border: 1px solid rgba(201,169,97,0.4); border-radius: 10px; padding: 10px 8px; text-align: center; backdrop-filter: blur(4px); }
+  .hero-stat-label { font-family: 'Frank Ruhl Libre', serif; font-size: 12px; color: var(--brown-light); margin-bottom: 2px; letter-spacing: 0.2px; }
+  .hero-stat-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 26px; color: var(--wine); line-height: 1.05; }
+  .hero-stat-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown); margin-top: 2px; }
+  .hero-identity-line { margin-top: 12px; padding: 10px 12px; background: linear-gradient(135deg, rgba(122,32,48,0.10), rgba(201,169,97,0.08)); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-weight: 700; font-size: 14.5px; color: var(--wine); text-align: center; position: relative; z-index: 2; }
+  .hero-status-line { margin-top: 14px; text-align: center; font-family: 'Frank Ruhl Libre', serif; font-size: 14.5px; color: var(--brown-deep); font-weight: 600; position: relative; z-index: 2; padding: 8px 12px; background: rgba(255,255,255,0.35); border-radius: 8px; border-right: 3px solid var(--gold-dark); }
+
+  .home-mini-row { display: flex; gap: 10px; margin: 0 0 18px; }
+  .home-mini-card { flex: 1; padding: 12px; background: var(--parchment-light); border: 1px solid var(--gold); border-radius: 12px; text-align: center; position: relative; }
+  .home-mini-label { font-family: 'Frank Ruhl Libre', serif; font-size: 11.5px; color: var(--brown-light); margin-bottom: 4px; }
+  .home-mini-value { font-family: 'Frank Ruhl Libre', serif; font-weight: 900; font-size: 24px; color: var(--brown-deep); line-height: 1; }
+  .home-mini-sub { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; color: var(--brown-light); margin-top: 3px; }
+  .home-mini-card.clickable { cursor: pointer; }
+  .home-mini-card.clickable:active { background: var(--parchment); }
+
+  /* Hide the old big score-today/date header on score view — replaced by hero+mini */
+  body.score-mode .score-date-header,
+  body.score-mode .score-today-total { display: none !important; }
   .backup-section { margin-top: 24px; padding-top: 18px; border-top: 1.5px dashed var(--brown-light); display: flex; gap: 8px; }
   .backup-btn { flex: 1; padding: 11px; background: var(--parchment-light); border: 1.5px solid var(--brown-light); border-radius: 8px; font-family: 'Frank Ruhl Libre', serif; font-size: 13px; color: var(--brown-deep); cursor: pointer; }
   .kupah-section { margin:18px 0; padding:16px; background:linear-gradient(135deg, rgba(74,168,90,0.16), rgba(201,169,97,0.08)); border:1.5px solid var(--gold); border-radius:12px; text-align:center; }
@@ -3611,16 +3639,45 @@
   </div>
 
   <div id="scoreView">
-    <div class="score-date-header" id="scoreDateHeader">
-      <div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div>
-      <div class="date-value" id="scoreDateValue">—</div>
-      <input type="date" id="scoreDatePicker" aria-label="בחר תאריך" />
+    <!-- Neria-style hero greeting — time-aware, with stats and verse -->
+    <div class="hero-greet">
+      <div class="hero-greet-row">
+        <div class="hero-greet-time" id="heroGreetTime">בוקר טוב,</div>
+        <div class="hero-greet-name" id="heroGreetName">אוריאל</div>
+        <div class="hero-greet-date" id="heroGreetDate">—</div>
+      </div>
+      <div class="hero-status-row">
+        <div class="hero-stat"><div class="hero-stat-label">🔥 רצף ימים</div><div class="hero-stat-value" id="heroStreak">0</div><div class="hero-stat-sub">ימים</div></div>
+        <div class="hero-stat"><div class="hero-stat-label">🏆 סה״כ נקודות</div><div class="hero-stat-value" id="heroTotal">0</div><div class="hero-stat-sub">לכל החיים</div></div>
+      </div>
+      <div class="hero-identity-line" id="heroIdentityLine">כל יום שאתה עומד מול עצמך — ניצחון.</div>
+      <div class="hero-status-line" id="heroStatusLine">״טוב לחסות בה׳״</div>
     </div>
 
-    <div class="score-today-total">
+    <!-- Date selector + score-today, side by side -->
+    <div class="home-mini-row">
+      <div class="home-mini-card clickable" style="position:relative">
+        <div class="home-mini-label">📅 לחץ לעריכת יום אחר</div>
+        <div class="home-mini-value" id="scoreDateValue">—</div>
+        <input type="date" id="scoreDatePicker" aria-label="בחר תאריך" style="position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer" />
+      </div>
+      <div class="home-mini-card">
+        <div class="home-mini-label">סך הניקוד היום</div>
+        <div class="home-mini-value"><span id="scoreToday">0</span></div>
+        <div class="home-mini-sub">מתוך <span id="scoreTodayMax">125</span></div>
+      </div>
+    </div>
+
+    <!-- The old date-header + score-today-total are hidden via CSS, kept here
+         only because some legacy code may still reference these IDs. -->
+    <div class="score-date-header" id="scoreDateHeader" style="display:none">
+      <div class="date-label">תאריך · לחץ לעריכת יום אחר 📅</div>
+      <div class="date-value">—</div>
+    </div>
+    <div class="score-today-total" style="display:none">
       <div class="label">סך הניקוד היום</div>
-      <div class="value"><span id="scoreToday">0</span></div>
-      <div class="max">מתוך <span id="scoreTodayMax">125</span></div>
+      <div class="value"><span></span></div>
+      <div class="max">מתוך <span>125</span></div>
     </div>
 
     <div class="hizuk-banner" id="hizukBanner"></div>
@@ -6041,6 +6098,9 @@ const TOTAL_OSHER = TEFILOT.length;
     const ts = document.getElementById('targetState'); if (ts) ts.textContent = score + '/' + target;
     const tf = document.getElementById('targetFill'); if (tf) tf.style.width = pct + '%';
     const tc = document.getElementById('targetCard'); if (tc) tc.classList.toggle('reached', target>0 && score >= target);
+    // Mirror values into hero greeting
+    const hs = document.getElementById('heroStreak'); if (hs) hs.textContent = s.current;
+    const ht = document.getElementById('heroTotal'); if (ht) { try { ht.textContent = _heroTotalPoints(); } catch(e){} }
   }
   let scoreAppReady = false;
   function checkScoreCelebrations() {
@@ -6351,6 +6411,77 @@ const TOTAL_OSHER = TEFILOT.length;
 
   function renderBuilding(){ var _bt=document.querySelector('.building-title'), _bs=document.querySelector('.building-subtitle'); var _tal=(typeof currentProfile!=='undefined'&&currentProfile==='tal'); if(_bt)_bt.textContent=_tal?'🏠 בונים את הבית שלנו':'🏛️ בונים את קדשי ישראל'; if(_bs)_bs.textContent=_tal?'אספי משאבים מהמצוות ובנו את הבית שלכם':'אסוף משאבים מהמצוות ובנֵה את כלי המקדש'; const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
+  // ===== Hero greeting (time-aware) — neria-style header for score view =====
+  function _heroGreetingTime(){
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return 'בוקר טוב,';
+    if (h >= 12 && h < 17) return 'צהריים טובים,';
+    if (h >= 17 && h < 22) return 'ערב טוב,';
+    return 'לילה טוב,';
+  }
+  const _HERO_VERSES = [
+    '״טוב לחסות בה׳ מבטוח באדם״',
+    '״אני לדודי ודודי לי״',
+    '״ה׳ אורי וישעי — ממי אירא״',
+    '״ה׳ צלך על יד ימינך״',
+    '״ובחרת בחיים״',
+    '״כי מלאכיו יצוה לך לשמרך בכל דרכיך״',
+    '״גול על ה׳ דרכך ובטח עליו והוא יעשה״',
+    '״רחמיך רבים ה׳ כמשפטיך חיני״',
+  ];
+  const _HERO_IDENTITY = [
+    'כל יום שאתה עומד מול עצמך — ניצחון.',
+    'כל מצווה — אבן בבית של חייך הנצחיים.',
+    'הצדיק הוא לא מי שלא נופל, אלא מי שקם שוב.',
+    'אחת אחר השנייה. אבן אחר אבן. יום אחר יום.',
+    'אתה עוסק עכשיו בעבודת הקודש החשובה ביותר — שלך.',
+    'תפילה אחת מתוך הלב — מזיזה עולמות.',
+    'המשך — והקב״ה ימשיך איתך.',
+    'כל אות שאתה לומד, כל מצווה — נחקקת לעולמים.',
+  ];
+  function _heroDate(){
+    try { return new Date().toLocaleDateString('he-IL', { weekday: 'long', day: 'numeric', month: 'long' }); }
+    catch(e) { return ''; }
+  }
+  function _heroName(){
+    return (currentProfile === 'tal') ? 'טל' : 'אוריאל';
+  }
+  function _heroTotalPoints(){
+    let total = 0;
+    try { total = getTotalLifetimePoints(); } catch(e) {
+      try {
+        const hist = loadHistory();
+        const today = getTodayDate(); const ts = calculateTodayScore();
+        total = ts;
+        hist.forEach(h => { if (h.date !== today) total += (h.score||0); });
+      } catch(_) {}
+    }
+    return total;
+  }
+  function renderHero(){
+    try {
+      const dayOfYear = (function(d){
+        return Math.floor((d - new Date(d.getFullYear(),0,0)) / 86400000);
+      })(new Date());
+      const tEl = document.getElementById('heroGreetTime');     if (tEl) tEl.textContent = _heroGreetingTime();
+      const nEl = document.getElementById('heroGreetName');     if (nEl) nEl.textContent = _heroName();
+      const dEl = document.getElementById('heroGreetDate');     if (dEl) dEl.textContent = _heroDate();
+      const sEl = document.getElementById('heroStatusLine');    if (sEl) sEl.textContent = _HERO_VERSES[dayOfYear % _HERO_VERSES.length];
+      const iEl = document.getElementById('heroIdentityLine');  if (iEl) iEl.textContent = _HERO_IDENTITY[dayOfYear % _HERO_IDENTITY.length];
+      // Streak: piggy-back on existing streakVal once it's set, else compute now
+      try {
+        const sv = document.getElementById('streakVal');
+        const hs = document.getElementById('heroStreak');
+        if (hs) hs.textContent = (sv && sv.textContent) ? sv.textContent : '0';
+      } catch(e) {}
+      // Total accumulated points
+      try {
+        const ht = document.getElementById('heroTotal');
+        if (ht) ht.textContent = _heroTotalPoints();
+      } catch(e) {}
+    } catch(e) {}
+  }
+
   function renderScoreView() {
     if (!todayState.date) loadTodayState();
     // Check if date changed (passed midnight)
@@ -6358,6 +6489,7 @@ const TOTAL_OSHER = TEFILOT.length;
       loadTodayState();
     }
 
+    renderHero();
     document.getElementById('scoreDateValue').textContent = formatHebrewDate(todayState.date);
     document.getElementById('scoreTodayMax').textContent = calculateMaxScore();
     try { updatePartnerView(); } catch(e) {}
