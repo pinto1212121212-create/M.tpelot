@@ -6020,6 +6020,70 @@ const TOTAL_OSHER = TEFILOT.length;
     }
   }
 
+  // Import a mega backup file: restore localStorage AND download all HTML+JSON
+  // files individually so the user can re-deploy the site if it ever got wiped.
+  function importMegaBackup(file) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      let obj;
+      try { obj = JSON.parse(reader.result); }
+      catch(e) { alert('הקובץ אינו JSON תקין.'); return; }
+      if (!obj || obj._app !== 'tefilot-mega') {
+        if (!confirm('הקובץ לא נראה כגיבוי ענק (חסר התווית tefilot-mega). להמשיך בכל זאת?')) return;
+      }
+      const data = obj.data || {};
+      const htmls = obj.htmls || {};
+      const pools = obj.pools || {};
+      const dataCount = Object.keys(data).length;
+      const htmlCount = Object.keys(htmls).length;
+      const poolCount = Object.keys(pools).length;
+      const msg =
+        'בגיבוי נמצא:\n' +
+        '• ' + dataCount + ' מפתחות נתונים אישיים (localStorage)\n' +
+        '• ' + htmlCount + ' קבצי HTML\n' +
+        '• ' + poolCount + ' קבצי תפילות (JSON)\n\n' +
+        '⚠ זה ישחזר את הנתונים האישיים שלך (יחליף את הנוכחיים) ויוריד את כל קבצי האתר. להמשיך?';
+      if (!confirm(msg)) return;
+      // 1. Restore localStorage
+      try {
+        Object.keys(data).forEach(function(k){
+          if (k.indexOf('_fb_') !== 0 && k.indexOf('_yfb_') !== 0) {
+            try { localStorage.setItem(k, data[k]); } catch(e){}
+          }
+        });
+      } catch(e) {}
+      // 2. Trigger download of each HTML + JSON file in series with small delays
+      // (Chrome rate-limits multiple downloads; delay prevents some being dropped)
+      const queue = [];
+      Object.keys(htmls).forEach(function(name){
+        queue.push({ name: name, mime: 'text/html', body: htmls[name] });
+      });
+      Object.keys(pools).forEach(function(path){
+        queue.push({ name: path, mime: 'application/json', body: JSON.stringify(pools[path], null, 1) });
+      });
+      let i = 0;
+      function downloadNext() {
+        if (i >= queue.length) {
+          try { scoreToast('✓ שוחזר ' + dataCount + ' נתונים + הורדו ' + queue.length + ' קבצים'); } catch(e){}
+          setTimeout(function(){ if (confirm('הסתיים! להעלות את הקבצים ל־GitHub:\n1. פתח את https://github.com/pinto1212121212-create/m.tpelot\n2. החלף כל קובץ בגרסה החדשה.\n\nלרענן את הדף עכשיו?')) location.reload(); }, 600);
+          return;
+        }
+        const item = queue[i++];
+        const blob = new Blob([item.body], { type: item.mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = item.name.replace(/\//g, '_'); // flatten path so it lands in Downloads
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); downloadNext(); }, 350);
+      }
+      downloadNext();
+    };
+    reader.readAsText(file);
+  }
+
   function importFullBackup(file) {
     const reader = new FileReader();
     reader.onload = () => { try { const obj = JSON.parse(reader.result); const data = obj.data || obj; if (typeof data !== 'object') throw 0; if (!confirm('לשחזר נתונים מהגיבוי? זה יחליף את הנתונים הנוכחיים במכשיר.')) return; Object.keys(data).forEach(k => { if (k.indexOf('_fb_')!==0 && k.indexOf('_yfb_')!==0) { try { localStorage.setItem(k, data[k]); } catch(e){} } }); location.reload(); } catch(e) { alert('קובץ גיבוי לא תקין'); } };
@@ -8181,6 +8245,8 @@ const TOTAL_OSHER = TEFILOT.length;
     const pt = document.getElementById('moreProfileTal'); if (pt) pt.addEventListener('click', function(){ try { setProfile('tal'); } catch(e){} closeMoreSheet(); });
     const bk = document.getElementById('moreBackup'); if (bk) bk.addEventListener('click', function(){ try { exportFullBackup(); } catch(e){} closeMoreSheet(); });
     const mb = document.getElementById('moreMegaBackup'); if (mb) mb.addEventListener('click', function(){ try { exportMegaBackup(); } catch(e){} /* keep sheet open during progress */ });
+    const mi = document.getElementById('moreMegaImport'); if (mi) mi.addEventListener('click', function(){ const f = document.getElementById('megaImportFile'); if (f) f.click(); });
+    const mif = document.getElementById('megaImportFile'); if (mif) mif.addEventListener('change', function(e){ const f = e.target.files && e.target.files[0]; if (f) { try { importMegaBackup(f); } catch(err){ alert('שגיאה: '+err); } } e.target.value=''; });
     const rs = document.getElementById('moreRestore'); if (rs) rs.addEventListener('click', function(){ const f = document.getElementById('restoreFile'); if (f) f.click(); closeMoreSheet(); });
     const rb = document.getElementById('moreReset'); if (rb) rb.addEventListener('click', function(){ try { requestReset(); } catch(e){} closeMoreSheet(); });
   }
@@ -8340,6 +8406,13 @@ const TOTAL_OSHER = TEFILOT.length;
     <div class="row">
       <button class="more-btn" id="moreMegaBackup" style="flex:1">📦 גיבוי הכל — כל האתר + כל התפילות (קובץ ענק)</button>
     </div>
+    <div class="row">
+      <button class="more-btn" id="moreMegaImport" style="flex:1">📂 ייבא גיבוי ענק — חלץ HTML + JSON להעלאה</button>
+    </div>
+    <input type="file" id="megaImportFile" accept="application/json,.json" style="display:none">
+    <div class="row" style="margin-top:-4px"><div style="flex:1;font-size:11.5px;color:var(--brown-light);text-align:center;padding:0 8px;line-height:1.45">
+      אם האתר נמחק: ייבוא גיבוי ענק = משחזר את הנתונים שלך + מוריד את כל קבצי HTML/JSON, כדי שתעלה אותם חזרה ל־GitHub Pages
+    </div></div>
     <div class="row">
       <button class="more-btn danger" id="moreReset">🔄 איפוס נאמרו</button>
     </div>
