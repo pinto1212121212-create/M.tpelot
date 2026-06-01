@@ -5222,7 +5222,9 @@ const TOTAL_OSHER = TEFILOT.length;
     if(_poolLoading[v]) return _poolLoading[v];
     const file = _POOL_VAR_TO_FILE[v];
     if(!file) return Promise.resolve();
-    _poolLoading[v] = fetch(file)
+    // Bypass browser HTTP cache — pool files get updated and stale cache
+    // serves old text (e.g., when prayer wording was changed).
+    _poolLoading[v] = fetch(file, { cache: 'no-store' })
       .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.json(); })
       .then(function(arr){
         const ref = _poolRefs[v];
@@ -8390,7 +8392,7 @@ const TOTAL_OSHER = TEFILOT.length;
   function loadHitorerut() {
     if (_HITORERUT) return Promise.resolve(_HITORERUT);
     if (_hitorerutLoading) return _hitorerutLoading;
-    _hitorerutLoading = fetch('data/hitorerut.json')
+    _hitorerutLoading = fetch('data/hitorerut.json', { cache: 'no-store' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){ _HITORERUT = j || {}; return _HITORERUT; })
       .catch(function(){ _HITORERUT = {}; return _HITORERUT; });
