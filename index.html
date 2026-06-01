@@ -4266,7 +4266,7 @@
   const TEFILOT_ANAVA = []; // lazy-loaded from data/anava.json (515 items)
   const TEFILOT_TIKUN = []; // lazy-loaded from data/tikun.json (515 items)
   const TEFILOT_SHMIRA = []; // lazy-loaded from data/shmira.json (515 items)
-  const TEFILOT_DATE = []; // lazy-loaded from data/date.json (515 items)
+  const TEFILOT_DIET = []; // lazy-loaded from data/diet.json (515 items)
 
   // ============= TEFILOT_BRIT_TAL POOL (515 prayers - קדושת בנות ישראל - לטל) =============
   const TEFILOT_BRIT_TAL = []; // lazy-loaded from data/brit_tal.json (515 items)
@@ -4328,7 +4328,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_ANAVA = 'tefilot_anava_said_v1';
   const STORAGE_KEY_TIKUN = 'tefilot_tikun_said_v1';
   const STORAGE_KEY_SHMIRA = 'tefilot_shmira_said_v1';
-  const STORAGE_KEY_DATE = 'tefilot_date_said_v1';
+  const STORAGE_KEY_DIET = 'tefilot_diet_said_v1';
   const STORAGE_KEY_BRIT_TAL = 'tefilot_brit_tal_said_v1';
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_said_v1';
@@ -4524,7 +4524,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const FAV_KEY_ANAVA = 'tefilot_anava_fav_v1';
   const FAV_KEY_TIKUN = 'tefilot_tikun_fav_v1';
   const FAV_KEY_SHMIRA = 'tefilot_shmira_fav_v1';
-  const FAV_KEY_DATE = 'tefilot_date_fav_v1';
+  const FAV_KEY_DIET = 'tefilot_diet_fav_v1';
   const FAV_KEY_BRIT_TAL = 'tefilot_brit_tal_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
   const FAV_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_fav_v1';
@@ -4678,14 +4678,14 @@ const TOTAL_OSHER = TEFILOT.length;
       verse: '״הנה לא ינום ולא ייׁשן שומר ישראל״',
       poolLength: 515
     },
-    date: {
-      pool: TEFILOT_DATE,
+    diet: {
+      pool: TEFILOT_DIET,
       total: 515,
-      storageKey: STORAGE_KEY_DATE,
-      favStorageKey: FAV_KEY_DATE,
-      title: 'תקט״ו תפילות לדייט',
-      subtitle: 'לפני המפגש — שייגלה הזיווג מן השמים',
-      verse: '״לא טוב היות האדם לבדו אעשה לו עזר כנגדו״',
+      storageKey: STORAGE_KEY_DIET,
+      favStorageKey: FAV_KEY_DIET,
+      title: 'תקט״ו תפילות לדייטה / בריאות במשקל',
+      subtitle: 'לשליטה ביצר האכילה ולמשקל בריא',
+      verse: '״ונשמרתם מאד לנפשתיכם״',
       poolLength: 515
     },
     brit_tal: {
@@ -5374,7 +5374,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ANAVA': TEFILOT_ANAVA,
     'TEFILOT_TIKUN': TEFILOT_TIKUN,
     'TEFILOT_SHMIRA': TEFILOT_SHMIRA,
-    'TEFILOT_DATE': TEFILOT_DATE,
+    'TEFILOT_DIET': TEFILOT_DIET,
     'TEFILOT_BRIT_TAL': TEFILOT_BRIT_TAL,
     'TEFILOT_BITACHON': TEFILOT_BITACHON,
     'TEFILOT_BITACHON_TAL': TEFILOT_BITACHON_TAL,
@@ -5389,8 +5389,8 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ROEI': TEFILOT_ROEI,
     'TEFILOT_ROEI_TAL': TEFILOT_ROEI_TAL
   };
-  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "date": "TEFILOT_DATE", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
-  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_DATE": "data/date.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
+  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "diet": "TEFILOT_DIET", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL"};
+  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_DIET": "data/diet.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json"};
   const _poolLoaded = {};
   const _poolLoading = {};
   function poolVarForTab(t){ return _POOL_TAB_TO_VAR[t]; }
@@ -8016,7 +8016,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'tefilot_anava_said_v1', 'tefilot_anava_fav_v1',
     'tefilot_tikun_said_v1', 'tefilot_tikun_fav_v1',
     'tefilot_shmira_said_v1', 'tefilot_shmira_fav_v1',
-    'tefilot_date_said_v1', 'tefilot_date_fav_v1',
+    'tefilot_diet_said_v1', 'tefilot_diet_fav_v1',
     'tefilot_osher_fav_v1', 'tefilot_brit_fav_v1', 'tefilot_bitachon_fav_v1',
     'tefilot_hochma_fav_v1', 'tefilot_roei_fav_v1', 'tefilot_refua_fav_v1',
     'tefilot_osher_tal_fav_v1', 'tefilot_leda_fav_v1', 'tefilot_hayalim_fav_v1', 'tefilot_leda_uriel_fav_v1', 'tefilot_targilim_fav_v1', 'tefilot_briaut_fav_v1', 'tefilot_zikui_fav_v1', 'tefilot_zikui_tal_fav_v1', 'tefilot_hochma_tal_fav_v1', 'tefilot_bitachon_tal_fav_v1', 'tefilot_targilim_tal_fav_v1', 'tefilot_briaut_tal_fav_v1', 'tefilot_hayalim_tal_fav_v1', 'tefilot_refua_tal_fav_v1', 'tefilot_roei_tal_fav_v1', 'tefilot_brit_tal_fav_v1'
@@ -8252,6 +8252,20 @@ const TOTAL_OSHER = TEFILOT.length;
     }
   }
 
+  // Preserve scroll position around a re-render so the partner-sync doesn't
+  // make the page "jump" while both spouses read prayers together.
+  function _withPreservedScroll(fn) {
+    const sx = window.scrollX, sy = window.scrollY;
+    try { fn(); } catch(e) {}
+    // Restore in next frame so layout has settled
+    requestAnimationFrame(function(){ try { window.scrollTo(sx, sy); } catch(e){} });
+    // Once more after a brief delay (some renders are async / lazy-loaded)
+    setTimeout(function(){ try { window.scrollTo(sx, sy); } catch(e){} }, 80);
+  }
+  // Suppress prayer-view re-renders triggered by partner-sync. The local user's
+  // displayed cards stay stable; new "said" updates from partner will appear on
+  // the next natural render (tab switch, scroll-load, etc.).
+  let _suppressNextPrayerRender = false;
   async function syncDown() {
     const url = getSyncUrl();
     if (!url) return;
@@ -8268,10 +8282,16 @@ const TOTAL_OSHER = TEFILOT.length;
         try { updateStats(); } catch(e) {}
         try { updateTabColors(); } catch(e) {}
         if (typeof currentTab !== 'undefined' && currentTab === 'score') {
-          try { loadTodayState(); } catch(e) {}
-          try { renderScoreView(); } catch(e) {}
+          // Score view DOES need to re-render (mitzvot, kupah, score) but we
+          // preserve scroll position so the user doesn't lose their place.
+          _withPreservedScroll(function(){
+            try { loadTodayState(); } catch(e) {}
+            try { renderScoreView(); } catch(e) {}
+          });
         } else {
-          try { renderPrayers(); } catch(e) {}
+          // Prayer view: do NOT re-render cards from sync — that's what causes
+          // the visible "jump" when both spouses pray together. Stats already
+          // updated; cards stay stable until next user interaction.
         }
       }
     } catch(e) {
@@ -8617,7 +8637,7 @@ const TOTAL_OSHER = TEFILOT.length;
     { id: 'anava',    icon: '🌸', label: 'ענווה' },
     { id: 'tikun',    icon: '✨', label: 'תיקון השלם' },
     { id: 'shmira',   icon: '✡️', label: 'שמירה לעם ישראל' },
-    { id: 'date',     icon: '💍', label: 'דייט / זיווג' }
+    { id: 'diet',    icon: '🥗', label: 'דייטה / בריאות' }
   ];
   function _saidCountForTab(tabId) {
     try {
