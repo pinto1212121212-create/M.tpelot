@@ -3115,9 +3115,9 @@
   .em-btn:active { transform: scale(0.98); }
   .em-btn-sub { font-size: 12px; color: rgba(255,247,224,0.8); margin-top: 10px; position: relative; z-index: 1; }
 
-  /* Floating FAB — visible across all screens when on Uriel profile */
+  /* Floating FAB — visible on the ניקוד (score) tab only, when on Uriel profile */
   .em-fab {
-    display: none;  /* shown by body.profile-pinto */
+    display: none;  /* shown by body.profile-pinto.score-mode — only on the ניקוד tab */
     position: fixed; bottom: 96px; left: 16px;
     width: 56px; height: 56px; border-radius: 50%;
     background: linear-gradient(135deg, #c93a3a 0%, #8a1f1f 100%);
@@ -3131,7 +3131,7 @@
     animation: emFabBreathe 2.6s ease-in-out infinite;
     transition: transform 0.2s, box-shadow 0.3s;
   }
-  body.profile-pinto .em-fab { display: flex; }
+  body.profile-pinto.score-mode .em-fab { display: flex; }
   .em-fab:hover { transform: scale(1.1); }
   .em-fab:active { transform: scale(0.95); }
   @keyframes emFabBreathe {
@@ -4086,6 +4086,16 @@
   </div>
 </div>
 
+<div class="celebration" id="dailyQuotaCeleb">
+  <div class="celebration-card">
+    <div class="celebration-icon">✅</div>
+    <div class="celebration-title">המכסה היומית הושלמה!</div>
+    <div class="celebration-num">✦</div>
+    <div class="celebration-text" id="dailyQuotaText"></div>
+    <button class="celebration-btn" id="dailyQuotaBtn">אמן 🙏</button>
+  </div>
+</div>
+
 <div class="modal-backdrop" id="editDayModal">
   <div class="modal">
     <div class="modal-header">
@@ -4899,16 +4909,34 @@ const TOTAL_OSHER = TEFILOT.length;
     saveDailyCounts(counts);
     // Device-local counter — powers the green tab badge (per person, per device).
     const green = loadGreenCounts();
-    green[tabName] = (green[tabName] || 0) + 1;
+    const before = green[tabName] || 0;
+    green[tabName] = before + 1;
     saveGreenCounts(green);
     updateTabColors();
+    // Celebrate the moment the daily quota (DAILY_TARGET) is first reached today.
+    if (before < DAILY_TARGET && green[tabName] >= DAILY_TARGET) {
+      try { showDailyQuotaCeleb(tabName); } catch(e) {}
+    }
+  }
+  // The sub-version tabs (e.g. leda/leda_uriel) store their daily counts under
+  // their own id. Return every tab id in the same sub-group so the main .tab-btn
+  // can turn green when EITHER partner's version reaches the daily target.
+  function subtabGroupFor(mainId) {
+    const bars = Array.from(document.querySelectorAll('.subtabs'));
+    const bar = bars.find(b => Array.from(b.querySelectorAll('.subtab-btn')).some(btn => btn.dataset.subtab === mainId));
+    if (!bar) return [mainId];
+    return Array.from(bar.querySelectorAll('.subtab-btn')).map(b => b.dataset.subtab);
+  }
+  function dailyDoneForTab(mainId, counts) {
+    const c = counts || loadGreenCounts();
+    return subtabGroupFor(mainId).some(id => (c[id] || 0) >= DAILY_TARGET);
   }
   function updateTabColors() {
     const counts = loadGreenCounts();
     document.querySelectorAll('.tab-btn').forEach(btn => {
       const tab = btn.dataset.tab;
       if (!tab || tab === 'score') return;
-      if ((counts[tab] || 0) >= DAILY_TARGET) {
+      if (dailyDoneForTab(tab, counts)) {
         btn.classList.add('daily-done');
       } else {
         btn.classList.remove('daily-done');
@@ -5310,8 +5338,22 @@ const TOTAL_OSHER = TEFILOT.length;
     launchConfetti();
   }
 
-  function launchConfetti() {
-    const cel = document.getElementById('celebration');
+  // Daily-quota popup — fires once when DAILY_TARGET prayers are read in a tab today.
+  function showDailyQuotaCeleb(tabName) {
+    const main = (typeof mainTabFor === 'function') ? mainTabFor(tabName) : tabName;
+    let name = '';
+    try {
+      const entry = (typeof PICKER_TABS !== 'undefined') ? PICKER_TABS.find(t => t.id === main) : null;
+      name = (entry && entry.label) || (TABS_DATA[main] && TABS_DATA[main].title) || '';
+    } catch(e) {}
+    const txtEl = document.getElementById('dailyQuotaText');
+    if (txtEl) txtEl.textContent = 'השלמת ' + DAILY_TARGET + ' תפילות' + (name ? (' · ' + name) : '') + ' היום. תזכה למצוות! 🙏';
+    const cel = document.getElementById('dailyQuotaCeleb');
+    if (cel) { cel.classList.add('active'); launchConfetti(cel); }
+  }
+
+  function launchConfetti(target) {
+    const cel = target || document.getElementById('celebration');
     const colors = ['#c9a961', '#e0c585', '#6b1f2d', '#a08540'];
     for (let i = 0; i < 30; i++) {
       const c = document.createElement('div');
@@ -7796,6 +7838,7 @@ const TOTAL_OSHER = TEFILOT.length;
   on('confirmYes', 'click', confirmReset);
   on('confirmNo', 'click', cancelReset);
   on('celebBtn', 'click', () => closeModal('celebration'));
+  on('dailyQuotaBtn', 'click', () => closeModal('dailyQuotaCeleb'));
 
   // ===== Score tab buttons =====
   on('endDayBtn', 'click', endDay);
@@ -8660,8 +8703,7 @@ const TOTAL_OSHER = TEFILOT.length;
       const said = _saidCountForTab(t.id);
       const total = (data && data.total) || 515;
       const active = (t.id === activeId) ? ' active' : '';
-      const todayCount = greenCounts[t.id] || 0;
-      const dailyDone = todayCount >= DAILY_TARGET;
+      const dailyDone = dailyDoneForTab(t.id, greenCounts);
       const doneAttr = dailyDone ? ' data-done="1"' : '';
       const finishBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
       const dailyBadge = dailyDone ? '<span class="cat-daily">✓ יעד יומי</span>' : '';
@@ -8764,7 +8806,7 @@ const TOTAL_OSHER = TEFILOT.length;
     }
     try {
       const counts = loadGreenCounts();
-      if ((counts[mainId] || 0) >= DAILY_TARGET) chip.dataset.done = '1';
+      if (dailyDoneForTab(mainId, counts)) chip.dataset.done = '1';
     } catch(e){}
   }
   function wireCategoryPicker() {
