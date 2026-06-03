@@ -3851,6 +3851,7 @@
     </div>
 
     <div id="mitzvotList"></div>
+    <button class="add-goal-btn" id="manageMitzvotBtn" style="margin-top:12px;margin-bottom:6px">⚙️ נהל את המצוות שלי</button>
 
     <div class="brit-log-section" id="britLogSection" style="display:none;">
       <div class="brit-log-title">🛡️ תיעוד שמירת הברית</div>
@@ -4043,6 +4044,64 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="mitzvotManagerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">המצוות שלי</div>
+      <button class="modal-close" id="mitzvotManagerClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="mitzvotManagerList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
+      <button class="goal-form-btn save" id="mitzvaAddBtn" style="width:100%">+ הוסף מצווה חדשה</button>
+      <button class="add-goal-btn" id="mitzvaPresetBtn" style="margin-top:10px">📚 הוסף מספריית המצוות</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="mitzvaEditModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="mitzvaEditTitle">מצווה חדשה</div>
+      <button class="modal-close" id="mitzvaEditClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="goal-form">
+        <div class="goal-form-row">
+          <label class="goal-form-label">שם המצווה</label>
+          <input type="text" class="goal-form-input" id="mitzvaNameInput" placeholder="למשל: דף יומי, צדקה, שמירת הלשון...">
+        </div>
+        <div class="goal-form-row">
+          <label class="goal-form-label">כמות נקודות</label>
+          <input type="number" class="goal-form-input" id="mitzvaPointsInput" min="1" max="1000" step="5">
+        </div>
+        <div class="goal-form-row">
+          <label class="goal-form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="mitzvaMinyanInput" style="width:auto;margin:0"> ניקוד כפול במניין (×2)
+          </label>
+        </div>
+        <div class="goal-form-row">
+          <label class="goal-form-label">בחר אייקון</label>
+          <div class="goal-icon-grid" id="mitzvaIconGrid"></div>
+        </div>
+        <div class="goal-form-buttons">
+          <button class="goal-form-btn save" id="mitzvaSaveBtn">שמור</button>
+          <button class="goal-form-btn cancel" id="mitzvaCancelBtn">ביטול</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="presetPickerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ספריית המצוות</div>
+      <button class="modal-close" id="presetPickerClose">×</button>
+    </div>
+    <div class="modal-body"><div id="presetGrid" style="display:flex;flex-direction:column;gap:8px"></div></div>
   </div>
 </div>
 
@@ -5976,8 +6035,115 @@ const TOTAL_OSHER = TEFILOT.length;
     { id: 'tal_kosher', name: 'כושר (2 פעמים בשבוע)', icon: '💪', points: 35, hasMinyan: false }
   ];
 
+  // Icons available when building a custom mitzva
+  const MITZVA_ICONS = ['🌅','☀️','🌙','🙏','📜','📖','📚','📕','📗','📘','⚖️','✨','🛡️','👁️','🤐','🧘','🌱','🤝','❤️','🫶','👴','🏡','👨‍👩‍👧','💪','💧','😴','🥗','📵','⏰','🧹','🎯','🎓','🕰️','🍞','🛏️','🕯️','🏃','📝','🌟','💎'];
+  // Ready-made library the user can add from
+  const PRESET_MITZVOT = [
+    {name:'שחרית',icon:'🌅',points:20,hasMinyan:true},{name:'מנחה',icon:'☀️',points:10,hasMinyan:true},{name:'ערבית',icon:'🌙',points:10,hasMinyan:true},
+    {name:'תפילה בכוונה',icon:'🙏',points:15,hasMinyan:false},{name:'ברכות השחר',icon:'📜',points:10,hasMinyan:false},{name:'ברכת המזון בכוונה',icon:'🍞',points:10,hasMinyan:false},
+    {name:'קריאת שמע על המיטה',icon:'🛏️',points:5,hasMinyan:false},{name:'שיעור תורה',icon:'📚',points:30,hasMinyan:false},{name:'דף יומי',icon:'📖',points:30,hasMinyan:false},
+    {name:'הלכה יומית',icon:'⚖️',points:15,hasMinyan:false},{name:'משניות',icon:'📕',points:20,hasMinyan:false},{name:'תהילים',icon:'📗',points:15,hasMinyan:false},
+    {name:'מוסר/חסידות',icon:'📘',points:15,hasMinyan:false},{name:'חיזוק אמונה',icon:'✨',points:10,hasMinyan:false},{name:'יום נקי - שמירת הברית',icon:'🛡️',points:15,hasMinyan:false},
+    {name:'שמירת העיניים',icon:'👁️',points:15,hasMinyan:false},{name:'שמירת הלשון',icon:'🤐',points:15,hasMinyan:false},{name:'התגברות על הכעס',icon:'🧘',points:15,hasMinyan:false},
+    {name:'עבודת המידות',icon:'🌱',points:10,hasMinyan:false},{name:'צדקה',icon:'🤝',points:15,hasMinyan:false},{name:'ביקור חולים',icon:'❤️',points:20,hasMinyan:false},
+    {name:'חסד עם הזולת',icon:'🫶',points:15,hasMinyan:false},{name:'כיבוד הורים',icon:'👴',points:20,hasMinyan:false},{name:'עזרה בבית',icon:'🏡',points:15,hasMinyan:false},
+    {name:'זמן איכות עם המשפחה',icon:'👨‍👩‍👧',points:20,hasMinyan:false},{name:'כושר/ספורט',icon:'💪',points:25,hasMinyan:false},{name:'שתיית מים',icon:'💧',points:5,hasMinyan:false},
+    {name:'שינה מסודרת',icon:'😴',points:10,hasMinyan:false},{name:'אכילה בריאה',icon:'🥗',points:10,hasMinyan:false},{name:'הימנעות ממסכים מיותרים',icon:'📵',points:15,hasMinyan:false},
+    {name:'קימה בזמן',icon:'⏰',points:10,hasMinyan:false},{name:'סדר ונקיון',icon:'🧹',points:10,hasMinyan:false},{name:'הכרת הטוב',icon:'🌟',points:10,hasMinyan:false},
+    {name:'מטרה אישית',icon:'🎯',points:15,hasMinyan:false},{name:'לימוד מקצועי',icon:'🎓',points:20,hasMinyan:false},{name:'קביעת עיתים לתורה',icon:'🕰️',points:25,hasMinyan:false},
+    {name:'אהבת ישראל / אחדות',icon:'🫶',points:15,hasMinyan:false},{name:'חשבון נפש',icon:'📝',points:10,hasMinyan:false}
+  ];
+
+  // Custom mitzvot are stored per-profile (pk = profile-namespaced key)
+  const CUSTOM_MITZVOT_KEY = 'tefilot_custom_mitzvot_v1';
+  function loadCustomMitzvot() {
+    try { const r = localStorage.getItem(pk(CUSTOM_MITZVOT_KEY)); if (r) { const a = JSON.parse(r); if (Array.isArray(a)) return a; } } catch(e) {}
+    return [];
+  }
+  function saveCustomMitzvot(arr) {
+    try { localStorage.setItem(pk(CUSTOM_MITZVOT_KEY), JSON.stringify(arr || [])); } catch(e) {}
+  }
   function getActiveMitzvot() {
-    return currentProfile === 'tal' ? MITZVOT_TAL : MITZVOT_PINTO;
+    const base = currentProfile === 'tal' ? MITZVOT_TAL : MITZVOT_PINTO;
+    return base.concat(loadCustomMitzvot());
+  }
+
+  // ===== Mitzvot manager (add from library / build your own) — per profile =====
+  let editingMitzvaId = null, selectedMitzvaIcon = '🎯';
+  function refreshMitzvotAfterChange() {
+    MITZVOT = getActiveMitzvot();
+    if (!todayState.items) todayState.items = {};
+    MITZVOT.forEach(m => { if (!todayState.items[m.id]) todayState.items[m.id] = { done: false, minyan: false }; });
+    try { saveTodayState(); } catch(e) {}
+    try { renderScoreView(); } catch(e) {}
+  }
+  function openMitzvotManager() { renderMitzvotManager(); document.getElementById('mitzvotManagerModal').classList.add('active'); }
+  function renderMitzvotManager() {
+    const base = (currentProfile === 'tal' ? MITZVOT_TAL : MITZVOT_PINTO).filter(m => m.id !== 'brit' || britUnlocked);
+    const custom = loadCustomMitzvot();
+    const baseHtml = base.map(m => '<div class="goal-card"><div class="goal-icon">'+m.icon+'</div><div class="goal-info"><div class="goal-name">'+escapeHtml(m.name)+'</div><div class="goal-points">'+m.points+' נקודות'+(m.hasMinyan?' · ×2 במניין':'')+' · קבוע</div></div><div class="goal-actions"><span style="opacity:.35;font-size:18px">🔒</span></div></div>').join('');
+    const customHtml = custom.map(m => '<div class="goal-card" data-id="'+m.id+'"><div class="goal-icon">'+m.icon+'</div><div class="goal-info"><div class="goal-name">'+escapeHtml(m.name)+'</div><div class="goal-points">'+m.points+' נקודות'+(m.hasMinyan?' · ×2 במניין':'')+'</div></div><div class="goal-actions"><button class="goal-btn edit" data-action="edit">✏️</button><button class="goal-btn delete" data-action="delete">×</button></div></div>').join('');
+    const list = document.getElementById('mitzvotManagerList');
+    list.innerHTML = baseHtml + customHtml + (custom.length ? '' : '<div style="text-align:center;opacity:.6;padding:8px;font-size:13px">הוסף מצוות משלך עם הכפתורים למטה ⬇</div>');
+    list.querySelectorAll('.goal-card[data-id]').forEach(card => {
+      const id = card.dataset.id;
+      const e = card.querySelector('[data-action="edit"]'); if (e) e.addEventListener('click', () => openMitzvaEdit(id));
+      const d = card.querySelector('[data-action="delete"]'); if (d) d.addEventListener('click', () => deleteMitzva(id));
+    });
+  }
+  function deleteMitzva(id) {
+    let custom = loadCustomMitzvot();
+    const m = custom.find(x => x.id === id); if (!m) return;
+    if (!confirm('למחוק את "'+m.name+'"?')) return;
+    custom = custom.filter(x => x.id !== id); saveCustomMitzvot(custom);
+    refreshMitzvotAfterChange(); renderMitzvotManager();
+  }
+  function openMitzvaEdit(id) {
+    editingMitzvaId = id || null;
+    const m = id ? loadCustomMitzvot().find(x => x.id === id) : null;
+    document.getElementById('mitzvaEditTitle').textContent = m ? 'עריכת מצווה' : 'מצווה חדשה';
+    document.getElementById('mitzvaNameInput').value = m ? m.name : '';
+    document.getElementById('mitzvaPointsInput').value = m ? m.points : '';
+    document.getElementById('mitzvaMinyanInput').checked = m ? !!m.hasMinyan : false;
+    selectedMitzvaIcon = m ? m.icon : '🎯';
+    renderMitzvaIconGrid();
+    document.getElementById('mitzvaEditModal').classList.add('active');
+  }
+  function renderMitzvaIconGrid() {
+    const g = document.getElementById('mitzvaIconGrid');
+    g.innerHTML = MITZVA_ICONS.map(ic => '<button class="goal-icon-option'+(ic===selectedMitzvaIcon?' selected':'')+'" data-icon="'+ic+'">'+ic+'</button>').join('');
+    g.querySelectorAll('.goal-icon-option').forEach(b => b.addEventListener('click', () => { selectedMitzvaIcon = b.dataset.icon; renderMitzvaIconGrid(); }));
+  }
+  function saveMitzvaEdit() {
+    const name = document.getElementById('mitzvaNameInput').value.trim();
+    const pts = parseInt(document.getElementById('mitzvaPointsInput').value, 10);
+    const minyan = document.getElementById('mitzvaMinyanInput').checked;
+    if (!name) { alert('נא להזין שם'); return; }
+    if (!pts || pts < 1) { alert('נא להזין מספר נקודות תקין'); return; }
+    let custom = loadCustomMitzvot();
+    if (editingMitzvaId) {
+      const m = custom.find(x => x.id === editingMitzvaId);
+      if (m) { m.name = name; m.points = pts; m.hasMinyan = minyan; m.icon = selectedMitzvaIcon; }
+    } else {
+      custom.push({ id: 'm'+Date.now()+Math.floor(Math.random()*99), name: name, points: pts, hasMinyan: minyan, icon: selectedMitzvaIcon });
+    }
+    saveCustomMitzvot(custom);
+    closeModal('mitzvaEditModal');
+    refreshMitzvotAfterChange(); renderMitzvotManager();
+  }
+  function openPresetPicker() {
+    const g = document.getElementById('presetGrid');
+    g.innerHTML = PRESET_MITZVOT.map((p,i) => '<button class="goal-card" data-idx="'+i+'" style="cursor:pointer;text-align:right;width:100%;border:1.5px solid var(--brown-light)"><div class="goal-icon">'+p.icon+'</div><div class="goal-info"><div class="goal-name">'+escapeHtml(p.name)+'</div><div class="goal-points">'+p.points+' נק׳'+(p.hasMinyan?' · ×2 במניין':'')+'</div></div><div style="color:var(--gold-dark);font-size:20px;font-weight:700">+</div></button>').join('');
+    g.querySelectorAll('[data-idx]').forEach(b => b.addEventListener('click', () => addPreset(parseInt(b.dataset.idx,10))));
+    document.getElementById('presetPickerModal').classList.add('active');
+  }
+  function addPreset(i) {
+    const p = PRESET_MITZVOT[i]; if (!p) return;
+    const custom = loadCustomMitzvot();
+    custom.push({ id:'m'+Date.now()+Math.floor(Math.random()*99), name:p.name, points:p.points, hasMinyan:p.hasMinyan, icon:p.icon });
+    saveCustomMitzvot(custom);
+    try { scoreToast('נוסף: '+p.name); } catch(e) {}
+    refreshMitzvotAfterChange(); renderMitzvotManager();
   }
 
   // Backward compatibility - some code still uses MITZVOT
@@ -7887,6 +8053,19 @@ const TOTAL_OSHER = TEFILOT.length;
   on('goalCancelBtn', 'click', () => closeModal('goalEditModal'));
   on('goalEditClose', 'click', () => closeModal('goalEditModal'));
   onBackdrop('goalEditModal');
+
+  // Mitzvot manager wiring
+  on('manageMitzvotBtn', 'click', openMitzvotManager);
+  on('mitzvotManagerClose', 'click', () => closeModal('mitzvotManagerModal'));
+  onBackdrop('mitzvotManagerModal');
+  on('mitzvaAddBtn', 'click', () => openMitzvaEdit(null));
+  on('mitzvaPresetBtn', 'click', openPresetPicker);
+  on('mitzvaSaveBtn', 'click', saveMitzvaEdit);
+  on('mitzvaCancelBtn', 'click', () => closeModal('mitzvaEditModal'));
+  on('mitzvaEditClose', 'click', () => closeModal('mitzvaEditModal'));
+  onBackdrop('mitzvaEditModal');
+  on('presetPickerClose', 'click', () => closeModal('presetPickerModal'));
+  onBackdrop('presetPickerModal');
 
   // ===== Goal celebration modal =====
   on('goalCelebClose', 'click', () => closeModal('goalCelebrationModal'));
