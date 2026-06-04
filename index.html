@@ -4338,6 +4338,7 @@
   const TEFILOT_DIET = []; // lazy-loaded from data/diet.json (515 items)
   const TEFILOT_ACHDUT = []; // lazy-loaded from data/achdut.json (515 items)
   const TEFILOT_HATMADA = []; // lazy-loaded from data/hatmada.json (515 items)
+  const TEFILOT_MAZAL = []; // lazy-loaded from data/mazal.json (515 items)
 
   // ============= TEFILOT_BRIT_TAL POOL (515 prayers - קדושת בנות ישראל - לטל) =============
   const TEFILOT_BRIT_TAL = []; // lazy-loaded from data/brit_tal.json (515 items)
@@ -4402,6 +4403,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_DIET = 'tefilot_diet_said_v1';
   const STORAGE_KEY_ACHDUT = 'tefilot_achdut_said_v1';
   const STORAGE_KEY_HATMADA = 'tefilot_hatmada_said_v1';
+  const STORAGE_KEY_MAZAL = 'tefilot_mazal_said_v1';
   const STORAGE_KEY_BRIT_TAL = 'tefilot_brit_tal_said_v1';
   const STORAGE_KEY_BITACHON = 'tefilot_bitachon_said_v1';
   const STORAGE_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_said_v1';
@@ -4600,6 +4602,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const FAV_KEY_DIET = 'tefilot_diet_fav_v1';
   const FAV_KEY_ACHDUT = 'tefilot_achdut_fav_v1';
   const FAV_KEY_HATMADA = 'tefilot_hatmada_fav_v1';
+  const FAV_KEY_MAZAL = 'tefilot_mazal_fav_v1';
   const FAV_KEY_BRIT_TAL = 'tefilot_brit_tal_fav_v1';
   const FAV_KEY_BITACHON = 'tefilot_bitachon_fav_v1';
   const FAV_KEY_BITACHON_TAL = 'tefilot_bitachon_tal_fav_v1';
@@ -4781,6 +4784,16 @@ const TOTAL_OSHER = TEFILOT.length;
       title: 'תקט״ו תפילות להתמדה בתפילה',
       subtitle: 'לזכות להתמדה ולהשיג הכל בכוח התפילה',
       verse: '״ואני תפלתי לך ה׳ עת רצון״',
+      poolLength: 515
+    },
+    mazal: {
+      pool: TEFILOT_MAZAL,
+      total: 515,
+      storageKey: STORAGE_KEY_MAZAL,
+      favStorageKey: FAV_KEY_MAZAL,
+      title: 'תקט״ו תפילות להרמת המזל',
+      subtitle: 'שבורא עולם ירים את מזלי ויצליח דרכי',
+      verse: '״ויהי ה׳ את יוסף ויהי איש מצליח״',
       poolLength: 515
     },
     brit_tal: {
@@ -5504,6 +5517,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_DIET': TEFILOT_DIET,
     'TEFILOT_ACHDUT': TEFILOT_ACHDUT,
     'TEFILOT_HATMADA': TEFILOT_HATMADA,
+    'TEFILOT_MAZAL': TEFILOT_MAZAL,
     'TEFILOT_BRIT_TAL': TEFILOT_BRIT_TAL,
     'TEFILOT_BITACHON': TEFILOT_BITACHON,
     'TEFILOT_BITACHON_TAL': TEFILOT_BITACHON_TAL,
@@ -5518,8 +5532,8 @@ const TOTAL_OSHER = TEFILOT.length;
     'TEFILOT_ROEI': TEFILOT_ROEI,
     'TEFILOT_ROEI_TAL': TEFILOT_ROEI_TAL
   };
-  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "diet": "TEFILOT_DIET", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL", "achdut": "TEFILOT_ACHDUT", "hatmada": "TEFILOT_HATMADA"};
-  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_DIET": "data/diet.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json", "TEFILOT_ACHDUT": "data/achdut.json", "TEFILOT_HATMADA": "data/hatmada.json"};
+  const _POOL_TAB_TO_VAR = {"osher": "TEFILOT", "osher_tal": "TEFILOT_OSHER_TAL", "leda": "TEFILOT_LEDA", "leda_uriel": "TEFILOT_LEDA_URIEL", "targilim": "TARGILIM_BITACHON", "targilim_tal": "TARGILIM_BITACHON_TAL", "hayalim": "TEFILOT_HAYALIM", "hayalim_tal": "TEFILOT_HAYALIM_TAL", "brit": "TEFILOT_BRIT", "friends": "TEFILOT_FRIENDS", "mashiach": "TEFILOT_MASHIACH", "anava": "TEFILOT_ANAVA", "tikun": "TEFILOT_TIKUN", "shmira": "TEFILOT_SHMIRA", "diet": "TEFILOT_DIET", "brit_tal": "TEFILOT_BRIT_TAL", "bitachon": "TEFILOT_BITACHON", "bitachon_tal": "TEFILOT_BITACHON_TAL", "hochma": "TEFILOT_HOCHMA", "hochma_tal": "TEFILOT_HOCHMA_TAL", "refua": "TEFILOT_REFUA", "refua_tal": "TEFILOT_REFUA_TAL", "briaut": "TEFILOT_BRIAUT", "briaut_tal": "TEFILOT_BRIAUT_TAL", "zikui": "TEFILOT_ZIKUI", "zikui_tal": "TEFILOT_ZIKUI_TAL", "roei": "TEFILOT_ROEI", "roei_tal": "TEFILOT_ROEI_TAL", "achdut": "TEFILOT_ACHDUT", "hatmada": "TEFILOT_HATMADA", "mazal": "TEFILOT_MAZAL"};
+  const _POOL_VAR_TO_FILE = {"TEFILOT": "data/osher.json", "TEFILOT_OSHER_TAL": "data/osher_tal.json", "TEFILOT_LEDA": "data/leda.json", "TEFILOT_LEDA_URIEL": "data/leda_uriel.json", "TARGILIM_BITACHON": "data/targilim.json", "TARGILIM_BITACHON_TAL": "data/targilim_tal.json", "TEFILOT_HAYALIM": "data/hayalim.json", "TEFILOT_HAYALIM_TAL": "data/hayalim_tal.json", "TEFILOT_BRIT": "data/brit.json", "TEFILOT_FRIENDS": "data/friends.json", "TEFILOT_MASHIACH": "data/mashiach.json", "TEFILOT_ANAVA": "data/anava.json", "TEFILOT_TIKUN": "data/tikun.json", "TEFILOT_SHMIRA": "data/shmira.json", "TEFILOT_DIET": "data/diet.json", "TEFILOT_BRIT_TAL": "data/brit_tal.json", "TEFILOT_BITACHON": "data/bitachon.json", "TEFILOT_BITACHON_TAL": "data/bitachon_tal.json", "TEFILOT_HOCHMA": "data/hochma.json", "TEFILOT_HOCHMA_TAL": "data/hochma_tal.json", "TEFILOT_REFUA": "data/refua.json", "TEFILOT_REFUA_TAL": "data/refua_tal.json", "TEFILOT_BRIAUT": "data/briaut.json", "TEFILOT_BRIAUT_TAL": "data/briaut_tal.json", "TEFILOT_ZIKUI": "data/zikui.json", "TEFILOT_ZIKUI_TAL": "data/zikui_tal.json", "TEFILOT_ROEI": "data/roei.json", "TEFILOT_ROEI_TAL": "data/roei_tal.json", "TEFILOT_ACHDUT": "data/achdut.json", "TEFILOT_HATMADA": "data/hatmada.json", "TEFILOT_MAZAL": "data/mazal.json"};
   const _poolLoaded = {};
   const _poolLoading = {};
   function poolVarForTab(t){ return _POOL_TAB_TO_VAR[t]; }
@@ -8269,6 +8283,7 @@ const TOTAL_OSHER = TEFILOT.length;
     'tefilot_diet_said_v1', 'tefilot_diet_fav_v1',
     'tefilot_achdut_said_v1', 'tefilot_achdut_fav_v1',
     'tefilot_hatmada_said_v1', 'tefilot_hatmada_fav_v1',
+    'tefilot_mazal_said_v1', 'tefilot_mazal_fav_v1',
     'tefilot_osher_fav_v1', 'tefilot_brit_fav_v1', 'tefilot_bitachon_fav_v1',
     'tefilot_hochma_fav_v1', 'tefilot_roei_fav_v1', 'tefilot_refua_fav_v1',
     'tefilot_osher_tal_fav_v1', 'tefilot_leda_fav_v1', 'tefilot_hayalim_fav_v1', 'tefilot_leda_uriel_fav_v1', 'tefilot_targilim_fav_v1', 'tefilot_briaut_fav_v1', 'tefilot_zikui_fav_v1', 'tefilot_zikui_tal_fav_v1', 'tefilot_hochma_tal_fav_v1', 'tefilot_bitachon_tal_fav_v1', 'tefilot_targilim_tal_fav_v1', 'tefilot_briaut_tal_fav_v1', 'tefilot_hayalim_tal_fav_v1', 'tefilot_refua_tal_fav_v1', 'tefilot_roei_tal_fav_v1', 'tefilot_brit_tal_fav_v1'
@@ -8891,7 +8906,8 @@ const TOTAL_OSHER = TEFILOT.length;
     { id: 'shmira',   icon: '✡️', label: 'שמירה לעם ישראל' },
     { id: 'diet',    icon: '🥗', label: 'דייטה / בריאות' },
     { id: 'achdut',  icon: '🕊️', label: 'אחדות ושלום' },
-    { id: 'hatmada', icon: '🔥', label: 'התמדה בתפילה' }
+    { id: 'hatmada', icon: '🔥', label: 'התמדה בתפילה' },
+    { id: 'mazal',   icon: '⭐', label: 'הרמת המזל' }
   ];
   function _saidCountForTab(tabId) {
     try {
