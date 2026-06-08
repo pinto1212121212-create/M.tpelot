@@ -3016,6 +3016,30 @@
     color: #c8e6c9;
     opacity: 1;
   }
+  .tab-btn.daily-done-full {
+    background: linear-gradient(135deg, #e8852f 0%, #c2660f 100%);
+    color: #fff;
+    border-color: #ff9f43;
+    box-shadow: 0 2px 8px rgba(255,140,0,0.4);
+    position: relative;
+  }
+  .tab-btn.daily-done-full::after {
+    content: '✓✓';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    font-size: 11px;
+    color: #ffe0b2;
+    font-weight: 900;
+  }
+  .tab-btn.daily-done-full.active {
+    background: linear-gradient(135deg, #c2660f 0%, #8f4a08 100%);
+    border-color: var(--gold);
+  }
+  .tab-btn.daily-done-full .tab-subtitle {
+    color: #ffe0b2;
+    opacity: 1;
+  }
   .tab-subtitle {
     font-family: 'Heebo', sans-serif;
     font-size: 10px;
@@ -3447,6 +3471,7 @@
   #categoryChip[data-done="1"] .chip-chevron { color: #fff8e7; }
   #categoryChip .chip-checkmark { display: none; font-size: 14px; color: #ffd700; }
   #categoryChip[data-done="1"] .chip-checkmark { display: inline-block; margin-right: 2px; }
+  #categoryChip[data-done="2"] .chip-checkmark { display: inline-block; margin-right: 2px; color: #e0822a; }
 
   /* Picker cards — green border + ✓ badge when daily-done (5+ today) */
   #categoryPicker .cat-card[data-done="1"] {
@@ -3466,6 +3491,23 @@
   }
   #categoryPicker .cat-card[data-done="1"] .cat-daily { display: inline-block; }
   #categoryPicker .cat-card[data-done="1"].active .cat-daily { color: #fff8e7; background: rgba(255,255,255,0.18); }
+
+  /* כרטיס בורר — כתום כשמגיעים ל-10 (יעד מלא) */
+  #categoryPicker .cat-card[data-done="2"] {
+    border-color: #e0822a;
+    box-shadow: 0 2px 8px rgba(220,120,30,0.22);
+  }
+  #categoryPicker .cat-card[data-done="2"]:not(.active) {
+    background: linear-gradient(135deg, rgba(230,130,40,0.16), rgba(230,130,40,0.05));
+  }
+  #categoryPicker .cat-card[data-done="2"].active {
+    background: linear-gradient(135deg, #c2660f, #e8852f);
+    border-color: #f0d68f;
+  }
+  #categoryPicker .cat-card[data-done="2"] .cat-daily {
+    display: inline-block; color: #b85c12; background: rgba(230,130,40,0.18);
+  }
+  #categoryPicker .cat-card[data-done="2"].active .cat-daily { color: #fff8e7; background: rgba(255,255,255,0.2); }
 
   #categoryPicker { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8000; display: none; align-items: flex-end; }
   #categoryPicker.open { display: flex; animation: fadeIn 0.2s; }
@@ -4414,7 +4456,8 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_HOCHMA = 'tefilot_hochma_said_v1';
   const STORAGE_KEY_HOCHMA_TAL = 'tefilot_hochma_tal_said_v1';
   const STORAGE_KEY_DAILY = 'tefilot_daily_counts_v1';
-  const DAILY_TARGET = 5;
+  const DAILY_TARGET = 5;        // סף ירוק — יעד יומי
+  const DAILY_TARGET_FULL = 10;  // סף כתום — יעד מלא
   const STORAGE_KEY_ROEI = 'tefilot_roei_said_v1';
   const STORAGE_KEY_ROEI_TAL = 'tefilot_roei_tal_said_v1';
   const FAV_KEY_ROEI = 'tefilot_roei_fav_v1';
@@ -5055,16 +5098,23 @@ const TOTAL_OSHER = TEFILOT.length;
     const c = counts || loadGreenCounts();
     return subtabGroupFor(mainId).some(id => (c[id] || 0) >= DAILY_TARGET);
   }
+  // 0 = ללא צבע, 1 = ירוק (5+ תפילות), 2 = כתום (10+ תפילות)
+  function dailyLevelForTab(mainId, counts) {
+    const c = counts || loadGreenCounts();
+    let max = 0;
+    subtabGroupFor(mainId).forEach(id => { if ((c[id] || 0) > max) max = (c[id] || 0); });
+    if (max >= DAILY_TARGET_FULL) return 2;
+    if (max >= DAILY_TARGET) return 1;
+    return 0;
+  }
   function updateTabColors() {
     const counts = loadGreenCounts();
     document.querySelectorAll('.tab-btn').forEach(btn => {
       const tab = btn.dataset.tab;
       if (!tab || tab === 'score') return;
-      if (dailyDoneForTab(tab, counts)) {
-        btn.classList.add('daily-done');
-      } else {
-        btn.classList.remove('daily-done');
-      }
+      const lvl = dailyLevelForTab(tab, counts);
+      btn.classList.toggle('daily-done', lvl === 1);
+      btn.classList.toggle('daily-done-full', lvl === 2);
     });
   }
 
@@ -8962,10 +9012,11 @@ const TOTAL_OSHER = TEFILOT.length;
       const said = _saidCountForTab(t.id);
       const total = (data && data.total) || 515;
       const active = (t.id === activeId) ? ' active' : '';
-      const dailyDone = dailyDoneForTab(t.id, greenCounts);
-      const doneAttr = dailyDone ? ' data-done="1"' : '';
+      const lvl = dailyLevelForTab(t.id, greenCounts);
+      const doneAttr = lvl ? ' data-done="' + lvl + '"' : '';
       const finishBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
-      const dailyBadge = dailyDone ? '<span class="cat-daily">✓ יעד יומי</span>' : '';
+      const dailyBadge = lvl === 2 ? '<span class="cat-daily">🔥 יעד מלא (10)</span>'
+                       : lvl === 1 ? '<span class="cat-daily">✓ יעד יומי (5)</span>' : '';
       return '<button class="cat-card' + active + '" data-tab="' + t.id + '"' + doneAttr + '>' +
         '<span class="cat-icon">' + t.icon + '</span>' +
         '<span class="cat-name">' + t.label + '</span>' +
@@ -9065,7 +9116,8 @@ const TOTAL_OSHER = TEFILOT.length;
     }
     try {
       const counts = loadGreenCounts();
-      if (dailyDoneForTab(mainId, counts)) chip.dataset.done = '1';
+      const lvl = dailyLevelForTab(mainId, counts);
+      if (lvl) chip.dataset.done = String(lvl); else chip.removeAttribute('data-done');
     } catch(e){}
   }
   function wireCategoryPicker() {
