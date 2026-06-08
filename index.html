@@ -3040,6 +3040,29 @@
     color: #ffe0b2;
     opacity: 1;
   }
+  .tab-btn.daily-done-extra {
+    background: linear-gradient(135deg, #e6c34d 0%, #b8932f 100%);
+    color: #3a2410;
+    border-color: #f0d878;
+    box-shadow: 0 2px 12px rgba(212,175,55,0.55);
+    position: relative;
+  }
+  .tab-btn.daily-done-extra::after {
+    content: '👑';
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    font-size: 11px;
+  }
+  .tab-btn.daily-done-extra.active {
+    background: linear-gradient(135deg, #c9a32f 0%, #9a7a1f 100%);
+    color: #fff8e7;
+    border-color: var(--gold);
+  }
+  .tab-btn.daily-done-extra .tab-subtitle {
+    color: #5a3a12;
+    opacity: 1;
+  }
   .tab-subtitle {
     font-family: 'Heebo', sans-serif;
     font-size: 10px;
@@ -3472,6 +3495,7 @@
   #categoryChip .chip-checkmark { display: none; font-size: 14px; color: #ffd700; }
   #categoryChip[data-done="1"] .chip-checkmark { display: inline-block; margin-right: 2px; }
   #categoryChip[data-done="2"] .chip-checkmark { display: inline-block; margin-right: 2px; color: #e0822a; }
+  #categoryChip[data-done="3"] .chip-checkmark { display: inline-block; margin-right: 2px; color: #d4af37; }
 
   /* Picker cards — green border + ✓ badge when daily-done (5+ today) */
   #categoryPicker .cat-card[data-done="1"] {
@@ -3508,6 +3532,23 @@
     display: inline-block; color: #b85c12; background: rgba(230,130,40,0.18);
   }
   #categoryPicker .cat-card[data-done="2"].active .cat-daily { color: #fff8e7; background: rgba(255,255,255,0.2); }
+
+  /* כרטיס בורר — זהב כשמתפללים מעל ומעבר (15+) */
+  #categoryPicker .cat-card[data-done="3"] {
+    border-color: #d4af37;
+    box-shadow: 0 2px 14px rgba(212,175,55,0.4);
+  }
+  #categoryPicker .cat-card[data-done="3"]:not(.active) {
+    background: linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.06));
+  }
+  #categoryPicker .cat-card[data-done="3"].active {
+    background: linear-gradient(135deg, #b8932f, #e6c34d);
+    border-color: #fff3c4;
+  }
+  #categoryPicker .cat-card[data-done="3"] .cat-daily {
+    display: inline-block; color: #8a6d12; background: rgba(212,175,55,0.22);
+  }
+  #categoryPicker .cat-card[data-done="3"].active .cat-daily { color: #fff8e7; background: rgba(255,255,255,0.22); }
 
   #categoryPicker { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8000; display: none; align-items: flex-end; }
   #categoryPicker.open { display: flex; animation: fadeIn 0.2s; }
@@ -4456,8 +4497,9 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_HOCHMA = 'tefilot_hochma_said_v1';
   const STORAGE_KEY_HOCHMA_TAL = 'tefilot_hochma_tal_said_v1';
   const STORAGE_KEY_DAILY = 'tefilot_daily_counts_v1';
-  const DAILY_TARGET = 5;        // סף ירוק — יעד יומי
-  const DAILY_TARGET_FULL = 10;  // סף כתום — יעד מלא
+  const DAILY_TARGET = 5;         // סף ירוק — יעד יומי
+  const DAILY_TARGET_FULL = 10;   // סף כתום — יעד מלא
+  const DAILY_TARGET_EXTRA = 15;  // סף זהב — מעל ומעבר
   const STORAGE_KEY_ROEI = 'tefilot_roei_said_v1';
   const STORAGE_KEY_ROEI_TAL = 'tefilot_roei_tal_said_v1';
   const FAV_KEY_ROEI = 'tefilot_roei_fav_v1';
@@ -5098,11 +5140,12 @@ const TOTAL_OSHER = TEFILOT.length;
     const c = counts || loadGreenCounts();
     return subtabGroupFor(mainId).some(id => (c[id] || 0) >= DAILY_TARGET);
   }
-  // 0 = ללא צבע, 1 = ירוק (5+ תפילות), 2 = כתום (10+ תפילות)
+  // 0 = ללא צבע, 1 = ירוק (5+), 2 = כתום (10+), 3 = זהב — מעל ומעבר (15+)
   function dailyLevelForTab(mainId, counts) {
     const c = counts || loadGreenCounts();
     let max = 0;
     subtabGroupFor(mainId).forEach(id => { if ((c[id] || 0) > max) max = (c[id] || 0); });
+    if (max >= DAILY_TARGET_EXTRA) return 3;
     if (max >= DAILY_TARGET_FULL) return 2;
     if (max >= DAILY_TARGET) return 1;
     return 0;
@@ -5115,6 +5158,7 @@ const TOTAL_OSHER = TEFILOT.length;
       const lvl = dailyLevelForTab(tab, counts);
       btn.classList.toggle('daily-done', lvl === 1);
       btn.classList.toggle('daily-done-full', lvl === 2);
+      btn.classList.toggle('daily-done-extra', lvl === 3);
     });
   }
 
@@ -9015,7 +9059,8 @@ const TOTAL_OSHER = TEFILOT.length;
       const lvl = dailyLevelForTab(t.id, greenCounts);
       const doneAttr = lvl ? ' data-done="' + lvl + '"' : '';
       const finishBadge = (said >= total && total > 0) ? '<span class="cat-done">✓ הושלם</span>' : '';
-      const dailyBadge = lvl === 2 ? '<span class="cat-daily">🔥 יעד מלא (10)</span>'
+      const dailyBadge = lvl === 3 ? '<span class="cat-daily">👑 מעל ומעבר (15)</span>'
+                       : lvl === 2 ? '<span class="cat-daily">🔥 יעד מלא (10)</span>'
                        : lvl === 1 ? '<span class="cat-daily">✓ יעד יומי (5)</span>' : '';
       return '<button class="cat-card' + active + '" data-tab="' + t.id + '"' + doneAttr + '>' +
         '<span class="cat-icon">' + t.icon + '</span>' +
