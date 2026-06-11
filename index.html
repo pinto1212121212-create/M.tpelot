@@ -6766,6 +6766,25 @@ const TOTAL_OSHER = TEFILOT.length;
     const per=Math.max(1, Math.round(total/(ris.length||1))); const cost={};
     ris.forEach(function(r){ cost[r]=per; }); return cost;
   }
+  // הגירה חד-פעמית של מבנים קיימים למנגנון החדש — בלי לשבור: שומר על רמת ההשלמה
+  // (מבנה שהושלם נשאר מושלם; מבנה בתהליך שומר על אותו אחוז) ומקפיא את סוגי המשאבים.
+  function migrateLegacyBuildings(){
+    const tal=(typeof currentProfile!=='undefined'&&currentProfile==='tal');
+    const base=tal?HOME_BUILDINGS:BUILDINGS; const st=loadInvest(); const m=loadExpMeta();
+    let cs=false, cm=false;
+    base.forEach(function(b){
+      const inv=st[b.id]; if(!inv||!Object.keys(inv).length) return;   // לא הושקע — אין מה להגר
+      if(m['base_'+b.id]) return;                                       // כבר הוגר/הוקפא
+      let oldTotal=0, paid=0, complete=true;
+      Object.keys(b.cost).forEach(function(k){ oldTotal+=b.cost[k]; paid+=Math.min(inv[k]||0,b.cost[k]); if((inv[k]||0)<b.cost[k]) complete=false; });
+      const ris=activeResIds(); m['base_'+b.id]={ris:ris}; cm=true;
+      const per=Math.max(1,Math.round(oldTotal/(ris.length||1)));
+      const ratio=oldTotal?Math.min(1,paid/oldTotal):0;
+      const ni={}; ris.forEach(function(r){ ni[r]= complete?per:Math.min(per,Math.round(per*ratio)); });
+      st[b.id]=ni; cs=true;
+    });
+    if(cm) saveExpMeta(m); if(cs) saveInvest(st);
+  }
   function activeBuildings(){
     const tal=(typeof currentProfile!=='undefined' && currentProfile==='tal');
     const base=tal?HOME_BUILDINGS:BUILDINGS; const list=base.slice(); const st=loadInvest();
@@ -6869,7 +6888,7 @@ const TOTAL_OSHER = TEFILOT.length;
   function kupahDelTx(ts){ const k=loadKupah(); const x=(k.tx||[]).find(function(t){return t.ts===ts;}); if(!x) return; const label = x.type==='deposit' ? ('הפקדה ₪'+x.amount) : ('פרס: '+(x.note||'')+' ₪'+x.amount); if(!confirm('למחוק את התנועה הזו?\n'+label)) return; k.tx = (k.tx||[]).filter(function(t){return t.ts!==ts;}); saveKupah(k); renderKupah(); }
   function renderKupah(){ const k=loadKupah(); const accr=kupahAccrued(k), dep=kupahSum(k,'deposit'), spent=kupahSum(k,'prize'); const pend=Math.max(0,accr-dep), inbit=Math.max(0,dep-spent); const set=function(id,v){ const el=document.getElementById(id); if(el) el.textContent='₪'+v; }; set('kupAccr',accr); set('kupPend',pend); set('kupInbit',inbit); set('kupSpent',spent); const led=document.getElementById('kupahLedger'); if(led){ const tx=(k.tx||[]).slice().sort(function(a,b){return b.ts-a.ts;}).slice(0,15); led.innerHTML = tx.length ? tx.map(function(x){ const isDep=x.type==='deposit'; return '<div class="kupah-tx"><span class="kupah-tx-d">'+kupahFmtTs(x.ts)+'</span><span class="kupah-tx-t">'+(isDep?'הפקדה לביט':('🎁 '+(x.note||'פרס')))+'</span><span class="kupah-tx-a" style="color:'+(isDep?'#2f8a3f':'#a32a2a')+'">'+(isDep?'+':'−')+'₪'+x.amount+'</span><button class="kupah-tx-del" data-ts="'+x.ts+'" aria-label="מחק">✕</button></div>'; }).join('') : '<div class="kupah-empty">אין עדיין תנועות. צבור נקודות, הפקד, וקנה פרסים.</div>'; led.querySelectorAll('.kupah-tx-del').forEach(function(b){ b.addEventListener('click', function(){ kupahDelTx(parseInt(b.dataset.ts,10)); }); }); } const w=function(id,fn){ const el=document.getElementById(id); if(el) el.onclick=fn; }; w('kupahPay',kupahPay); w('kupahDep',kupahDep); w('kupahBuy',kupahBuy); w('kupahExport',kupahExport); w('kupahCfg',kupahCfg); [['kupAccr','accr'],['kupPend','pend'],['kupInbit','inbit'],['kupSpent','spent']].forEach(function(pair){ const el=document.getElementById(pair[0]); const cell=el && el.parentElement; if(cell){ cell.onclick=function(){ kupahEditCell(pair[1]); }; } }); }
 
-  function renderBuilding(){ var _bt=document.querySelector('.building-title'), _bs=document.querySelector('.building-subtitle'); var _tal=(typeof currentProfile!=='undefined'&&currentProfile==='tal'); if(_bt)_bt.textContent=_tal?'🏠 בונים את הבית שלנו':'🏛️ בונים את קדשי ישראל'; if(_bs)_bs.textContent=_tal?'אספי משאבים מהמצוות ובנו את הבית שלכם':'אסוף משאבים מהמצוות ובנֵה את כלי המקדש'; const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
+  function renderBuilding(){ try{ migrateLegacyBuildings(); }catch(e){} var _bt=document.querySelector('.building-title'), _bs=document.querySelector('.building-subtitle'); var _tal=(typeof currentProfile!=='undefined'&&currentProfile==='tal'); if(_bt)_bt.textContent=_tal?'🏠 בונים את הבית שלנו':'🏛️ בונים את קדשי ישראל'; if(_bs)_bs.textContent=_tal?'אספי משאבים מהמצוות ובנו את הבית שלכם':'אסוף משאבים מהמצוות ובנֵה את כלי המקדש'; const avail=availableRes(); renderBank(avail); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; renderGrid(); if(document.getElementById('buildModal') && document.getElementById('buildModal').classList.contains('active')) renderBuildModal(); }
 
   // ===== Hero greeting (time-aware) — neria-style header for score view =====
   function _heroGreetingTime(){
