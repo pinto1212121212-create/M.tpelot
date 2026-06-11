@@ -6751,8 +6751,23 @@ const TOTAL_OSHER = TEFILOT.length;
     const cost={}; ris.forEach(function(r){ cost[r]=per; });
     return {id:id, name:nm, cost:cost, points:points, _exp:true, _tal:tal, _idx:i};
   }
-  // מקפיא את עלות ההרחבה ברגע שמתחילים לבנות אותה, כדי שלא תשתנה למפרע
-  function freezeExpansion(b){ if(!b||!b._exp) return; const m=loadExpMeta(); if(m[b.id]) return; const ris=Object.keys(b.cost); m[b.id]={ris:ris, per:(b.cost[ris[0]]||50), points:b.points}; saveExpMeta(m); }
+  // מקפיא את סוגי המשאבים של מבנה ברגע שמתחילים לבנות אותו, כדי שהעלות לא תשתנה למפרע
+  function freezeExpansion(b){ if(!b) return; const m=loadExpMeta();
+    if(b._exp){ if(m[b.id]) return; const ris=Object.keys(b.cost); m[b.id]={ris:ris, per:(b.cost[ris[0]]||50), points:b.points}; saveExpMeta(m); return; }
+    const key='base_'+b.id; if(m[key]) return;
+    const st=loadInvest(); if(st[b.id] && Object.keys(st[b.id]).length) return; // מבנה ותיק שכבר הושקע בו — להשאיר על עלותו המקורית
+    m[key]={ris:activeResIds()}; saveExpMeta(m); }
+  // עלות אפקטיבית: כל מבנה מתפרס על סוגי המשאבים שהמצוות הפעילות מייצרות —
+  // כך כל מצווה שמוסיפים (לטל ולאוריאל) נותנת עזר בבנייה. מוקפא בעת התחלת הבנייה.
+  function effectiveCost(b){
+    if(b._exp) return b.cost; // הרחבות כבר דינמיות/מוקפאות דרך getExpansion
+    const m=loadExpMeta(); const st=loadInvest();
+    if(st[b.id] && Object.keys(st[b.id]).length && !m['base_'+b.id]) return b.cost; // מבנה ותיק — לא לשבור בנייה קיימת
+    const ris = m['base_'+b.id] ? m['base_'+b.id].ris : activeResIds();
+    let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
+    const per=Math.max(1, Math.round(total/(ris.length||1))); const cost={};
+    ris.forEach(function(r){ cost[r]=per; }); return cost;
+  }
   function activeBuildings(){
     const tal=(typeof currentProfile!=='undefined' && currentProfile==='tal');
     const base=tal?HOME_BUILDINGS:BUILDINGS; const list=base.slice(); const st=loadInvest();
@@ -6765,13 +6780,13 @@ const TOTAL_OSHER = TEFILOT.length;
   function saveInvest(st){ try{ localStorage.setItem(INV_KEY, JSON.stringify(st)); }catch(e){} }
   function invObj(st,id){ if(!st[id]) st[id]={}; return st[id]; }
   function availableRes(){ const earned=earnedResources(); const st=loadInvest(); const avail={}; RESOURCES.forEach(function(r){ avail[r.id]=earned[r.id]||0; }); Object.keys(st).forEach(function(bid){ Object.keys(st[bid]).forEach(function(k){ avail[k]=(avail[k]||0)-(st[bid][k]||0); }); }); RESOURCES.forEach(function(r){ if(avail[r.id]<0)avail[r.id]=0; }); return avail; }
-  function buildingComplete(b,st){ const inv=st[b.id]||{}; return Object.keys(b.cost).every(function(k){ return (inv[k]||0)>=b.cost[k]; }); }
+  function buildingComplete(b,st){ const inv=st[b.id]||{}; const C=effectiveCost(b); return Object.keys(C).every(function(k){ return (inv[k]||0)>=C[k]; }); }
   function getBuildPoints(){ const st=loadInvest(); let p=0; activeBuildings().forEach(function(b){ if(buildingComplete(b,st)) p+=b.points; }); return p; }
   function buildingArtSVG(b, inv){
     const id=b.id; const A=BUILDING_ART[id]||HOME_ART[id]||expArtFor(b)||{box:[14,16,92,92],silh:'<rect x="30" y="30" width="60" height="76" rx="4"/>',orn:'',fx:''};
-    const box=A.box, y2=box[1]+box[3]; let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
+    const C=effectiveCost(b); const box=A.box, y2=box[1]+box[3]; let total=0; Object.keys(C).forEach(function(k){ total+=C[k]; });
     let cy=y2, bands='';
-    RESOURCES.forEach(function(r){ if(!b.cost[r.id])return; const v=Math.min(inv[r.id]||0,b.cost[r.id]); const h=total? v/total*box[3] : 0; if(h>0.3){ bands+='<rect x="'+box[0]+'" y="'+(cy-h).toFixed(1)+'" width="'+box[2]+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
+    RESOURCES.forEach(function(r){ if(!C[r.id])return; const v=Math.min(inv[r.id]||0,C[r.id]); const h=total? v/total*box[3] : 0; if(h>0.3){ bands+='<rect x="'+box[0]+'" y="'+(cy-h).toFixed(1)+'" width="'+box[2]+'" height="'+h.toFixed(1)+'" fill="'+r.color+'"/>'; cy-=h; } });
     const st=loadInvest(); const done=buildingComplete(b,st);
     const aura = done ? '<circle class="v-aura" cx="60" cy="60" r="60" fill="url(#gl_'+id+')"/>' : '';
     const orn=(A.orn||'').replace(/@GG@/g,'url(#gg_'+id+')').replace(/@CG@/g,'url(#cg_'+id+')').replace(/@WD@/g,'url(#wd_'+id+')');
@@ -6794,16 +6809,16 @@ const TOTAL_OSHER = TEFILOT.length;
       +'<g filter="url(#sh_'+id+')">'+orn+'</g>'+fx+'</svg>';
   }
   function renderBank(avail){ const el=document.getElementById('resStrip'); if(!el)return; el.innerHTML=RESOURCES.map(function(r){ return '<div class="res-chip" style="border-color:'+r.color+'"><span class="res-ic">'+r.icon+'</span><span class="res-ct" style="color:'+r.color+'">'+(avail[r.id]||0)+'</span><span class="res-nm">'+r.name+'</span></div>'; }).join(''); }
-  function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=activeBuildings().map(function(b){ const inv=st[b.id]||{}; let sh=0,sn=0; Object.keys(b.cost).forEach(function(k){ sn+=b.cost[k]; sh+=Math.min(inv[k]||0,b.cost[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
+  function renderGrid(){ const el=document.getElementById('buildGrid'); if(!el)return; const st=loadInvest(); el.innerHTML=activeBuildings().map(function(b){ const inv=st[b.id]||{}; const C=effectiveCost(b); let sh=0,sn=0; Object.keys(C).forEach(function(k){ sn+=C[k]; sh+=Math.min(inv[k]||0,C[k]); }); const pct=sn?Math.round(sh/sn*100):0; const done=buildingComplete(b,st); return '<div class="build-cell'+(done?' done':'')+'" data-bid="'+b.id+'">'+buildingArtSVG(b,inv)+'<div class="bc-nm">'+b.name+'</div><div class="bc-pc">'+(done?'✓ +'+b.points:pct+'%')+'</div></div>'; }).join(''); el.querySelectorAll('[data-bid]').forEach(function(c){ c.addEventListener('click', function(){ openBuildModal(c.dataset.bid); }); }); }
   function openBuildModal(id){ currentBuildId=id; const m=document.getElementById('buildModal'); if(!m)return; m.classList.add('active'); m.onclick=function(e){ if(e.target===m) m.classList.remove('active'); }; const cl=document.getElementById('bmClose'); if(cl) cl.onclick=function(){ m.classList.remove('active'); }; const ia=document.getElementById('bmInvestAll'); if(ia) ia.onclick=function(){ investMax(id); }; const wd=document.getElementById('bmWithdraw'); if(wd) wd.onclick=function(){ withdrawAll(id); }; renderBuildModal(); }
   function renderBuildModal(){ if(!currentBuildId)return; const b=activeBuildings().find(function(x){return x.id===currentBuildId;}); if(!b)return; const st=loadInvest(); const inv=st[b.id]||{}; const avail=availableRes(); const done=buildingComplete(b,st);
     const nm=document.getElementById('bmName'); if(nm) nm.textContent=b.name;
     const art=document.getElementById('bmArt'); if(art) art.innerHTML=buildingArtSVG(b,inv);
     const stt=document.getElementById('bmStatus'); if(stt) stt.textContent = done ? ('✓ הושלם! +'+b.points+' נקודות בנייה') : 'השקע משאבים כדי לבנות (' + b.points + ' נק׳)';
-    const rb=document.getElementById('bmRes'); if(rb){ rb.innerHTML=RESOURCES.filter(function(r){return b.cost[r.id];}).map(function(r){ const need=b.cost[r.id], iv=inv[r.id]||0, av=avail[r.id]||0; return '<div class="bm-row"><span class="bm-ric">'+r.icon+'</span><span class="bm-rnm">'+r.name+'</span><span class="bm-rct">'+iv+'/'+need+'</span><span class="bm-ravail">זמין: '+av+'</span><button class="bm-minus" data-r="'+r.id+'"'+(iv<=0?' disabled':'')+'>−</button><button class="bm-plus" data-r="'+r.id+'"'+((iv>=need||av<=0)?' disabled':'')+'>+</button></div>'; }).join(''); rb.querySelectorAll('.bm-plus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, 1); }); }); rb.querySelectorAll('.bm-minus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, -1); }); }); }
+    const C=effectiveCost(b); const rb=document.getElementById('bmRes'); if(rb){ rb.innerHTML=RESOURCES.filter(function(r){return C[r.id];}).map(function(r){ const need=C[r.id], iv=inv[r.id]||0, av=avail[r.id]||0; return '<div class="bm-row"><span class="bm-ric">'+r.icon+'</span><span class="bm-rnm">'+r.name+'</span><span class="bm-rct">'+iv+'/'+need+'</span><span class="bm-ravail">זמין: '+av+'</span><button class="bm-minus" data-r="'+r.id+'"'+(iv<=0?' disabled':'')+'>−</button><button class="bm-plus" data-r="'+r.id+'"'+((iv>=need||av<=0)?' disabled':'')+'>+</button></div>'; }).join(''); rb.querySelectorAll('.bm-plus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, 1); }); }); rb.querySelectorAll('.bm-minus').forEach(function(btn){ btn.addEventListener('click', function(){ investOne(b.id, btn.dataset.r, -1); }); }); }
   }
-  function investOne(bid,res,delta){ const b=activeBuildings().find(function(x){return x.id===bid;}); if(!b)return; if(delta>0) freezeExpansion(b); const st=loadInvest(); const o=invObj(st,bid); const cur=o[res]||0; const avail=availableRes(); if(delta>0){ if(cur>=b.cost[res] || (avail[res]||0)<=0) return; o[res]=cur+1; } else { if(cur<=0) return; o[res]=cur-1; } saveInvest(st); afterBuildChange(); renderBuildModal(); }
-  function investMax(bid){ const b=activeBuildings().find(function(x){return x.id===bid;}); if(!b)return; freezeExpansion(b); const st=loadInvest(); const o=invObj(st,bid); Object.keys(b.cost).forEach(function(res){ let avail=availableRes()[res]||0; while((o[res]||0)<b.cost[res] && avail>0){ o[res]=(o[res]||0)+1; avail--; } }); saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function investOne(bid,res,delta){ const b=activeBuildings().find(function(x){return x.id===bid;}); if(!b)return; if(delta>0) freezeExpansion(b); const C=effectiveCost(b); const st=loadInvest(); const o=invObj(st,bid); const cur=o[res]||0; const avail=availableRes(); if(delta>0){ if(cur>=(C[res]||0) || (avail[res]||0)<=0) return; o[res]=cur+1; } else { if(cur<=0) return; o[res]=cur-1; } saveInvest(st); afterBuildChange(); renderBuildModal(); }
+  function investMax(bid){ const b=activeBuildings().find(function(x){return x.id===bid;}); if(!b)return; freezeExpansion(b); const C=effectiveCost(b); const st=loadInvest(); const o=invObj(st,bid); Object.keys(C).forEach(function(res){ let avail=availableRes()[res]||0; while((o[res]||0)<C[res] && avail>0){ o[res]=(o[res]||0)+1; avail--; } }); saveInvest(st); afterBuildChange(); renderBuildModal(); }
   function withdrawAll(bid){ const st=loadInvest(); if(st[bid]){ delete st[bid]; saveInvest(st); afterBuildChange(); renderBuildModal(); } }
   function afterBuildChange(){ renderGrid(); renderBank(availableRes()); const bp=getBuildPoints(); const bpEl=document.getElementById('buildPoints'); if(bpEl) bpEl.textContent='🏆 ניקוד בנייה: '+bp; if(scoreAppReady && _bgLastBP>=0 && bp>_bgLastBP){ try{ scoreToast('🎉 בנית מבנה קדוש! +'+(bp-_bgLastBP)+' נקודות בנייה'); }catch(e){} } _bgLastBP=bp; }
   (function(){
