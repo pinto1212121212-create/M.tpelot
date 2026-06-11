@@ -6755,14 +6755,12 @@ const TOTAL_OSHER = TEFILOT.length;
   function freezeExpansion(b){ if(!b) return; const m=loadExpMeta();
     if(b._exp){ if(m[b.id]) return; const ris=Object.keys(b.cost); m[b.id]={ris:ris, per:(b.cost[ris[0]]||50), points:b.points}; saveExpMeta(m); return; }
     const key='base_'+b.id; if(m[key]) return;
-    const st=loadInvest(); if(st[b.id] && Object.keys(st[b.id]).length) return; // מבנה ותיק שכבר הושקע בו — להשאיר על עלותו המקורית
     m[key]={ris:activeResIds()}; saveExpMeta(m); }
-  // עלות אפקטיבית: כל מבנה מתפרס על סוגי המשאבים שהמצוות הפעילות מייצרות —
+  // עלות אפקטיבית: כל מבנה (קיים וחדש) מתפרס על סוגי המשאבים שהמצוות הפעילות מייצרות —
   // כך כל מצווה שמוסיפים (לטל ולאוריאל) נותנת עזר בבנייה. מוקפא בעת התחלת הבנייה.
   function effectiveCost(b){
     if(b._exp) return b.cost; // הרחבות כבר דינמיות/מוקפאות דרך getExpansion
-    const m=loadExpMeta(); const st=loadInvest();
-    if(st[b.id] && Object.keys(st[b.id]).length && !m['base_'+b.id]) return b.cost; // מבנה ותיק — לא לשבור בנייה קיימת
+    const m=loadExpMeta();
     const ris = m['base_'+b.id] ? m['base_'+b.id].ris : activeResIds();
     let total=0; Object.keys(b.cost).forEach(function(k){ total+=b.cost[k]; });
     const per=Math.max(1, Math.round(total/(ris.length||1))); const cost={};
