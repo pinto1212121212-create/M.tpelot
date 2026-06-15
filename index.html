@@ -3510,6 +3510,21 @@
   #kavanaCard .kv-name {
     font-weight: 700; color: #5a3a7a;
   }
+  #kavanaCard .kv-anim-btn {
+    display: block; width: 100%;
+    margin: 4px 0 12px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #2a1d3a 0%, #4a2a5a 100%);
+    color: #ffe9a8;
+    border: 1px solid rgba(233,196,106,0.5);
+    border-radius: 11px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px; font-weight: 700;
+    letter-spacing: 0.5px; cursor: pointer;
+    box-shadow: 0 3px 12px rgba(40,20,70,0.3);
+    transition: transform .15s, box-shadow .2s;
+  }
+  #kavanaCard .kv-anim-btn:active { transform: scale(0.97); }
   #kavanaCard .kv-src {
     font-size: 12px; color: #7a6a8a; font-style: italic;
   }
@@ -3673,6 +3688,7 @@
   <div id="kavanaCard" role="article" aria-label="כוונות שמות הקודש לפרנסה">
     <div class="kv-title">🕯️ כוונות שמות הקודש לפרנסה ולשפע</div>
     <div class="kv-intro">השמות נֶהֱגִים בְּמַחְשָׁבָה בלבד — אין לבטא אותם בפה. כַּוֵּן בהם בלב טהור ובדבקות בשעת התפילה:</div>
+    <button class="kv-anim-btn" onclick="window.open('parnasa-kavana.html','_blank')">✨ כניסה לחוויית הכוונה — אנימציה ✨</button>
     <div class="kv-item">🔹 <span class="kv-name">״פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן״</span> — כשתאמר זאת, כַּוֵּן שה׳ פותח את שערי השפע ומפרנס אותך ואת כל העולם ברצון.<br><span class="kv-src">תהילים קמ״ה · שולחן ערוך או״ח נ״א, ז׳ — חובה לכוון בפסוק זה.</span></div>
     <div class="kv-item">🔹 <span class="kv-name">חֲתָ״ךְ</span> — שם <span class="kv-name">המלאך</span> הממונה על הפרנסה (שֶׁבּוֹ נֶחְתָּכִים מזונותיו של אדם), הרמוז בכוונת ״פותח את ידך״. כַּוֵּן במחשבה שפרנסתך נמשכת <span class="kv-name">מאת ה׳ לבדו</span> — והמלאך אינו אלא צינור לשליחותו.<br><span class="kv-src">סידור האר״י (גימ׳ 428) · אין מתפללים אל המלאך אלא אל ה׳.</span></div>
     <div class="kv-item">🔹 <span class="kv-name">דִּיקַרְנוֹסָ״א</span> — <span class="kv-name">שֵׁם קָדוֹשׁ</span> המסוגל לפרנסה (לא מלאך רגיל), היוצא מפסוקי ״יָאֵר / נָשָׂא ה׳ אוֹר פָּנָיו״. כַּוֵּן בו במחשבה שיאיר ה׳ פניו אליך וישלח פרנסה ברווח.<br><span class="kv-src">נזכר ב׳סדר הפרנסה׳ שבסידורי המקובלים · יש שדנו במקורו — היוועץ ברב.</span></div>
@@ -6647,7 +6663,7 @@ const TOTAL_OSHER = TEFILOT.length;
         const k = localStorage.key(i);
         if (k && k.indexOf('_fb_') !== 0 && k.indexOf('_yfb_') !== 0) data[k] = localStorage.getItem(k);
       }
-      const HTML_FILES = ['index.html', 'neria.html', 'yosef.html'];
+      const HTML_FILES = ['index.html', 'neria.html', 'yosef.html', 'parnasa-kavana.html'];
       const htmls = {};
       let step = 0;
       const totalSteps = HTML_FILES.length + Object.keys(_POOL_VAR_TO_FILE).length;
