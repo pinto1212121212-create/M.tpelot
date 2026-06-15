@@ -3461,6 +3461,64 @@
     letter-spacing: 0.3px;
   }
   #hitorerutCard.dismissed { display: none; }
+
+  /* ===== Kavana card — Holy-Name intentions for parnasa (osher tab only) ===== */
+  #kavanaCard {
+    display: none;
+    position: relative;
+    margin: 6px auto 18px;
+    max-width: 460px;
+    padding: 18px 20px 14px;
+    background: linear-gradient(160deg, #fbf3ff 0%, #efe2fb 100%);
+    border: 1.5px solid #8a6fb0;
+    border-radius: 14px;
+    box-shadow:
+      0 4px 14px rgba(70,40,110,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+    font-family: 'Frank Ruhl Libre', serif;
+    color: var(--brown-deep, #3a2a4a);
+  }
+  #kavanaCard::before {
+    content: '🕯️';
+    position: absolute;
+    top: -12px; right: 18px;
+    background: #4a2a5a;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(60,30,80,0.3);
+  }
+  #kavanaCard .kv-title {
+    font-size: 13px; font-weight: 700;
+    color: #5a3a7a;
+    letter-spacing: 0.5px; text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(138,111,176,0.4);
+    padding-bottom: 7px;
+  }
+  #kavanaCard .kv-intro {
+    font-size: 13.5px; line-height: 1.7;
+    text-align: right; margin-bottom: 10px;
+    color: #4a3a5a;
+  }
+  #kavanaCard .kv-item {
+    font-size: 14.5px; line-height: 1.75;
+    text-align: right; margin: 8px 0;
+    padding-right: 4px;
+  }
+  #kavanaCard .kv-name {
+    font-weight: 700; color: #5a3a7a;
+  }
+  #kavanaCard .kv-src {
+    font-size: 12px; color: #7a6a8a; font-style: italic;
+  }
+  #kavanaCard .kv-warn {
+    font-size: 12px; color: #6a4a3a;
+    margin-top: 11px; text-align: center;
+    border-top: 1px solid rgba(138,111,176,0.35);
+    padding-top: 8px; line-height: 1.6;
+  }
   /* Daily-done state — when 5+ prayers said today in this pool, chip turns green */
   #categoryChip[data-done="1"] {
     background: linear-gradient(135deg, #2f7a3a, #3a9a4a);
@@ -3610,6 +3668,15 @@
     <div class="ht-title">✦ רגע לפני שאתה מתפלל ✦</div>
     <div class="ht-body" id="hitorerutBody">…</div>
     <div class="ht-footer">לחץ להצגת התעוררות אחרת</div>
+  </div>
+
+  <div id="kavanaCard" role="article" aria-label="כוונות שמות הקודש לפרנסה">
+    <div class="kv-title">🕯️ כוונות שמות הקודש לפרנסה ולשפע</div>
+    <div class="kv-intro">השמות נֶהֱגִים בְּמַחְשָׁבָה בלבד — אין לבטא אותם בפה. כַּוֵּן בהם בלב טהור ובדבקות בשעת התפילה:</div>
+    <div class="kv-item">🔹 <span class="kv-name">״פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן״</span> — כשתאמר זאת, כַּוֵּן שה׳ פותח את שערי השפע ומפרנס אותך ואת כל העולם ברצון.<br><span class="kv-src">תהילים קמ״ה · שולחן ערוך או״ח נ״א, ז׳ — חובה לכוון בפסוק זה.</span></div>
+    <div class="kv-item">🔹 <span class="kv-name">שֵׁם הֲוָיָ״ה ב״ה</span> — צַיֵּר במחשבתך את אותיות השם הקדוש כמקור כל החיים והשפע, וכַוֵּן שכל הטוב יורד ונמשך ממנו אליך. (במחשבה בלבד.)</div>
+    <div class="kv-item">🔹 <span class="kv-name">שֵׁם ע״ב</span> (מילוי יודי״ן · בגימטרייה 72) — שם החסד, צינור השפע והרחמים. מקובל לכוון בו להמשכת פרנסה ברווח.<br><span class="kv-src">למד את הכוונה המדויקת מרב או מסידור המקובלים.</span></div>
+    <div class="kv-warn">⚠️ לכַוֵּן בלב ובמחשבה בלבד, מתוך טהרה ויראה — ולא לבטא את השמות בפה. בכל כוונה למעשה — היוועץ ברב.</div>
   </div>
 
   <div class="profile-selector">
@@ -5757,6 +5824,7 @@ const TOTAL_OSHER = TEFILOT.length;
     try { updateBottomNavActive(); } catch(e) {}
     try { updateCategoryChip(); } catch(e) {}
     try { renderHitorerutCard(); } catch(e) {}
+    try { renderKavanaCard(); } catch(e) {}
   }
 
   // ============= קוד סודי לשמירת הברית =============
@@ -9129,6 +9197,16 @@ const TOTAL_OSHER = TEFILOT.length;
       card.style.display = 'block';
     });
   }
+  // Kavana card (Holy-Name intentions) — shown only on the עושר ושפע (osher) tab.
+  function renderKavanaCard() {
+    const card = document.getElementById('kavanaCard');
+    if (!card) return;
+    const onOsher = (typeof currentTab !== 'undefined') &&
+      currentTab !== 'score' &&
+      (typeof mainTabFor === 'function' ? mainTabFor(currentTab) : currentTab) === 'osher';
+    card.style.display = onOsher ? 'block' : 'none';
+  }
+
   function _rerollHitorerut() {
     if (typeof currentTab === 'undefined' || currentTab === 'score') return;
     const main = mainTabFor(currentTab);
@@ -9183,6 +9261,7 @@ const TOTAL_OSHER = TEFILOT.length;
     if (cls) cls.addEventListener('click', function(e){ e.stopPropagation(); closeCategoryPicker(); });
     updateCategoryChip();
     renderHitorerutCard();
+    renderKavanaCard();
     const card = document.getElementById('hitorerutCard');
     if (card && !card._wired) {
       card._wired = true;
