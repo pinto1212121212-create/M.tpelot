@@ -3539,6 +3539,12 @@
   }
   .guided-btn:active{ transform:scale(.97); }
   .guided-btn .gb-sub{ display:block; font-size:11.5px; font-weight:500; color:rgba(189,240,234,0.7); margin-top:3px; }
+  .rechev-btn{
+    background:linear-gradient(135deg,#0c1124 0%,#1e2a52 60%,#3a2f1a 100%) !important;
+    color:#f4d88c !important; border:1px solid rgba(232,190,92,0.5) !important;
+    box-shadow:0 3px 14px rgba(12,17,36,0.4) !important;
+  }
+  .rechev-btn .gb-sub{ color:rgba(244,216,140,0.75) !important; }
 
   /* ===== Guided-imagery full-screen player ===== */
   #guidedOverlay{
@@ -3748,6 +3754,10 @@
 
   <button class="guided-btn" id="guidedBtn" style="display:none;">🎧 דמיון מודרך — רגע של התרגשות לפני התפילה
     <span class="gb-sub">עצום עיניים, הקשב, והיכנס ללב פתוח</span>
+  </button>
+
+  <button class="guided-btn rechev-btn" id="bitachonRechevBtn" style="display:none;" onclick="window.open('bitachon-rechev.html','_blank')">🚗 מסע אל הביטחון — הרכב בדרך
+    <span class="gb-sub">חוויה מודרכת לחיזוק הביטחון בה׳</span>
   </button>
 
   <div id="guidedOverlay" role="dialog" aria-label="דמיון מודרך">
@@ -5923,6 +5933,7 @@ const TOTAL_OSHER = TEFILOT.length;
     try { renderHitorerutCard(); } catch(e) {}
     try { renderKavanaCard(); } catch(e) {}
     try { renderGuidedBtn(); } catch(e) {}
+    try { renderBitachonRechevBtn(); } catch(e) {}
   }
 
   // ============= קוד סודי לשמירת הברית =============
@@ -6742,7 +6753,7 @@ const TOTAL_OSHER = TEFILOT.length;
         const k = localStorage.key(i);
         if (k && k.indexOf('_fb_') !== 0 && k.indexOf('_yfb_') !== 0) data[k] = localStorage.getItem(k);
       }
-      const HTML_FILES = ['index.html', 'neria.html', 'yosef.html', 'parnasa-kavana.html'];
+      const HTML_FILES = ['index.html', 'neria.html', 'yosef.html', 'parnasa-kavana.html', 'bitachon-rechev.html'];
       const htmls = {};
       let step = 0;
       const totalSteps = HTML_FILES.length + Object.keys(_POOL_VAR_TO_FILE).length;
@@ -9610,6 +9621,14 @@ const TOTAL_OSHER = TEFILOT.length;
     document.getElementById('giSound').textContent=_giSounding?'🔊':'🔇';
   }
 
+  // "מסע אל הביטחון" page link — shown only on the bitachon tab.
+  function renderBitachonRechevBtn(){
+    const btn=document.getElementById('bitachonRechevBtn'); if(!btn)return;
+    const onBitachon = (typeof currentTab!=='undefined') && currentTab!=='score'
+      && (typeof mainTabFor==='function' ? mainTabFor(currentTab) : currentTab) === 'bitachon';
+    btn.style.display = onBitachon ? 'block' : 'none';
+  }
+
   function renderGuidedBtn(){
     const btn=document.getElementById('guidedBtn'); if(!btn)return;
     const ok = (typeof currentTab!=='undefined') && currentTab!=='score'
@@ -9683,6 +9702,7 @@ const TOTAL_OSHER = TEFILOT.length;
     renderHitorerutCard();
     renderKavanaCard();
     renderGuidedBtn();
+    renderBitachonRechevBtn();
     const card = document.getElementById('hitorerutCard');
     if (card && !card._wired) {
       card._wired = true;

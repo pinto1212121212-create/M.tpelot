@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>מסע אל הביטחון · הרכב בדרך</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap"></noscript>
+<style>
+  :root{
+    --night-0:#070A14;
+    --night-1:#0C1124;
+    --night-2:#141B36;
+    --indigo:#1E2A52;
+    --gold:#E8BE5C;
+    --gold-soft:#F4D88C;
+    --amber:#FF9E45;
+    --rose:#C98B7A;
+    --ink:#F5EFE0;
+    --muted:#9AA6C4;
+    --line:rgba(232,190,92,.18);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--night-0);
+    color:var(--ink);
+    font-family:'Heebo',sans-serif;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  .verse{font-family:'Frank Ruhl Libre',serif}
+
+  /* ===== HERO / SCENE ===== */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    min-height:100svh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;
+    padding:40px 22px 60px;
+    overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 50% 118%, rgba(255,158,69,.30) 0%, rgba(201,139,122,.12) 28%, transparent 55%),
+      linear-gradient(180deg, var(--night-0) 0%, var(--night-1) 45%, var(--indigo) 100%);
+  }
+  /* stars */
+  .stars{position:absolute;inset:0;pointer-events:none}
+  .star{position:absolute;background:#fff;border-radius:50%;opacity:.0;animation:tw 4s ease-in-out infinite}
+  @keyframes tw{0%,100%{opacity:.1;transform:scale(.7)}50%{opacity:.85;transform:scale(1)}}
+
+  /* road of light */
+  .road{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,120%);height:46%;pointer-events:none;z-index:1}
+  .road span{
+    position:absolute;bottom:0;left:50%;width:2px;height:100%;
+    background:linear-gradient(to top, rgba(232,190,92,.55), transparent);
+    transform-origin:bottom center;
+  }
+  .road span:nth-child(1){transform:translateX(-50%) rotate(-26deg)}
+  .road span:nth-child(2){transform:translateX(-50%) rotate(-13deg)}
+  .road span:nth-child(3){transform:translateX(-50%) rotate(0deg)}
+  .road span:nth-child(4){transform:translateX(-50%) rotate(13deg)}
+  .road span:nth-child(5){transform:translateX(-50%) rotate(26deg)}
+  .horizon{position:absolute;left:50%;bottom:46%;transform:translateX(-50%);
+    width:min(420px,90%);height:120px;
+    background:radial-gradient(60% 100% at 50% 100%, rgba(244,216,140,.55), rgba(255,158,69,.18) 45%, transparent 70%);
+    filter:blur(6px);z-index:1}
+
+  /* car */
+  .car-wrap{position:relative;z-index:3;margin:6px auto 14px;width:min(300px,72vw);
+    animation:floaty 5.5s ease-in-out infinite, materialize 2.4s ease-out both}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes materialize{0%{opacity:0;filter:blur(14px);transform:translateY(26px) scale(.94)}100%{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}}
+  .car-wrap svg{width:100%;height:auto;display:block;filter:drop-shadow(0 10px 26px rgba(232,190,92,.35))}
+  .glow-floor{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+    width:78%;height:26px;border-radius:50%;
+    background:radial-gradient(50% 100% at 50% 50%, rgba(244,216,140,.6), transparent 70%);
+    filter:blur(7px);z-index:2}
+
+  /* descending keys beam */
+  .keys{position:relative;z-index:3;margin-top:-4px;animation:keyDrop 2.6s ease-out 1.1s both}
+  @keyframes keyDrop{0%{opacity:0;transform:translateY(-40px)}100%{opacity:1;transform:translateY(0)}}
+  .keys .beam{width:2px;height:34px;margin:0 auto;background:linear-gradient(to bottom,transparent,var(--gold-soft))}
+  .keys .ico{font-size:26px;color:var(--gold-soft);text-shadow:0 0 18px rgba(244,216,140,.8)}
+
+  .eyebrow{font-size:13px;letter-spacing:3px;color:var(--gold);font-weight:500;margin-top:18px;opacity:.9}
+  .hero h1{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:clamp(30px,8vw,46px);
+    line-height:1.25;margin:10px 0 6px;position:relative;z-index:3;
+    background:linear-gradient(180deg,#fff,var(--gold-soft));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .lead-verse{font-family:'Frank Ruhl Libre',serif;font-size:clamp(20px,5.4vw,26px);
+    color:var(--gold-soft);margin:8px 0 0;position:relative;z-index:3;
+    text-shadow:0 0 24px rgba(244,216,140,.35);animation:breathe 5s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.82}50%{opacity:1}}
+  .hero .ref{font-size:13px;color:var(--muted);margin-top:4px;position:relative;z-index:3}
+
+  .start-btn{position:relative;z-index:3;margin-top:30px;display:inline-flex;align-items:center;gap:9px;
+    background:linear-gradient(135deg,var(--amber),#F4A95C);color:#1a1206;font-weight:700;font-size:17px;
+    padding:15px 34px;border:none;border-radius:999px;cursor:pointer;
+    box-shadow:0 12px 30px rgba(255,158,69,.35);transition:transform .2s,box-shadow .2s}
+  .start-btn:active{transform:scale(.96)}
+  .scroll-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:22px;z-index:3;animation:bob 2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+  /* ===== SECTIONS ===== */
+  section.stage{padding:64px 22px;max-width:620px;margin:0 auto;position:relative}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  .num{font-family:'Frank Ruhl Libre',serif;font-size:14px;color:var(--gold);letter-spacing:2px;opacity:.8}
+  .stage h2{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:clamp(24px,6.4vw,32px);margin:6px 0 18px;color:#fff}
+  .stage p{color:var(--ink);font-size:17px;margin-bottom:14px;opacity:.92}
+  .stage .soft{color:var(--muted);font-size:15px}
+
+  .divider{width:60px;height:2px;margin:0 0 26px;background:linear-gradient(90deg,var(--gold),transparent);border-radius:2px}
+
+  /* breathing circle */
+  .breath{display:flex;flex-direction:column;align-items:center;gap:16px;margin:18px 0 8px}
+  .breath .circle{width:148px;height:148px;border-radius:50%;
+    background:radial-gradient(circle at 50% 40%, rgba(244,216,140,.25), rgba(30,42,82,.2));
+    border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;
+    color:var(--gold-soft);font-family:'Frank Ruhl Libre',serif;font-size:18px;
+    animation:breathPulse 8s ease-in-out infinite}
+  @keyframes breathPulse{0%,100%{transform:scale(.82);box-shadow:0 0 0 rgba(244,216,140,0)}50%{transform:scale(1.06);box-shadow:0 0 50px rgba(244,216,140,.28)}}
+
+  /* verse cards */
+  .verses{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+  .vcard{background:linear-gradient(160deg,rgba(30,42,82,.55),rgba(12,17,36,.7));
+    border:1px solid var(--line);border-radius:18px;padding:20px 20px;position:relative;overflow:hidden}
+  .vcard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 100% 0,rgba(232,190,92,.12),transparent 60%)}
+  .vcard .vt{font-family:'Frank Ruhl Libre',serif;font-size:21px;color:var(--gold-soft);position:relative;line-height:1.6}
+  .vcard .vr{font-size:13px;color:var(--muted);margin-top:8px;position:relative}
+
+  /* tefilla box */
+  .tefilla{background:linear-gradient(165deg,rgba(20,27,54,.85),rgba(7,10,20,.9));
+    border:1px solid var(--line);border-radius:20px;padding:26px 22px;margin-top:6px;
+    box-shadow:inset 0 0 60px rgba(232,190,92,.06)}
+  .tefilla .verse{font-size:18.5px;color:var(--ink);line-height:1.95}
+  .tefilla .verse b{color:var(--gold-soft);font-weight:700}
+
+  /* affirmations */
+  .affirm{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+  .affirm .a{display:flex;gap:12px;align-items:flex-start;font-size:17px}
+  .affirm .a span.k{color:var(--gold);font-size:18px;flex:0 0 auto;margin-top:2px}
+
+  /* tracker */
+  .tracker{background:linear-gradient(160deg,rgba(30,42,82,.6),rgba(12,17,36,.8));
+    border:1px solid var(--line);border-radius:22px;padding:30px 24px;text-align:center;margin-top:6px}
+  .tracker .count{font-family:'Frank Ruhl Libre',serif;font-weight:900;
+    font-size:60px;line-height:1;background:linear-gradient(180deg,#fff,var(--gold));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .tracker .clabel{color:var(--muted);font-size:15px;margin-top:4px}
+  .tracker .msg{color:var(--gold-soft);font-family:'Frank Ruhl Libre',serif;font-size:18px;margin:16px 0 20px;min-height:26px}
+  .done-btn{background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:#1a1206;font-weight:700;
+    font-size:17px;padding:15px 30px;border:none;border-radius:999px;cursor:pointer;width:100%;
+    box-shadow:0 10px 26px rgba(232,190,92,.3);transition:transform .2s}
+  .done-btn:active{transform:scale(.97)}
+  .done-btn.done{background:rgba(30,42,82,.6);color:var(--muted);box-shadow:none;cursor:default}
+
+  /* focus timer */
+  .timer{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:22px}
+  .timer .tdisp{font-family:'Frank Ruhl Libre',serif;font-size:42px;color:var(--gold-soft);letter-spacing:2px}
+  .timer .trow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .pill{background:rgba(30,42,82,.6);border:1px solid var(--line);color:var(--ink);
+    padding:10px 18px;border-radius:999px;font-size:15px;cursor:pointer;transition:background .2s}
+  .pill:active{background:rgba(232,190,92,.18)}
+  .pill.active{background:linear-gradient(135deg,var(--amber),#F4A95C);color:#1a1206;border-color:transparent;font-weight:700}
+
+  /* checklist */
+  .check{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .check .item{display:flex;align-items:center;gap:12px;background:rgba(20,27,54,.5);
+    border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;transition:background .2s}
+  .check .item:active{background:rgba(232,190,92,.1)}
+  .check .box{width:22px;height:22px;border-radius:7px;border:1.6px solid var(--gold);
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#1a1206;font-size:14px;
+    opacity:0;transition:opacity .2s,background .2s}
+  .check .item.on .box{background:var(--gold);opacity:1}
+  .check .item.on .lbl{color:var(--muted);text-decoration:line-through}
+  .check .lbl{font-size:16px}
+  /* personal note */
+  .pnote{width:100%;margin-top:14px;background:rgba(7,10,20,.7);border:1px solid var(--line);
+    border-radius:14px;color:var(--ink);font-family:'Frank Ruhl Libre',serif;font-size:17px;
+    padding:14px 16px;resize:vertical;min-height:78px;line-height:1.85}
+  .pnote::placeholder{color:var(--muted);opacity:.7}
+  .pnote:focus{outline:none;border-color:var(--gold)}
+  .two{display:flex;gap:14px;justify-content:center;margin-bottom:4px}
+  .two .col{flex:1}
+  .two .col .count{font-size:46px}
+  .two .col .clabel{font-size:13px}
+  /* live contemplation (meditation) overlay */
+  .med-open{margin-top:20px;display:inline-flex;align-items:center;gap:9px;
+    background:linear-gradient(135deg,var(--amber),#F4A95C);color:#1a1206;font-weight:700;font-size:16px;
+    padding:14px 26px;border:none;border-radius:999px;cursor:pointer;box-shadow:0 10px 26px rgba(255,158,69,.3);transition:transform .2s}
+  .med-open:active{transform:scale(.96)}
+  .med{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;
+    background:radial-gradient(120% 90% at 50% 0%, #0C1124 0%, #070A14 70%)}
+  .med.on{display:flex}
+  .med canvas{flex:1;width:100%;display:block}
+  .med .x{position:absolute;top:16px;left:18px;z-index:2;background:rgba(20,27,54,.7);
+    border:1px solid var(--line);color:var(--ink);width:44px;height:44px;border-radius:50%;
+    font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .med .snd{position:absolute;top:16px;right:18px;z-index:2;background:rgba(20,27,54,.7);
+    border:1px solid var(--line);color:var(--ink);width:44px;height:44px;border-radius:50%;
+    font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .med .cap .hint{color:var(--gold);font-size:13px;letter-spacing:2px;opacity:.7;margin-bottom:14px;animation:breathe 3s ease-in-out infinite}
+  .med .breathw{position:absolute;top:62px;left:0;right:0;text-align:center;pointer-events:none;
+    font-family:'Frank Ruhl Libre',serif;font-size:23px;color:var(--gold-soft);opacity:.9;letter-spacing:5px;
+    text-shadow:0 0 18px rgba(244,216,140,.4);transition:opacity .6s}
+  .host3d{position:absolute;inset:0;z-index:0}
+  .host3d canvas{display:block}
+  .fb3d{position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);padding:0 30px;
+    text-align:center;color:var(--muted);font-size:16px;line-height:1.7;display:none;z-index:1}
+  .med .cap .aff{font-family:'Frank Ruhl Libre',serif;font-size:20px;color:#fff;opacity:0;
+    transition:opacity 1.4s ease;margin-bottom:12px;min-height:28px;text-shadow:0 0 20px rgba(244,216,140,.5)}
+  .med .cap .aff.show{opacity:.96}
+  .ambient{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .ambient span{position:absolute;font-family:'Frank Ruhl Libre',serif;color:var(--gold-soft);
+    opacity:0;white-space:nowrap;text-shadow:0 0 12px rgba(244,216,140,.3);animation:drift 9s ease-in-out forwards}
+  @keyframes drift{0%{opacity:0;transform:translateY(12px) scale(.96)}18%{opacity:.17}82%{opacity:.17}100%{opacity:0;transform:translateY(-26px) scale(1.03)}}
+  .flash{position:absolute;top:41%;left:0;right:0;text-align:center;pointer-events:none;opacity:0;
+    font-family:'Frank Ruhl Libre',serif;font-size:30px;color:#fff;text-shadow:0 0 24px rgba(244,216,140,.6)}
+  @keyframes flashpop{0%{opacity:0;transform:scale(.9)}28%{opacity:.5}52%{opacity:.5}100%{opacity:0;transform:scale(1.08)}}
+  .med .top{position:absolute;top:26px;left:0;right:0;text-align:center;pointer-events:none;
+    font-family:'Frank Ruhl Libre',serif;font-size:15px;letter-spacing:3px;color:var(--gold);opacity:.85}
+  .med .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 24px calc(40px + env(safe-area-inset-bottom));
+    text-align:center;pointer-events:none}
+  .med .cap .v{font-family:'Frank Ruhl Libre',serif;font-size:clamp(21px,5.8vw,28px);color:var(--gold-soft);
+    text-shadow:0 0 26px rgba(244,216,140,.45);animation:breathe 5s ease-in-out infinite}
+  .med .cap .s{color:var(--muted);font-size:14.5px;margin-top:10px;line-height:1.6}
+  footer{padding:50px 22px 70px;text-align:center;color:var(--muted);font-size:14px}
+  footer .verse{color:var(--gold-soft);font-size:20px;margin-bottom:10px}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important}
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="stars" id="stars"></div>
+  <div class="horizon"></div>
+  <div class="road"><span></span><span></span><span></span><span></span><span></span></div>
+
+  <div class="eyebrow">בִּטָּחוֹן בַּה'</div>
+  <h1>הָרֶכֶב כְּבָר<br>בַּדֶּרֶךְ אֵלַי</h1>
+
+  <div class="car-wrap">
+    <div class="glow-floor"></div>
+    <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg" aria-label="רכב">
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F4D88C"/>
+          <stop offset="1" stop-color="#C9982F"/>
+        </linearGradient>
+        <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2A3866"/>
+          <stop offset="1" stop-color="#0C1124"/>
+        </linearGradient>
+      </defs>
+      <!-- SUV silhouette -->
+      <path d="M18 104 L40 104 C44 88 60 78 80 78 L150 76 C168 60 188 54 214 56 L246 60 C264 64 276 74 282 88 L300 92 C306 94 308 98 308 104 L308 110 L18 110 Z"
+            fill="url(#body)"/>
+      <path d="M92 78 L150 76 C166 62 184 58 206 60 L232 63 C222 64 210 72 204 80 L96 81 Z" fill="url(#glass)" opacity=".9"/>
+      <circle cx="92" cy="112" r="20" fill="#0C1124" stroke="#F4D88C" stroke-width="3"/>
+      <circle cx="92" cy="112" r="8" fill="#C9982F"/>
+      <circle cx="244" cy="112" r="20" fill="#0C1124" stroke="#F4D88C" stroke-width="3"/>
+      <circle cx="244" cy="112" r="8" fill="#C9982F"/>
+      <circle cx="302" cy="100" r="4" fill="#FFF6DA"/>
+    </svg>
+  </div>
+
+  <div class="keys">
+    <div class="beam"></div>
+    <div class="ico">🔑</div>
+  </div>
+
+  <p class="lead-verse verse">וְהַבּוֹטֵחַ בַּה' חֶסֶד יְסוֹבְבֶנּוּ</p>
+  <p class="ref">תהילים ל״ב, י׳</p>
+
+  <button class="start-btn" onclick="document.getElementById('intro').scrollIntoView()">להתחיל את החיזוק ✦</button>
+  <div class="scroll-hint">⌄</div>
+</header>
+
+<!-- ===== יסוד: מה זה ביטחון ===== -->
+<section class="stage" id="intro">
+  <div class="reveal">
+    <div class="num">לפני שמתחילים</div>
+    <h2>מַה זֶּה בֶּאֱמֶת בִּטָּחוֹן</h2>
+    <div class="divider"></div>
+    <p>ביטחון זה לא "לדמיין חזק ולמשוך אליי חפץ". זה הרבה יותר עמוק: לדעת בלב שלם שה' מנהל את הכל, אוהב אותי, ונותן לי בדיוק את מה שטוב לי — ברגע הנכון.</p>
+    <p>לכן הבקשה שלנו היא <b style="color:var(--gold-soft)">"את הרכב הזה, או טוב מזה שאתה יודע שמתאים לי"</b>. אנחנו בוטחים בנותן, לא רק רוצים את המתנה.</p>
+    <p class="soft">והסימן שהביטחון אמיתי? שאתה נעשה <b>רגוע יותר</b> — לא לחוץ יותר. הביטחון משחרר אותך מהדאגה, וזה כבר רווח עצום בפני עצמו.</p>
+    <p class="soft">השיטה כאן בנויה על מה שבאמת מחזק את הלב — חזרה מודעת על אמת, נשימה מרגיעה, ותחושת רוממות מול גדולת ה'. לא "מסרים נסתרים", אלא דברים שאתה אומר, שומע ומרגיש בכוונה — ודווקא זה נכנס עמוק.</p>
+  </div>
+</section>
+
+<!-- ===== 1. הרגעה ===== -->
+<section class="stage" id="s1">
+  <div class="reveal">
+    <div class="num">שלב א׳</div>
+    <h2>שֶׁקֶט. אֵין עוֹד מִלְּבַדּוֹ.</h2>
+    <div class="divider"></div>
+    <p>לפני הכל — נרגיע את הלב. אין כאן מנהל בנק, אין כאן "אין לי", אין כאן דאגה. יש רק אחד שמחזיק את כל העולם בידו, וגם את הרכב הזה.</p>
+    <p class="soft">נשום עם המעגל: שאיפה כשהוא גדל, נשיפה כשהוא קטֵן. שחרר את כל מה שלא בידך — וזכור: <b style="color:var(--gold-soft)">מי שברא את היקום מסדר לי רכב בקלות.</b></p>
+    <div class="breath">
+      <div class="circle verse">נושם<br>עם ה'</div>
+    </div>
+
+    <div class="timer">
+      <div class="tdisp" id="tdisp">00:00</div>
+      <div class="trow">
+        <button class="pill" data-min="3">3 דק׳</button>
+        <button class="pill" data-min="5">5 דק׳</button>
+        <button class="pill" data-min="10">10 דק׳</button>
+        <button class="pill" id="tstop">עצור</button>
+      </div>
+      <p class="soft" style="text-align:center">טיימר התבוננות — שב, עצום עיניים, ותחזיק את הביטחון בלב.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. התבוננות ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ב׳</div>
+    <h2>הִתְבּוֹנְנוּת — לִרְאוֹת אֶת הַיָּד הַנּוֹתֶנֶת</h2>
+    <div class="divider"></div>
+    <p>במקום לדמיין את המתנה — נתבונן בנותן. עצום עיניים לרגע, ותחשוב:</p>
+    <p>ה' מפרנס בכל רגע את כל העולם כולו — מהיתוש הקטן ועד הלווייתן שבים. <b style="color:var(--gold-soft)">"פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן."</b> ואם הוא דואג לכולם — בוודאי שהוא דואג גם לי.</p>
+    <p>תיזכר כמה פעמים כבר עזר לך — דווקא כשחשבת שאין מאיפה, והכל הסתדר. הוא לא עזב אותך אז, ולא יעזוב עכשיו.</p>
+    <p>ומתוך ההכרה הזאת — הלב נרגע. אתה יודע שמה שטוב לי, ה' כבר מסדר, ברגע הנכון ובדרך הטובה ביותר. <b>זה, או טוב מזה.</b></p>
+    <p class="soft">ככל שהלב מכיר באמת מי הנותן — כך הביטחון מתחזק, והדאגה מתפוגגת מאליה.</p>
+    <button class="med-open" id="medOpen">✦ הפעל התבוננות חיה</button>
+    <button class="med-open" id="open3d" style="background:linear-gradient(135deg,#6a7bff,#9a6bff);box-shadow:0 10px 26px rgba(120,110,255,.32)">🌌 חוויית תלת־ממד</button>
+  </div>
+</section>
+
+<!-- ===== 3. פסוקים ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ג׳</div>
+    <h2>פְּסוּקֵי הַבִּטָּחוֹן</h2>
+    <div class="divider"></div>
+    <p class="soft">אמור כל פסוק לאט, בקול, ותן לו להיכנס פנימה. אלו הפסוקים שמחזקים את מידת הביטחון.</p>
+    <div class="verses">
+      <div class="vcard"><div class="vt verse">בָּרוּךְ הַגֶּבֶר אֲשֶׁר יִבְטַח בַּה' וְהָיָה ה' מִבְטַחוֹ</div><div class="vr">ירמיהו י״ז, ז׳</div></div>
+      <div class="vcard"><div class="vt verse">בְּטַח בַּה' וַעֲשֵׂה טוֹב</div><div class="vr">תהילים ל״ז, ג׳</div></div>
+      <div class="vcard"><div class="vt verse">גּוֹל עַל ה' דַּרְכֶּךָ וּבְטַח עָלָיו וְהוּא יַעֲשֶׂה</div><div class="vr">תהילים ל״ז, ה׳</div></div>
+      <div class="vcard"><div class="vt verse">פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן</div><div class="vr">תהילים קמ״ה, ט״ז</div></div>
+      <div class="vcard"><div class="vt verse">וְהַבּוֹטֵחַ בַּה' חֶסֶד יְסוֹבְבֶנּוּ</div><div class="vr">תהילים ל״ב, י׳</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. תהילים ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ד׳</div>
+    <h2>מִזְמוֹר הַבִּטָּחוֹן</h2>
+    <div class="divider"></div>
+    <p class="soft">פרק כ״ג בתהילים — מזמור הביטחון של דוד המלך. אמור אותו לאט, והרגש שה' רועה אותך ולא חסר לך כלום.</p>
+    <div class="tefilla">
+      <p class="verse">מִזְמוֹר לְדָוִד, ה' רֹעִי לֹא אֶחְסָר.<br>
+      בִּנְאוֹת דֶּשֶׁא יַרְבִּיצֵנִי, עַל מֵי מְנֻחוֹת יְנַהֲלֵנִי.<br>
+      נַפְשִׁי יְשׁוֹבֵב, יַנְחֵנִי בְמַעְגְּלֵי צֶדֶק לְמַעַן שְׁמוֹ.<br>
+      גַּם כִּי אֵלֵךְ בְּגֵיא צַלְמָוֶת לֹא אִירָא רָע כִּי אַתָּה עִמָּדִי, שִׁבְטְךָ וּמִשְׁעַנְתֶּךָ הֵמָּה יְנַחֲמֻנִי.<br>
+      תַּעֲרֹךְ לְפָנַי שֻׁלְחָן נֶגֶד צֹרְרָי, דִּשַּׁנְתָּ בַשֶּׁמֶן רֹאשִׁי כּוֹסִי רְוָיָה.<br>
+      אַךְ טוֹב וָחֶסֶד יִרְדְּפוּנִי כָּל יְמֵי חַיָּי, וְשַׁבְתִּי בְּבֵית ה' לְאֹרֶךְ יָמִים.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. תפילה ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ה׳</div>
+    <h2>תְּפִלָּה אִישִׁית</h2>
+    <div class="divider"></div>
+    <div class="tefilla">
+      <p class="verse">רִבּוֹנוֹ שֶׁל עוֹלָם,<br>
+      אַתָּה יוֹדֵעַ אֶת לִבִּי וְאֶת כָּל צְרָכַי. אֲנִי בּוֹטֵחַ בְּךָ בְּלֵב שָׁלֵם, כִּי <b>אֵין עוֹד מִלְּבַדֶּךָ</b>.<br><br>
+      פּוֹתֵחַ אֶת יָדֶךָ — פְּתַח גַּם לִי. זַכֵּנִי, אוֹתִי וְאֶת רַעְיָתִי <b>טַל</b>, לְרֶכֶב חָדָשׁ וְטוֹב — <b>זֶה אוֹ טוֹב מִזֶּה שֶׁאַתָּה יוֹדֵעַ שֶׁמַּתְאִים לִי</b> — בְּרֶוַח וּבְכָבוֹד וּבְלִי שׁוּם חוֹב, מִיָּדְךָ הַמְּלֵאָה וְהָרְחָבָה.<br><br>
+      וַאֲנִי בּוֹטֵחַ שֶׁתִּתֵּן לִי בְּדִיּוּק אֶת הַטּוֹב בְּיוֹתֵר עֲבוּרִי — וּבִזְכוּת הַבִּטָּחוֹן הַזֶּה, <b>חַסְדְּךָ יְסוֹבְבֵנִי</b>. אָמֵן.</p>
+    </div>
+    <textarea class="pnote" id="pnote" placeholder="הוסף כאן בקשה אישית משלך... (נשמר אוטומטית)"></textarea>
+  </div>
+</section>
+
+<!-- ===== 6. השתדלות ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ו׳</div>
+    <h2>הַהִשְׁתַּדְּלוּת — הַכְּלִי שֶׁלִּי</h2>
+    <div class="divider"></div>
+    <p class="soft">ביטחון אמיתי הולך יד ביד עם מעשה. אתה עושה את שלך כ"כלי", וה' ממלא אותו. סמן מה כבר עשית:</p>
+    <div class="check" id="check">
+      <div class="item" data-id="h1"><div class="box">✓</div><div class="lbl">בדקתי דגמים ומחירים</div></div>
+      <div class="item" data-id="h2"><div class="box">✓</div><div class="lbl">הגדרתי סכום חיסכון חודשי</div></div>
+      <div class="item" data-id="h3"><div class="box">✓</div><div class="lbl">פתחתי תכנית חיסכון ייעודית</div></div>
+      <div class="item" data-id="h4"><div class="box">✓</div><div class="lbl">בדקתי מסלולי מימון בתנאים טובים</div></div>
+      <div class="item" data-id="h5"><div class="box">✓</div><div class="lbl">התעדכנתי במבצעים ובהזדמנויות</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. הודיה מראש ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">שלב ז׳</div>
+    <h2>הוֹדָאָה מֵרֹאשׁ</h2>
+    <div class="divider"></div>
+    <p class="soft">זה השיא של הביטחון — להודות עוד לפני שראית, כי אתה בטוח שזה כבר בדרך.</p>
+    <div class="affirm">
+      <div class="a"><span class="k">✦</span><div>תודה ה' שאתה כבר מסדר לי את הרכב, ברגע הנכון ובדרך הכי טובה.</div></div>
+      <div class="a"><span class="k">✦</span><div>תודה שאתה דואג לי ולמשפחתי בשפע ובכבוד.</div></div>
+      <div class="a"><span class="k">✦</span><div>תודה שאני רגוע ובוטח, כי אני יודע שאתה איתי בכל צעד.</div></div>
+      <div class="a"><span class="k">✦</span><div>תהיה טוב — תקבל טוב. אני בוחר בטוב, ובוטח בטוב.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. מונה יומי ===== -->
+<section class="stage">
+  <div class="reveal">
+    <div class="num">החיזוק היומי</div>
+    <h2>יוֹם אַחַר יוֹם</h2>
+    <div class="divider"></div>
+    <p class="soft">הרב יגאל כהן אומר שביטחון זו עבודה של שנים — אבל היא שווה את זה. תחזור לכאן כל יום. אם פספסת יום — לא נורא, פשוט ממשיכים.</p>
+    <div class="tracker">
+      <div class="two">
+        <div class="col"><div class="count" id="streak">0</div><div class="clabel">ימים ברצף</div></div>
+        <div class="col"><div class="count" id="total">0</div><div class="clabel">סה״כ ימי חיזוק</div></div>
+      </div>
+      <div class="msg verse" id="msg">מתחילים את המסע ✦</div>
+      <button class="done-btn" id="doneBtn">סיימתי את החיזוק היום ✓</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== התבוננות חיה (overlay) ===== -->
+<div class="med" id="meditate" aria-hidden="true">
+  <button class="x" id="medClose" aria-label="סגור">✕</button>
+  <button class="snd" id="medSound" aria-label="צליל">🔊</button>
+  <div class="top">הַיָּד הַפּוֹתַחַת</div>
+  <div class="breathw" id="medBreath"></div>
+  <canvas id="medCanvas"></canvas>
+  <div class="ambient" id="ambMed"></div>
+  <div class="flash" id="flashMed"></div>
+  <div class="cap">
+    <div class="hint">גע במסך — ושלח אור ✦</div>
+    <div class="aff" id="affMed"></div>
+    <div class="v verse">פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן</div>
+    <div class="s">הוא מפרנס את כל הברואים בכל רגע — ואם לכולם, גם אותי.</div>
+  </div>
+</div>
+
+<!-- ===== חוויית תלת-ממד (three.js) ===== -->
+<div class="med scene3d" id="scene3d" aria-hidden="true">
+  <button class="x" id="close3d" aria-label="סגור">✕</button>
+  <button class="snd" id="sound3d" aria-label="צליל">🔊</button>
+  <div class="top">מַעֲשֵׂה בְרֵאשִׁית · תלת־ממד</div>
+  <div class="breathw" id="breath3d"></div>
+  <div class="host3d" id="host3d"></div>
+  <div class="fb3d" id="fb3d">לא הצלחנו לטעון את חוויית התלת־ממד (ייתכן שאין חיבור לאינטרנט). אפשר תמיד להשתמש ב"התבוננות חיה" שעובדת גם ללא רשת.</div>
+  <div class="ambient" id="amb3d"></div>
+  <div class="flash" id="flash3d"></div>
+  <div class="cap">
+    <div class="aff" id="aff3d"></div>
+    <div class="v verse">פּוֹתֵחַ אֶת יָדֶךָ וּמַשְׂבִּיעַ לְכָל חַי רָצוֹן</div>
+    <div class="s">גע וגרור כדי לסובב · הוא נותן לכל הברואים בכל רגע</div>
+  </div>
+</div>
+
+<footer>
+  <div class="verse">בְּטַח בַּה' בְּכָל לֵב</div>
+  <div>מסע אל הביטחון · נבנה עבורך</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  // stars
+  var sc=document.getElementById('stars');
+  for(var i=0;i<46;i++){
+    var s=document.createElement('div');s.className='star';
+    var sz=Math.random()*2+1;
+    s.style.width=sz+'px';s.style.height=sz+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=(Math.random()*60)+'%';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    sc.appendChild(s);
+  }
+
+  // reveal on scroll
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')});
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+
+  // ===== focus timer =====
+  var disp=document.getElementById('tdisp'),iv=null,left=0;
+  function show(){var m=Math.floor(left/60),s=left%60;disp.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+  function start(min){
+    clearInterval(iv);left=min*60;show();
+    document.querySelectorAll('.trow .pill[data-min]').forEach(function(p){p.classList.toggle('active',+p.dataset.min===min)});
+    iv=setInterval(function(){left--;if(left<=0){left=0;show();clearInterval(iv);disp.textContent='✦ ✦';return;}show();},1000);
+  }
+  document.querySelectorAll('.trow .pill[data-min]').forEach(function(p){
+    p.addEventListener('click',function(){start(+p.dataset.min)});
+  });
+  document.getElementById('tstop').addEventListener('click',function(){
+    clearInterval(iv);left=0;show();
+    document.querySelectorAll('.trow .pill[data-min]').forEach(function(p){p.classList.remove('active')});
+  });
+
+  // ===== daily strengthening (guarded localStorage) =====
+  var KEY='bitachon_rechev_v2';
+  function load(){try{return JSON.parse(localStorage.getItem(KEY))||{count:0,total:0,last:null,note:'',checks:{}}}catch(e){return {count:0,total:0,last:null,note:'',checks:{}}}}
+  function save(d){try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}
+  function ymd(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+  function today(){return ymd(new Date());}
+  function yesterday(){var d=new Date();d.setDate(d.getDate()-1);return ymd(d);}
+
+  var data=load();
+  if(typeof data.total!=='number')data.total=data.count||0;
+  if(!data.checks)data.checks={};
+  var streakEl=document.getElementById('streak'),totalEl=document.getElementById('total'),
+      btn=document.getElementById('doneBtn'),msg=document.getElementById('msg');
+  var msgs=['כל יום אתה מתחזק 💪','הביטחון נכנס ללב ✦','חסד ה\' מסובב אותך','אתה בדרך הנכונה','ה\' שומע אותך','עוד יום של אמונה איתנה','יפה — ממשיכים בשקט'];
+
+  // streak counts consecutive days; a gap just starts fresh (no punishment)
+  if(data.last && data.last!==today() && data.last!==yesterday()){data.count=0;}
+
+  function render(done){
+    streakEl.textContent=data.count;
+    totalEl.textContent=data.total;
+    if(done){
+      btn.textContent='חיזקת היום ✓ נתראה מחר';
+      btn.classList.add('done');
+      msg.textContent=msgs[data.total%msgs.length];
+    }else{
+      msg.textContent=data.total>0?'טוב לראות אותך שוב — בוא נחזק היום ✦':'מתחילים את המסע ✦';
+    }
+  }
+  render(data.last===today());
+
+  btn.addEventListener('click',function(){
+    if(data.last===today())return;
+    data.count=(data.last===yesterday())?data.count+1:1;
+    data.total++;
+    data.last=today();save(data);render(true);
+  });
+
+  // personal note
+  var pnote=document.getElementById('pnote');
+  if(pnote){
+    pnote.value=data.note||'';
+    pnote.addEventListener('input',function(){data.note=pnote.value;save(data);});
+  }
+
+  // hishtadlut checklist
+  document.querySelectorAll('#check .item').forEach(function(it){
+    var id=it.getAttribute('data-id');
+    if(data.checks[id])it.classList.add('on');
+    it.addEventListener('click',function(){
+      it.classList.toggle('on');
+      data.checks[id]=it.classList.contains('on');
+      save(data);
+    });
+  });
+  // ===== live contemplation: "the Hand that gives" — immersive cosmos =====
+  (function(){
+    var med=document.getElementById('meditate'),cv=document.getElementById('medCanvas');
+    if(!med||!cv)return;
+    var ctx=cv.getContext('2d'),TAU=Math.PI*2;
+    var W=0,H=0,dpr=1,raf=null,src={x:0,y:0};
+    var stars=[],receivers=[],particles=[],bursts=[],formers=[];
+    var me=null,wordPts=[],climax={active:false,start:0},climaxTimer=0,lastFrame=0;
+    var globalLight=0,lastBell=0,soundOn=true,audio=null,breathK='';
+    var bw=document.getElementById('medBreath');
+    function rnd(a,b){return a+Math.random()*(b-a);}
+    function breath(){var e=Date.now()%11000;
+      if(e<4000)return{k:'in',f:e/4000};
+      if(e<5000)return{k:'hold',f:1};
+      return{k:'out',f:1-(e-5000)/6000};}
+    function sampleWord(){wordPts=[];try{
+      var oc=document.createElement('canvas');oc.width=Math.max(2,W|0);oc.height=Math.max(2,(H*0.42)|0);
+      var o=oc.getContext('2d');o.fillStyle='#fff';o.textAlign='center';o.textBaseline='middle';
+      var fs=Math.min(W*0.36,oc.height*0.78);o.font='900 '+fs+'px "Frank Ruhl Libre", Georgia, serif';
+      o.fillText('חסד',oc.width/2,oc.height/2);
+      var img=o.getImageData(0,0,oc.width,oc.height).data,gap=Math.max(5,Math.round(fs/24));
+      for(var y=0;y<oc.height;y+=gap){for(var x=0;x<oc.width;x+=gap){
+        if(img[(y*oc.width+x)*4+3]>128)wordPts.push({x:x,y:y+H*0.24});}}
+    }catch(e){wordPts=[];}}
+    function startClimax(){if(!wordPts.length)sampleWord();var pts=wordPts;if(!pts.length)return;
+      formers=[];var stepN=Math.max(1,Math.ceil(pts.length/300));
+      for(var i=0;i<pts.length;i+=stepN)formers.push({x:src.x+rnd(-30,30),y:src.y+rnd(-10,20),tx:pts[i].x,ty:pts[i].y,vx:0,vy:0,a:0,rel:false});
+      climax.active=true;climax.start=Date.now();bell(true);}
+
+    function resize(){
+      dpr=Math.min(window.devicePixelRatio||1,2);
+      W=cv.clientWidth;H=cv.clientHeight;
+      cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+      src={x:W/2,y:H*0.12};
+      stars=[];var ns=Math.round(Math.min(150,W*H/8500));
+      for(var i=0;i<ns;i++){var d=rnd(0.3,1);stars.push({x:Math.random()*W,y:Math.random()*H,r:d*1.4,d:d,tw:Math.random()*TAU});}
+      receivers=[];var n=Math.round(Math.min(54,Math.max(28,W/12)));
+      for(var k=0;k<n;k++){receivers.push({x:Math.random()*W,y:H*0.3+Math.random()*H*0.62,r:rnd(1.4,3.2),glow:0,base:rnd(0.1,0.22),pulse:0});}
+      me={x:W/2,y:H*0.8,r:6.5,glow:0.5,base:0.45,pulse:0,me:true};receivers.push(me);
+      sampleWord();
+    }
+    function spawn(tx,ty,fast){
+      if(particles.length>220)return;
+      var t=null,dx,dy;
+      if(tx!==undefined){dx=tx;dy=ty;}else{t=(me&&Math.random()<0.16)?me:receivers[(Math.random()*receivers.length)|0];if(!t)return;dx=t.x;dy=t.y;}
+      particles.push({t:t,tx:dx,ty:dy,p:0,sp:(fast?rnd(0.02,0.032):rnd(0.005,0.013)),
+        cx:(src.x+dx)/2+rnd(-160,160),cy:(src.y+dy)/2-rnd(0,110),sz:rnd(1,2.1),hue:rnd(0,1)});
+    }
+    function burst(x,y){
+      for(var i=0;i<10;i++)spawn(x+rnd(-14,14),y+rnd(-14,14),true);
+      bursts.push({x:x,y:y,r:4,a:1});
+      for(var j=0;j<receivers.length;j++){var r=receivers[j];if(Math.hypot(r.x-x,r.y-y)<72){r.glow=1;r.pulse=1;}}
+      bell(true);
+    }
+    // ---- ambient audio ----
+    function initAudio(){
+      try{
+        var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+        if(audio)return;
+        var c=new AC();audio={ctx:c};
+        if(c.state==='suspended')c.resume();
+        audio.master=c.createGain();audio.master.gain.value=0;audio.master.connect(c.destination);
+        audio.pad=c.createGain();audio.pad.gain.value=0.05;
+        var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=680;
+        audio.pad.connect(lp);lp.connect(audio.master);
+        [110,164.81,220].forEach(function(f,i){var o=c.createOscillator();o.type=i===2?'triangle':'sine';o.frequency.value=f;o.detune.value=(i-1)*5;o.connect(audio.pad);o.start();});
+        audio.lfo=c.createOscillator();audio.lfo.frequency.value=0.07;audio.lfoG=c.createGain();audio.lfoG.gain.value=0.035;
+        audio.lfo.connect(audio.lfoG);audio.lfoG.connect(audio.master.gain);audio.lfo.start();
+        audio.master.gain.setTargetAtTime(0.45,c.currentTime,2.5);
+      }catch(e){audio=null;}
+    }
+    var scale=[261.63,293.66,329.63,392.0,440.0,523.25];
+    function bell(strong){
+      if(!soundOn||!audio)return;var now=audio.ctx.currentTime;
+      if(now-lastBell<(strong?0.05:0.5))return;lastBell=now;
+      try{var o=audio.ctx.createOscillator(),g=audio.ctx.createGain();
+        o.type='sine';o.frequency.value=scale[(Math.random()*scale.length)|0]*(Math.random()<0.5?1:2);
+        g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(strong?0.16:0.06,now+0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001,now+(strong?1.3:0.85));
+        o.connect(g);g.connect(audio.master);o.start(now);o.stop(now+1.4);}catch(e){}
+    }
+    function stopAudio(){if(audio){try{var c=audio.ctx;audio.master.gain.setTargetAtTime(0,c.currentTime,0.3);setTimeout(function(){try{c.close()}catch(e){}},600);}catch(e){}audio=null;}}
+
+    function draw(){
+      ctx.globalCompositeOperation='source-over';
+      ctx.fillStyle='rgba(7,10,20,0.22)';ctx.fillRect(0,0,W,H);
+      if(globalLight>0.01){var gg=ctx.createRadialGradient(W/2,H*0.62,10,W/2,H*0.62,Math.max(W,H)*0.85);
+        gg.addColorStop(0,'rgba(255,158,69,'+(0.07*globalLight)+')');gg.addColorStop(1,'rgba(255,158,69,0)');
+        ctx.fillStyle=gg;ctx.fillRect(0,0,W,H);}
+      ctx.globalCompositeOperation='lighter';
+      for(var i=0;i<stars.length;i++){var s=stars[i];s.tw+=0.02*s.d;
+        ctx.fillStyle='rgba(200,210,255,'+(0.3+0.5*Math.abs(Math.sin(s.tw)))*s.d*0.6+')';
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,TAU);ctx.fill();
+        s.y+=0.05*s.d;if(s.y>H){s.y=0;s.x=Math.random()*W;}}
+      var bp=breath(),pulse=bp.f;
+      var sr=130+pulse*55;
+      var g=ctx.createRadialGradient(src.x,src.y,2,src.x,src.y,sr);
+      g.addColorStop(0,'rgba(255,246,218,'+(0.75+0.2*pulse)+')');g.addColorStop(0.3,'rgba(244,216,140,0.5)');g.addColorStop(1,'rgba(244,216,140,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(src.x,src.y,sr,0,TAU);ctx.fill();
+      for(i=0;i<receivers.length;i++){var r=receivers[i];var a=Math.min(r.base+r.glow,1);
+        if(r.me){var mg=ctx.createRadialGradient(r.x,r.y,1,r.x,r.y,18+r.glow*10);
+          mg.addColorStop(0,'rgba(255,238,190,'+Math.min(0.9,a+0.2)+')');mg.addColorStop(1,'rgba(244,216,140,0)');
+          ctx.fillStyle=mg;ctx.beginPath();ctx.arc(r.x,r.y,18+r.glow*10,0,TAU);ctx.fill();
+          ctx.fillStyle='rgba(255,246,218,0.95)';ctx.beginPath();ctx.arc(r.x,r.y,3.2,0,TAU);ctx.fill();
+          ctx.strokeStyle='rgba(244,216,140,'+(0.3+r.pulse*0.5)+')';ctx.lineWidth=1.2;
+          ctx.beginPath();ctx.arc(r.x,r.y,9+(1-r.pulse)*14,0,TAU);ctx.stroke();
+          continue;}
+        ctx.fillStyle='rgba(232,190,92,'+a+')';ctx.beginPath();ctx.arc(r.x,r.y,r.r+r.glow*2.5,0,TAU);ctx.fill();
+        if(r.pulse>0.02){ctx.strokeStyle='rgba(244,216,140,'+r.pulse*0.5+')';ctx.lineWidth=1.2;
+          ctx.beginPath();ctx.arc(r.x,r.y,(1-r.pulse)*24+4,0,TAU);ctx.stroke();}}
+      for(var j=0;j<particles.length;j++){var pt=particles[j],u=1-pt.p;
+        var x=u*u*src.x+2*u*pt.p*pt.cx+pt.p*pt.p*pt.tx;
+        var y=u*u*src.y+2*u*pt.p*pt.cy+pt.p*pt.p*pt.ty;
+        ctx.fillStyle='rgba(255,'+((220+30*pt.hue)|0)+','+((150+60*pt.hue)|0)+','+(0.7*u+0.3)+')';
+        ctx.beginPath();ctx.arc(x,y,pt.sz,0,TAU);ctx.fill();}
+      for(var fi=0;fi<formers.length;fi++){var fp=formers[fi];if(fp.a<=0.01)continue;
+        ctx.fillStyle='rgba(255,236,180,'+fp.a+')';ctx.beginPath();ctx.arc(fp.x,fp.y,1.8,0,TAU);ctx.fill();}
+      for(i=bursts.length-1;i>=0;i--){var b=bursts[i];b.r+=3;b.a*=0.93;
+        if(b.a<0.03){bursts.splice(i,1);continue;}
+        ctx.strokeStyle='rgba(255,246,218,'+b.a+')';ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.stroke();}
+      ctx.globalCompositeOperation='source-over';
+    }
+    function step(){
+      var now=Date.now(),dt=lastFrame?now-lastFrame:16;lastFrame=now;
+      var bp=breath();if(bp.k!==breathK){breathK=bp.k;if(bw)bw.textContent=bp.k==='in'?'שְׁאַף':(bp.k==='hold'?'הַחְזֵק':'נְשֹׁף');}
+      for(var i=0;i<receivers.length;i++){receivers[i].glow*=0.93;receivers[i].pulse*=0.92;}
+      if(me)me.glow=Math.max(me.glow,0.35);
+      for(var j=particles.length-1;j>=0;j--){var pt=particles[j];pt.p+=pt.sp;
+        if(pt.p>=1){if(pt.t){pt.t.glow=1;pt.t.pulse=1;}globalLight=Math.min(1,globalLight+0.004);bell(false);particles.splice(j,1);}}
+      globalLight*=0.997;
+      if(Math.random()<0.8)spawn();
+      if(Math.random()<0.5)spawn();
+      climaxTimer+=dt;
+      if(!climax.active&&climaxTimer>15000){climaxTimer=0;startClimax();}
+      if(climax.active){var e=now-climax.start,mode=e<2600?0:(e<6000?1:(e<8200?2:3));
+        if(mode===3){climax.active=false;formers=[];}
+        else{for(var f=0;f<formers.length;f++){var fp=formers[f];
+          if(mode===0){fp.x+=(fp.tx-fp.x)*0.07;fp.y+=(fp.ty-fp.y)*0.07;fp.a=Math.min(1,fp.a+0.03);}
+          else if(mode===1){fp.x+=(fp.tx-fp.x)*0.2;fp.y+=(fp.ty-fp.y)*0.2;fp.a=1;}
+          else{if(!fp.rel){fp.rel=true;fp.vx=rnd(-1.4,1.4);fp.vy=rnd(-2.2,-0.4);}fp.x+=fp.vx;fp.y+=fp.vy;fp.vy+=0.03;fp.a*=0.95;}}}
+      }
+    }
+    function loop(){step();draw();raf=requestAnimationFrame(loop);}
+    function open(){
+      med.classList.add('on');med.setAttribute('aria-hidden','false');resize();
+      particles=[];bursts=[];formers=[];globalLight=0;climax.active=false;climaxTimer=0;lastFrame=0;breathK='';
+      ctx.globalCompositeOperation='source-over';ctx.fillStyle='#070A14';ctx.fillRect(0,0,W,H);
+      if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){
+        for(var i=0;i<receivers.length;i++)receivers[i].glow=0.6;
+        for(var k=0;k<40;k++){spawn();if(particles.length)particles[particles.length-1].p=Math.random();}
+        draw();return;
+      }
+      if(soundOn)initAudio();
+      if(!raf)loop();
+    }
+    function close(){
+      med.classList.remove('on');med.setAttribute('aria-hidden','true');
+      if(raf){cancelAnimationFrame(raf);raf=null;}
+      stopAudio();
+    }
+    document.getElementById('medOpen').addEventListener('click',open);
+    document.getElementById('medClose').addEventListener('click',close);
+    var sb=document.getElementById('medSound');
+    if(sb)sb.addEventListener('click',function(){soundOn=!soundOn;sb.textContent=soundOn?'🔊':'🔇';
+      if(soundOn){if(med.classList.contains('on'))initAudio();}else{stopAudio();}});
+    function pos(e){var rc=cv.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return {x:t.clientX-rc.left,y:t.clientY-rc.top};}
+    cv.addEventListener('pointerdown',function(e){var p=pos(e);burst(p.x,p.y);});
+    window.addEventListener('resize',function(){if(med.classList.contains('on'))resize();});
+  })();
+
+  // ===== 3D contemplation (three.js) =====
+  (function(){
+    var btn=document.getElementById('open3d'),ov=document.getElementById('scene3d'),
+        host=document.getElementById('host3d'),closeb=document.getElementById('close3d'),
+        fb=document.getElementById('fb3d'),bwords=document.getElementById('breath3d'),
+        sb=document.getElementById('sound3d');
+    if(!btn||!ov)return;
+    var renderer,scene,camera,raf=null,started=false,fail=false;
+    var source,sourceGlow,stars,souls,flow,tex,soulPos=[],flowData=[];
+    var W,H,camTheta=0.6,camPhi=1.15,autoRot=true,drag=false,lastX=0,lastY=0;
+    var audio=null,soundOn=true;
+
+    function breathF(){var e=Date.now()%11000;if(e<4000)return e/4000;if(e<5000)return 1;return 1-(e-5000)/6000;}
+    function breathW(){var e=Date.now()%11000;return e<4000?'שְׁאַף':(e<5000?'הַחְזֵק':'נְשֹׁף');}
+
+    function glowTex(){
+      var c=document.createElement('canvas');c.width=c.height=64;var g=c.getContext('2d');
+      var gr=g.createRadialGradient(32,32,0,32,32,32);
+      gr.addColorStop(0,'rgba(255,250,235,1)');gr.addColorStop(0.25,'rgba(255,226,150,0.9)');
+      gr.addColorStop(0.6,'rgba(240,200,110,0.32)');gr.addColorStop(1,'rgba(240,200,110,0)');
+      g.fillStyle=gr;g.fillRect(0,0,64,64);return new THREE.CanvasTexture(c);
+    }
+    function respawn(i,initial){
+      var t=soulPos[(Math.random()*soulPos.length)|0];
+      flowData[i]={tx:t[0],ty:t[1],tz:t[2],
+        cx:t[0]*0.5+(Math.random()-0.5)*12,cy:t[1]*0.5+Math.random()*9,cz:t[2]*0.5+(Math.random()-0.5)*12,
+        p:initial?Math.random():0,sp:0.004+Math.random()*0.011};
+    }
+    function init(){
+      if(started||fail)return;
+      if(!window.THREE){fail=true;fb.style.display='block';return;}
+      try{
+        tex=glowTex();
+        renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+        renderer.setClearColor(0x070A14,1);
+        host.appendChild(renderer.domElement);
+        scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x070A14,0.008);
+        camera=new THREE.PerspectiveCamera(60,1,0.1,400);
+        source=new THREE.Mesh(new THREE.SphereGeometry(0.7,24,24),new THREE.MeshBasicMaterial({color:0xfff2da}));
+        scene.add(source);
+        sourceGlow=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,color:0xffffff,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false}));
+        sourceGlow.scale.set(10,10,1);scene.add(sourceGlow);
+        // stars
+        var sn=700,sa=new Float32Array(sn*3),sg=new THREE.BufferGeometry();
+        for(var i=0;i<sn;i++){var r=45+Math.random()*70,th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);
+          sa[i*3]=r*Math.sin(ph)*Math.cos(th);sa[i*3+1]=r*Math.cos(ph);sa[i*3+2]=r*Math.sin(ph)*Math.sin(th);}
+        sg.setAttribute('position',new THREE.BufferAttribute(sa,3));
+        stars=new THREE.Points(sg,new THREE.PointsMaterial({size:0.8,map:tex,color:0x9fb0e0,transparent:true,opacity:0.7,sizeAttenuation:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+        scene.add(stars);
+        // souls
+        var n=440,pa=new Float32Array(n*3),gg=new THREE.BufferGeometry();soulPos=[];
+        for(i=0;i<n;i++){var rr=6+Math.random()*9,t2=Math.random()*Math.PI*2,p2=Math.acos(2*Math.random()-1);
+          var x=rr*Math.sin(p2)*Math.cos(t2),y=rr*Math.cos(p2)*0.75,z=rr*Math.sin(p2)*Math.sin(t2);
+          pa[i*3]=x;pa[i*3+1]=y;pa[i*3+2]=z;soulPos.push([x,y,z]);}
+        gg.setAttribute('position',new THREE.BufferAttribute(pa,3));
+        souls=new THREE.Points(gg,new THREE.PointsMaterial({size:1.5,map:tex,color:0xE8BE5C,transparent:true,opacity:0.95,sizeAttenuation:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+        scene.add(souls);
+        // flow
+        var fn=650,fpos=new Float32Array(fn*3),fgeo=new THREE.BufferGeometry();flowData=[];
+        for(i=0;i<fn;i++){respawn(i,true);fpos[i*3]=0;fpos[i*3+1]=0;fpos[i*3+2]=0;}
+        fgeo.setAttribute('position',new THREE.BufferAttribute(fpos,3));
+        flow=new THREE.Points(fgeo,new THREE.PointsMaterial({size:1.4,map:tex,color:0xFFE6B4,transparent:true,opacity:0.9,sizeAttenuation:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+        scene.add(flow);
+        started=true;resize();
+      }catch(e){fail=true;fb.style.display='block';}
+    }
+    function resize(){if(!renderer)return;W=ov.clientWidth;H=ov.clientHeight;renderer.setSize(W,H);camera.aspect=W/H;camera.updateProjectionMatrix();}
+    function frame(){
+      var b=breathF();
+      source.scale.setScalar(0.8+b*0.5);
+      var gs=9+b*8;sourceGlow.scale.set(gs,gs,1);
+      if(autoRot)camTheta+=0.0016;
+      var cr=30;
+      camera.position.set(cr*Math.sin(camPhi)*Math.cos(camTheta),cr*Math.cos(camPhi),cr*Math.sin(camPhi)*Math.sin(camTheta));
+      camera.lookAt(0,0,0);
+      souls.rotation.y+=0.0006;stars.rotation.y+=0.0002;
+      var arr=flow.geometry.attributes.position.array;
+      for(var i=0;i<flowData.length;i++){var f=flowData[i];f.p+=f.sp;if(f.p>=1)respawn(i,false);
+        var f2=flowData[i],u=1-f2.p,p=f2.p;
+        arr[i*3]=2*u*p*f2.cx+p*p*f2.tx;arr[i*3+1]=2*u*p*f2.cy+p*p*f2.ty;arr[i*3+2]=2*u*p*f2.cz+p*p*f2.tz;}
+      flow.geometry.attributes.position.needsUpdate=true;
+      renderer.render(scene,camera);
+      if(bwords){var w=breathW();if(bwords.textContent!==w)bwords.textContent=w;}
+      raf=requestAnimationFrame(frame);
+    }
+    function initAudio(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC||audio)return;
+      var c=new AC();if(c.state==='suspended')c.resume();var m=c.createGain();m.gain.value=0;m.connect(c.destination);
+      var pg=c.createGain();pg.gain.value=0.05;var lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=680;pg.connect(lp);lp.connect(m);
+      [110,164.81,220].forEach(function(f,i){var o=c.createOscillator();o.type=i===2?'triangle':'sine';o.frequency.value=f;o.detune.value=(i-1)*5;o.connect(pg);o.start();});
+      var lfo=c.createOscillator();lfo.frequency.value=0.07;var lg=c.createGain();lg.gain.value=0.035;lfo.connect(lg);lg.connect(m.gain);lfo.start();
+      m.gain.setTargetAtTime(0.4,c.currentTime,2.5);audio={ctx:c,m:m};}catch(e){audio=null;}}
+    function stopAudio(){if(audio){try{var c=audio.ctx;audio.m.gain.setTargetAtTime(0,c.currentTime,0.3);setTimeout(function(){try{c.close()}catch(e){}},600);}catch(e){}audio=null;}}
+
+    function open(){
+      ov.classList.add('on');ov.setAttribute('aria-hidden','false');init();
+      if(!started)return;resize();autoRot=true;if(soundOn)initAudio();if(!raf)frame();
+    }
+    function close(){ov.classList.remove('on');ov.setAttribute('aria-hidden','true');if(raf){cancelAnimationFrame(raf);raf=null;}stopAudio();}
+    btn.addEventListener('click',open);closeb.addEventListener('click',close);
+    if(sb)sb.addEventListener('click',function(){soundOn=!soundOn;sb.textContent=soundOn?'🔊':'🔇';
+      if(soundOn){if(ov.classList.contains('on'))initAudio();}else{stopAudio();}});
+    function down(e){drag=true;autoRot=false;var t=e.touches?e.touches[0]:e;lastX=t.clientX;lastY=t.clientY;}
+    function move(e){if(!drag)return;var t=e.touches?e.touches[0]:e;
+      camTheta-=(t.clientX-lastX)*0.005;camPhi=Math.max(0.35,Math.min(2.6,camPhi-(t.clientY-lastY)*0.005));
+      lastX=t.clientX;lastY=t.clientY;}
+    function up(){drag=false;}
+    host.addEventListener('pointerdown',down);host.addEventListener('pointermove',move);
+    window.addEventListener('pointerup',up);
+    window.addEventListener('resize',function(){if(ov.classList.contains('on')&&started)resize();});
+  })();
+
+  // ===== affirmation layer: conscious truths revealed on the calming exhale =====
+  (function(){
+    var els=[document.getElementById('affMed'),document.getElementById('aff3d')].filter(Boolean);
+    if(!els.length)return;
+    var lines=['ה\' אִתִּי תָּמִיד','אֲנִי נִמְסָר וּבוֹטֵחַ בּוֹ','הַכֹּל מִמֶּנּוּ — וְהַכֹּל לְטוֹבָתִי','פּוֹתֵחַ אֶת יָדוֹ — וְגַם אֵלַי','אֵין עוֹד מִלְּבַדּוֹ','הוּא דּוֹאֵג לִי כְּבָר עַכְשָׁו','אֲנִי רָגוּעַ — הוּא מַחְזִיק אוֹתִי','מַה שֶּׁטּוֹב לִי כְּבָר בַּדֶּרֶךְ'];
+    var idx=0,wasExhale=false;
+    function setTxt(t){els.forEach(function(e){e.textContent=t;});}
+    function show(b){els.forEach(function(e){e.classList.toggle('show',b);});}
+    setTxt(lines[0]);
+    setInterval(function(){
+      var e=Date.now()%11000,exhale=e>=5000;
+      if(exhale&&!wasExhale){idx=(idx+1)%lines.length;setTxt(lines[idx]);show(true);}
+      else if(!exhale&&wasExhale){show(false);}
+      wasExhale=exhale;
+    },200);
+  })();
+
+  // ===== ambient affirmations: gentle, visible truths drifting through the field =====
+  (function(){
+    var pool=['ה\' אִתִּי','אֵין עוֹד מִלְּבַדּוֹ','הַכֹּל לְטוֹבָה','אֲנִי בּוֹטֵחַ','פּוֹתֵחַ אֶת יָדוֹ','הוּא מַחְזִיק אוֹתִי','חֶסֶד יְסוֹבְבֵנִי','הַכֹּל מִמֶּנּוּ'];
+    var med=document.getElementById('meditate'),sc=document.getElementById('scene3d'),
+        aMed=document.getElementById('ambMed'),a3=document.getElementById('amb3d');
+    function host(){if(med&&med.classList.contains('on'))return aMed;if(sc&&sc.classList.contains('on'))return a3;return null;}
+    setInterval(function(){
+      var h=host();if(!h)return;
+      var s=document.createElement('span');
+      s.textContent=pool[(Math.random()*pool.length)|0];
+      s.style.left=(8+Math.random()*68)+'%';
+      s.style.top=(16+Math.random()*54)+'%';
+      s.style.fontSize=(16+Math.random()*14)+'px';
+      h.appendChild(s);
+      setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},9200);
+    },2200);
+  })();
+
+  // ===== quick-flash affirmations: brief perceptible pulses of truth =====
+  (function(){
+    var pool=['ה\' אִתִּי','אֵין עוֹד מִלְּבַדּוֹ','הַכֹּל לְטוֹבָה','אֲנִי בּוֹטֵחַ','הוּא מַחְזִיק אוֹתִי','חֶסֶד יְסוֹבְבֵנִי','הַכֹּל מִמֶּנּוּ','פּוֹתֵחַ אֶת יָדוֹ'];
+    var med=document.getElementById('meditate'),sc=document.getElementById('scene3d'),
+        fMed=document.getElementById('flashMed'),f3=document.getElementById('flash3d');
+    function target(){if(med&&med.classList.contains('on'))return fMed;if(sc&&sc.classList.contains('on'))return f3;return null;}
+    function pop(el,txt){el.textContent=txt;el.style.animation='none';void el.offsetWidth;el.style.animation='flashpop 0.7s ease-out';}
+    setInterval(function(){var el=target();if(el)pop(el,pool[(Math.random()*pool.length)|0]);},2600);
+  })();
+})();
+</script>
+</body>
+</html>
