@@ -3580,6 +3580,12 @@
     border:1px solid rgba(189,240,234,0.35); color:#bdf0ea; font-size:20px; cursor:pointer; }
   .gi-hint{ position:absolute; top:max(24px,env(safe-area-inset-top)); left:0; right:0;
     font-size:12.5px; color:rgba(189,240,234,0.55); letter-spacing:1px; pointer-events:none; }
+  .gi-speed{ position:absolute; left:50%; transform:translateX(-50%);
+    bottom:max(98px,calc(env(safe-area-inset-bottom) + 98px));
+    background:rgba(255,255,255,0.08); border:1px solid rgba(189,240,234,0.4); color:#bdf0ea;
+    border-radius:30px; padding:9px 22px; font-family:inherit; font-size:14px; font-weight:700;
+    letter-spacing:.5px; cursor:pointer; }
+  .gi-speed:active{ transform:translateX(-50%) scale(.94); }
   #kavanaCard .kv-src {
     font-size: 12px; color: #7a6a8a; font-style: italic;
   }
@@ -3749,6 +3755,7 @@
     <button id="giClose" aria-label="סגור">✕</button>
     <div class="gi-orb"></div>
     <div class="gi-text" id="giText"></div>
+    <button class="gi-speed" id="giSpeed" aria-label="מהירות">🐢 איטי</button>
     <div class="gi-controls">
       <button class="gi-ctrl" id="giSound" aria-label="מוזיקת רקע">🔇</button>
       <button class="gi-ctrl main" id="giPlay" aria-label="נגן/השהה">▶</button>
@@ -9498,6 +9505,24 @@ const TOTAL_OSHER = TEFILOT.length;
   let _giLines=[], _giIdx=0, _giState='idle', _giTimer=null, _giVoice=null;
   let _giActx=null, _giGain=null, _giSounding=false;
 
+  // Speed modes — from comfortable down to very slow/meditative.
+  const GI_SPEED_MODES = [
+    { label:'רגיל',      rate:0.78, gap:2000 },
+    { label:'איטי',      rate:0.68, gap:2600 },
+    { label:'איטי מאוד', rate:0.58, gap:3400 },
+    { label:'מדיטטיבי',  rate:0.50, gap:4200 },
+    { label:'עמוק',      rate:0.42, gap:5200 }
+  ];
+  let _giSpeed = 1;
+  try { const s=parseInt(localStorage.getItem('gi_speed_v1'),10); if(!isNaN(s)&&s>=0&&s<GI_SPEED_MODES.length) _giSpeed=s; } catch(e){}
+  function _giUpdateSpeedLabel(){ const b=document.getElementById('giSpeed'); if(b) b.textContent='🐢 '+GI_SPEED_MODES[_giSpeed].label; }
+  function _giCycleSpeed(){
+    _giSpeed=(_giSpeed+1)%GI_SPEED_MODES.length;
+    try{ localStorage.setItem('gi_speed_v1', String(_giSpeed)); }catch(e){}
+    _giUpdateSpeedLabel();
+    if(_giState==='playing') _giPlayFrom(_giIdx); // apply new speed immediately
+  }
+
   function _giSelectVoice(){
     try{
       const vs = window.speechSynthesis.getVoices()||[];
@@ -9514,7 +9539,7 @@ const TOTAL_OSHER = TEFILOT.length;
     el.classList.remove('show'); void el.offsetWidth;
     el.textContent=text; el.classList.add('show');
   }
-  function _giNextDelay(){ return 2600; } // longer breathing pause between lines
+  function _giNextDelay(){ return GI_SPEED_MODES[_giSpeed].gap; } // breathing pause between lines
 
   function _giPlayFrom(i){
     clearTimeout(_giTimer);
@@ -9527,7 +9552,7 @@ const TOTAL_OSHER = TEFILOT.length;
       try{
         window.speechSynthesis.cancel();
         const u=new SpeechSynthesisUtterance(line);
-        u.lang='he-IL'; u.rate=0.68; u.pitch=1.0; u.volume=1;
+        u.lang='he-IL'; u.rate=GI_SPEED_MODES[_giSpeed].rate; u.pitch=1.0; u.volume=1;
         if(_giVoice) u.voice=_giVoice;
         u.onend=()=>{ if(_giState==='playing') advance(); };
         u.onerror=()=>{ if(_giState==='playing') advance(); };
@@ -9535,8 +9560,9 @@ const TOTAL_OSHER = TEFILOT.length;
         return;
       }catch(e){ /* fall through to timed mode */ }
     }
-    // Fallback (no TTS): time the line by its length.
-    const dur=Math.max(4200, line.length*150);
+    // Fallback (no TTS): time the line by its length, scaled to the chosen speed.
+    const md=GI_SPEED_MODES[_giSpeed];
+    const dur=Math.max(md.gap+1800, Math.round(line.length*100/md.rate));
     _giTimer=setTimeout(()=>{ if(_giState==='playing') _giPlayFrom(i+1); }, dur);
   }
 
@@ -9596,6 +9622,8 @@ const TOTAL_OSHER = TEFILOT.length;
       document.getElementById('giPlay').addEventListener('click',_giTogglePlay);
       document.getElementById('giReplay').addEventListener('click',()=>_giPlayFrom(0));
       document.getElementById('giSound').addEventListener('click',_giToggleSound);
+      document.getElementById('giSpeed').addEventListener('click',_giCycleSpeed);
+      _giUpdateSpeedLabel();
     }
   }
 
