@@ -2244,6 +2244,7 @@
     gap: 6px;
     margin-bottom: 12px;
     justify-content: center;
+    flex-wrap: wrap;
   }
   .chart-tab {
     padding: 6px 14px;
@@ -4161,6 +4162,9 @@
         <button class="chart-tab" data-range="7">7 ימים</button>
         <button class="chart-tab active" data-range="14">14 ימים</button>
         <button class="chart-tab" data-range="30">30 ימים</button>
+        <button class="chart-tab" data-range="180">חצי שנה</button>
+        <button class="chart-tab" data-range="365">שנה</button>
+        <button class="chart-tab" data-range="730">שנתיים</button>
       </div>
       <div class="chart-container">
         <div id="chartContent"></div>
@@ -8093,21 +8097,27 @@ const TOTAL_OSHER = TEFILOT.length;
       gridLines += `<text class="chart-axis-label" x="${padLeft - 4}" y="${y + 3}" text-anchor="end">${Math.round(label)}</text>`;
     }
 
-    // X-axis labels (show every Nth day depending on range)
-    const xLabelEvery = chartRange <= 7 ? 1 : (chartRange <= 14 ? 2 : 5);
+    // X-axis labels (show ~6 labels, scaled to the range).
+    const xLabelEvery = chartRange <= 7 ? 1 : (chartRange <= 14 ? 2 : (chartRange <= 30 ? 5 : Math.ceil(chartRange / 6)));
+    const longRange = chartRange >= 120; // show month/year instead of day/month
     let xLabels = '';
     points.forEach((p, i) => {
       if (i % xLabelEvery === 0 || i === points.length - 1) {
         const d = new Date(p.date);
-        const txt = d.getDate() + '/' + (d.getMonth() + 1);
+        const txt = longRange ? ((d.getMonth() + 1) + '/' + String(d.getFullYear()).slice(2))
+                              : (d.getDate() + '/' + (d.getMonth() + 1));
         xLabels += `<text class="chart-axis-label" x="${p.x}" y="${H - 12}" text-anchor="middle">${txt}</text>`;
       }
     });
 
-    // Points
+    // Points — for long ranges draw fewer, smaller markers so it stays clean & fast.
+    const markerEvery = chartRange <= 31 ? 1 : xLabelEvery;
+    const markerR = chartRange <= 31 ? 4 : 2.5;
     let circles = '';
     points.forEach((p, i) => {
-      circles += `<circle class="chart-point${p.isToday ? ' today' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" data-idx="${i}"/>`;
+      if (i % markerEvery === 0 || i === points.length - 1 || p.isToday) {
+        circles += `<circle class="chart-point${p.isToday ? ' today' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${markerR}" data-idx="${i}"/>`;
+      }
     });
 
     content.innerHTML = `
