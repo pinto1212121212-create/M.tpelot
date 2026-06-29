@@ -4643,7 +4643,7 @@ const TOTAL_OSHER = TEFILOT.length;
   const STORAGE_KEY_HOCHMA = 'tefilot_hochma_said_v1';
   const STORAGE_KEY_HOCHMA_TAL = 'tefilot_hochma_tal_said_v1';
   const STORAGE_KEY_DAILY = 'tefilot_daily_counts_v1';
-  const DAILY_TARGET = 4;         // סף ירוק — יעד יומי
+  const DAILY_TARGET = 3;         // סף ירוק — יעד יומי
   const DAILY_TARGET_FULL = 8;    // סף כתום — יעד יומי גבוה
   const STORAGE_KEY_ROEI = 'tefilot_roei_said_v1';
   const STORAGE_KEY_ROEI_TAL = 'tefilot_roei_tal_said_v1';
@@ -5329,7 +5329,7 @@ const TOTAL_OSHER = TEFILOT.length;
     const c = counts || loadGreenCounts();
     return subtabGroupFor(mainId).some(id => (c[id] || 0) >= DAILY_TARGET);
   }
-  // 0 = ללא צבע, 1 = ירוק (4+), 2 = כתום (8+ — יעד יומי גבוה)
+  // 0 = ללא צבע, 1 = ירוק (3+), 2 = כתום (8+ — יעד יומי גבוה)
   function dailyLevelForTab(mainId, counts) {
     const c = counts || loadGreenCounts();
     let max = 0;
