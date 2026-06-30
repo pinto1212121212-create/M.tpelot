@@ -8681,6 +8681,36 @@ const TOTAL_OSHER = TEFILOT.length;
     fbSaveToken(d.idToken, d.refreshToken, d.expiresIn);
     return d.idToken;
   }
+  // Fixed account — gives a STABLE uid so the DB rules can be locked to exactly
+  // this account (auth.uid === '<uid>'). On first run it creates the account;
+  // afterwards it just signs in. Requires Email/Password provider enabled in the
+  // Firebase console. Falls back to anonymous so sync never breaks meanwhile.
+  const FB_SYNC_EMAIL = 'urieltal-sync@tpilot-app.com';
+  const FB_SYNC_PASS = 'Tp7k9Qz2Lr4Vx8Nm3Wd6Yb1Hc5Sg0uA';
+  const FB_UID_KEY = '_fb_uid_v1';
+  function _fbStoreUid(d) {
+    try { if (d && d.localId) { localStorage.setItem(FB_UID_KEY, d.localId);
+      try { window.dbg && window.dbg('🔐 sync uid: ' + d.localId); } catch(e) {} } } catch(e) {}
+  }
+  async function fbSignInFixed() {
+    // 1) try to sign in to the existing fixed account
+    let r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FIREBASE_API_KEY, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: FB_SYNC_EMAIL, password: FB_SYNC_PASS, returnSecureToken: true })
+    });
+    if (!r.ok) {
+      // 2) account doesn't exist yet → create it (first run)
+      r = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + FIREBASE_API_KEY, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: FB_SYNC_EMAIL, password: FB_SYNC_PASS, returnSecureToken: true })
+      });
+    }
+    if (!r.ok) throw new Error('fixed sign-in failed');
+    const d = await r.json();
+    fbSaveToken(d.idToken, d.refreshToken, d.expiresIn);
+    _fbStoreUid(d);
+    return d.idToken;
+  }
   async function fbRefresh(refreshToken) {
     const r = await fetch('https://securetoken.googleapis.com/v1/token?key=' + FIREBASE_API_KEY, {
       method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -8699,7 +8729,10 @@ const TOTAL_OSHER = TEFILOT.length;
       if (tok && Date.now() < exp) return tok;
       const ref = localStorage.getItem(FB_REF_KEY);
       if (ref) { try { return await fbRefresh(ref); } catch(e) {} }
-      return await fbSignInAnon();
+      // Prefer the fixed account (stable uid → rules can lock to it). If the
+      // Email/Password provider isn't enabled yet, fall back to anonymous so
+      // sync keeps working until the console is configured.
+      try { return await fbSignInFixed(); } catch(e) { return await fbSignInAnon(); }
     } catch(e) { return null; }
   }
   async function authedStateUrl() {
