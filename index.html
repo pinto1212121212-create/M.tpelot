@@ -3974,6 +3974,7 @@
       <div class="hero-status-row">
         <div class="hero-stat"><div class="hero-stat-label">🔥 רצף ימים</div><div class="hero-stat-value" id="heroStreak">0</div><div class="hero-stat-sub">ימים</div></div>
         <div class="hero-stat"><div class="hero-stat-label">🏆 סה״כ נקודות</div><div class="hero-stat-value" id="heroTotal">0</div><div class="hero-stat-sub">לכל החיים</div></div>
+        <div class="hero-stat" id="heroBritStat" style="grid-column:1/-1;display:none;background:rgba(107,31,45,0.10);border-color:rgba(107,31,45,0.35)"><div class="hero-stat-label">🛡️ רצף שמירת הברית</div><div class="hero-stat-value" id="heroBritStreak">0</div><div class="hero-stat-sub">ימים נקיים ברצף</div></div>
       </div>
       <div class="hero-identity-line" id="heroIdentityLine">כל יום שאתה עומד מול עצמך — ניצחון.</div>
       <div class="hero-status-line" id="heroStatusLine">״טוב לחסות בה׳״</div>
@@ -6789,6 +6790,25 @@ const TOTAL_OSHER = TEFILOT.length;
     dates.forEach(ds => { if (prev) { const pd=new Date(prev); pd.setDate(pd.getDate()+1); cur = (pd.toISOString().slice(0,10)===ds)?cur+1:1; } else cur=1; if (cur>best) best=cur; prev=ds; });
     return { current, best };
   }
+  // Clean-day (brit) streak: consecutive days where the "יום נקי - שמירת הברית"
+  // mitzva was completed, using the per-day items stored in history.
+  function computeBritStreak() {
+    try {
+      const history = loadHistory(); const by = {};
+      history.forEach(h => { by[h.date] = !!(h.items && h.items.brit && h.items.brit.done); });
+      const today = getTodayDate();
+      if (typeof todayState !== 'undefined' && todayState && todayState.items) {
+        by[today] = !!(todayState.items.brit && todayState.items.brit.done);
+      }
+      let current = 0; const d = new Date();
+      if (!by[today]) d.setDate(d.getDate() - 1);
+      while (true) {
+        const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+        if (by[ds]) { current++; d.setDate(d.getDate()-1); } else break;
+      }
+      return current;
+    } catch(e) { return 0; }
+  }
   const DAILY_TARGET_KEY = 'tefilot_daily_target_v1';
   function loadDailyTarget() { const v = parseInt(localStorage.getItem(pk(DAILY_TARGET_KEY))||'',10); return (v && v>0) ? v : 80; }
   function saveDailyTarget(v) { try { localStorage.setItem(pk(DAILY_TARGET_KEY), String(v)); } catch(e) {} }
@@ -6803,6 +6823,14 @@ const TOTAL_OSHER = TEFILOT.length;
     // Mirror values into hero greeting
     const hs = document.getElementById('heroStreak'); if (hs) hs.textContent = s.current;
     const ht = document.getElementById('heroTotal'); if (ht) { try { ht.textContent = _heroTotalPoints(); } catch(e){} }
+    // Brit (clean-day) streak — shown only when the brit feature is unlocked.
+    try {
+      const hbStat = document.getElementById('heroBritStat');
+      const hb = document.getElementById('heroBritStreak');
+      const unlocked = (typeof britUnlocked !== 'undefined') ? britUnlocked : false;
+      if (hbStat) hbStat.style.display = unlocked ? 'block' : 'none';
+      if (hb && unlocked) hb.textContent = computeBritStreak();
+    } catch(e){}
   }
   let scoreAppReady = false;
   function checkScoreCelebrations() {
