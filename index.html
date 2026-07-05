@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>תקט״ו תפילות</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#4a2a12">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="תפילות">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -9901,6 +9909,9 @@ const TOTAL_OSHER = TEFILOT.length;
     <button class="close-x" id="moreClose" aria-label="סגור">✕</button>
     <h3>הגדרות וכלים</h3>
     <div class="row">
+      <button class="more-btn" id="moreInstall" style="flex:1;background:linear-gradient(135deg,#4a2a12,#7a4a1e);color:#f0d68f;border-color:#c9a961;font-weight:700">📲 התקן את האפליקציה למסך הבית</button>
+    </div>
+    <div class="row">
       <button class="more-btn" id="moreProfileUriel">👨 פרופיל אוריאל</button>
       <button class="more-btn" id="moreProfileTal">👩 פרופיל טל</button>
     </div>
@@ -9923,5 +9934,55 @@ const TOTAL_OSHER = TEFILOT.length;
     </div>
   </div>
 </div>
+
+<button id="installFab" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:7000;align-items:center;gap:6px;background:linear-gradient(135deg,#4a2a12,#7a4a1e);color:#f0d68f;border:1.5px solid #c9a961;border-radius:30px;padding:11px 20px;font-family:inherit;font-size:14px;font-weight:700;box-shadow:0 5px 18px rgba(40,20,10,.45);cursor:pointer">📲 התקן את האפליקציה</button>
+
+<script>
+(function(){
+  // Register the service worker — network-first, so updates always show.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+  var deferredPrompt = null;
+  var fab = document.getElementById('installFab');
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+  function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
+  function showFab(){ if (fab && !isStandalone()) fab.style.display = 'inline-flex'; }
+  function hideFab(){ if (fab) fab.style.display = 'none'; }
+
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault(); deferredPrompt = e; showFab();
+  });
+  window.addEventListener('appinstalled', function(){
+    deferredPrompt = null; hideFab();
+    try { alert('האפליקציה הותקנה! 🙏 תמצא אותה במסך הבית.'); } catch(e){}
+  });
+
+  function doInstall(){
+    if (isStandalone()) { alert('האפליקציה כבר מותקנת אצלך 🙏'); return; }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function(){ deferredPrompt = null; hideFab(); });
+      return;
+    }
+    if (isIOS()) {
+      alert('להתקנה באייפון (Safari):\n1) לחץ על כפתור השיתוף ⬆️ למטה.\n2) בחר "הוסף למסך הבית".');
+      return;
+    }
+    alert('להתקנה:\nפתח את תפריט הדפדפן (⋮) למעלה, ובחר "התקן אפליקציה" או "הוסף למסך הבית".');
+  }
+
+  var mBtn = document.getElementById('moreInstall');
+  if (mBtn) mBtn.addEventListener('click', doInstall);
+  if (fab) fab.addEventListener('click', doInstall);
+
+  // iOS has no beforeinstallprompt — surface the button so users know it's installable.
+  if (isIOS() && !isStandalone()) showFab();
+})();
+</script>
 </body>
 </html>
