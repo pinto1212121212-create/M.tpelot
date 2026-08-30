@@ -6827,7 +6827,7 @@ const TOTAL_OSHER = TEFILOT.length;
     try {
       const hbStat = document.getElementById('heroBritStat');
       const hb = document.getElementById('heroBritStreak');
-      const unlocked = (typeof britUnlocked !== 'undefined') ? britUnlocked : false;
+      const unlocked = currentProfile === 'pinto' && ((typeof britUnlocked !== 'undefined') ? britUnlocked : false);
       if (hbStat) hbStat.style.display = unlocked ? 'block' : 'none';
       if (hb && unlocked) hb.textContent = computeBritStreak();
     } catch(e){}
