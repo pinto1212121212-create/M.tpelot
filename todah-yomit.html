@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>יומן תודה יומי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fs:17px;
+    --brown-deep:#3d2410; --brown:#5c3a1e; --brown-light:#7a5230;
+    --gold:#c9a961; --gold-light:#e0c585; --gold-dark:#a08540;
+    --paper:#fdf6ea; --ink:#3a2616;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Frank Ruhl Libre',serif; line-height:1.7;
+    padding-top:64px; -webkit-text-size-adjust:100%;
+  }
+  .bar{
+    position:fixed; top:0; left:0; right:0; height:64px; z-index:50;
+    background:linear-gradient(180deg,#8a5a12,#6b4209);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 14px; box-shadow:0 2px 12px rgba(90,60,10,.35);
+    padding-top:env(safe-area-inset-top);
+  }
+  .bar .title{ color:var(--gold-light); font-weight:900; font-size:19px; letter-spacing:.5px; }
+  .bar .title small{ display:block; font-size:11px; font-weight:500; color:#e8d9b0; letter-spacing:0; }
+  .bar button{
+    background:rgba(255,255,255,.12); border:1px solid rgba(224,197,133,.45);
+    color:var(--gold-light); border-radius:9px; cursor:pointer; font-family:inherit;
+    width:40px; height:40px; font-size:18px; font-weight:700;
+  }
+  .bar button:active{ transform:scale(.92); }
+  .grp{ display:flex; gap:8px; align-items:center; }
+  .content{ max-width:640px; margin:0 auto; padding:20px 18px 90px; font-size:var(--fs); }
+
+  .quote-card{
+    background:linear-gradient(135deg,rgba(201,169,97,.14),rgba(201,169,97,.05));
+    border:1px solid rgba(201,169,97,.35); border-radius:14px;
+    padding:16px 18px; text-align:center; cursor:pointer; user-select:none;
+  }
+  .quote-text{ font-weight:700; color:var(--brown-deep); line-height:1.85; }
+  .quote-src{ font-size:12.5px; color:var(--gold-dark); margin-top:8px; }
+  .quote-hint{ font-size:11px; color:#b3a077; margin-top:6px; }
+
+  .date-label{ text-align:center; color:var(--brown-light); font-size:14.5px; margin:16px 0 10px; }
+
+  .stats-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+  .stat-box{
+    background:#fff; border:1px solid rgba(201,169,97,.4); border-radius:12px;
+    text-align:center; padding:12px 6px; box-shadow:0 2px 8px rgba(90,60,10,.06);
+  }
+  .stat-num{ font-size:22px; font-weight:900; color:#8a5a12; }
+  .stat-lbl{ font-size:12px; color:var(--brown-light); margin-top:2px; }
+
+  .compose-card{
+    background:#fff; border:1px solid rgba(201,169,97,.45); border-radius:16px;
+    padding:14px; box-shadow:0 3px 14px rgba(90,60,10,.08); margin-bottom:20px;
+  }
+  .compose-card textarea{
+    width:100%; border:none; outline:none; resize:vertical; min-height:64px;
+    font-family:inherit; font-size:16px; color:var(--ink); background:transparent;
+  }
+  .compose-card textarea::placeholder{ color:#b8a074; }
+  .compose-actions{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .compose-hint{ font-size:11.5px; color:#b3a077; }
+  .add-btn{
+    background:linear-gradient(135deg,#c9a961,#a08540); color:#fff; border:none;
+    border-radius:11px; padding:10px 20px; font-family:inherit; font-size:15px; font-weight:700;
+    cursor:pointer; box-shadow:0 3px 10px rgba(160,133,64,.35);
+  }
+  .add-btn:active{ transform:scale(.96); }
+  .add-btn:disabled{ opacity:.5; cursor:default; }
+
+  .list-header{ display:flex; align-items:center; justify-content:space-between; margin:4px 2px 10px; }
+  .list-header span{ font-weight:700; color:var(--brown-deep); }
+  .ghost-btn{
+    background:none; border:1px solid rgba(201,169,97,.55); color:var(--gold-dark);
+    border-radius:9px; padding:6px 12px; font-family:inherit; font-size:13px; cursor:pointer;
+  }
+  .ghost-btn:active{ transform:scale(.95); }
+
+  .entry-card{
+    background:#fff; border:1px solid rgba(201,169,97,.3); border-right:4px solid var(--gold);
+    border-radius:10px; padding:12px 14px; margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(90,60,10,.05);
+    animation:pop .25s ease;
+  }
+  @keyframes pop{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+  .entry-text{ white-space:pre-wrap; word-break:break-word; }
+  .entry-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+  .entry-time{ font-size:12px; color:var(--gold-dark); }
+  .entry-del{
+    background:none; border:none; color:#b98; font-size:15px; cursor:pointer; opacity:.6;
+  }
+  .entry-del:active{ opacity:1; }
+
+  .empty-state{
+    text-align:center; color:var(--brown-light); padding:24px 10px; font-size:15px; line-height:1.9;
+  }
+  .empty-state .em{ display:block; font-size:26px; margin-bottom:6px; }
+
+  .history-toggle{
+    display:block; width:100%; margin-top:22px; background:rgba(201,169,97,.1);
+    border:1px solid rgba(201,169,97,.4); color:var(--brown-deep); border-radius:12px;
+    padding:12px; font-family:inherit; font-size:14.5px; font-weight:700; cursor:pointer;
+  }
+  .history-toggle:active{ transform:scale(.98); }
+
+  #historyPanel{ margin-top:12px; }
+  .hist-day{
+    background:#fff; border:1px solid rgba(201,169,97,.3); border-radius:10px;
+    margin-bottom:8px; overflow:hidden;
+  }
+  .hist-day-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:11px 14px; cursor:pointer;
+  }
+  .hist-day-head .d{ font-weight:700; color:var(--brown-deep); font-size:14.5px; }
+  .hist-day-head .c{ font-size:12.5px; color:var(--gold-dark); }
+  .hist-day-body{ display:none; padding:0 14px 12px; }
+  .hist-day-body.open{ display:block; }
+  .hist-entry{ font-size:14.5px; color:var(--ink); padding:6px 0; border-top:1px dashed rgba(201,169,97,.35); }
+  .hist-entry:first-child{ border-top:none; }
+  .hist-entry .t{ color:var(--gold-dark); font-size:11.5px; margin-left:6px; }
+  .hist-empty{ text-align:center; color:var(--brown-light); font-size:13.5px; padding:14px; }
+
+  .footer{ text-align:center; color:#8a6a4a; font-size:13px; margin-top:26px; line-height:1.8; }
+
+  .toast{
+    position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--brown-deep); color:var(--gold-light); padding:11px 20px; border-radius:30px;
+    font-size:14px; font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,.3);
+    opacity:0; transition:opacity .3s, transform .3s; z-index:100; pointer-events:none; white-space:nowrap;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button id="closeBtn" aria-label="סגור">✕</button>
+  <div class="title">יומן תודה יומי<small>הכרת טוב לבורא עולם</small></div>
+  <div class="grp">
+    <button id="fsMinus" aria-label="הקטן">א−</button>
+    <button id="fsPlus" aria-label="הגדל">א+</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="quote-card" id="quoteCard">
+    <div class="quote-text" id="quoteText">—</div>
+    <div class="quote-src" id="quoteSrc"></div>
+    <div class="quote-hint">לחץ לפסוק חיזוק נוסף</div>
+  </div>
+
+  <div class="date-label" id="dateLabel">—</div>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="statToday">0</div><div class="stat-lbl">תודות היום</div></div>
+    <div class="stat-box"><div class="stat-num" id="statStreak">0</div><div class="stat-lbl">🔥 ימי רצף</div></div>
+    <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">סה״כ תודות</div></div>
+  </div>
+
+  <div class="compose-card">
+    <textarea id="todahInput" rows="3" placeholder="על מה אתה מודה היום לבורא עולם? כתוב כאן במילים שלך..."></textarea>
+    <div class="compose-actions">
+      <span class="compose-hint">Ctrl+Enter לשליחה מהירה</span>
+      <button class="add-btn" id="addBtn">🙏 הוסף תודה</button>
+    </div>
+  </div>
+
+  <div class="list-header">
+    <span>התודות שלי היום</span>
+    <button class="ghost-btn" id="shareBtn">שיתוף 📤</button>
+  </div>
+
+  <div id="entriesList"></div>
+  <div class="empty-state" id="emptyState">
+    <span class="em">✦</span>
+    עדיין לא כתבת תודה היום.<br>התחל עכשיו — גם דבר קטן הוא התחלה גדולה.
+  </div>
+
+  <button class="history-toggle" id="historyToggle">📖 הצג יומן ימים קודמים</button>
+  <div id="historyPanel" style="display:none;"></div>
+
+  <div class="footer">״הוֹדוּ לַה׳ כִּי טוֹב, כִּי לְעוֹלָם חַסְדּוֹ״<br>תהלים קי״ח, א׳</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var QUOTES = [
+    { t: 'הוֹדוּ לַה׳ כִּי טוֹב, כִּי לְעוֹלָם חַסְדּוֹ.', s: 'תהלים קי״ח, א׳' },
+    { t: 'טוֹב לְהֹדוֹת לַה׳ וּלְזַמֵּר לְשִׁמְךָ עֶלְיוֹן.', s: 'תהלים צ״ב, ב׳' },
+    { t: 'מוֹדֶה אֲנִי לְפָנֶיךָ מֶלֶךְ חַי וְקַיָּם, שֶׁהֶחֱזַרְתָּ בִּי נִשְׁמָתִי בְּחֶמְלָה, רַבָּה אֱמוּנָתֶךָ.', s: 'תפילת מודה אני' },
+    { t: 'לְעוֹלָם יְהֵא אָדָם מַכִּיר וּמוֹדֶה — שֶׁמַּעֲלָה יְתֵרָה הִיא הַכָּרַת הַטּוֹב.', s: 'על פי חז״ל' },
+    { t: 'אֵין לְךָ יוֹם שֶׁאֵין בּוֹ בְּרָכָה — רַק עֵינַיִם לִרְאוֹת אוֹתָהּ.', s: 'על פי רבי נחמן מברסלב' },
+    { t: 'כָּל הָעוֹלָם כֻּלּוֹ לֹא נִבְרָא אֶלָּא בִּשְׁבִיל לְהוֹדוֹת לוֹ יִתְבָּרַךְ.', s: 'על פי חז״ל' },
+    { t: 'מִי שֶׁאֵין לוֹ הַכָּרַת הַטּוֹב לַבְּרִיּוֹת — סוֹפוֹ שֶׁלֹּא יַכִּיר טוֹבָה גַּם לַבּוֹרֵא.', s: 'על פי מדרש תנחומא' },
+    { t: 'בְּכָל יוֹם וָיוֹם חַיָּב אָדָם לְהוֹדוֹת עַל הַטּוֹבָה הַנֶּעֱשֵׂית עִמּוֹ בְּכָל שָׁעָה.', s: 'על פי אורחות צדיקים' }
+  ];
+
+  var KEY = 'todah_yomit_v1';
+  var MILESTONES = [1, 10, 18, 36, 54, 100, 180, 365, 613];
+
+  function pad(n){ return n<10 ? '0'+n : ''+n; }
+  function ymd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function today(){ return ymd(new Date()); }
+  function timeNow(){ var d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+
+  function load(){
+    try {
+      var raw = JSON.parse(localStorage.getItem(KEY));
+      if (raw && raw.days) return raw;
+    } catch(e){}
+    return { days: {} };
+  }
+  function save(d){ try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){} }
+
+  var data = load();
+
+  function totalCount(){
+    var n = 0;
+    for (var k in data.days) if (data.days.hasOwnProperty(k)) n += data.days[k].length;
+    return n;
+  }
+  function computeStreak(){
+    var d = new Date();
+    if (!(data.days[today()] && data.days[today()].length)) d.setDate(d.getDate()-1);
+    var count = 0;
+    while (data.days[ymd(d)] && data.days[ymd(d)].length){ count++; d.setDate(d.getDate()-1); }
+    return count;
+  }
+
+  var toastEl = document.getElementById('toast'), toastTimer=null;
+  function toast(msg){
+    toastEl.textContent = msg; toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 2600);
+  }
+
+  function renderQuote(){
+    var q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+    document.getElementById('quoteText').textContent = q.t;
+    document.getElementById('quoteSrc').textContent = q.s;
+  }
+  document.getElementById('quoteCard').addEventListener('click', renderQuote);
+
+  function renderDate(){
+    var el = document.getElementById('dateLabel');
+    try {
+      el.textContent = new Date().toLocaleDateString('he-IL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    } catch(e) { el.textContent = today(); }
+  }
+
+  function renderStats(){
+    document.getElementById('statToday').textContent = (data.days[today()]||[]).length;
+    document.getElementById('statStreak').textContent = computeStreak();
+    document.getElementById('statTotal').textContent = totalCount();
+  }
+
+  function renderEntries(){
+    var list = document.getElementById('entriesList');
+    var empty = document.getElementById('emptyState');
+    var items = data.days[today()] || [];
+    list.innerHTML = '';
+    empty.style.display = items.length ? 'none' : 'block';
+    for (var i = items.length - 1; i >= 0; i--) {
+      (function(entry){
+        var card = document.createElement('div'); card.className = 'entry-card';
+        var txt = document.createElement('div'); txt.className = 'entry-text'; txt.textContent = entry.text;
+        var foot = document.createElement('div'); foot.className = 'entry-foot';
+        var time = document.createElement('span'); time.className = 'entry-time'; time.textContent = '🕐 ' + entry.time;
+        var del = document.createElement('button'); del.className = 'entry-del'; del.setAttribute('aria-label','מחק'); del.textContent = '✕';
+        del.addEventListener('click', function(){
+          var arr = data.days[today()] || [];
+          data.days[today()] = arr.filter(function(e){ return e.id !== entry.id; });
+          save(data); renderAll();
+        });
+        foot.appendChild(time); foot.appendChild(del);
+        card.appendChild(txt); card.appendChild(foot);
+        list.appendChild(card);
+      })(items[i]);
+    }
+  }
+
+  function renderAll(){ renderStats(); renderEntries(); renderHistoryIfOpen(); }
+
+  function addEntry(){
+    var input = document.getElementById('todahInput');
+    var text = input.value.trim();
+    if (!text) return;
+    if (!data.days[today()]) data.days[today()] = [];
+    data.days[today()].push({ id: Date.now()+Math.random(), time: timeNow(), text: text });
+    save(data);
+    input.value = '';
+    renderAll();
+    var n = totalCount();
+    if (MILESTONES.indexOf(n) !== -1) toast('🎉 ' + n + ' תודות לבורא עולם! כל הכבוד');
+    else toast('🙏 נכתב בהצלחה');
+  }
+
+  document.getElementById('addBtn').addEventListener('click', addEntry);
+  document.getElementById('todahInput').addEventListener('keydown', function(e){
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') addEntry();
+  });
+
+  document.getElementById('shareBtn').addEventListener('click', function(){
+    var items = data.days[today()] || [];
+    if (!items.length) { toast('אין עדיין תודות היום לשיתוף'); return; }
+    var dateStr = document.getElementById('dateLabel').textContent;
+    var body = '🙏 התודות שלי היום — ' + dateStr + '\n\n' +
+      items.map(function(e,i){ return (i+1) + '. ' + e.text; }).join('\n') +
+      '\n\nמודה ומשבח לבורא עולם ✦';
+    if (navigator.share) {
+      navigator.share({ text: body }).catch(function(){});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(body).then(function(){ toast('הועתק ללוח 📋'); }).catch(function(){ toast('לא ניתן להעתיק'); });
+    } else {
+      window.prompt('העתק את הטקסט:', body);
+    }
+  });
+
+  var historyOpen = false;
+  document.getElementById('historyToggle').addEventListener('click', function(){
+    historyOpen = !historyOpen;
+    var panel = document.getElementById('historyPanel');
+    panel.style.display = historyOpen ? 'block' : 'none';
+    this.textContent = historyOpen ? '📕 הסתר יומן ימים קודמים' : '📖 הצג יומן ימים קודמים';
+    if (historyOpen) renderHistory();
+  });
+  function renderHistoryIfOpen(){ if (historyOpen) renderHistory(); }
+
+  function renderHistory(){
+    var panel = document.getElementById('historyPanel');
+    var days = Object.keys(data.days).filter(function(k){ return k !== today() && data.days[k].length; }).sort().reverse();
+    if (!days.length) { panel.innerHTML = '<div class="hist-empty">אין עדיין ימים קודמים ביומן.</div>'; return; }
+    panel.innerHTML = '';
+    days.forEach(function(dayKey){
+      var entries = data.days[dayKey];
+      var wrap = document.createElement('div'); wrap.className = 'hist-day';
+      var head = document.createElement('div'); head.className = 'hist-day-head';
+      var dLabel = document.createElement('span'); dLabel.className = 'd';
+      try {
+        var parts = dayKey.split('-').map(Number);
+        dLabel.textContent = new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString('he-IL', { day:'numeric', month:'long', year:'numeric' });
+      } catch(e){ dLabel.textContent = dayKey; }
+      var cLabel = document.createElement('span'); cLabel.className = 'c'; cLabel.textContent = entries.length + ' תודות ▾';
+      head.appendChild(dLabel); head.appendChild(cLabel);
+      var body = document.createElement('div'); body.className = 'hist-day-body';
+      entries.forEach(function(e){
+        var row = document.createElement('div'); row.className = 'hist-entry';
+        var t = document.createElement('span'); t.className = 't'; t.textContent = e.time;
+        row.appendChild(t); row.appendChild(document.createTextNode(e.text));
+        body.appendChild(row);
+      });
+      head.addEventListener('click', function(){
+        body.classList.toggle('open');
+        cLabel.textContent = entries.length + ' תודות ' + (body.classList.contains('open') ? '▴' : '▾');
+      });
+      wrap.appendChild(head); wrap.appendChild(body);
+      panel.appendChild(wrap);
+    });
+  }
+
+  var FS_KEY = 'todah_fs';
+  var fs = parseInt(localStorage.getItem(FS_KEY) || '17', 10); if (isNaN(fs)) fs = 17;
+  function applyFs(){ document.documentElement.style.setProperty('--fs', fs+'px'); try { localStorage.setItem(FS_KEY, String(fs)); } catch(e){} }
+  applyFs();
+  document.getElementById('fsPlus').addEventListener('click', function(){ fs = Math.min(26, fs+1); applyFs(); });
+  document.getElementById('fsMinus').addEventListener('click', function(){ fs = Math.max(13, fs-1); applyFs(); });
+
+  document.getElementById('closeBtn').addEventListener('click', function(){
+    try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch(e){}
+    if (history.length > 1) history.back(); else location.href = 'index.html';
+  });
+
+  renderQuote();
+  renderDate();
+  renderAll();
+})();
+</script>
+</body>
+</html>
